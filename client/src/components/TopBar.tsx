@@ -17,10 +17,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     title: {
       flexGrow: 1
+    },
+    toolBar: {
+      maxWidth: 1280
     }
-    // toolBar: {
-    //   // maxWidth: 1170
-    // }
   })
 );
 
@@ -30,7 +30,7 @@ export default function ButtonAppBar() {
   return (
     <div className={classes.root}>
       <AppBar position='static'>
-        <Toolbar>
+        <Toolbar className={classes.toolBar}>
           <IconButton
             edge='start'
             className={classes.menuButton}
