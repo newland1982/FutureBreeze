@@ -1,4 +1,4 @@
-export const bookReducer = (state, action) => {
+const themeReducer = (state: any, action: any) => {
   switch (action.type) {
     case 'ADD_BOOK':
       return [
@@ -6,12 +6,13 @@ export const bookReducer = (state, action) => {
         {
           title: action.book.title,
           author: action.book.author,
-          id: uuid()
         }
       ];
     case 'REMOVE_BOOK':
-      return state.filter(book => book.id !== action.id);
+      return;
     default:
       return state;
   }
 };
+
+export default themeReducer;

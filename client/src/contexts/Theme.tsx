@@ -1,33 +1,22 @@
 import React, { createContext, useReducer, useEffect } from 'react';
-import { themeReducer } from '../reducers/theme';
-import { createMuiTheme } from '@material-ui/core/styles';
+import themeReducer from '../reducers/theme';
 import themeStore from '../data/themeStore';
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import ThemeContextProviderPart1 from './ThemePart1';
 
-export const ThemeContext = createContext({});
+export const ThemeContext = createContext<any>(themeStore.black);
 
-const initialTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: '#444444'
-    },
-    background: {
-      default: '#000000'
-    }
-  }
-});
+type Props = {
 
-const ThemeContextProvider = props => {
-  const [theme, dispatch] = useReducer(themeReducer, themeStore.black, () => {
-    const localData = localStorage.getItem('theme');
-    return localData ? JSON.parse(localData) : [];
-  });
-  useEffect(() => {
-    localStorage.setItem('theme', JSON.stringify(theme));
-  }, [theme]);
+};
+
+const ThemeContextProvider: React.FC<Props> = props => {
+  const [theme, dispatch] = useReducer(themeReducer, themeStore.black);
+
   return (
     <ThemeContext.Provider value={{ theme, dispatch }}>
-      {props.children}
+      <ThemeContextProviderPart1>
+        {props.children}
+      </ThemeContextProviderPart1>
     </ThemeContext.Provider>
   );
 };
