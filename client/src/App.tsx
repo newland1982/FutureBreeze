@@ -1,8 +1,9 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import TopBar from './components/layouts/TopBar';
-import ThemeContextProvider from './contexts/Theme';
+import ThemeContextProvider from './contexts/ThemeContext';
 
 const App: React.FC = () => {
   return (
@@ -23,6 +24,7 @@ const App: React.FC = () => {
             Learn Reactaaaffsdfadazz
         </a>
         </header>
+        <CssBaseline />
       </ThemeContextProvider>
     </div>
   );

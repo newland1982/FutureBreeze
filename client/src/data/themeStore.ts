@@ -1,18 +1,20 @@
-const themeStore = {
+export const fixedTheme = {};
+
+export const optionalTheme = {
   black: {
     palette: {
       primary: {
-        main: '#444'
+        main: '#333'
       },
       background: {
-        default: '#000'
+        default: '#333'
       }
     }
   },
   grey: {
     palette: {
       primary: {
-        main: '#888'
+        main: '#444'
       },
       background: {
         default: '#444'
@@ -22,33 +24,31 @@ const themeStore = {
   green: {
     palette: {
       primary: {
-        main: '#008800'
+        main: '#004400'
       },
       background: {
-        default: '#004400'
+        default: '#003300'
       }
     }
   },
   red: {
     palette: {
       primary: {
-        main: '#880000'
+        main: '#440000'
       },
       background: {
-        default: '#440000'
+        default: '#330000'
       }
     }
   },
   blue: {
     palette: {
       primary: {
-        main: '#000088'
+        main: '#000044'
       },
       background: {
-        default: '#000044'
+        default: '#000033'
       }
     }
   }
 };
-
-export default themeStore;
