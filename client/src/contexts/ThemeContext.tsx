@@ -1,16 +1,18 @@
 import React, { createContext, useReducer, useEffect } from 'react';
 import themeReducer from '../reducers/theme';
-import { fixedTheme, optionalTheme } from '../data/themeStore';
+import { fixedThemeSetting, optionalThemeSetting } from '../data/themeStore';
 import MuiThemeContextProvider from './MuiThemeContext';
 
 export const ThemeContext = createContext({});
 
-type Props = {};
+type Props = {
+  children: JSX.Element[] | JSX.Element;
+};
 
 const ThemeContextProvider: React.FC<Props> = props => {
   const [theme, dispatch] = useReducer(themeReducer, {
-    fixedTheme,
-    ...optionalTheme.black
+    ...fixedThemeSetting,
+    ...optionalThemeSetting.black
   });
 
   return (

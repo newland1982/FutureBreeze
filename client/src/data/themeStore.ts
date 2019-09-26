@@ -1,6 +1,17 @@
-export const fixedTheme = {};
+export const fixedThemeSetting = {
+  props: {
+    IconButton: {
+      size: 'small'
+    }
+  },
+  mixins: {
+    toolbar: {
+      minHeight: 48
+    }
+  }
+};
 
-export const optionalTheme = {
+export const optionalThemeSetting = {
   black: {
     palette: {
       primary: {

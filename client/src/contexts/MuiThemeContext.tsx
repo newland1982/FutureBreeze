@@ -3,11 +3,11 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import { ThemeContext } from './ThemeContext';
 
-type Props = object;
+type Props = {};
 
 const MuiThemeContextProvider: React.FC<Props> = props => {
   const { theme }: { theme?: object } = useContext(ThemeContext);
-  console.log('theme', theme);
+  console.log('theme', props);
   return (
     <ThemeProvider theme={createMuiTheme(theme)}>
       {props.children}

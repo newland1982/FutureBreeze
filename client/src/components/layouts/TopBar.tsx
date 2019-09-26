@@ -5,21 +5,24 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-// import MenuIcon from '@material-ui/icons/Menu';
+import Icon from '@mdi/react';
+import {
+  mdiAccount,
+  mdiForum,
+  mdiFile,
+  mdiVideo,
+  mdiTelevision
+} from '@mdi/js';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      flexGrow: 1
-    },
-    menuButton: {
-      marginRight: theme.spacing(2)
-    },
-    title: {
-      flexGrow: 1
+    IconButton: {
+      marginRight: theme.spacing(2.4)
     },
     toolBar: {
-      maxWidth: 1280
+      maxWidth: 1280,
+      marginLeft: 'auto',
+      marginRight: 0
     }
   })
 );
@@ -28,21 +31,24 @@ export default function ButtonAppBar() {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
+    <div>
       <AppBar position='static'>
         <Toolbar className={classes.toolBar}>
-          <IconButton
-            edge='start'
-            className={classes.menuButton}
-            color='inherit'
-            aria-label='menu'
-          >
-            {/* <MenuIcon /> */}
+          <IconButton className={classes.IconButton} size='small'>
+            <Icon path={mdiAccount} size={1} color='#FFF' />
           </IconButton>
-          <Typography variant='h6' className={classes.title}>
-            News
-          </Typography>
-          <Button color='inherit'>Login</Button>
+          <IconButton className={classes.IconButton} size='small'>
+            <Icon path={mdiForum} size={1} color='#FFF' />
+          </IconButton>
+          <IconButton className={classes.IconButton} size='small'>
+            <Icon path={mdiFile} size={1} color='#FFF' />
+          </IconButton>
+          <IconButton className={classes.IconButton} size='small'>
+            <Icon path={mdiVideo} size={1} color='#FFF' />
+          </IconButton>
+          <IconButton className={classes.IconButton} size='small'>
+            <Icon path={mdiTelevision} size={1} color='#FFF' />
+          </IconButton>
         </Toolbar>
       </AppBar>
     </div>
