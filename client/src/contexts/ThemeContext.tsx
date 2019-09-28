@@ -3,7 +3,10 @@ import themeReducer from '../reducers/theme';
 import { fixedThemeSetting, optionalThemeSetting } from '../data/themeStore';
 import MuiThemeContextProvider from './MuiThemeContext';
 
-export const ThemeContext = createContext({});
+export const ThemeContext = createContext<{
+  theme: {};
+  dispatch: React.Dispatch<{}>;
+}>({ theme: {}, dispatch: () => {} });
 
 type Props = {
   children: JSX.Element[] | JSX.Element;

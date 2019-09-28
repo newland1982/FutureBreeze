@@ -18,28 +18,29 @@ import {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    appBar: {
+      top: 'auto',
+      bottom: 0
+    },
     iconButton: {
-      marginRight: theme.spacing(2.4)
+      marginRight: theme.spacing(3.6)
     },
     lastIconButton: {
       marginRight: theme.spacing(0)
-    },
-    toolbar: {
-      paddingRight: 0
     }
   })
 );
 
-const TopBar = (props: WithWidth) => {
+const BottomBar = (props: WithWidth) => {
   const classes = useStyles();
 
   return (
     <React.Fragment>
-      <Hidden xsDown>
-        <AppBar position='static'>
+      <Hidden smUp>
+        <AppBar position='static' className={classes.appBar}>
           <Container maxWidth='xl'>
-            <Box display='flex' justifyContent='flex-end'>
-              <Toolbar className={classes.toolbar}>
+            <Box display='flex' justifyContent='center'>
+              <Toolbar>
                 <IconButton className={classes.iconButton} size='small'>
                   <Icon path={mdiAccount} size={1} color='#FFF' />
                 </IconButton>
@@ -64,4 +65,4 @@ const TopBar = (props: WithWidth) => {
   );
 };
 
-export default withWidth()(TopBar);
+export default withWidth()(BottomBar);

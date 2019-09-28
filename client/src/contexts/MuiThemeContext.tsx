@@ -8,7 +8,7 @@ type Props = {
 };
 
 const MuiThemeContextProvider: React.FC<Props> = props => {
-  const { theme }: { theme?: object } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   console.log('theme', props);
   return (
     <ThemeProvider theme={createMuiTheme(theme)}>

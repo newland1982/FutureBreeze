@@ -2,6 +2,7 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import BottomBar from './components/layouts/BottomBar';
 import TopBar from './components/layouts/TopBar';
 import ThemeContextProvider from './contexts/ThemeContext';
 
@@ -25,6 +26,7 @@ const App: React.FC = () => {
             Learn Reactaaaffsdfadazz
           </a>
         </header>
+        <BottomBar />
       </ThemeContextProvider>
     </div>
   );
