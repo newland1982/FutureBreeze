@@ -1,13 +1,12 @@
-import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
-import Container from '@material-ui/core/Container';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Hidden from '@material-ui/core/Hidden';
+import Icon from '@mdi/react';
 import IconButton from '@material-ui/core/IconButton';
+import React from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
 import withWidth, { WithWidth } from '@material-ui/core/withWidth';
-import Icon from '@mdi/react';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import {
   mdiAccount,
   mdiForum,
@@ -23,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) =>
       bottom: 0
     },
     iconButton: {
-      marginRight: theme.spacing(3.6)
+      marginRight: theme.spacing(4.2)
     },
     lastIconButton: {
       marginRight: theme.spacing(0)
@@ -37,10 +36,10 @@ const BottomBar = (props: WithWidth) => {
   return (
     <React.Fragment>
       <Hidden smUp>
-        <AppBar position='static' className={classes.appBar}>
-          <Container maxWidth='xl'>
-            <Box display='flex' justifyContent='center'>
-              <Toolbar>
+        <AppBar position='fixed' className={classes.appBar}>
+          <Box display='flex' justifyContent='center'>
+            <Toolbar>
+              <Box display='flex' justifyContent='space-evenly'>
                 <IconButton className={classes.iconButton} size='small'>
                   <Icon path={mdiAccount} size={1} color='#FFF' />
                 </IconButton>
@@ -56,9 +55,9 @@ const BottomBar = (props: WithWidth) => {
                 <IconButton className={classes.lastIconButton} size='small'>
                   <Icon path={mdiTelevision} size={1} color='#FFF' />
                 </IconButton>
-              </Toolbar>
-            </Box>
-          </Container>
+              </Box>
+            </Toolbar>
+          </Box>
         </AppBar>
       </Hidden>
     </React.Fragment>

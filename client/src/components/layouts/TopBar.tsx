@@ -1,13 +1,13 @@
-import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Hidden from '@material-ui/core/Hidden';
+import Icon from '@mdi/react';
 import IconButton from '@material-ui/core/IconButton';
+import React from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
 import withWidth, { WithWidth } from '@material-ui/core/withWidth';
-import Icon from '@mdi/react';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import {
   mdiAccount,
   mdiForum,
@@ -36,7 +36,7 @@ const TopBar = (props: WithWidth) => {
   return (
     <React.Fragment>
       <Hidden xsDown>
-        <AppBar position='static'>
+        <AppBar position='fixed'>
           <Container maxWidth='xl'>
             <Box display='flex' justifyContent='flex-end'>
               <Toolbar className={classes.toolbar}>

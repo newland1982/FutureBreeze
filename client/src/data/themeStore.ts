@@ -15,10 +15,10 @@ export const optionalThemeSetting = {
   black: {
     palette: {
       primary: {
-        main: '#333'
+        main: '#222'
       },
       background: {
-        default: '#333'
+        default: '#222'
       }
     }
   },
@@ -38,7 +38,7 @@ export const optionalThemeSetting = {
         main: '#004400'
       },
       background: {
-        default: '#003300'
+        default: '#004400'
       }
     }
   },
@@ -48,7 +48,7 @@ export const optionalThemeSetting = {
         main: '#440000'
       },
       background: {
-        default: '#330000'
+        default: '#440000'
       }
     }
   },
@@ -58,7 +58,7 @@ export const optionalThemeSetting = {
         main: '#000044'
       },
       background: {
-        default: '#000033'
+        default: '#000044'
       }
     }
   }

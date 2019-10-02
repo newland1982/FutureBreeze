@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
-import { createMuiTheme } from '@material-ui/core/styles';
-import { ThemeProvider } from '@material-ui/styles';
 import { ThemeContext } from './ThemeContext';
+import { ThemeProvider } from '@material-ui/styles';
+import { createMuiTheme } from '@material-ui/core/styles';
 
 type Props = {
   children: JSX.Element[] | JSX.Element;

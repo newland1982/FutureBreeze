@@ -1,34 +1,24 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import BottomBar from './components/layouts/BottomBar';
-import TopBar from './components/layouts/TopBar';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import MyPage from './components/myPage/MyPage';
+import React from 'react';
 import ThemeContextProvider from './contexts/ThemeContext';
+import TopBar from './components/layouts/TopBar';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 const App: React.FC = () => {
   return (
-    <div className='App'>
-      <ThemeContextProvider>
-        <CssBaseline />
-        <TopBar />
-        <header className='App-header'>
-          <img src={logo} className='App-logo' alt='logo' />
-          <p>
-            Edit <code>src/App.tsx</code> and save to reload.
-          </p>
-          <a
-            className='App-link'
-            href='https://reactjs.org'
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            Learn Reactaaaffsdfadazz
-          </a>
-        </header>
-        <BottomBar />
-      </ThemeContextProvider>
-    </div>
+    <Router>
+      <div className='App'>
+        <ThemeContextProvider>
+          <CssBaseline />
+          <TopBar />
+          <Route path='/mypage' component={MyPage} />
+          <BottomBar />
+        </ThemeContextProvider>
+      </div>
+    </Router>
   );
 };
 
