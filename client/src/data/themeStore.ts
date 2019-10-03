@@ -15,10 +15,14 @@ export const optionalThemeSetting = {
   black: {
     palette: {
       primary: {
-        main: '#222'
+        main: '#000'
+      },
+      text: {
+        primary: '#fff'
       },
       background: {
-        default: '#222'
+        paper: '#222',
+        default: '#000'
       }
     }
   },

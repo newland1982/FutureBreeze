@@ -1,5 +1,5 @@
 import MuiThemeContextProvider from './MuiThemeContext';
-import React, { createContext, useReducer, useEffect } from 'react';
+import React, { createContext, useReducer } from 'react';
 import themeReducer from '../reducers/theme';
 import { fixedThemeSetting, optionalThemeSetting } from '../data/themeStore';
 

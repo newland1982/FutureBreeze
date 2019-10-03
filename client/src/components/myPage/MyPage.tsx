@@ -1,5 +1,6 @@
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
+import Divider from '@material-ui/core/Divider';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import Paper from '@material-ui/core/Paper';
@@ -34,16 +35,19 @@ const MyPage = () => {
                   Sign Up
                 </Typography>
               </MenuItem>
+              <Divider component='li' />
               <MenuItem>
                 <Typography variant='h6' gutterBottom>
                   Sign In
                 </Typography>
               </MenuItem>
+              <Divider component='li' />
               <MenuItem>
                 <Typography variant='h6' gutterBottom>
                   Sign Out
                 </Typography>
               </MenuItem>
+              <Divider component='li' />
               <MenuItem>
                 <Typography variant='h6' gutterBottom>
                   Unsubscribe
