@@ -1,12 +1,12 @@
 export const fixedThemeSetting = {
-  props: {
-    IconButton: {
-      size: 'small'
-    }
-  },
   mixins: {
     toolbar: {
       minHeight: 48
+    }
+  },
+  props: {
+    IconButton: {
+      size: 'small'
     }
   }
 };
