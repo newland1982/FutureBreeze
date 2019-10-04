@@ -1,78 +1,81 @@
-import Box from '@material-ui/core/Box';
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
+import Drawer from '@material-ui/core/Drawer';
+import Icon from '@mdi/react';
+import IconButton from '@material-ui/core/IconButton';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import React from 'react';
-import Typography from '@material-ui/core/Typography';
-import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
+import { mdiAccount } from '@mdi/js';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      // flexGrow: 1
-    },
-    paper: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      // padding: theme.spacing(2),
-      textAlign: 'center',
-      // color: theme.palette.text.secondary,
-      width: 240,
-      height: 240,
-      margin: 'auto'
-    }
-  })
-);
-
-const tileData = [
-  {
-    title: 'Sign Up'
+const useStyles = makeStyles({
+  list: {
+    width: 120
   },
-  {
-    title: 'Sign In'
+  fullList: {
+    width: 'auto'
   },
-  {
-    title: 'Sign out'
-  },
-  {
-    title: 'Unsubscribe'
-  },
-  {
-    title: 'Image'
+  iconButton: {
+    // marginRight: theme.spacing(4.2)
   }
-];
+});
 
-const ThemeOption = () => {
+export default function TemporaryDrawer() {
   const classes = useStyles();
-  return (
-    <div className={classes.root}>
-      <Box display='flex' justifyContent='center' alignItems='center' mt={24}>
-        <Container maxWidth='md'>
-          <Grid
-            container
-            direction='row'
-            alignContent='center'
-            alignItems='center'
-            justify='space-around'
-            spacing={3}
-          >
-            {tileData.map(tile => (
-              <Grid item key={tile.title} xs={12} sm={4} md={3} lg={3}>
-                {/* <Box width={200} height={400}> */}
-                <Paper className={classes.paper}>
-                  <Typography variant='h4' color='textPrimary'>
-                    {tile.title}
-                  </Typography>
-                </Paper>
-                {/* </Box> */}
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </Box>
+  const [state, setState] = React.useState({
+    isOpen: false
+  });
+
+  const toggleDrawer = (isOpen: boolean) => (
+    event: React.KeyboardEvent | React.MouseEvent
+  ) => {
+    if (
+      event.type === 'keydown' &&
+      ((event as React.KeyboardEvent).key === 'Tab' ||
+        (event as React.KeyboardEvent).key === 'Shift')
+    ) {
+      return;
+    }
+
+    setState({ isOpen });
+  };
+
+  const sideList = () => (
+    <div
+      className={classes.list}
+      role='presentation'
+      onClick={toggleDrawer(false)}
+      onKeyDown={toggleDrawer(false)}
+    >
+      <List>
+        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+          <ListItem button key={text}>
+            <ListItemText primary={text} />
+          </ListItem>
+        ))}
+      </List>
+      <Divider />
+      <List>
+        {['All mail', 'Trash', 'Spam'].map((text, index) => (
+          <ListItem button key={text}>
+            <ListItemText primary={text} />
+          </ListItem>
+        ))}
+      </List>
     </div>
   );
-};
 
-export default ThemeOption;
+  return (
+    <div>
+      <IconButton className={classes.iconButton} size='small'>
+        <Icon path={mdiAccount} size={1} color='#FFF' />
+      </IconButton>
+      <Button onClick={toggleDrawer(true)}>Open Left</Button>
+      <Drawer open={state.isOpen} onClose={toggleDrawer(false)}>
+        {sideList()}
+      </Drawer>
+    </div>
+  );
+}
