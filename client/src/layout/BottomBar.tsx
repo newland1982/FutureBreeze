@@ -3,17 +3,12 @@ import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import Icon from '@mdi/react';
 import IconButton from '@material-ui/core/IconButton';
+import MyPageMenu from '../pages/myPage/MyPageMenu';
 import React from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
 import withWidth, { WithWidth } from '@material-ui/core/withWidth';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import {
-  mdiAccount,
-  mdiForum,
-  mdiFile,
-  mdiVideo,
-  mdiTelevision
-} from '@mdi/js';
+import { mdiForum, mdiFile, mdiVideo, mdiTelevision } from '@mdi/js';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -36,9 +31,7 @@ const BottomBar = (props: WithWidth) => {
         <AppBar position='fixed' className={classes.appBar}>
           <Toolbar className={classes.toolBar}>
             <Grid container justify='space-around'>
-              <IconButton size='small'>
-                <Icon path={mdiAccount} size={1} color='#FFF' />
-              </IconButton>
+              <MyPageMenu />
               <IconButton size='small'>
                 <Icon path={mdiForum} size={1} color='#FFF' />
               </IconButton>
