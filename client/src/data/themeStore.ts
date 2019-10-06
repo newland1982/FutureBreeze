@@ -41,13 +41,14 @@ const themeStore = {
         }
       }
     },
-    backgroundImages: {
-      simpleBlack: 'black.jpg',
-      simpleBlue: 'blue.jpg',
-      simpleGreen: 'green.jpg',
-      simpleGrey: 'grey.jpg',
-      simpleRed: 'red.jpg'
-    }
+    backgroundImages: [
+      'black.jpg',
+      'blue.jpg',
+      'green.jpg',
+      'grey.jpg',
+      'red.jpg',
+      'forest.jpg'
+    ]
   }
 };
 
