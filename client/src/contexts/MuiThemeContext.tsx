@@ -9,9 +9,11 @@ type Props = {
 
 const MuiThemeContextProvider: React.FC<Props> = props => {
   const { theme } = useContext(ThemeContext);
-  console.log('theme', props);
+  console.log('theme', theme.colorTheme);
   return (
-    <ThemeProvider theme={createMuiTheme(theme)}>
+    <ThemeProvider
+      theme={createMuiTheme({ ...theme.fixedTheme, ...theme.colorTheme })}
+    >
       {props.children}
     </ThemeProvider>
   );

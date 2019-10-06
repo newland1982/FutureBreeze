@@ -4,17 +4,12 @@ import Container from '@material-ui/core/Container';
 import Hidden from '@material-ui/core/Hidden';
 import Icon from '@mdi/react';
 import IconButton from '@material-ui/core/IconButton';
+import MyPageMenu from '../pages/myPage/MyPageMenu';
 import React from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
 import withWidth, { WithWidth } from '@material-ui/core/withWidth';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import {
-  mdiAccount,
-  mdiForum,
-  mdiFile,
-  mdiVideo,
-  mdiTelevision
-} from '@mdi/js';
+import { mdiForum, mdiFile, mdiVideo, mdiTelevision } from '@mdi/js';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -40,9 +35,9 @@ const TopBar = (props: WithWidth) => {
           <Container maxWidth='xl'>
             <Box display='flex' justifyContent='flex-end'>
               <Toolbar className={classes.toolbar}>
-                <IconButton className={classes.iconButton} size='small'>
-                  <Icon path={mdiAccount} size={1} color='#FFF' />
-                </IconButton>
+                <Box className={classes.iconButton}>
+                  <MyPageMenu />
+                </Box>
                 <IconButton className={classes.iconButton} size='small'>
                   <Icon path={mdiForum} size={1} color='#FFF' />
                 </IconButton>

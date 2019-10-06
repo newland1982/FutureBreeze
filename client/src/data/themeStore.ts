@@ -1,69 +1,54 @@
-export const fixedThemeSetting = {
-  mixins: {
-    toolbar: {
-      minHeight: 48
+const themeStore = {
+  fixedThemeSetting: {
+    mixins: {
+      toolbar: {
+        minHeight: 48
+      }
+    },
+    props: {
+      IconButton: {
+        size: 'small'
+      }
     }
   },
-  props: {
-    IconButton: {
-      size: 'small'
+
+  optionalThemeSetting: {
+    opacity000000: {
+      palette: {
+        primary: {
+          main: 'rgba(0, 0, 0, 0)'
+        },
+        text: {
+          primary: '#fff'
+        },
+        background: {
+          paper: 'rgba(0, 0, 0, 0)',
+          default: '#000'
+        }
+      }
+    },
+    opacity000036: {
+      palette: {
+        primary: {
+          main: 'rgba(0, 0, 0, 0.36)'
+        },
+        text: {
+          primary: '#fff'
+        },
+        background: {
+          paper: 'rgba(0, 0, 0, 0)',
+          default: '#000'
+        }
+      }
+    },
+    backgroundImages: {
+      simpleBlack: 'black.jpg',
+      simpleBlue: 'blue.jpg',
+      simpleGreen: 'green.jpg',
+      simpleGrey: 'grey.jpg',
+      simpleRed: 'red.jpg'
     }
   }
 };
 
-export const optionalThemeSetting = {
-  black: {
-    palette: {
-      primary: {
-        main: '#000'
-      },
-      text: {
-        primary: '#fff'
-      },
-      background: {
-        paper: '#222',
-        default: '#000'
-      }
-    }
-  },
-  grey: {
-    palette: {
-      primary: {
-        main: '#444'
-      },
-      background: {
-        default: '#444'
-      }
-    }
-  },
-  green: {
-    palette: {
-      primary: {
-        main: '#004400'
-      },
-      background: {
-        default: '#004400'
-      }
-    }
-  },
-  red: {
-    palette: {
-      primary: {
-        main: '#440000'
-      },
-      background: {
-        default: '#440000'
-      }
-    }
-  },
-  blue: {
-    palette: {
-      primary: {
-        main: '#000044'
-      },
-      background: {
-        default: '#000044'
-      }
-    }
-  }
-};
+export default themeStore;

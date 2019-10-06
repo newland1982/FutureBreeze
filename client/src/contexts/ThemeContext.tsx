@@ -1,12 +1,12 @@
 import MuiThemeContextProvider from './MuiThemeContext';
 import React, { createContext, useReducer } from 'react';
 import themeReducer from '../reducers/theme';
-import { fixedThemeSetting, optionalThemeSetting } from '../data/themeStore';
+import themeStore from '../data/themeStore';
 
 export const ThemeContext = createContext<{
-  theme: {};
+  theme: { fixedTheme: {}; colorTheme: {} };
   dispatch: React.Dispatch<{}>;
-}>({ theme: {}, dispatch: () => {} });
+}>({ theme: { fixedTheme: {}, colorTheme: {} }, dispatch: () => {} });
 
 type Props = {
   children: JSX.Element[] | JSX.Element;
@@ -14,8 +14,13 @@ type Props = {
 
 const ThemeContextProvider: React.FC<Props> = props => {
   const [theme, dispatch] = useReducer(themeReducer, {
-    ...fixedThemeSetting,
-    ...optionalThemeSetting.black
+    fixedTheme: {
+      ...themeStore.fixedThemeSetting
+    },
+    colorTheme: {
+      ...themeStore.optionalThemeSetting.opacity000000
+    },
+    imageTheme: themeStore.optionalThemeSetting.backgroundImages.simpleBlack
   });
 
   return (

@@ -8,7 +8,7 @@ import TopBar from './layout/TopBar';
 
 const App: React.FC = () => {
   useEffect(() => {
-    document.body.style.backgroundImage = `url(./backgroundImage/tape.jpg)`;
+    document.body.style.backgroundImage = `url(./backgroundImage/forest.jpg)`;
     document.body.style.backgroundPosition = `center center`;
     document.body.style.backgroundRepeat = `no-repeat`;
     document.body.style.backgroundAttachment = `fixed`;
