@@ -9,7 +9,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 const App: React.FC = () => {
   useEffect(() => {
-    document.body.style.backgroundImage = `url(../backgroundImage/forest.jpg)`;
+    document.body.style.backgroundImage = `url(../backgroundImage/grey.jpg)`;
     document.body.style.backgroundPosition = `center center`;
     document.body.style.backgroundRepeat = `no-repeat`;
     document.body.style.backgroundAttachment = `fixed`;

@@ -42,12 +42,12 @@ const themeStore = {
       }
     },
     backgroundImages: [
-      'black.jpg',
-      'blue.jpg',
-      'green.jpg',
-      'grey.jpg',
-      'red.jpg',
-      'forest.jpg'
+      { img: 'black.jpg', title: 'black' },
+      { img: 'blue.jpg', title: 'blue' },
+      { img: 'green.jpg', title: 'green' },
+      { img: 'grey.jpg', title: 'grey' },
+      { img: 'red.jpg', title: 'red' },
+      { img: 'forest1.jpg', title: 'forest1' }
     ]
   }
 };

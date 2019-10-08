@@ -20,7 +20,7 @@ const ThemeContextProvider: React.FC<Props> = props => {
     colorTheme: {
       ...themeStore.optionalThemeSetting.opacity000000
     },
-    imageTheme: themeStore.optionalThemeSetting.backgroundImages[0]
+    imageTheme: themeStore.optionalThemeSetting.backgroundImages[0].img
   });
 
   return (
