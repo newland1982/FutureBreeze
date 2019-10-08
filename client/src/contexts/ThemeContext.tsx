@@ -4,9 +4,16 @@ import themeReducer from '../reducers/theme';
 import themeStore from '../data/themeStore';
 
 export const ThemeContext = createContext<{
-  theme: { fixedTheme: {}; colorTheme: {} };
+  theme: { fixedTheme: {}; colorTheme: {}; imageTheme: string };
   dispatch: React.Dispatch<{}>;
-}>({ theme: { fixedTheme: {}, colorTheme: {} }, dispatch: () => {} });
+}>({
+  theme: {
+    fixedTheme: { ...themeStore.fixedThemeSetting },
+    colorTheme: { ...themeStore.optionalThemeSetting.opacity000000 },
+    imageTheme: themeStore.optionalThemeSetting.backgroundImages[1].img
+  },
+  dispatch: () => {}
+});
 
 type Props = {
   children: JSX.Element[] | JSX.Element;
@@ -20,7 +27,7 @@ const ThemeContextProvider: React.FC<Props> = props => {
     colorTheme: {
       ...themeStore.optionalThemeSetting.opacity000000
     },
-    imageTheme: themeStore.optionalThemeSetting.backgroundImages[0].img
+    imageTheme: themeStore.optionalThemeSetting.backgroundImages[1].img
   });
 
   return (
