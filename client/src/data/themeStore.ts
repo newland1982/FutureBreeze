@@ -42,12 +42,12 @@ const themeStore = {
       }
     },
     backgroundImages: [
-      { img: 'black.jpg', title: 'black' },
-      { img: 'blue.jpg', title: 'blue' },
-      { img: 'green.jpg', title: 'green' },
-      { img: 'grey.jpg', title: 'grey' },
-      { img: 'red.jpg', title: 'red' },
-      { img: 'forest1.jpg', title: 'forest1' }
+      { img: 'black.jpg', title: 'black', type: 'color' },
+      { img: 'blue.jpg', title: 'blue', type: 'color' },
+      { img: 'green.jpg', title: 'green', type: 'color' },
+      { img: 'grey.jpg', title: 'grey', type: 'color' },
+      { img: 'red.jpg', title: 'red', type: 'color' },
+      { img: 'forest1.jpg', title: 'forest1', type: 'image' }
     ]
   }
 };

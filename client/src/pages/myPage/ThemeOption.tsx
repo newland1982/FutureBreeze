@@ -38,6 +38,11 @@ const useStyles = makeStyles((theme: Theme) =>
 const ThemeOption = () => {
   const classes = useStyles();
   const { theme, dispatch } = useContext(ThemeContext);
+  document.body.style.backgroundImage = `url(../backgroundImage/${theme.imageTheme})`;
+  document.body.style.backgroundPosition = `center center`;
+  document.body.style.backgroundRepeat = `no-repeat`;
+  document.body.style.backgroundAttachment = `fixed`;
+  document.body.style.backgroundSize = `cover`;
 
   const isXlSize = useMediaQuery(useTheme().breakpoints.up('xl'));
   const isLgSize = useMediaQuery(useTheme().breakpoints.up('lg'));
@@ -66,6 +71,7 @@ const ThemeOption = () => {
   let tileData: {
     img: string;
     title: string;
+    type: string;
   }[] = themeStore.optionalThemeSetting.backgroundImages;
 
   return (
@@ -81,9 +87,9 @@ const ThemeOption = () => {
             className={classes.gridListTile}
             key={tile.img}
             cols={1}
-            onClick={() => dispatch({ type: 'REMOVE_BOOK', id: 1 })}
+            onClick={() => dispatch({ type: 'SET_THEME', payload: tile })}
             style={{
-              display: `${tile.img === theme.imageTheme ? 'none' : 'inherit'}`
+              display: `${tile.img === theme.imageTheme ? 'none' : 'inline'}`
             }}
           >
             <img src={`../backgroundImage/${tile.img}`} alt={tile.img} />

@@ -1,6 +1,6 @@
 import MuiThemeContextProvider from './MuiThemeContext';
 import React, { createContext, useReducer } from 'react';
-import themeReducer from '../reducers/theme';
+import themeReducer from '../reducers/themeReducer';
 import themeStore from '../data/themeStore';
 
 type initState = {
@@ -12,13 +12,21 @@ type initState = {
 const initState = {
   fixedTheme: { ...themeStore.fixedThemeSetting },
   colorTheme: { ...themeStore.optionalThemeSetting.opacity000000 },
-  imageTheme: themeStore.optionalThemeSetting.backgroundImages[0].img
+  imageTheme: themeStore.optionalThemeSetting.backgroundImages[2].img
 };
-console.log(initState);
+
+type action = {
+  type: string;
+  payload: {
+    img: string;
+    title: string;
+    type: string;
+  };
+};
 
 export const ThemeContext = createContext<{
   theme: initState;
-  dispatch: React.Dispatch<{}>;
+  dispatch: React.Dispatch<action>;
 }>({
   theme: initState,
   dispatch: () => {}
