@@ -1,11 +1,12 @@
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { useTheme } from '@material-ui/core/styles';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
-import React from 'react';
+import React, { useContext } from 'react';
 import themeStore from '../../data/themeStore';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
+import { ThemeContext } from '../../contexts/ThemeContext';
+import { useTheme } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -36,6 +37,8 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 const ThemeOption = () => {
   const classes = useStyles();
+  const { theme, dispatch } = useContext(ThemeContext);
+
   const isXlSize = useMediaQuery(useTheme().breakpoints.up('xl'));
   const isLgSize = useMediaQuery(useTheme().breakpoints.up('lg'));
   const isMdSize = useMediaQuery(useTheme().breakpoints.up('md'));
@@ -60,8 +63,10 @@ const ThemeOption = () => {
     return 2;
   };
 
-  let tileData: { img: string; title: string }[] =
-    themeStore.optionalThemeSetting.backgroundImages;
+  let tileData: {
+    img: string;
+    title: string;
+  }[] = themeStore.optionalThemeSetting.backgroundImages;
 
   return (
     <div className={classes.root}>
@@ -76,6 +81,10 @@ const ThemeOption = () => {
             className={classes.gridListTile}
             key={tile.img}
             cols={1}
+            onClick={() => dispatch({ type: 'REMOVE_BOOK', id: 1 })}
+            style={{
+              display: `${tile.img === theme.imageTheme ? 'none' : 'inherit'}`
+            }}
           >
             <img src={`../backgroundImage/${tile.img}`} alt={tile.img} />
             <GridListTileBar title={tile.img} />

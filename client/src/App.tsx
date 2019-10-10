@@ -25,7 +25,7 @@ const App: React.FC = () => {
         <ThemeContextProvider>
           <CssBaseline />
           <TopBar />
-          <Route path='/mypage/themeoption' component={ThemeOption} />
+          <Route exact path='/mypage/themeoption' component={ThemeOption} />
           <BottomBar />
         </ThemeContextProvider>
       </div>

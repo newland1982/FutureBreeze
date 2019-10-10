@@ -5,7 +5,7 @@ const themeReducer = (state: any, action: any) => {
         ...state,
         {
           title: action.book.title,
-          author: action.book.author,
+          author: action.book.author
         }
       ];
     case 'REMOVE_BOOK':

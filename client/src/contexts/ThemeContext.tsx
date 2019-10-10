@@ -3,15 +3,24 @@ import React, { createContext, useReducer } from 'react';
 import themeReducer from '../reducers/theme';
 import themeStore from '../data/themeStore';
 
+type initState = {
+  fixedTheme: {};
+  colorTheme: {};
+  imageTheme: string;
+};
+
+const initState = {
+  fixedTheme: { ...themeStore.fixedThemeSetting },
+  colorTheme: { ...themeStore.optionalThemeSetting.opacity000000 },
+  imageTheme: themeStore.optionalThemeSetting.backgroundImages[0].img
+};
+console.log(initState);
+
 export const ThemeContext = createContext<{
-  theme: { fixedTheme: {}; colorTheme: {}; imageTheme: string };
+  theme: initState;
   dispatch: React.Dispatch<{}>;
 }>({
-  theme: {
-    fixedTheme: { ...themeStore.fixedThemeSetting },
-    colorTheme: { ...themeStore.optionalThemeSetting.opacity000000 },
-    imageTheme: themeStore.optionalThemeSetting.backgroundImages[1].img
-  },
+  theme: initState,
   dispatch: () => {}
 });
 
@@ -20,15 +29,7 @@ type Props = {
 };
 
 const ThemeContextProvider: React.FC<Props> = props => {
-  const [theme, dispatch] = useReducer(themeReducer, {
-    fixedTheme: {
-      ...themeStore.fixedThemeSetting
-    },
-    colorTheme: {
-      ...themeStore.optionalThemeSetting.opacity000000
-    },
-    imageTheme: themeStore.optionalThemeSetting.backgroundImages[1].img
-  });
+  const [theme, dispatch] = useReducer(themeReducer, initState);
 
   return (
     <ThemeContext.Provider value={{ theme, dispatch }}>
