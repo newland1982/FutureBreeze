@@ -3,7 +3,6 @@ import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 import Hidden from '@material-ui/core/Hidden';
 import Icon from '@mdi/react';
-import IconButton from '@material-ui/core/IconButton';
 import MyPageMenu from '../pages/myPage/MyPageMenu';
 import React from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -13,10 +12,10 @@ import { mdiForum, mdiFile, mdiVideo, mdiTelevision } from '@mdi/js';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    iconButton: {
+    icon: {
       marginRight: theme.spacing(2.4)
     },
-    lastIconButton: {
+    lastIcon: {
       marginRight: theme.spacing(0)
     },
     toolbar: {
@@ -35,21 +34,33 @@ const TopBar = (props: WithWidth) => {
           <Container maxWidth='xl'>
             <Box display='flex' justifyContent='flex-end'>
               <Toolbar className={classes.toolbar}>
-                <Box className={classes.iconButton}>
+                <Box className={classes.icon}>
                   <MyPageMenu />
                 </Box>
-                <IconButton className={classes.iconButton} size='small'>
-                  <Icon path={mdiForum} size={1} color='#FFF' />
-                </IconButton>
-                <IconButton className={classes.iconButton} size='small'>
-                  <Icon path={mdiFile} size={1} color='#FFF' />
-                </IconButton>
-                <IconButton className={classes.iconButton} size='small'>
-                  <Icon path={mdiVideo} size={1} color='#FFF' />
-                </IconButton>
-                <IconButton className={classes.lastIconButton} size='small'>
-                  <Icon path={mdiTelevision} size={1} color='#FFF' />
-                </IconButton>
+                <Icon
+                  className={classes.icon}
+                  path={mdiForum}
+                  size={1}
+                  color='#FFF'
+                />
+                <Icon
+                  className={classes.icon}
+                  path={mdiFile}
+                  size={1}
+                  color='#FFF'
+                />
+                <Icon
+                  className={classes.icon}
+                  path={mdiVideo}
+                  size={1}
+                  color='#FFF'
+                />
+                <Icon
+                  className={classes.lastIcon}
+                  path={mdiTelevision}
+                  size={1}
+                  color='#FFF'
+                />
               </Toolbar>
             </Box>
           </Container>

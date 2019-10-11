@@ -15,9 +15,8 @@ const useStyles = makeStyles((theme: Theme) =>
       flexWrap: 'wrap',
       justifyContent: 'space-around',
       overflow: 'hidden',
-      backgroundColor: theme.palette.background.paper,
-      [theme.breakpoints.up('sm')]: { marginTop: 72 },
-      [theme.breakpoints.down('xs')]: { marginTop: 24 }
+      [theme.breakpoints.up('sm')]: { marginTop: 60 },
+      [theme.breakpoints.down('xs')]: { marginTop: 12 }
     },
     gridList: {
       [theme.breakpoints.up('xs')]: { width: 600 },
@@ -28,10 +27,11 @@ const useStyles = makeStyles((theme: Theme) =>
       height: 'auto',
       paddingRight: 24,
       paddingLeft: 24,
-      paddingBottom: 120
+      paddingTop: 12,
+      paddingBottom: 48
     },
     gridListTile: {
-      // margin: 10
+      cursor: 'pointer'
     }
   })
 );

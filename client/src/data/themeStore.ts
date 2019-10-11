@@ -18,8 +18,12 @@ const themeStore = {
         primary: {
           main: 'rgba(0, 0, 0, 0)'
         },
+        secondary: {
+          main: 'rgba(0, 0, 0, 0)'
+        },
         text: {
-          primary: '#fff'
+          primary: '#fff',
+          secondary: '#fff'
         },
         background: {
           paper: 'rgba(0, 0, 0, 0)',
@@ -32,8 +36,12 @@ const themeStore = {
         primary: {
           main: 'rgba(0, 0, 0, 0.36)'
         },
+        secondary: {
+          main: 'rgba(0, 0, 0, 0.36)'
+        },
         text: {
-          primary: '#fff'
+          primary: '#fff',
+          secondary: '#fff'
         },
         background: {
           paper: 'rgba(0, 0, 0, 0)',

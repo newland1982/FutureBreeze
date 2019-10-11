@@ -5,7 +5,7 @@ import React from 'react';
 import ThemeContextProvider from './contexts/ThemeContext';
 import ThemeOption from './pages/myPage/ThemeOption';
 import TopBar from './layout/TopBar';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 const App: React.FC = () => {
   return (
@@ -14,7 +14,10 @@ const App: React.FC = () => {
         <ThemeContextProvider>
           <CssBaseline />
           <TopBar />
-          <Route exact path='/mypage/themeoption' component={ThemeOption} />
+          <Switch>
+            <Route exact path='/mypage/themeoption' component={ThemeOption} />
+            <Route exact component={ThemeOption} />
+          </Switch>
           <BottomBar />
         </ThemeContextProvider>
       </div>

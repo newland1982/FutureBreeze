@@ -1,10 +1,11 @@
+import Box from '@material-ui/core/Box';
 import Drawer from '@material-ui/core/Drawer';
 import Icon from '@mdi/react';
-import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import React from 'react';
+import { BrowserRouter as Router, Link } from 'react-router-dom';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { mdiAccount } from '@mdi/js';
 
@@ -13,6 +14,9 @@ const useStyles = makeStyles((theme: Theme) =>
     list: {
       width: 120,
       paddingTop: '24%'
+    },
+    listItemText: {
+      color: '#FFF'
     }
   })
 );
@@ -38,34 +42,42 @@ const MyPageMenu = () => {
   };
 
   const sideList = () => (
-    <div
-      className={classes.list}
-      role='presentation'
-      onClick={toggleDrawer(false)}
-      onKeyDown={toggleDrawer(false)}
-    >
-      <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map(text => (
-          <ListItem button key={text}>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-    </div>
+    <Router>
+      <div
+        className={classes.list}
+        role='presentation'
+        onClick={toggleDrawer(false)}
+        onKeyDown={toggleDrawer(false)}
+      >
+        <List>
+          {[
+            { name: 'Theme', path: '/mypage/themeoption' },
+            { name: 'wip', path: '/mypage/themeoption' }
+          ].map(link => (
+            <ListItem key={link.name}>
+              <Link to={link.path} style={{ textDecoration: 'none' }}>
+                <ListItemText
+                  className={classes.listItemText}
+                  primary={link.name}
+                />
+              </Link>
+            </ListItem>
+          ))}
+        </List>
+      </div>
+    </Router>
   );
 
   return (
     <div>
-      <IconButton onClick={toggleDrawer(true)} size='small'>
-        <Icon path={mdiAccount} size={1} color='#FFF' />
-      </IconButton>
+      <Box onClick={toggleDrawer(true)}>
+        <Icon
+          style={{ cursor: 'pointer' }}
+          path={mdiAccount}
+          size={1}
+          color='#FFF'
+        />
+      </Box>
       <Drawer
         open={state.isOpen}
         onClose={toggleDrawer(false)}
