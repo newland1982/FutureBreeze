@@ -1,6 +1,7 @@
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import Icon from '@mdi/react';
 import MyPageMenu from '../pages/myPage/MyPageMenu';
@@ -12,14 +13,10 @@ import { mdiForum, mdiFile, mdiVideo, mdiTelevision } from '@mdi/js';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    icon: {
-      marginRight: theme.spacing(2.4)
-    },
-    lastIcon: {
-      marginRight: theme.spacing(0)
-    },
     toolbar: {
-      paddingRight: 0
+      width: '48%',
+      maxWidth: 300,
+      marginRight: -36
     }
   })
 );
@@ -34,33 +31,13 @@ const TopBar = (props: WithWidth) => {
           <Container maxWidth='xl'>
             <Box display='flex' justifyContent='flex-end'>
               <Toolbar className={classes.toolbar}>
-                <Box className={classes.icon}>
+                <Grid container justify='space-around'>
                   <MyPageMenu />
-                </Box>
-                <Icon
-                  className={classes.icon}
-                  path={mdiForum}
-                  size={1}
-                  color='#FFF'
-                />
-                <Icon
-                  className={classes.icon}
-                  path={mdiFile}
-                  size={1}
-                  color='#FFF'
-                />
-                <Icon
-                  className={classes.icon}
-                  path={mdiVideo}
-                  size={1}
-                  color='#FFF'
-                />
-                <Icon
-                  className={classes.lastIcon}
-                  path={mdiTelevision}
-                  size={1}
-                  color='#FFF'
-                />
+                  <Icon path={mdiForum} size={1} color='#FFF' />
+                  <Icon path={mdiFile} size={1} color='#FFF' />
+                  <Icon path={mdiVideo} size={1} color='#FFF' />
+                  <Icon path={mdiTelevision} size={1} color='#FFF' />
+                </Grid>
               </Toolbar>
             </Box>
           </Container>
