@@ -5,7 +5,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import React from 'react';
-import { BrowserRouter as Router, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { mdiAccount } from '@mdi/js';
 
@@ -42,30 +42,44 @@ const MyPageMenu = () => {
   };
 
   const sideList = () => (
-    <Router>
-      <div
-        className={classes.list}
-        role='presentation'
-        onClick={toggleDrawer(false)}
-        onKeyDown={toggleDrawer(false)}
-      >
-        <List>
-          {[
-            { name: 'Theme', path: '/mypage/themeoption' },
-            { name: 'wip', path: '/mypage/themeoption' }
-          ].map(link => (
-            <ListItem key={link.name}>
-              <Link to={link.path} style={{ textDecoration: 'none' }}>
-                <ListItemText
-                  className={classes.listItemText}
-                  primary={link.name}
-                />
-              </Link>
-            </ListItem>
-          ))}
-        </List>
-      </div>
-    </Router>
+    <div
+      className={classes.list}
+      role='presentation'
+      onClick={toggleDrawer(false)}
+      onKeyDown={toggleDrawer(false)}
+    >
+      <List>
+        {[
+          { name: 'Sign Up', path: '/mypage/signup' },
+          { name: 'Sign In', path: '/mypage/themeoption' },
+          { name: 'Themes', path: '/mypage/themeoption' }
+        ].map(link => (
+          <ListItem key={link.name}>
+            <Link to={link.path} style={{ textDecoration: 'none' }}>
+              <ListItemText
+                className={classes.listItemText}
+                primary={link.name}
+              />
+            </Link>
+          </ListItem>
+        ))}
+        <br />
+        {[
+          { name: 'Sign Up', path: '/mypage/signup' },
+          { name: 'Sign In', path: '/mypage/themeoption' },
+          { name: 'Themes', path: '/mypage/themeoption' }
+        ].map(link => (
+          <ListItem key={link.name}>
+            <Link to={link.path} style={{ textDecoration: 'none' }}>
+              <ListItemText
+                className={classes.listItemText}
+                primary={link.name}
+              />
+            </Link>
+          </ListItem>
+        ))}
+      </List>
+    </div>
   );
 
   return (

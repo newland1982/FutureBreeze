@@ -38,11 +38,6 @@ const useStyles = makeStyles((theme: Theme) =>
 const ThemeOption = () => {
   const classes = useStyles();
   const { theme, dispatch } = useContext(ThemeContext);
-  document.body.style.backgroundImage = `url(../backgroundImage/${theme.imageTheme})`;
-  document.body.style.backgroundPosition = `center center`;
-  document.body.style.backgroundRepeat = `no-repeat`;
-  document.body.style.backgroundAttachment = `fixed`;
-  document.body.style.backgroundSize = `cover`;
 
   const isXlSize = useMediaQuery(useTheme().breakpoints.up('xl'));
   const isLgSize = useMediaQuery(useTheme().breakpoints.up('lg'));

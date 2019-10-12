@@ -8,6 +8,11 @@ const themeStore = {
     props: {
       IconButton: {
         size: 'small'
+      },
+      MuiInput: {
+        inputProps: {
+          spellCheck: 'false'
+        }
       }
     }
   },
@@ -26,7 +31,7 @@ const themeStore = {
           secondary: '#fff'
         },
         background: {
-          paper: 'rgba(0, 0, 0, 0)',
+          paper: 'rgba(255, 255, 255, 0.06)',
           default: '#000'
         }
       }
@@ -44,7 +49,7 @@ const themeStore = {
           secondary: '#fff'
         },
         background: {
-          paper: 'rgba(0, 0, 0, 0)',
+          paper: 'rgba(255, 255, 255, 0.12)',
           default: '#000'
         }
       }

@@ -19,3 +19,14 @@
 .App-link {
   color: #09d3ac;
 } */
+.MuiDrawer-paper {
+  background-color: rgba(0, 0, 0, 0) !important;
+}
+
+.MuiOutlinedInput-notchedOutline {
+  border-color: rgba(255, 255, 255, 0.24) !important;
+}
+
+.MuiInputLabel-root {
+  color: rgba(255, 255, 255, 0.72) !important;
+}
