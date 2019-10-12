@@ -42,6 +42,7 @@ const SignUp = () => {
         // value={values.name}
         // onChange={handleChange('name')}
         margin='normal'
+        placeholder='placeholder'
         variant='outlined'
       />
       <TextField

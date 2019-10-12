@@ -44,7 +44,7 @@ const themeStore = {
           secondary: '#fff'
         },
         background: {
-          paper: 'rgba(255, 255, 255, 0.12)',
+          paper: 'rgba(255, 255, 255, 0.24)',
           default: '#000'
         }
       }
