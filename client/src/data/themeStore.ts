@@ -8,11 +8,6 @@ const themeStore = {
     props: {
       IconButton: {
         size: 'small'
-      },
-      MuiInput: {
-        inputProps: {
-          spellCheck: 'false'
-        }
       }
     }
   },

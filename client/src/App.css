@@ -1,24 +1,3 @@
-/* .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-}
-
-.App-header {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #09d3ac;
-} */
 .MuiDrawer-paper {
   background-color: rgba(0, 0, 0, 0) !important;
 }
@@ -29,4 +8,12 @@
 
 .MuiInputLabel-root {
   color: rgba(255, 255, 255, 0.72) !important;
+}
+
+.MuiListItem-button:hover {
+  background-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.MuiTouchRipple-child {
+  background-color: rgba(255, 255, 255, 0.18) !important;
 }

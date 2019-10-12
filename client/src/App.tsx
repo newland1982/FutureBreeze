@@ -14,7 +14,7 @@ const App: React.FC = () => {
       inputElement.setAttribute('spellcheck', 'false')
     );
     console.log(123);
-  }, []);
+  });
 
   return (
     <Router>

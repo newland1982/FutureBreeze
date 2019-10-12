@@ -54,7 +54,7 @@ const MyPageMenu = () => {
           { name: 'Sign In', path: '/mypage/themeoption' },
           { name: 'Themes', path: '/mypage/themeoption' }
         ].map(link => (
-          <ListItem key={link.name}>
+          <ListItem button key={link.name}>
             <Link to={link.path} style={{ textDecoration: 'none' }}>
               <ListItemText
                 className={classes.listItemText}
@@ -69,7 +69,7 @@ const MyPageMenu = () => {
           { name: 'Sign In', path: '/mypage/themeoption' },
           { name: 'Themes', path: '/mypage/themeoption' }
         ].map(link => (
-          <ListItem key={link.name}>
+          <ListItem button key={link.name}>
             <Link to={link.path} style={{ textDecoration: 'none' }}>
               <ListItemText
                 className={classes.listItemText}

@@ -2,6 +2,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import Icon from '@mdi/react';
+import IconButton from '@material-ui/core/IconButton';
 import MyPageMenu from '../pages/myPage/MyPageMenu';
 import React from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -30,11 +31,21 @@ const BottomBar = (props: WithWidth) => {
         <AppBar position='fixed' className={classes.appBar}>
           <Toolbar className={classes.toolBar}>
             <Grid container justify='space-around'>
-              <MyPageMenu />
-              <Icon path={mdiForum} size={1} color='#FFF' />
-              <Icon path={mdiFile} size={1} color='#FFF' />
-              <Icon path={mdiVideo} size={1} color='#FFF' />
-              <Icon path={mdiTelevision} size={1} color='#FFF' />
+              <IconButton size='small'>
+                <MyPageMenu />
+              </IconButton>
+              <IconButton size='small'>
+                <Icon path={mdiForum} size={1} color='#FFF' />
+              </IconButton>
+              <IconButton size='small'>
+                <Icon path={mdiFile} size={1} color='#FFF' />
+              </IconButton>
+              <IconButton size='small'>
+                <Icon path={mdiVideo} size={1} color='#FFF' />
+              </IconButton>
+              <IconButton size='small'>
+                <Icon path={mdiTelevision} size={1} color='#FFF' />
+              </IconButton>
             </Grid>
           </Toolbar>
         </AppBar>
