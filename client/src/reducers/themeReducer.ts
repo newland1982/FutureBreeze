@@ -19,7 +19,7 @@ const themeReducer = (state: state, action: action) => {
   switch (action.type) {
     case 'SET_THEME':
       return {
-        ...state,
+        fixedTheme: { ...themeStore.fixedThemeSetting },
         colorTheme:
           action.payload.type === 'color'
             ? { ...themeStore.optionalThemeSetting.opacity000000 }

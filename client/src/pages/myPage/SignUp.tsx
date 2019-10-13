@@ -1,4 +1,5 @@
 import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import React, { useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
@@ -12,6 +13,11 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
       alignItems: 'center',
       height: '100vh'
+    },
+    button: {
+      width: '88%',
+      minWidth: 240,
+      margin: theme.spacing(1)
     },
     paper: {
       display: 'flex',
@@ -39,7 +45,6 @@ const SignUp = () => {
 
   const location = useLocation();
   useEffect(() => {
-    console.log('wqwq');
     Array.from(document.getElementsByTagName('input')).forEach(inputElement =>
       inputElement.setAttribute('spellcheck', 'false')
     );
@@ -58,6 +63,14 @@ const SignUp = () => {
           placeholder='placeholder'
           variant='outlined'
         />
+        <Button
+          variant='contained'
+          color='secondary'
+          size='large'
+          className={classes.button}
+        >
+          Sign Up
+        </Button>
       </Paper>
     </Box>
   );
