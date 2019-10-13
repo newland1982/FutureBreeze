@@ -54,8 +54,12 @@ const MyPageMenu = () => {
           { name: 'Sign In', path: '/mypage/themeoption' },
           { name: 'Themes', path: '/mypage/themeoption' }
         ].map(link => (
-          <Link to={link.path} style={{ textDecoration: 'none' }}>
-            <ListItem button key={link.name}>
+          <Link
+            to={link.path}
+            key={link.name}
+            style={{ textDecoration: 'none' }}
+          >
+            <ListItem button>
               <ListItemText
                 className={classes.listItemText}
                 primary={link.name}

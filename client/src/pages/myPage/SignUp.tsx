@@ -1,3 +1,4 @@
+import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
@@ -9,8 +10,9 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
+      height: '100vh'
       // [theme.breakpoints.up('sm')]: { marginTop: 120 },
-      [theme.breakpoints.down('xs')]: { marginTop: 'auto' }
+      // [theme.breakpoints.down('xs')]: { marginTop: 'auto' }
     },
     paper: {
       display: 'flex',
@@ -18,15 +20,18 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
       alignItems: 'center',
       margin: '0 auto',
-      width: 480,
-      height: 240,
-      [theme.breakpoints.up('sm')]: { marginTop: 120 },
-      // backgroundColor: 'rgba(255, 255, 255, 0.12)',
+      [theme.breakpoints.only('sm')]: { marginTop: 24 },
+      width: '48%',
+      minWidth: 276,
+      maxWidth: 360,
+      height: '48%',
+      minHeight: 204,
+      maxHeight: 360,
       padding: theme.spacing(3, 2)
     },
     textField: {
-      // display: 'block'
-      width: 300
+      width: '88%',
+      minWidth: 240
     }
   })
 );
@@ -34,27 +39,29 @@ const SignUp = () => {
   const classes = useStyles();
 
   return (
-    <Paper className={classes.paper}>
-      <TextField
-        id='standard-name'
-        label='Name'
-        className={classes.textField}
-        // value={values.name}
-        // onChange={handleChange('name')}
-        margin='normal'
-        placeholder='placeholder'
-        variant='outlined'
-      />
-      <TextField
-        id='standard-name'
-        label='Password'
-        className={classes.textField}
-        // value={values.name}
-        // onChange={handleChange('name')}
-        margin='normal'
-        variant='outlined'
-      />
-    </Paper>
+    <Box className={classes.root}>
+      <Paper className={classes.paper}>
+        <TextField
+          id='standard-name'
+          label='Name'
+          className={classes.textField}
+          // value={values.name}
+          // onChange={handleChange('name')}
+          margin='normal'
+          placeholder='placeholder'
+          variant='outlined'
+        />
+        <TextField
+          id='standard-name'
+          label='Password'
+          className={classes.textField}
+          // value={values.name}
+          // onChange={handleChange('name')}
+          margin='normal'
+          variant='outlined'
+        />
+      </Paper>
+    </Box>
   );
 };
 
