@@ -1,8 +1,9 @@
 import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
-import React from 'react';
+import React, { useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
+import { useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -11,8 +12,6 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
       alignItems: 'center',
       height: '100vh'
-      // [theme.breakpoints.up('sm')]: { marginTop: 120 },
-      // [theme.breakpoints.down('xs')]: { marginTop: 'auto' }
     },
     paper: {
       display: 'flex',
@@ -38,6 +37,14 @@ const useStyles = makeStyles((theme: Theme) =>
 const SignUp = () => {
   const classes = useStyles();
 
+  const location = useLocation();
+  useEffect(() => {
+    console.log('wqwq');
+    Array.from(document.getElementsByTagName('input')).forEach(inputElement =>
+      inputElement.setAttribute('spellcheck', 'false')
+    );
+  }, [location]);
+
   return (
     <Box className={classes.root}>
       <Paper className={classes.paper}>
@@ -49,15 +56,6 @@ const SignUp = () => {
           // onChange={handleChange('name')}
           margin='normal'
           placeholder='placeholder'
-          variant='outlined'
-        />
-        <TextField
-          id='standard-name'
-          label='Password'
-          className={classes.textField}
-          // value={values.name}
-          // onChange={handleChange('name')}
-          margin='normal'
           variant='outlined'
         />
       </Paper>
