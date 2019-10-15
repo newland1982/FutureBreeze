@@ -2,7 +2,7 @@ const themeStore = {
   fixedThemeSetting: {
     mixins: {
       toolbar: {
-        minHeight: 48
+        minHeight: 56
       }
     },
     props: {

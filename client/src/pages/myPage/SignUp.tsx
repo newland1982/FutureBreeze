@@ -1,7 +1,8 @@
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
-import React, { useEffect } from 'react';
+import Menu from '../../components/Menu';
+import React, { useEffect, Fragment } from 'react';
 import TextField from '@material-ui/core/TextField';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { useLocation } from 'react-router-dom';
@@ -12,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      height: '100vh'
+      height: `calc(100vh - 112px)`
     },
     button: {
       width: '88%',
@@ -51,28 +52,31 @@ const SignUp = () => {
   }, [location]);
 
   return (
-    <Box className={classes.root}>
-      <Paper className={classes.paper}>
-        <TextField
-          id='standard-name'
-          label='Name'
-          className={classes.textField}
-          // value={values.name}
-          // onChange={handleChange('name')}
-          margin='normal'
-          placeholder='placeholder'
-          variant='outlined'
-        />
-        <Button
-          variant='contained'
-          color='secondary'
-          size='large'
-          className={classes.button}
-        >
-          Sign Up
-        </Button>
-      </Paper>
-    </Box>
+    <Fragment>
+      <Menu />
+      <Box className={classes.root}>
+        <Paper className={classes.paper}>
+          <TextField
+            id='standard-name'
+            label='Name'
+            className={classes.textField}
+            // value={values.name}
+            // onChange={handleChange('name')}
+            margin='normal'
+            placeholder='placeholder'
+            variant='outlined'
+          />
+          <Button
+            variant='contained'
+            color='secondary'
+            size='large'
+            className={classes.button}
+          >
+            Sign Up
+          </Button>
+        </Paper>
+      </Box>
+    </Fragment>
   );
 };
 

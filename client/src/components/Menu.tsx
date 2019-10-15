@@ -1,16 +1,22 @@
 import Box from '@material-ui/core/Box';
 import Drawer from '@material-ui/core/Drawer';
 import Icon from '@mdi/react';
+import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import React from 'react';
+import React, { Fragment } from 'react';
+import Toolbar from '@material-ui/core/Toolbar';
 import { Link } from 'react-router-dom';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { mdiAccount } from '@mdi/js';
+import { mdiMenu } from '@mdi/js';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    toolBar: {
+      maxWidth: 1280,
+      margin: '0 auto'
+    },
     list: {
       width: 120,
       paddingTop: '24%'
@@ -21,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const MyPageMenu = () => {
+const Menu = () => {
   const classes = useStyles();
   const [state, setState] = React.useState({
     isOpen: false
@@ -91,15 +97,24 @@ const MyPageMenu = () => {
   );
 
   return (
-    <div>
-      <Box onClick={toggleDrawer(true)}>
-        <Icon
-          style={{ cursor: 'pointer' }}
-          path={mdiAccount}
-          size={1}
-          color='#FFF'
-        />
-      </Box>
+    <Fragment>
+      <Toolbar className={classes.toolBar}>
+        <Box
+          onClick={toggleDrawer(true)}
+          visibility={state.isOpen ? 'hidden' : 'visible'}
+        >
+          <IconButton size='medium'>
+            <Icon
+              path={mdiMenu}
+              size={1}
+              color='#FFF'
+              style={{
+                cursor: 'pointer'
+              }}
+            />
+          </IconButton>
+        </Box>
+      </Toolbar>
       <Drawer
         open={state.isOpen}
         onClose={toggleDrawer(false)}
@@ -107,8 +122,8 @@ const MyPageMenu = () => {
       >
         {sideList()}
       </Drawer>
-    </div>
+    </Fragment>
   );
 };
 
-export default MyPageMenu;
+export default Menu;

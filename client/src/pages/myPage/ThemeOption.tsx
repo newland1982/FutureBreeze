@@ -1,7 +1,8 @@
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
-import React, { useContext } from 'react';
+import Menu from '../../components/Menu';
+import React, { useContext, Fragment } from 'react';
 import themeStore from '../../data/themeStore';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
@@ -15,8 +16,8 @@ const useStyles = makeStyles((theme: Theme) =>
       flexWrap: 'wrap',
       justifyContent: 'space-around',
       overflow: 'hidden',
-      [theme.breakpoints.up('sm')]: { marginTop: 60 },
-      [theme.breakpoints.down('xs')]: { marginTop: 12 }
+      [theme.breakpoints.up('sm')]: { marginTop: 0 },
+      [theme.breakpoints.down('xs')]: { marginTop: 0 }
     },
     gridList: {
       [theme.breakpoints.up('xs')]: { width: 600 },
@@ -70,29 +71,32 @@ const ThemeOption = () => {
   }[] = themeStore.optionalThemeSetting.backgroundImages;
 
   return (
-    <div className={classes.root}>
-      <GridList
-        spacing={6}
-        cellHeight={180}
-        className={classes.gridList}
-        cols={cols()}
-      >
-        {tileData.map(tile => (
-          <GridListTile
-            className={classes.gridListTile}
-            key={tile.img}
-            cols={1}
-            onClick={() => dispatch({ type: 'SET_THEME', payload: tile })}
-            style={{
-              display: `${tile.img === theme.imageTheme ? 'none' : 'inline'}`
-            }}
-          >
-            <img src={`../backgroundImage/${tile.img}`} alt={tile.img} />
-            <GridListTileBar title={tile.img} />
-          </GridListTile>
-        ))}
-      </GridList>
-    </div>
+    <Fragment>
+      <Menu />
+      <div className={classes.root}>
+        <GridList
+          spacing={6}
+          cellHeight={180}
+          className={classes.gridList}
+          cols={cols()}
+        >
+          {tileData.map(tile => (
+            <GridListTile
+              className={classes.gridListTile}
+              key={tile.img}
+              cols={1}
+              onClick={() => dispatch({ type: 'SET_THEME', payload: tile })}
+              style={{
+                display: `${tile.img === theme.imageTheme ? 'none' : 'inline'}`
+              }}
+            >
+              <img src={`../backgroundImage/${tile.img}`} alt={tile.img} />
+              <GridListTileBar title={tile.img} />
+            </GridListTile>
+          ))}
+        </GridList>
+      </div>
+    </Fragment>
   );
 };
 
