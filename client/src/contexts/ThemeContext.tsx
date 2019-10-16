@@ -50,6 +50,7 @@ const ThemeContextProvider: React.FC<Props> = props => {
   document.body.style.backgroundRepeat = `no-repeat`;
   document.body.style.backgroundAttachment = `fixed`;
   document.body.style.backgroundSize = `cover`;
+  document.body.style.height = `120vh`;
 
   return (
     <ThemeContext.Provider value={{ theme, dispatch }}>

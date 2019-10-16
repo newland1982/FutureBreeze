@@ -62,14 +62,14 @@ const SignUp = () => {
             className={classes.textField}
             // value={values.name}
             // onChange={handleChange('name')}
-            margin='normal'
+            margin='dense'
             placeholder='placeholder'
             variant='outlined'
           />
           <Button
             variant='contained'
             color='secondary'
-            size='large'
+            size='medium'
             className={classes.button}
           >
             Sign Up
