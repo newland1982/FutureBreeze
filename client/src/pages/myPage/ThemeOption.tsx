@@ -12,7 +12,6 @@ import themeStore from '../../data/themeStore';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { ThemeContext } from '../../contexts/ThemeContext';
-import { mdiBackspace } from '@mdi/js';
 import { mdiChevronLeft } from '@mdi/js';
 import { mdiChevronRight } from '@mdi/js';
 import { useTheme } from '@material-ui/core/styles';
@@ -20,15 +19,10 @@ import { useTheme } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      display: 'flex',
-      flexWrap: 'wrap',
-      justifyContent: 'space-around',
-      overflow: 'hidden',
-      [theme.breakpoints.up('sm')]: { marginTop: 0 },
-      [theme.breakpoints.down('xs')]: { marginTop: 0 }
+      display: 'flex'
     },
     searchBox: {
-      maxWidth: 200,
+      width: 240,
       margin: '0 auto'
     },
     iconBox: {
@@ -36,17 +30,16 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     chevronLeftIcon: {
       position: 'fixed',
-      top: 'calc((100vh - 48px) / 2)'
-      // right: theme.spacing(2)
+      top: 'calc((100vh - 48px) / 2)',
+      left: theme.spacing(0.4)
     },
     chevronRightIcon: {
       position: 'fixed',
       top: 'calc((100vh - 48px) / 2)',
-
-      right: 0
+      right: theme.spacing(0.4)
     },
     gridList: {
-      [theme.breakpoints.up('xs')]: { width: 600 },
+      [theme.breakpoints.up('xs')]: { width: 636 },
       [theme.breakpoints.up('sm')]: { width: 960 },
       [theme.breakpoints.up('md')]: { width: 1280 },
       [theme.breakpoints.up('lg')]: { width: 1280 },
@@ -70,6 +63,7 @@ const ThemeOption = () => {
   const isLgSize = useMediaQuery(useTheme().breakpoints.up('lg'));
   const isMdSize = useMediaQuery(useTheme().breakpoints.up('md'));
   const isSmSize = useMediaQuery(useTheme().breakpoints.up('sm'));
+  const isXsSize = useMediaQuery(useTheme().breakpoints.up('xs'));
   const cols = () => {
     if (isXlSize) {
       return 6;
@@ -87,7 +81,11 @@ const ThemeOption = () => {
       return 3;
     }
 
-    return 2;
+    if (isXsSize) {
+      return 2;
+    }
+
+    return 1;
   };
 
   let tileData: {
@@ -123,48 +121,26 @@ const ThemeOption = () => {
           />
         </IconButton>
       </Box>
-      {/* <Box mt={3} mb={2}>
+      <Box mt={3} mb={2}>
         <Toolbar variant='dense'>
           <Box className={classes.searchBox}>
             <TextField
               margin='dense'
               variant='outlined'
               inputProps={{ 'aria-label': 'bare' }}
-            />
-            <Icon
-              path={mdiBackspace}
-              size={1}
-              color='#FFF'
-              style={{
-                cursor: 'pointer'
-              }}
+              fullWidth
             />
           </Box>
         </Toolbar>
-      </Box> */}
+      </Box>
       <div className={classes.root}>
         <GridList
           spacing={6}
-          cellHeight={180}
+          cellHeight={196}
           className={classes.gridList}
           cols={cols()}
         >
-          <GridListTile cols={cols()} style={{ height: 'auto' }}>
-            <TextField
-              className={classes.searchBox}
-              margin='dense'
-              variant='outlined'
-              inputProps={{ 'aria-label': 'bare' }}
-            />
-            <Icon
-              path={mdiBackspace}
-              size={1}
-              color='#FFF'
-              style={{
-                cursor: 'pointer'
-              }}
-            />
-          </GridListTile>
+          <GridListTile cols={cols()} style={{ height: 'auto' }}></GridListTile>
           {tileData.map(tile => (
             <GridListTile
               className={classes.gridListTile}

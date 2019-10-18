@@ -1,5 +1,15 @@
 const themeStore = {
   fixedThemeSetting: {
+    breakpoints: {
+      values: {
+        xxs: 0,
+        xs: 420,
+        sm: 636,
+        md: 960,
+        lg: 1280,
+        xl: 1920
+      }
+    },
     mixins: {
       toolbar: {
         minHeight: 56

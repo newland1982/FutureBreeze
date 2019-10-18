@@ -26,7 +26,6 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
       alignItems: 'center',
       margin: '0 auto',
-      [theme.breakpoints.only('sm')]: { marginTop: 24 },
       width: '48%',
       minWidth: 276,
       maxWidth: 360,
