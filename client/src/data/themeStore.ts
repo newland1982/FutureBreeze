@@ -2,12 +2,12 @@ const themeStore = {
   fixedThemeSetting: {
     breakpoints: {
       values: {
-        xxs: 0,
-        xs: 420,
-        sm: 636,
-        md: 960,
-        lg: 1280,
-        xl: 1920
+        xxs: 0, //1 column
+        xs: 598, //2
+        sm: 864, //3
+        md: 1130, //4
+        lg: 1380, //5
+        xl: 1630 //6
       }
     },
     mixins: {
@@ -78,6 +78,13 @@ const themeStore = {
       { img: 'green.jpg', title: 'green', type: 'color' },
       { img: 'grey.jpg', title: 'grey', type: 'color' },
       { img: 'red.jpg', title: 'red', type: 'color' },
+      { img: 'red.jpg', title: 'red1', type: 'color' },
+      { img: 'red.jpg', title: 'red2', type: 'color' },
+      { img: 'red.jpg', title: 'red3', type: 'color' },
+      { img: 'red.jpg', title: 'red4', type: 'color' },
+      { img: 'red.jpg', title: 'red5', type: 'color' },
+      { img: 'red.jpg', title: 'red6', type: 'color' },
+      { img: 'red.jpg', title: 'red7', type: 'color' },
       { img: 'forest1.jpg', title: 'forest1', type: 'image' }
     ]
   }

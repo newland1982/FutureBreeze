@@ -1,28 +1,26 @@
 import Box from '@material-ui/core/Box';
-import GridList from '@material-ui/core/GridList';
+import Container from '@material-ui/core/Container';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import Icon from '@mdi/react';
 import IconButton from '@material-ui/core/IconButton';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import Menu from '../../components/Menu';
-import React, { useContext, Fragment } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
 import themeStore from '../../data/themeStore';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { ThemeContext } from '../../contexts/ThemeContext';
 import { mdiChevronLeft } from '@mdi/js';
 import { mdiChevronRight } from '@mdi/js';
-import { useTheme } from '@material-ui/core/styles';
+import { mdiClose } from '@mdi/js';
+import { useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      display: 'flex'
-    },
     searchBox: {
-      width: 240,
+      width: 244,
       margin: '0 auto'
     },
     iconBox: {
@@ -31,62 +29,45 @@ const useStyles = makeStyles((theme: Theme) =>
     chevronLeftIcon: {
       position: 'fixed',
       top: 'calc((100vh - 48px) / 2)',
-      left: theme.spacing(0.4)
+      [theme.breakpoints.down('lg')]: { left: 2.4 },
+      [theme.breakpoints.up('xl')]: { left: 'calc((100vw - 1630px ) / 2)' }
     },
     chevronRightIcon: {
       position: 'fixed',
       top: 'calc((100vh - 48px) / 2)',
-      right: theme.spacing(0.4)
-    },
-    gridList: {
-      [theme.breakpoints.up('xs')]: { width: 636 },
-      [theme.breakpoints.up('sm')]: { width: 960 },
-      [theme.breakpoints.up('md')]: { width: 1280 },
-      [theme.breakpoints.up('lg')]: { width: 1280 },
-      [theme.breakpoints.up('xl')]: { width: 1280 },
-      height: 'auto',
-      paddingRight: 36,
-      paddingLeft: 36,
-      paddingTop: 12,
-      paddingBottom: 48
+      [theme.breakpoints.down('lg')]: { right: 2.4 },
+      [theme.breakpoints.up('xl')]: { right: 'calc((100vw - 1630px ) / 2)' }
     },
     gridListTile: {
       cursor: 'pointer'
+    },
+    gridContainer: {
+      display: 'grid',
+      gridAutoRows: 244,
+      gridTemplateColumns: 'repeat(auto-fit, 244px)',
+      justifyContent: 'center',
+      gridRowGap: 6,
+      gridColumnGap: 6,
+      paddingRight: 36,
+      paddingLeft: 36,
+      paddingTop: 0,
+      paddingBottom: 48,
+      marginTop: 30
     }
   })
 );
 const ThemeOption = () => {
   const classes = useStyles();
+
+  const location = useLocation();
+  useEffect(() => {
+    Array.from(document.getElementsByTagName('input')).forEach(inputElement =>
+      inputElement.setAttribute('spellcheck', 'false')
+    );
+  }, [location]);
+
   const { theme, dispatch } = useContext(ThemeContext);
-
-  const isXlSize = useMediaQuery(useTheme().breakpoints.up('xl'));
-  const isLgSize = useMediaQuery(useTheme().breakpoints.up('lg'));
-  const isMdSize = useMediaQuery(useTheme().breakpoints.up('md'));
-  const isSmSize = useMediaQuery(useTheme().breakpoints.up('sm'));
-  const isXsSize = useMediaQuery(useTheme().breakpoints.up('xs'));
-  const cols = () => {
-    if (isXlSize) {
-      return 6;
-    }
-
-    if (isLgSize) {
-      return 5;
-    }
-
-    if (isMdSize) {
-      return 4;
-    }
-
-    if (isSmSize) {
-      return 3;
-    }
-
-    if (isXsSize) {
-      return 2;
-    }
-
-    return 1;
-  };
+  const [searchWord, setSearchWord] = useState('');
 
   let tileData: {
     img: string;
@@ -129,18 +110,40 @@ const ThemeOption = () => {
               variant='outlined'
               inputProps={{ 'aria-label': 'bare' }}
               fullWidth
+              value={searchWord}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment
+                    position='end'
+                    onClick={() => setSearchWord('')}
+                  >
+                    <IconButton
+                      size='small'
+                      style={{
+                        marginLeft: '0 !important'
+                      }}
+                    >
+                      <Icon
+                        path={mdiClose}
+                        size={0.6}
+                        color='#FFF'
+                        style={{
+                          marginLeft: '0 !important',
+                          cursor: 'pointer',
+                          display: `${searchWord === '' ? 'none' : 'inline'}`
+                        }}
+                      />
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
+              onChange={e => setSearchWord(e.target.value)}
             />
           </Box>
         </Toolbar>
       </Box>
-      <div className={classes.root}>
-        <GridList
-          spacing={6}
-          cellHeight={196}
-          className={classes.gridList}
-          cols={cols()}
-        >
-          <GridListTile cols={cols()} style={{ height: 'auto' }}></GridListTile>
+      <Container maxWidth='xl'>
+        <div className={classes.gridContainer}>
           {tileData.map(tile => (
             <GridListTile
               className={classes.gridListTile}
@@ -152,11 +155,11 @@ const ThemeOption = () => {
               }}
             >
               <img src={`../backgroundImage/${tile.img}`} alt={tile.img} />
-              <GridListTileBar title={tile.img} />
+              <GridListTileBar title={tile.img} subtitle={'by: apple_orange'} />
             </GridListTile>
           ))}
-        </GridList>
-      </div>
+        </div>
+      </Container>
     </Fragment>
   );
 };

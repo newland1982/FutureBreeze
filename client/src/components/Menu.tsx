@@ -14,7 +14,7 @@ import { mdiMenu } from '@mdi/js';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     toolBar: {
-      maxWidth: 1280,
+      maxWidth: 1630,
       margin: '0 auto'
     },
     list: {
