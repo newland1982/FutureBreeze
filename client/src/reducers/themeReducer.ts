@@ -2,7 +2,6 @@ import themeStore from '../data/themeStore';
 
 type state = {
   fixedTheme: {};
-  colorTheme: {};
   imageTheme: string;
 };
 
@@ -11,7 +10,6 @@ type action = {
   payload: {
     img: string;
     title: string;
-    type: string;
   };
 };
 
@@ -20,10 +18,6 @@ const themeReducer = (state: state, action: action) => {
     case 'SET_THEME':
       return {
         fixedTheme: { ...themeStore.fixedThemeSetting },
-        colorTheme:
-          action.payload.type === 'color'
-            ? { ...themeStore.optionalThemeSetting.opacity000000 }
-            : { ...themeStore.optionalThemeSetting.opacity000036 },
         imageTheme: action.payload.img
       };
     default:

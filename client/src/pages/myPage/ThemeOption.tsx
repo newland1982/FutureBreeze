@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     gridContainer: {
       display: 'grid',
-      gridAutoRows: 244,
+      gridAutoRows: 180,
       gridTemplateColumns: 'repeat(auto-fit, 244px)',
       justifyContent: 'center',
       gridRowGap: 6,
@@ -72,7 +72,6 @@ const ThemeOption = () => {
   let tileData: {
     img: string;
     title: string;
-    type: string;
   }[] = themeStore.optionalThemeSetting.backgroundImages;
 
   return (
@@ -108,6 +107,7 @@ const ThemeOption = () => {
             <TextField
               margin='dense'
               variant='outlined'
+              autoFocus={true}
               inputProps={{ 'aria-label': 'bare' }}
               fullWidth
               value={searchWord}
@@ -155,7 +155,7 @@ const ThemeOption = () => {
               }}
             >
               <img src={`../backgroundImage/${tile.img}`} alt={tile.img} />
-              <GridListTileBar title={tile.img} subtitle={'by: apple_orange'} />
+              <GridListTileBar title={tile.img} />
             </GridListTile>
           ))}
         </div>
