@@ -154,7 +154,7 @@ const ThemeOption = () => {
                 display: `${tile.img === theme.imageTheme ? 'none' : 'inline'}`
               }}
             >
-              <img src={`../backgroundImage/${tile.img}`} alt={tile.img} />
+              <img src={`../thumbnails/${tile.img}`} alt={tile.img} />
               <GridListTileBar title={tile.img} />
             </GridListTile>
           ))}

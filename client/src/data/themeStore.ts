@@ -49,15 +49,12 @@ const themeStore = {
 
   optionalThemeSetting: {
     backgroundImages: [
-      { img: 'black.jpg', title: 'black' },
-      { img: 'TheDigitalArtist1.jpg', title: 'TheDigitalArtist1' },
-      {
-        img: 'Pexels1.jpg',
-        title: 'Pexels1'
-      },
-      { img: 'Pixabay1.jpg', title: 'Pixabay1' },
-      { img: 'Pixabay2.jpg', title: 'Pixabay2' },
-      { img: 'forest1.jpg', title: 'forest1' }
+      { img: 'qimono_0.jpg', title: 'qimono_0' },
+      { img: '8385_0.jpg', title: '8385_0' },
+      { img: 'ArtTower_0.jpg', title: 'ArtTower_0' },
+      { img: 'Pixabay_0.jpg', title: 'Pixabay_0' },
+      { img: 'Pixabay_1.jpg', title: 'Pixabay_1' },
+      { img: 'garageband_0.jpg', title: 'garageband_0' }
     ]
   }
 };
