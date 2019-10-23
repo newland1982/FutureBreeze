@@ -20,7 +20,8 @@ const themeStore = {
         main: 'rgba(0, 0, 0, 0.36)'
       },
       secondary: {
-        main: 'rgba(105, 105, 105, 0.42)'
+        // main: 'rgba(105, 105, 105, 0.42)'
+        main: 'rgba(0, 0, 0, 0.6)'
       },
       text: {
         primary: '#fff',
@@ -32,7 +33,7 @@ const themeStore = {
       },
       action: {
         disabled: 'rgba(255, 255, 255, 0.36)',
-        disabledBackground: 'rgba(255, 255, 255, 0.12)'
+        disabledBackground: 'rgba(0, 0, 0, 0.24)'
       }
     },
     props: {

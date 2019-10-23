@@ -65,12 +65,7 @@ const SignUp = () => {
             placeholder='placeholder'
             variant='outlined'
           />
-          <Button
-            variant='contained'
-            color='secondary'
-            size='medium'
-            className={classes.button}
-          >
+          <Button variant='contained' size='medium' className={classes.button}>
             Sign Up
           </Button>
         </Paper>
