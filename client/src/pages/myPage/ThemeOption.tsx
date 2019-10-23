@@ -29,13 +29,13 @@ const useStyles = makeStyles((theme: Theme) =>
     chevronLeftIcon: {
       position: 'fixed',
       top: 'calc((100vh - 48px) / 2)',
-      [theme.breakpoints.down('lg')]: { left: 2.4 },
+      [theme.breakpoints.down('lg')]: { left: 4.8 },
       [theme.breakpoints.up('xl')]: { left: 'calc((100vw - 1630px ) / 2)' }
     },
     chevronRightIcon: {
       position: 'fixed',
       top: 'calc((100vh - 48px) / 2)',
-      [theme.breakpoints.down('lg')]: { right: 2.4 },
+      [theme.breakpoints.down('lg')]: { right: 4.8 },
       [theme.breakpoints.up('xl')]: { right: 'calc((100vw - 1630px ) / 2)' }
     },
     gridListTile: {
@@ -107,7 +107,6 @@ const ThemeOption = () => {
             <TextField
               margin='dense'
               variant='outlined'
-              autoFocus={true}
               inputProps={{ 'aria-label': 'bare' }}
               fullWidth
               value={searchWord}
@@ -117,23 +116,28 @@ const ThemeOption = () => {
                     position='end'
                     onClick={() => setSearchWord('')}
                   >
-                    <IconButton
-                      size='small'
+                    <Box
                       style={{
-                        marginLeft: '0 !important'
+                        display: `${searchWord === '' ? 'none' : 'inline'}`
                       }}
                     >
-                      <Icon
-                        path={mdiClose}
-                        size={0.6}
-                        color='#FFF'
+                      <IconButton
+                        size='small'
                         style={{
-                          marginLeft: '0 !important',
-                          cursor: 'pointer',
-                          display: `${searchWord === '' ? 'none' : 'inline'}`
+                          marginLeft: '0 !important'
                         }}
-                      />
-                    </IconButton>
+                      >
+                        <Icon
+                          path={mdiClose}
+                          size={0.6}
+                          color='#FFF'
+                          style={{
+                            marginLeft: '0 !important',
+                            cursor: 'pointer'
+                          }}
+                        />
+                      </IconButton>
+                    </Box>
                   </InputAdornment>
                 )
               }}

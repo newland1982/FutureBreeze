@@ -15,7 +15,8 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     toolBar: {
       maxWidth: 1630,
-      margin: '0 auto'
+      margin: '0 auto',
+      marginTop: 1
     },
     list: {
       width: 120,

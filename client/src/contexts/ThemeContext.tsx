@@ -2,6 +2,8 @@ import MuiThemeContextProvider from './MuiThemeContext';
 import React, { createContext, useEffect, useReducer } from 'react';
 import themeReducer from '../reducers/themeReducer';
 import themeStore from '../data/themeStore';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useTheme } from '@material-ui/core/styles';
 
 type initState = {
   fixedTheme: {};
@@ -38,16 +40,20 @@ const ThemeContextProvider: React.FC<Props> = props => {
     const localData = localStorage.getItem('theme');
     return localData ? JSON.parse(localData) : initState;
   });
-  useEffect(() => {
-    localStorage.setItem('theme', JSON.stringify(theme));
-  }, [theme]);
 
-  document.body.style.backgroundImage = `url(../backgroundImage/${theme.imageTheme})`;
+  const isXsSize = useMediaQuery(useTheme().breakpoints.down('xs'));
+  const deviceType = isXsSize ? 'mobile' : 'pc';
+
+  document.body.style.backgroundImage = `url(../backgroundImage/${deviceType}/${theme.imageTheme})`;
   document.body.style.backgroundPosition = `center center`;
   document.body.style.backgroundRepeat = `no-repeat`;
   document.body.style.backgroundAttachment = `fixed`;
   document.body.style.backgroundSize = `cover`;
   document.body.style.height = `120vh`;
+
+  useEffect(() => {
+    localStorage.setItem('theme', JSON.stringify(theme));
+  }, [theme]);
 
   return (
     <ThemeContext.Provider value={{ theme, dispatch }}>
