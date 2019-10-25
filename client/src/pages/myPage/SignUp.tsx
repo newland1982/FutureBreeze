@@ -1,3 +1,4 @@
+import Amplify, { Auth } from 'aws-amplify';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
@@ -40,6 +41,16 @@ const useStyles = makeStyles((theme: Theme) =>
     }
   })
 );
+
+Amplify.configure({
+  Auth: {
+    region: process.env.REACT_APP_AWS_COGNITO_region,
+    userPoolId: process.env.REACT_APP_AWS_COGNITO_userPoolId,
+    userPoolWebClientId: process.env.REACT_APP_AWS_COGNITO_userPoolWebClientId,
+    mandatorySignIn: true
+  }
+});
+
 const SignUp = () => {
   const classes = useStyles();
 
@@ -49,6 +60,8 @@ const SignUp = () => {
       inputElement.setAttribute('spellcheck', 'false')
     );
   }, [location]);
+
+  const signUp = () => {};
 
   return (
     <Fragment>
