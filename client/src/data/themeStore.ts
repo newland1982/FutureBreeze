@@ -50,12 +50,12 @@ const themeStore = {
 
   optionalThemeSetting: {
     backgroundImages: [
-      { img: 'qimono_0.jpg', title: 'qimono_0' },
-      { img: '8385_0.jpg', title: '8385_0' },
-      { img: 'ArtTower_0.jpg', title: 'ArtTower_0' },
-      { img: 'Pixabay_0.jpg', title: 'Pixabay_0' },
-      { img: 'Pixabay_1.jpg', title: 'Pixabay_1' },
-      { img: 'garageband_0.jpg', title: 'garageband_0' }
+      { img: 'qimono_0.jpg', by: 'qimono' },
+      { img: '8385_0.jpg', by: '8385' },
+      { img: 'ArtTower_0.jpg', by: 'ArtTower' },
+      { img: 'Pixabay_0.jpg', by: 'Pixabay' },
+      { img: 'Pixabay_1.jpg', by: 'Pixabay' },
+      { img: 'garageband_0.jpg', by: 'garageband' }
     ]
   }
 };

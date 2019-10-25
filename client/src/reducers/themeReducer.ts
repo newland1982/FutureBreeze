@@ -9,7 +9,7 @@ type action = {
   type: string;
   payload: {
     img: string;
-    title: string;
+    by: string;
   };
 };
 

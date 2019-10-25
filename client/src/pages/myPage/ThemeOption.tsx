@@ -28,13 +28,13 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     chevronLeftIcon: {
       position: 'fixed',
-      top: 'calc((100vh - 48px) / 2)',
+      top: 'calc((100vh - 30px) / 2)',
       [theme.breakpoints.down('lg')]: { left: 4.8 },
       [theme.breakpoints.up('xl')]: { left: 'calc((100vw - 1630px ) / 2)' }
     },
     chevronRightIcon: {
       position: 'fixed',
-      top: 'calc((100vh - 48px) / 2)',
+      top: 'calc((100vh - 30px) / 2)',
       [theme.breakpoints.down('lg')]: { right: 4.8 },
       [theme.breakpoints.up('xl')]: { right: 'calc((100vw - 1630px ) / 2)' }
     },
@@ -71,7 +71,7 @@ const ThemeOption = () => {
 
   let tileData: {
     img: string;
-    title: string;
+    by: string;
   }[] = themeStore.optionalThemeSetting.backgroundImages;
 
   return (
