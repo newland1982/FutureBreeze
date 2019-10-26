@@ -26,7 +26,6 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
-      margin: '0 auto',
       width: '48%',
       minWidth: 276,
       maxWidth: 360,
@@ -63,21 +62,35 @@ const SignUp = () => {
 
   const [userName, setUserName] = useState('');
   const [isValidUserName, setIsValidUserName] = useState(false);
+  const [isUniqueUsername, setIsUniqueUsername] = useState(true);
 
-  const inputUserName = (
+  const inputUserName = async (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setUserName(e.target.value);
   };
 
   useEffect(() => {
-    console.log(userName);
-    userName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)
-      ? setIsValidUserName(true)
-      : setIsValidUserName(false);
+    const func = async () => {
+      if (userName) {
+        await Auth.signIn(userName, 'password').catch(err => {
+          err.code === 'UserNotFoundException'
+            ? setIsUniqueUsername(true)
+            : setIsUniqueUsername(false);
+        });
+        userName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)
+          ? setIsValidUserName(true)
+          : setIsValidUserName(false);
+      }
+    };
+    func();
+    return () => {
+      setIsUniqueUsername(true);
+      setIsValidUserName(false);
+    };
   }, [userName]);
 
-  const signUp = () => {
+  const signUp = async () => {
     const passwordGenerator = () => {
       let uint32HexArray = [];
       for (let i = 0; i < 32; i++) {
@@ -88,13 +101,10 @@ const SignUp = () => {
       return uint32HexArray.join('');
     };
 
-    Auth.signUp(userName, passwordGenerator())
-      .then(user => {
-        console.log(user);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    const signUpResult = await Auth.signUp(userName, passwordGenerator()).catch(
+      err => console.log(err)
+    );
+    console.log(signUpResult);
     setUserName('');
   };
 
@@ -105,12 +115,11 @@ const SignUp = () => {
         <Paper className={classes.paper}>
           <TextField
             className={classes.textField}
-            id='standard-name'
             label='Name'
             // value={values.name}
             // onChange={handleChange('name')}
             margin='dense'
-            placeholder='placeholder'
+            placeholder='e.g.  user_name1,  user_123'
             variant='outlined'
             value={userName}
             onChange={(
@@ -121,7 +130,7 @@ const SignUp = () => {
             className={classes.button}
             variant='contained'
             size='medium'
-            disabled={!isValidUserName}
+            disabled={!isUniqueUsername || !isValidUserName}
             onClick={() => signUp()}
           >
             Sign Up
