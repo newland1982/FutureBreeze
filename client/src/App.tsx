@@ -15,7 +15,6 @@ const App: React.FC = () => {
           <Switch>
             <Route exact path='/mypage/signup' component={SignuUp} />
             <Route exact path='/mypage/themeoption' component={ThemeOption} />
-            {/* <Route exact component={ThemeOption} /> */}
           </Switch>
         </ThemeContextProvider>
       </div>

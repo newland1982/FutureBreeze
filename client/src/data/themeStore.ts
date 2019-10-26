@@ -1,15 +1,5 @@
 const themeStore = {
   fixedThemeSetting: {
-    breakpoints: {
-      values: {
-        xxs: 0, //1 column
-        xs: 598, //2
-        sm: 864, //3
-        md: 1130, //4
-        lg: 1380, //5
-        xl: 1630 //6
-      }
-    },
     mixins: {
       toolbar: {
         minHeight: 56
@@ -33,7 +23,7 @@ const themeStore = {
       },
       action: {
         disabled: 'rgba(255, 255, 255, 0.36)',
-        disabledBackground: 'rgba(0, 0, 0, 0.24)'
+        disabledBackground: 'rgba(255, 255, 255, 0.36)'
       }
     },
     props: {

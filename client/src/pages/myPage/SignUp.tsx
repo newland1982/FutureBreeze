@@ -61,7 +61,21 @@ const SignUp = () => {
     );
   }, [location]);
 
-  const [username, setUsername] = useState('');
+  const [userName, setUserName] = useState('');
+  const [isValidUserName, setIsValidUserName] = useState(false);
+
+  const inputUserName = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setUserName(e.target.value);
+  };
+
+  useEffect(() => {
+    console.log(userName);
+    userName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)
+      ? setIsValidUserName(true)
+      : setIsValidUserName(false);
+  }, [userName]);
 
   const signUp = () => {
     const passwordGenerator = () => {
@@ -71,18 +85,17 @@ const SignUp = () => {
           crypto.getRandomValues(new Uint32Array(1))[0].toString(16)
         );
       }
-      return `${
-        process.env.REACT_APP_AWS_COGNITO_additionToPassword
-      }${uint32HexArray.join('')}`;
+      return uint32HexArray.join('');
     };
 
-    Auth.signIn(username, passwordGenerator())
+    Auth.signUp(userName, passwordGenerator())
       .then(user => {
         console.log(user);
       })
       .catch(err => {
         console.log(err);
       });
+    setUserName('');
   };
 
   return (
@@ -91,20 +104,24 @@ const SignUp = () => {
       <Box className={classes.root}>
         <Paper className={classes.paper}>
           <TextField
+            className={classes.textField}
             id='standard-name'
             label='Name'
-            className={classes.textField}
             // value={values.name}
             // onChange={handleChange('name')}
             margin='dense'
             placeholder='placeholder'
             variant='outlined'
-            onChange={e => setUsername(e.target.value)}
+            value={userName}
+            onChange={(
+              e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+            ) => inputUserName(e)}
           />
           <Button
+            className={classes.button}
             variant='contained'
             size='medium'
-            className={classes.button}
+            disabled={!isValidUserName}
             onClick={() => signUp()}
           >
             Sign Up
