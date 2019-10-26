@@ -3,7 +3,7 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Menu from '../../components/Menu';
-import React, { useEffect, Fragment } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import TextField from '@material-ui/core/TextField';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { useLocation } from 'react-router-dom';
@@ -61,7 +61,29 @@ const SignUp = () => {
     );
   }, [location]);
 
-  const signUp = () => {};
+  const [username, setUsername] = useState('');
+
+  const signUp = () => {
+    const passwordGenerator = () => {
+      let uint32HexArray = [];
+      for (let i = 0; i < 32; i++) {
+        uint32HexArray.push(
+          crypto.getRandomValues(new Uint32Array(1))[0].toString(16)
+        );
+      }
+      return `${
+        process.env.REACT_APP_AWS_COGNITO_additionToPassword
+      }${uint32HexArray.join('')}`;
+    };
+
+    Auth.signIn(username, passwordGenerator())
+      .then(user => {
+        console.log(user);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
 
   return (
     <Fragment>
@@ -77,8 +99,14 @@ const SignUp = () => {
             margin='dense'
             placeholder='placeholder'
             variant='outlined'
+            onChange={e => setUsername(e.target.value)}
           />
-          <Button variant='contained' size='medium' className={classes.button}>
+          <Button
+            variant='contained'
+            size='medium'
+            className={classes.button}
+            onClick={() => signUp()}
+          >
             Sign Up
           </Button>
         </Paper>
