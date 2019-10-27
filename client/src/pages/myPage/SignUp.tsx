@@ -6,7 +6,7 @@ import Menu from '../../components/Menu';
 import React, { useState, useEffect, Fragment } from 'react';
 import TextField from '@material-ui/core/TextField';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
-import { useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -64,6 +64,8 @@ const SignUp = () => {
   const [isValidUserName, setIsValidUserName] = useState(false);
   const [isUniqueUsername, setIsUniqueUsername] = useState(true);
 
+  const history = useHistory();
+
   const inputUserName = async (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -71,7 +73,7 @@ const SignUp = () => {
   };
 
   useEffect(() => {
-    const func = async () => {
+    const userNameCheck = async () => {
       if (userName) {
         await Auth.signIn(userName, 'password').catch(err => {
           err.code === 'UserNotFoundException'
@@ -83,11 +85,7 @@ const SignUp = () => {
           : setIsValidUserName(false);
       }
     };
-    func();
-    return () => {
-      setIsUniqueUsername(true);
-      setIsValidUserName(false);
-    };
+    userNameCheck();
   }, [userName]);
 
   const signUp = async () => {
@@ -100,9 +98,14 @@ const SignUp = () => {
       }
       return uint32HexArray.join('');
     };
-
     const signUpResult = await Auth.signUp(userName, passwordGenerator()).catch(
-      err => console.log(err)
+      err => {
+        localStorage.setItem(
+          'returnLocation',
+          JSON.stringify(location.pathname)
+        );
+        history.push('/failure/error');
+      }
     );
     console.log(signUpResult);
     setUserName('');
@@ -116,8 +119,6 @@ const SignUp = () => {
           <TextField
             className={classes.textField}
             label='Name'
-            // value={values.name}
-            // onChange={handleChange('name')}
             margin='dense'
             placeholder='e.g.  user_name1,  user_123'
             variant='outlined'
