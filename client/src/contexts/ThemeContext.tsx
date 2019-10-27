@@ -5,7 +5,7 @@ import themeStore from '../data/themeStore';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 
-type initState = {
+type theme = {
   fixedTheme: {};
   imageTheme: string;
 };
@@ -24,7 +24,7 @@ type action = {
 };
 
 export const ThemeContext = createContext<{
-  theme: initState;
+  theme: theme;
   dispatch: React.Dispatch<action>;
 }>({
   theme: initState,

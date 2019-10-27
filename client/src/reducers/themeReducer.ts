@@ -1,6 +1,6 @@
 import themeStore from '../data/themeStore';
 
-type state = {
+type theme = {
   fixedTheme: {};
   imageTheme: string;
 };
@@ -13,7 +13,7 @@ type action = {
   };
 };
 
-const themeReducer = (state: state, action: action) => {
+const themeReducer = (state: theme, action: action) => {
   switch (action.type) {
     case 'SET_THEME':
       return {
