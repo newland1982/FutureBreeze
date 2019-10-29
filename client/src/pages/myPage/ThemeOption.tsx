@@ -90,7 +90,7 @@ const ThemeOption = () => {
         </IconButton>
       </Box>
       <Box className={classes.chevronRightIcon}>
-        <IconButton size='medium'>
+        <IconButton size='small'>
           <Icon
             path={mdiChevronRight}
             size={1}
