@@ -65,16 +65,17 @@ const SignUp = () => {
   const [isValidUserName, setIsValidUserName] = useState(false);
   const [isUniqueUsername, setIsUniqueUsername] = useState(true);
   const [isValidEmailAddress, setIsValidEmailAddress] = useState(false);
+  const [isUniqueEmailAddress, setIsUniqueEmailAddress] = useState(true);
 
   const history = useHistory();
 
-  const inputUserName = async (
+  const inputUserName = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setUserName(e.target.value);
   };
 
-  const inputEmailAddress = async (
+  const inputEmailAddress = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setEmailAddress(e.target.value);
@@ -100,6 +101,12 @@ const SignUp = () => {
   useEffect(() => {
     const emailAddressCheck = async () => {
       if (emailAddress) {
+        await Auth.signIn(emailAddress, 'password').catch(err => {
+          console.log(err);
+          err.code === 'UserNotFoundException'
+            ? setIsUniqueEmailAddress(true)
+            : setIsUniqueEmailAddress(false);
+        });
         emailAddress.match(
           /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
         )
@@ -122,19 +129,20 @@ const SignUp = () => {
     };
 
     const signUpResult = await Auth.signUp({
-      username: emailAddress,
+      username: userName,
       password: passwordGenerator(),
       attributes: {
         email: emailAddress
       }
     }).catch(err => {
       console.log(err);
+
+      setUserName('');
+      setEmailAddress('');
       localStorage.setItem('returnLocation', JSON.stringify(location.pathname));
       history.push('/failure/error');
     });
     console.log(signUpResult);
-    setUserName('');
-    setEmailAddress('');
   };
 
   return (
@@ -169,7 +177,10 @@ const SignUp = () => {
             variant='contained'
             size='medium'
             disabled={
-              !isUniqueUsername || !isValidUserName || !isValidEmailAddress
+              !isUniqueUsername ||
+              !isValidUserName ||
+              !isUniqueEmailAddress ||
+              !isValidEmailAddress
             }
             onClick={() => signUp()}
           >
