@@ -61,11 +61,8 @@ const SignUp = () => {
   }, [location]);
 
   const [userName, setUserName] = useState('');
-  const [emailAddress, setEmailAddress] = useState('');
   const [isValidUserName, setIsValidUserName] = useState(false);
   const [isUniqueUsername, setIsUniqueUsername] = useState(true);
-  const [isValidEmailAddress, setIsValidEmailAddress] = useState(false);
-  const [isUniqueEmailAddress, setIsUniqueEmailAddress] = useState(true);
 
   const history = useHistory();
 
@@ -73,12 +70,6 @@ const SignUp = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setUserName(e.target.value);
-  };
-
-  const inputEmailAddress = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setEmailAddress(e.target.value);
   };
 
   useEffect(() => {
@@ -98,25 +89,6 @@ const SignUp = () => {
     userNameCheck();
   }, [userName]);
 
-  useEffect(() => {
-    const emailAddressCheck = async () => {
-      if (emailAddress) {
-        await Auth.signIn(emailAddress, 'password').catch(err => {
-          console.log(err);
-          err.code === 'UserNotFoundException'
-            ? setIsUniqueEmailAddress(true)
-            : setIsUniqueEmailAddress(false);
-        });
-        emailAddress.match(
-          /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
-        )
-          ? setIsValidEmailAddress(true)
-          : setIsValidEmailAddress(false);
-      }
-    };
-    emailAddressCheck();
-  }, [emailAddress]);
-
   const signUp = async () => {
     const passwordGenerator = () => {
       let uint32HexArray = [];
@@ -130,15 +102,10 @@ const SignUp = () => {
 
     const signUpResult = await Auth.signUp({
       username: userName,
-      password: passwordGenerator(),
-      attributes: {
-        email: emailAddress
-      }
+      password: passwordGenerator()
     }).catch(err => {
       console.log(err);
-
       setUserName('');
-      setEmailAddress('');
       localStorage.setItem('returnLocation', JSON.stringify(location.pathname));
       history.push('/failure/error');
     });
@@ -161,27 +128,11 @@ const SignUp = () => {
               e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
             ) => inputUserName(e)}
           />
-          <TextField
-            className={classes.textField}
-            label='Email'
-            margin='dense'
-            placeholder=''
-            variant='outlined'
-            value={emailAddress}
-            onChange={(
-              e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-            ) => inputEmailAddress(e)}
-          />
           <Button
             className={classes.button}
             variant='contained'
             size='medium'
-            disabled={
-              !isUniqueUsername ||
-              !isValidUserName ||
-              !isUniqueEmailAddress ||
-              !isValidEmailAddress
-            }
+            disabled={!isUniqueUsername || !isValidUserName}
             onClick={() => signUp()}
           >
             Sign Up
