@@ -40,7 +40,6 @@ const useStyles = makeStyles((theme: Theme) =>
     }
   })
 );
-
 Amplify.configure({
   Auth: {
     region: process.env.REACT_APP_AWS_COGNITO_region,
@@ -60,34 +59,34 @@ const SignUp = () => {
     );
   }, [location]);
 
-  const [userName, setUserName] = useState('');
-  const [isValidUserName, setIsValidUserName] = useState(false);
-  const [isUniqueUsername, setIsUniqueUsername] = useState(true);
+  const [aliasName, setAliasName] = useState('');
+  const [isValidAliasName, setIsValidAliasName] = useState(false);
+  const [isUniqueAliasName, setIsUniqueAliasName] = useState(true);
 
   const history = useHistory();
 
-  const inputUserName = (
+  const inputAliasName = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setUserName(e.target.value);
+    setAliasName(e.target.value);
   };
 
   useEffect(() => {
-    const userNameCheck = async () => {
-      if (userName) {
-        await Auth.signIn(userName, 'password').catch(err => {
+    const aliasNameCheck = async () => {
+      if (aliasName) {
+        await Auth.signIn(aliasName, 'password').catch(err => {
           console.log(err);
           err.code === 'UserNotFoundException'
-            ? setIsUniqueUsername(true)
-            : setIsUniqueUsername(false);
+            ? setIsUniqueAliasName(true)
+            : setIsUniqueAliasName(false);
         });
-        userName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)
-          ? setIsValidUserName(true)
-          : setIsValidUserName(false);
+        aliasName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)
+          ? setIsValidAliasName(true)
+          : setIsValidAliasName(false);
       }
     };
-    userNameCheck();
-  }, [userName]);
+    aliasNameCheck();
+  }, [aliasName]);
 
   const signUp = async () => {
     const passwordGenerator = () => {
@@ -101,11 +100,11 @@ const SignUp = () => {
     };
 
     const signUpResult = await Auth.signUp({
-      username: userName,
+      username: aliasName,
       password: passwordGenerator()
     }).catch(err => {
       console.log(err);
-      setUserName('');
+      setAliasName('');
       localStorage.setItem('returnLocation', JSON.stringify(location.pathname));
       history.push('/failure/error');
     });
@@ -123,16 +122,16 @@ const SignUp = () => {
             margin='dense'
             placeholder='e.g.  user_name1,  user_123'
             variant='outlined'
-            value={userName}
+            value={aliasName}
             onChange={(
               e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-            ) => inputUserName(e)}
+            ) => inputAliasName(e)}
           />
           <Button
             className={classes.button}
             variant='contained'
             size='medium'
-            disabled={!isUniqueUsername || !isValidUserName}
+            disabled={!isUniqueAliasName || !isValidAliasName}
             onClick={() => signUp()}
           >
             Sign Up
