@@ -1,5 +1,4 @@
 import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Menu from '../../components/Menu';
 import React, { Fragment } from 'react';
@@ -38,19 +37,13 @@ const Error = () => {
   return (
     <Fragment>
       <Menu />
-      <Container maxWidth='md'>
-        <Box className={classes.root}>
-          <Typography variant='h1'>Error.</Typography>
-          <Button
-            className={classes.button}
-            variant='contained'
-            size='small'
-            onClick={() => goBack()}
-          >
-            Go Back
-          </Button>
-        </Box>
-      </Container>
+      <Box onClick={() => goBack()}>
+        <Container maxWidth='md'>
+          <Box className={classes.root}>
+            <Typography variant='h1'>Error.</Typography>
+          </Box>
+        </Container>
+      </Box>
     </Fragment>
   );
 };

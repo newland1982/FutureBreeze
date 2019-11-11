@@ -1,4 +1,4 @@
-import Amplify, { Auth } from 'aws-amplify';
+import Amplify, { API, Auth, graphqlOperation } from 'aws-amplify';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
@@ -42,12 +42,23 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 Amplify.configure({
   Auth: {
+    identityPoolId:
+      process.env.REACT_APP_AWS_COGNITO_HsoUnauthenticatedIdPool_identityPoolId,
     region: process.env.REACT_APP_AWS_COGNITO_region,
     userPoolId: process.env.REACT_APP_AWS_COGNITO_userPoolId,
-    userPoolWebClientId: process.env.REACT_APP_AWS_COGNITO_userPoolWebClientId,
-    mandatorySignIn: true
-  }
+    userPoolWebClientId: process.env.REACT_APP_AWS_COGNITO_userPoolWebClientId
+  },
+  aws_appsync_graphqlEndpoint:
+    process.env.REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint,
+  aws_appsync_region: process.env.REACT_APP_AWS_APPSYNC_aws_appsync_region,
+  aws_appsync_authenticationType:
+    process.env.REACT_APP_AWS_APPSYNC_aws_appsync_authenticationType
 });
+
+console.log(
+  'epiiiiii',
+  process.env.REACT_APP_AWS_COGNITO_HsoUnauthenticatedIdPool_identityPoolId
+);
 
 const SignUp = () => {
   const classes = useStyles();
@@ -98,6 +109,26 @@ const SignUp = () => {
       }
       return uint32HexArray.join('');
     };
+
+    const createUserInfo = `mutation CreateUserInfo($input: CreateUserInfoInput!) {
+      createUserInfo(input: $input) {
+      id
+      aliasName
+      }
+     }`;
+
+    const createUserInfoInput = {
+      aliasName
+    };
+
+    try {
+      const graphQLResult = await API.graphql(
+        graphqlOperation(createUserInfo, { input: createUserInfoInput })
+      );
+      console.log('result', graphQLResult);
+    } catch (err) {
+      console.log('errrrr', err);
+    }
 
     const signUpResult = await Auth.signUp({
       username: aliasName,
