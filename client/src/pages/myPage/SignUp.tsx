@@ -3,7 +3,7 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Menu from '../../components/Menu';
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { Fragment, useEffect, useMemo, useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -55,11 +55,6 @@ Amplify.configure({
     process.env.REACT_APP_AWS_APPSYNC_aws_appsync_authenticationType
 });
 
-console.log(
-  'epiiiiii',
-  process.env.REACT_APP_AWS_COGNITO_HsoUnauthenticatedIdPool_identityPoolId
-);
-
 const SignUp = () => {
   const classes = useStyles();
 
@@ -70,55 +65,66 @@ const SignUp = () => {
     );
   }, [location]);
 
-  const [aliasName, setAliasName] = useState('');
-  const [isValidAliasName, setIsValidAliasName] = useState(false);
-  const [isUniqueAliasName, setIsUniqueAliasName] = useState(true);
+  const [userName, setUserName] = useState('');
+  const [isValidUserName, setIsValidUserName] = useState(false);
+  const [isUniqueUserName, setIsUniqueUserName] = useState(true);
+
+  const userNamePrefix = useMemo(() => {
+    let uint32HexArray = [];
+    for (let i = 0; i < 12; i++) {
+      uint32HexArray.push(
+        crypto.getRandomValues(new Uint32Array(1))[0].toString(16)
+      );
+    }
+    return uint32HexArray.join('');
+  }, []);
+
+  const randomNumber = useMemo(() => {
+    let uint32HexArray = [];
+    for (let i = 0; i < 20; i++) {
+      uint32HexArray.push(
+        crypto.getRandomValues(new Uint32Array(1))[0].toString(16)
+      );
+    }
+    return uint32HexArray.join('');
+  }, []);
 
   const history = useHistory();
 
-  const inputAliasName = (
+  const inputUserName = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setAliasName(e.target.value);
+    setUserName(e.target.value);
   };
 
   useEffect(() => {
-    const aliasNameCheck = async () => {
-      if (aliasName) {
-        await Auth.signIn(aliasName, 'password').catch(err => {
+    const userNameCheck = async () => {
+      const fullUserName = `${userNamePrefix}${userName}`;
+      if (fullUserName) {
+        await Auth.signIn(fullUserName, 'password').catch(err => {
           console.log(err);
           err.code === 'UserNotFoundException'
-            ? setIsUniqueAliasName(true)
-            : setIsUniqueAliasName(false);
+            ? setIsUniqueUserName(true)
+            : setIsUniqueUserName(false);
         });
-        aliasName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)
-          ? setIsValidAliasName(true)
-          : setIsValidAliasName(false);
+        userName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)
+          ? setIsValidUserName(true)
+          : setIsValidUserName(false);
       }
     };
-    aliasNameCheck();
-  }, [aliasName]);
+    userNameCheck();
+  }, [userNamePrefix, userName]);
 
   const signUp = async () => {
-    const passwordGenerator = () => {
-      let uint32HexArray = [];
-      for (let i = 0; i < 32; i++) {
-        uint32HexArray.push(
-          crypto.getRandomValues(new Uint32Array(1))[0].toString(16)
-        );
-      }
-      return uint32HexArray.join('');
-    };
-
     const createUserInfo = `mutation CreateUserInfo($input: CreateUserInfoInput!) {
       createUserInfo(input: $input) {
-      id
-      aliasName
+      userName
       }
      }`;
 
     const createUserInfoInput = {
-      aliasName
+      userName,
+      password: `${userNamePrefix}${randomNumber}`
     };
 
     try {
@@ -131,11 +137,11 @@ const SignUp = () => {
     }
 
     const signUpResult = await Auth.signUp({
-      username: aliasName,
-      password: passwordGenerator()
+      username: userName,
+      password: `${userNamePrefix}${randomNumber}`
     }).catch(err => {
       console.log(err);
-      setAliasName('');
+      setUserName('');
       localStorage.setItem('returnLocation', JSON.stringify(location.pathname));
       history.push('/failure/error');
     });
@@ -153,16 +159,16 @@ const SignUp = () => {
             margin='dense'
             placeholder='e.g.  user_name1,  user_123'
             variant='outlined'
-            value={aliasName}
+            value={userName}
             onChange={(
               e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-            ) => inputAliasName(e)}
+            ) => inputUserName(e)}
           />
           <Button
             className={classes.button}
             variant='contained'
             size='medium'
-            disabled={!isUniqueAliasName || !isValidAliasName}
+            disabled={!isUniqueUserName || !isValidUserName}
             onClick={() => signUp()}
           >
             Sign Up
