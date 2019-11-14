@@ -40,6 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
     }
   })
 );
+
 Amplify.configure({
   Auth: {
     identityPoolId:
@@ -100,7 +101,7 @@ const SignUp = () => {
   useEffect(() => {
     const userNameCheck = async () => {
       const fullUserName = `${userNamePrefix}${userName}`;
-      if (fullUserName) {
+      if (userName) {
         await Auth.signIn(fullUserName, 'password').catch(err => {
           console.log(err);
           err.code === 'UserNotFoundException'
@@ -136,16 +137,16 @@ const SignUp = () => {
       console.log('errrrr', err);
     }
 
-    const signUpResult = await Auth.signUp({
-      username: userName,
-      password: `${userNamePrefix}${randomNumber}`
-    }).catch(err => {
-      console.log(err);
-      setUserName('');
-      localStorage.setItem('returnLocation', JSON.stringify(location.pathname));
-      history.push('/failure/error');
-    });
-    console.log(signUpResult);
+    // const signUpResult = await Auth.signUp({
+    //   username: userName,
+    //   password: `${userNamePrefix}${randomNumber}`
+    // }).catch(err => {
+    //   console.log(err);
+    //   setUserName('');
+    //   localStorage.setItem('returnLocation', JSON.stringify(location.pathname));
+    //   history.push('/failure/error');
+    // });
+    // console.log(signUpResult);
   };
 
   return (
