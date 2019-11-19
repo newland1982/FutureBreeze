@@ -24,6 +24,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # memo
+client/memo
 memo.tsx
 memo.gql
 
