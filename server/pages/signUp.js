@@ -9,13 +9,7 @@ const AUTH_TYPE = require('aws-appsync/lib/link/auth-link').AUTH_TYPE;
 const AWSAppSyncClient = require('aws-appsync').default;
 
 const AWS = require('aws-sdk');
-// AWS.config.update({
-//   region: process.env.REGION,
-//   credentials: new AWS.Credentials({
-//     accessKeyId: process.env.ACCESSKEYID,
-//     secretAccessKey: process.env.SECRETACCESSKEY
-//   })
-// });
+
 AWS.config.region = process.env.REGION;
 const credentials = new AWS.CognitoIdentityCredentials({
   IdentityPoolId: process.env.IDENTITYPOOLID
@@ -23,9 +17,9 @@ const credentials = new AWS.CognitoIdentityCredentials({
 
 const gql = require('graphql-tag');
 const query = gql(`
-query GetIpAddress($input: GetIpAddressInput!) {
-  getIpAddress(input: $input) {
-    ipAddressList {ipAddress}
+query GetIpAddressList($input: GetIpAddressListInput!) {
+  getIpAddressList(input: $input) {
+    ipAddressList { ipAddress }
 }
 }`);
 
@@ -45,28 +39,22 @@ exports.handler = (event, context, callback) => {
     console.log('DynamoDB Record: %j', record.dynamodb);
     console.log('heyhey', record.dynamodb.Keys.ipAddress.S);
 
-    const GetIpAddressInput = {
+    const GetIpAddressListInput = {
       ipAddress: record.dynamodb.Keys.ipAddress.S
     };
-    console.log('fafds', GetIpAddressInput);
+    console.log('fafds', GetIpAddressListInput);
 
     if (record.eventName == 'INSERT') {
-      client.hydrated().then(function(client) {
-        client
-          .query({
-            query,
-            variables: { input: GetIpAddressInput },
-            fetchPolicy: 'network-only'
-          })
-          .then(function logData(data) {
-            console.log('results of queryyyyyy: ', data);
-            console.log(
-              'results of queraaaaa: ',
-              data.data.getIpAddress.ipAddressList.length
-            );
-          })
-          .catch(console.error);
-      });
+      (async () => { 
+        await client.hydrated();
+      
+        const result = await client.query({
+          query,
+          variables: { input: GetIpAddressListInput },
+          fetchPolicy: 'network-only'
+        }).catch(error => console.log(error));;
+        console.log(result.data.getIpAddressList.ipAddressList.length);
+      })();
     }
   });
 };
@@ -81,7 +69,7 @@ input CreateUserInfoInput {
 	status: String
 }
 
-input GetIpAddressInput {
+input GetIpAddressListInput {
 	ipAddress: String!
 }
 
@@ -98,7 +86,7 @@ type Mutation {
 }
 
 type Query {
-	getIpAddress(input: GetIpAddressInput!): IpAddressList
+	getIpAddressList(input: GetIpAddressListInput!): IpAddressList
 	getUserInfo(userName: String!, createdDate: String!): UserName
 }
 
@@ -158,7 +146,7 @@ $util.toJson($ctx.result)
 }
 
 {
-  "items": $utils.toJson($context.result.items)
+  "ipAddressList": $utils.toJson($context.result.items)
 }
 
 //pre-signup
