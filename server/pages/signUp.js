@@ -4,18 +4,23 @@
 global.WebSocket = require('ws');
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
-
 const AUTH_TYPE = require('aws-appsync/lib/link/auth-link').AUTH_TYPE;
 const AWSAppSyncClient = require('aws-appsync').default;
-
 const AWS = require('aws-sdk');
+const AmazonCognitoIdentity = require('amazon-cognito-identity-js');
+const gql = require('graphql-tag');
 
 AWS.config.region = process.env.REGION;
 const credentials = new AWS.CognitoIdentityCredentials({
   IdentityPoolId: process.env.IDENTITYPOOLID
 });
 
-const gql = require('graphql-tag');
+const poolData = {
+  UserPoolId: process.env.USERPOOLID,
+  ClientId: process.env.CLIENTID
+};
+const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+
 const query = gql(`
 query GetIpAddressList($input: GetIpAddressListInput!) {
   getIpAddressList(input: $input) {
@@ -37,23 +42,29 @@ exports.handler = (event, context, callback) => {
   event.Records.forEach(record => {
     console.log('eventName', record.eventName);
     console.log('DynamoDB Record: %j', record.dynamodb);
-    console.log('heyhey', record.dynamodb.Keys.ipAddress.S);
+    console.log('heyhey', record.dynamodb.NewImage.ipAddress.S);
 
     const GetIpAddressListInput = {
-      ipAddress: record.dynamodb.Keys.ipAddress.S
+      ipAddress: record.dynamodb.NewImage.ipAddress.S
     };
-    console.log('fafds', GetIpAddressListInput);
-
-    if (record.eventName == 'INSERT') {
-      (async () => { 
+    let ipAddressCount;
+    if (record.eventName === 'INSERT') {
+      (async () => {
         await client.hydrated();
-      
-        const result = await client.query({
-          query,
-          variables: { input: GetIpAddressListInput },
-          fetchPolicy: 'network-only'
-        }).catch(error => console.log(error));;
+
+        const result = await client
+          .query({
+            query,
+            variables: { input: GetIpAddressListInput },
+            fetchPolicy: 'network-only'
+          })
+          .catch(error => console.log(error));
         console.log(result.data.getIpAddressList.ipAddressList.length);
+        ipAddressCount = result.data.getIpAddressList.ipAddressList.length;
+        console.log('ipaddresscount', ipAddressCount);
+        if (ipAddressCount > 4) {
+          console.log('more than 3!!!', ipAddressCount);
+        }
       })();
     }
   });
