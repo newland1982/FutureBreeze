@@ -23,9 +23,11 @@ const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
 const query = gql(`
 query GetIpAddressList($input: GetIpAddressListInput!) {
-  getIpAddressList(input: $input) {
-    ipAddressList { ipAddress }
-}
+	getIpAddressList(input: $input) {
+		ipAddressList {
+			ipAddress
+		}
+	}
 }`);
 
 const client = new AWSAppSyncClient({
