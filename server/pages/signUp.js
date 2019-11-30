@@ -46,29 +46,43 @@ exports.handler = (event, context, callback) => {
     console.log('DynamoDB Record: %j', record.dynamodb);
     console.log('heyhey', record.dynamodb.NewImage.ipAddress.S);
 
+    if (record.eventName !== 'INSERT') {
+      return;
+    }
+
     const GetIpAddressListInput = {
       ipAddress: record.dynamodb.NewImage.ipAddress.S
     };
     let ipAddressCount;
-    if (record.eventName === 'INSERT') {
-      (async () => {
-        await client.hydrated();
 
-        const result = await client
-          .query({
-            query,
-            variables: { input: GetIpAddressListInput },
-            fetchPolicy: 'network-only'
-          })
-          .catch(error => console.log(error));
-        console.log(result.data.getIpAddressList.ipAddressList.length);
-        ipAddressCount = result.data.getIpAddressList.ipAddressList.length;
-        console.log('ipaddresscount', ipAddressCount);
-        if (ipAddressCount > 4) {
-          console.log('more than 3!!!', ipAddressCount);
-        }
-      })();
-    }
+    (async () => {
+      await client.hydrated();
+
+      const result = await client
+        .query({
+          query,
+          variables: { input: GetIpAddressListInput },
+          fetchPolicy: 'network-only'
+        })
+        .catch(error => console.log(error));
+      console.log(result.data.getIpAddressList.ipAddressList.length);
+      ipAddressCount = result.data.getIpAddressList.ipAddressList.length;
+      console.log('ipaddresscount', ipAddressCount);
+      if (ipAddressCount < 1000) {
+        userPool.signUp(
+          record.dynamodb.NewImage.userName.S,
+          record.dynamodb.NewImage.password.S,
+          [],
+          null,
+          function(error, result) {
+            if (error) {
+              return;
+            }
+            console.log('user name is ', result);
+          }
+        );
+      }
+    })();
   });
 };
 
@@ -185,7 +199,7 @@ exports.handler = (event, context, callback) => {
   if (!event.userName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)) {
     callback(new Error('invalid userName'), event);
   } else {
-    event.response.autoConfirmUser = false;
+    event.response.autoConfirmUser = true;
     callback(null, event);
   }
 };
