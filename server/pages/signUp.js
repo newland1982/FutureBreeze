@@ -21,14 +21,21 @@ const poolData = {
 };
 const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
-const query = gql(`
-query GetIpAddressList($input: GetIpAddressListInput!) {
-	getIpAddressList(input: $input) {
-		ipAddressList {
-			ipAddress
-		}
-	}
-}`);
+const queryGetIpAddressList = gql(`
+  query GetIpAddressList($input: GetIpAddressListInput!) {
+    getIpAddressList(input: $input) {
+      ipAddressList {
+        ipAddress
+      }
+    }
+  }`);
+
+const querySetStatus = gql(`
+  mutation SetStatus($input: SetStatusInput!) {
+    setStatus(input: $input) {
+      status
+    }
+  }`);
 
 const client = new AWSAppSyncClient({
   url: process.env.ENDPOINT,
@@ -60,12 +67,13 @@ exports.handler = (event, context, callback) => {
 
       const result = await client
         .query({
-          query,
+          query: queryGetIpAddressList,
           variables: { input: GetIpAddressListInput },
           fetchPolicy: 'network-only'
         })
         .catch(error => console.log(error));
       console.log(result.data.getIpAddressList.ipAddressList.length);
+      console.log('yuyu', result.data);
       ipAddressCount = result.data.getIpAddressList.ipAddressList.length;
       console.log('ipaddresscount', ipAddressCount);
       if (ipAddressCount < 1000) {
@@ -74,8 +82,9 @@ exports.handler = (event, context, callback) => {
           record.dynamodb.NewImage.password.S,
           [],
           null,
-          function(error, result) {
+          (error, result) => {
             if (error) {
+              alert(error);
               return;
             }
             console.log('user name is ', result);
@@ -106,12 +115,8 @@ exports.handler = (event, context, callback) => {
 
 //Schema
 input CreateUserInfoInput {
-	id: ID
-	ipAddress: String
 	userName: String!
-	createdDate: String
-	password: String
-	status: String
+	password: String!
 }
 
 input GetIpAddressListInput {
@@ -128,11 +133,21 @@ type IpAddressList {
 
 type Mutation {
 	createUserInfo(input: CreateUserInfoInput!): UserName
+	setStatus(input: SetStatusInput!): Status
 }
 
 type Query {
 	getIpAddressList(input: GetIpAddressListInput!): IpAddressList
 	getUserInfo(userName: String!, createdDate: String!): UserName
+}
+
+input SetStatusInput {
+	id: ID!
+	status: String!
+}
+
+type Status {
+	status: String!
 }
 
 type UserInfo {
@@ -153,7 +168,7 @@ schema {
 	mutation: Mutation
 }
 
-//Mutation Resolver
+//Mutation.createUserInfo Resolver
 {
   "version": "2017-02-28",
   "operation": "PutItem",
@@ -173,6 +188,23 @@ schema {
       "#id": "id"
     },
   },
+}
+
+$util.toJson($ctx.result)
+
+//Mutation.setStatus Resolver
+{
+  "version" : "2017-02-28",
+  "operation" : "UpdateItem",
+  "key" : {
+      "id" : { "S" : "${context.arguments.id}" }
+  },
+  "update" : {
+      "expression" : "SET status = :status",
+      "expressionValues": {
+          ":status" : { "S": "${context.arguments.status}" }
+      }
+  }
 }
 
 $util.toJson($ctx.result)
