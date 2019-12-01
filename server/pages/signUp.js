@@ -49,13 +49,12 @@ const client = new AWSAppSyncClient({
 
 exports.handler = (event, context, callback) => {
   event.Records.forEach(record => {
-    console.log('eventName', record.eventName);
-    console.log('DynamoDB Record: %j', record.dynamodb);
-    console.log('heyhey', record.dynamodb.NewImage.ipAddress.S);
-
     if (record.eventName !== 'INSERT') {
       return;
     }
+    console.log('eventName', record.eventName);
+    console.log('DynamoDB Record: %j', record.dynamodb);
+    console.log('heyhey', record.dynamodb.NewImage.ipAddress.S);
 
     const GetIpAddressListInput = {
       ipAddress: record.dynamodb.NewImage.ipAddress.S
@@ -76,21 +75,34 @@ exports.handler = (event, context, callback) => {
       console.log('yuyu', result.data);
       ipAddressCount = result.data.getIpAddressList.ipAddressList.length;
       console.log('ipaddresscount', ipAddressCount);
-      if (ipAddressCount < 1000) {
-        userPool.signUp(
-          record.dynamodb.NewImage.userName.S,
-          record.dynamodb.NewImage.password.S,
-          [],
-          null,
-          (error, result) => {
-            if (error) {
-              alert(error);
-              return;
-            }
-            console.log('user name is ', result);
-          }
-        );
+      if (ipAddressCount > 3) {
+        const SetStatusInput = {
+          id: record.dynamodb.NewImage.id.S,
+          status: 'accessLimitExceeded'
+        };
+
+        await client
+          .query({
+            query: querySetStatus,
+            variables: { input: SetStatusInput },
+            fetchPolicy: 'network-only'
+          })
+          .catch(error => console.log(error));
+        return;
       }
+      userPool.signUp(
+        record.dynamodb.NewImage.userName.S,
+        record.dynamodb.NewImage.password.S,
+        [],
+        null,
+        (error, result) => {
+          if (error) {
+            console.log(error);
+            return;
+          }
+          console.log('user name is ', result);
+        }
+      );
     })();
   });
 };
@@ -197,12 +209,12 @@ $util.toJson($ctx.result)
   "version" : "2017-02-28",
   "operation" : "UpdateItem",
   "key" : {
-      "id" : { "S" : "${context.arguments.id}" }
+      "id" : { "S" : "${context.arguments.input.id}" }
   },
   "update" : {
       "expression" : "SET status = :status",
       "expressionValues": {
-          ":status" : { "S": "${context.arguments.status}" }
+          ":status" : { "S": "${context.arguments.input.status}" }
       }
   }
 }
