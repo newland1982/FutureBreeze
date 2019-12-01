@@ -80,12 +80,12 @@ exports.handler = (event, context, callback) => {
           id: record.dynamodb.NewImage.id.S,
           status: 'accessLimitExceeded'
         };
-
+        console.log('SetStatusInput', SetStatusInput);
         await client
-          .query({
-            query: querySetStatus,
+          .mutate({
+            mutation: querySetStatus,
             variables: { input: SetStatusInput },
-            fetchPolicy: 'network-only'
+            fetchPolicy: 'no-cache'
           })
           .catch(error => console.log(error));
         return;
