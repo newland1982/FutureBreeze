@@ -30,7 +30,7 @@ const queryGetIpAddressList = gql(`
     }
   }`);
 
-const querySetStatus = gql(`
+const mutationSetStatus = gql(`
   mutation SetStatus($input: SetStatusInput!) {
     setStatus(input: $input) {
       status
@@ -75,15 +75,17 @@ exports.handler = (event, context, callback) => {
       console.log('yuyu', result.data);
       ipAddressCount = result.data.getIpAddressList.ipAddressList.length;
       console.log('ipaddresscount', ipAddressCount);
-      if (ipAddressCount > 3) {
+      if (ipAddressCount > process.env.ACCESSLIMIT) {
         const SetStatusInput = {
           id: record.dynamodb.NewImage.id.S,
+          ipAddress: record.dynamodb.NewImage.ipAddress.S,
           status: 'accessLimitExceeded'
         };
         console.log('SetStatusInput', SetStatusInput);
+
         await client
           .mutate({
-            mutation: querySetStatus,
+            mutation: mutationSetStatus,
             variables: { input: SetStatusInput },
             fetchPolicy: 'no-cache'
           })
@@ -127,8 +129,12 @@ exports.handler = (event, context, callback) => {
 
 //Schema
 input CreateUserInfoInput {
+	id: ID
+	ipAddress: String
 	userName: String!
+	createdDate: String
 	password: String!
+	status: String
 }
 
 input GetIpAddressListInput {
@@ -155,6 +161,7 @@ type Query {
 
 input SetStatusInput {
 	id: ID!
+	ipAddress: String!
 	status: String!
 }
 
@@ -186,20 +193,21 @@ schema {
   "operation": "PutItem",
   "key": {
   	 "id" : { "S" : "${util.autoId()}" },
-     "ipAddress" : { "S" : "${context.identity.sourceIp[0]}"},
+     "ipAddress" : { "S" : "${context.identity.sourceIp[0]}"}
   },
   
   "attributeValues" : {
       "userName": { "S" : "${context.arguments.input.userName}" },
-      "password": { "S" : "${context.arguments.input.password}" },
       "createdDate": { "S" : "$util.time.nowFormatted("yyyy-MM-dd")" },
+      "password": { "S" : "${context.arguments.input.password}" },
+      "status": { "S" : "init" }
   },
   "condition": {
     "expression": "attribute_not_exists(#id)",
     "expressionNames": {
       "#id": "id"
     },
-  },
+  }
 }
 
 $util.toJson($ctx.result)
@@ -209,10 +217,14 @@ $util.toJson($ctx.result)
   "version" : "2017-02-28",
   "operation" : "UpdateItem",
   "key" : {
-      "id" : { "S" : "${context.arguments.input.id}" }
+      "id" : { "S" : "${context.arguments.input.id}" },
+      "ipAddress" : { "S" : "${context.arguments.input.ipAddress}"}
   },
   "update" : {
-      "expression" : "SET status = :status",
+      "expression" : "SET #status = :status",
+      "expressionNames": {
+          "#status" : "status"
+      },
       "expressionValues": {
           ":status" : { "S": "${context.arguments.input.status}" }
       }
