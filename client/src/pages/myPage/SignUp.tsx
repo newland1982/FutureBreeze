@@ -1,8 +1,9 @@
+import * as Observable from 'zen-observable';
 import Amplify, { API, Auth, graphqlOperation } from 'aws-amplify';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
 import Menu from '../../components/Menu';
+import Paper from '@material-ui/core/Paper';
 import React, { Fragment, useEffect, useMemo, useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
@@ -102,9 +103,9 @@ const SignUp = () => {
     const userNameCheck = async () => {
       const fullUserName = `${userNamePrefix}${userName}`;
       if (userName) {
-        await Auth.signIn(fullUserName, 'password').catch(err => {
-          console.log(err);
-          err.code === 'UserNotFoundException'
+        await Auth.signIn(fullUserName, 'password').catch(error => {
+          console.log(error);
+          error.code === 'UserNotFoundException'
             ? setIsUniqueUserName(true)
             : setIsUniqueUserName(false);
         });
@@ -129,22 +130,44 @@ const SignUp = () => {
     };
 
     try {
-      const graphQLResult = await API.graphql(
+      const result = await API.graphql(
         graphqlOperation(createUserInfo, { input: createUserInfoInput })
       );
-      console.log('result', graphQLResult);
-    } catch (err) {
-      console.log('errrrr', err);
+      console.log('result1', result);
+    } catch (error) {
+      console.log('errorrrr', error);
     }
+
+    const setStatus = `subscription OnSetStatus {
+      onSetStatus {
+        status
+      }
+     }`;
+
+    const observable: Observable<object> = (await API.graphql(
+      graphqlOperation(setStatus)
+    )) as Observable<object>;
+
+    type eventData = {
+      value: { data: { onSetStatus: { status: string } } };
+    };
+
+    observable.subscribe({
+      next: (eventData: eventData) => {
+        console.log('wqwqwq', eventData.value.data.onSetStatus.status);
+      },
+      complete: () => {},
+      error: () => {}
+    });
 
     // const signUpResult = await Auth.signUp({
     //   username: userName,
     //   password: `${userNamePrefix}${randomNumber}`
-    // }).catch(err => {
-    //   console.log(err);
+    // }).catch(error => {
+    //   console.log(error);
     //   setUserName('');
     //   localStorage.setItem('returnLocation', JSON.stringify(location.pathname));
-    //   history.push('/failure/error');
+    //   history.push('/failure/erroror');
     // });
     // console.log(signUpResult);
   };
