@@ -75,7 +75,9 @@ const SignUp = () => {
     let uint32HexArray = [];
     for (let i = 0; i < 12; i++) {
       uint32HexArray.push(
-        crypto.getRandomValues(new Uint32Array(1))[0].toString(16)
+        `00000000${crypto
+          .getRandomValues(new Uint32Array(1))[0]
+          .toString(16)}`.slice(-8)
       );
     }
     return uint32HexArray.join('');
@@ -85,7 +87,9 @@ const SignUp = () => {
     let uint32HexArray = [];
     for (let i = 0; i < 20; i++) {
       uint32HexArray.push(
-        crypto.getRandomValues(new Uint32Array(1))[0].toString(16)
+        `00000000${crypto
+          .getRandomValues(new Uint32Array(1))[0]
+          .toString(16)}`.slice(-8)
       );
     }
     return uint32HexArray.join('');
@@ -125,7 +129,7 @@ const SignUp = () => {
      }`;
 
     const createUserInfoInput = {
-      userName,
+      userName: `${userNamePrefix}${userName}`,
       password: `${userNamePrefix}${randomNumber}`
     };
 

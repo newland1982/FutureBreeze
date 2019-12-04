@@ -253,8 +253,14 @@ $util.toJson($ctx.result)
 
 //pre-signup
 exports.handler = (event, context, callback) => {
-  if (!event.userName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)) {
-    callback(new Error('invalid userName'), event);
+  const userName = event.userName.slice(96);
+  const userNamePrefix = event.userName.slice(0, 96);
+  console.log('usernameeee', userName);
+  if (
+    !userName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/) ||
+    !userNamePrefix.match(/^[a-f0-9]{96}$/)
+  ) {
+    callback(new Error('invalid fullUserName'), event);
   } else {
     event.response.autoConfirmUser = true;
     callback(null, event);
