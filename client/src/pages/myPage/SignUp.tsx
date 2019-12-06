@@ -1,4 +1,4 @@
-import * as Observable from 'zen-observable';
+import Observable from 'zen-observable';
 import Amplify, { API, Auth, graphqlOperation } from 'aws-amplify';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -122,20 +122,22 @@ const SignUp = () => {
   }, [userNamePrefix, userName]);
 
   const signUp = async () => {
-    const createUserInfo = `mutation CreateUserInfo($input: CreateUserInfoInput!) {
-      createUserInfo(input: $input) {
-      userName
+    const createSignUpUserInfo = `mutation CreateSignUpUserInfo($input: CreateSignUpUserInfoInput!) {
+      createSignUpUserInfo(input: $input) {
+        regularUserName
       }
      }`;
 
-    const createUserInfoInput = {
-      userName: `${userNamePrefix}${userName}`,
+    const createSignUpUserInfoInput = {
+      regularUserName: `${userNamePrefix}${userName}`,
       password: `${userNamePrefix}${randomNumber}`
     };
 
     try {
       const result = await API.graphql(
-        graphqlOperation(createUserInfo, { input: createUserInfoInput })
+        graphqlOperation(createSignUpUserInfo, {
+          input: createSignUpUserInfoInput
+        })
       );
       console.log('result1', result);
     } catch (error) {

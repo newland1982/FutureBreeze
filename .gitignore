@@ -26,6 +26,7 @@ yarn-error.log*
 # memo
 memo
 memo.js
+memo2.js
 memo.tsx
 memo.gql
 

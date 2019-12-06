@@ -1,4 +1,4 @@
-//triggered by dynamodb stream
+//hsoSignUp function triggered by dynamodb stream
 'use strict';
 
 global.WebSocket = require('ws');
@@ -78,7 +78,7 @@ exports.handler = (event, context, callback) => {
       if (ipAddressCount > process.env.ACCESSLIMIT) {
         const SetStatusInput = {
           id: record.dynamodb.NewImage.id.S,
-          ipAddress: record.dynamodb.NewImage.ipAddress.S,
+          createdDate: record.dynamodb.NewImage.createdDate.S,
           status: 'accessLimitExceeded'
         };
         console.log('SetStatusInput', SetStatusInput);
@@ -93,7 +93,7 @@ exports.handler = (event, context, callback) => {
         return;
       }
       userPool.signUp(
-        record.dynamodb.NewImage.userName.S,
+        record.dynamodb.NewImage.regularUserName.S,
         record.dynamodb.NewImage.password.S,
         [],
         null,
@@ -129,11 +129,11 @@ exports.handler = (event, context, callback) => {
 }
 
 //Schema
-input CreateUserInfoInput {
+input CreateSignUpUserInfoInput {
 	id: ID
-	ipAddress: String
-	userName: String!
 	createdDate: String
+	ipAddress: String
+	regularUserName: String!
 	password: String!
 	status: String
 }
@@ -151,55 +151,60 @@ type IpAddressList {
 }
 
 type Mutation {
-	createUserInfo(input: CreateUserInfoInput!): UserName
+	createSignUpUserInfo(input: CreateSignUpUserInfoInput!): RegularUserName
 	setStatus(input: SetStatusInput!): Status
 }
 
 type Query {
 	getIpAddressList(input: GetIpAddressListInput!): IpAddressList
-	getUserInfo(userName: String!, createdDate: String!): UserName
+}
+
+type RegularUserName {
+	regularUserName: String!
 }
 
 input SetStatusInput {
 	id: ID!
-	ipAddress: String!
+	createdDate: String!
 	status: String!
+}
+
+type SignUpUserInfo {
+	id: ID
+	createdDate: String
+	ipAddress: String
+	regularUserName: String!
+	password: String
+	status: String
 }
 
 type Status {
 	status: String!
 }
 
-type UserInfo {
-	id: ID
-	ipAddress: String
-	userName: String!
-	createdDate: String
-	password: String
-	status: String
-}
-
-type UserName {
-	userName: String!
+type Subscription {
+	onSetStatus: Status
+		@aws_subscribe(mutations: ["setStatus"])
 }
 
 schema {
 	query: Query
 	mutation: Mutation
+	subscription: Subscription
 }
 
-//Mutation.createUserInfo Resolver
+//Mutation.createSignUpUserInfo Resolver
 {
   "version": "2017-02-28",
   "operation": "PutItem",
   "key": {
   	 "id" : { "S" : "${util.autoId()}" },
-     "ipAddress" : { "S" : "${context.identity.sourceIp[0]}"}
+     "createdDate": { "S" : "$util.time.nowFormatted("yyyy-MM-dd HH:mm:ssZ")" }
   },
   
   "attributeValues" : {
-      "userName": { "S" : "${context.arguments.input.userName}" },
-      "createdDate": { "S" : "$util.time.nowFormatted("yyyy-MM-dd")" },
+      "ipAddress" : { "S" : "${context.identity.sourceIp[0]}"},
+      "regularUserName": { "S" : "${context.arguments.input.regularUserName}" },
       "password": { "S" : "${context.arguments.input.password}" },
       "status": { "S" : "init" }
   },
@@ -211,7 +216,7 @@ schema {
   }
 }
 
-$util.toJson($ctx.result)
+$util.toJson($context.result)
 
 //Mutation.setStatus Resolver
 {
@@ -219,7 +224,7 @@ $util.toJson($ctx.result)
   "operation" : "UpdateItem",
   "key" : {
       "id" : { "S" : "${context.arguments.input.id}" },
-      "ipAddress" : { "S" : "${context.arguments.input.ipAddress}"}
+      "createdDate" : { "S" : "${context.arguments.input.createdDate}"}
   },
   "update" : {
       "expression" : "SET #status = :status",
@@ -232,9 +237,9 @@ $util.toJson($ctx.result)
   }
 }
 
-$util.toJson($ctx.result)
+$util.toJson($context.result)
 
-//Query Resolver
+//Query.getIpAddressList Resolver
 {
   "version" : "2017-02-28",
   "operation" : "Query",
@@ -250,6 +255,7 @@ $util.toJson($ctx.result)
 {
   "ipAddressList": $utils.toJson($context.result.items)
 }
+
 
 //pre-signup
 exports.handler = (event, context, callback) => {
