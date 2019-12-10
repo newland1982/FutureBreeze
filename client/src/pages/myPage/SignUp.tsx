@@ -132,6 +132,7 @@ const SignUp = () => {
       regularUserName: `${userNamePrefix}${userName}`,
       password: `${userNamePrefix}${randomNumber}`
     };
+    console.log('password', createSignUpUserInfoInput.password);
 
     try {
       const result = await API.graphql(
