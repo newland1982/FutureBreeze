@@ -1,0 +1,62 @@
+##Mutation.createSignUpUserInfo Resolver
+{
+  "version": "2017-02-28",
+  "operation": "PutItem",
+  "key": {
+  	 "id" : { "S" : "${util.autoId()}" },
+     "createdDate": { "S" : "$util.time.nowFormatted("yyyy-MM-dd HH:mm:ssZ")" }
+  },
+  
+  "attributeValues" : {
+      "ipAddress" : { "S" : "${context.identity.sourceIp[0]}"},
+      "regularUserName": { "S" : "${context.arguments.input.regularUserName}" },
+      "password": { "S" : "${context.arguments.input.password}" },
+      "status": { "S" : "init" }
+  },
+  "condition": {
+    "expression": "attribute_not_exists(#id)",
+    "expressionNames": {
+      "#id": "id"
+    },
+  }
+}
+
+$util.toJson($context.result)
+
+##Mutation.setStatus Resolver
+{
+  "version" : "2017-02-28",
+  "operation" : "UpdateItem",
+  "key" : {
+      "id" : { "S" : "${context.arguments.input.id}" },
+      "createdDate" : { "S" : "${context.arguments.input.createdDate}"}
+  },
+  "update" : {
+      "expression" : "SET #status = :status",
+      "expressionNames": {
+          "#status" : "status"
+      },
+      "expressionValues": {
+          ":status" : { "S": "${context.arguments.input.status}" }
+      }
+  }
+}
+
+$util.toJson($context.result)
+
+##Query.getIpAddressList Resolver
+{
+  "version" : "2017-02-28",
+  "operation" : "Query",
+  "index" : "ipAddress-index",
+  "query" : {
+    "expression": "ipAddress = :ipAddress",
+      "expressionValues" : {
+        ":ipAddress" : { "S" : "${context.arguments.input.ipAddress}" }
+      }
+  }
+}
+
+{
+  "ipAddressList": $utils.toJson($context.result.items)
+}

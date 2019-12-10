@@ -1,0 +1,62 @@
+input CreateSignUpUserInfoInput {
+  id: ID
+  createdDate: String
+  ipAddress: String
+  regularUserName: String!
+  password: String!
+  status: String
+}
+
+input GetIpAddressListInput {
+  ipAddress: String!
+}
+
+type IpAddress {
+  ipAddress: String!
+}
+
+type IpAddressList {
+  ipAddressList: [IpAddress!]!
+}
+
+type Mutation {
+  createSignUpUserInfo(input: CreateSignUpUserInfoInput!): RegularUserName
+  setStatus(input: SetStatusInput!): Status
+}
+
+type Query {
+  getIpAddressList(input: GetIpAddressListInput!): IpAddressList
+}
+
+type RegularUserName {
+  regularUserName: String!
+}
+
+input SetStatusInput {
+  id: ID!
+  createdDate: String!
+  status: String!
+}
+
+type SignUpUserInfo {
+  id: ID
+  createdDate: String
+  ipAddress: String
+  regularUserName: String!
+  password: String
+  status: String
+}
+
+type Status {
+  status: String!
+}
+
+type Subscription {
+  onSetStatus: Status @aws_subscribe(mutations: ["setStatus"])
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}

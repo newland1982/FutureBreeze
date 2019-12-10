@@ -109,8 +109,23 @@ exports.handler = (event, context, callback) => {
   });
 };
 
+//pre-signup
+exports.handler = (event, context, callback) => {
+  const userName = event.userName.slice(96);
+  const userNamePrefix = event.userName.slice(0, 96);
+  console.log('usernameeee', userName);
+  if (
+    !userName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/) ||
+    !userNamePrefix.match(/^[a-f0-9]{96}$/)
+  ) {
+    callback(new Error('invalid fullUserName'), event);
+  } else {
+    event.response.autoConfirmUser = true;
+    callback(null, event);
+  }
+};
 
-// layer package.json
+/* layer package.json
 {
   "dependencies": {
     "apollo-cache-inmemory": "^1.1.0",
@@ -127,148 +142,4 @@ exports.handler = (event, context, callback) => {
     "amazon-cognito-identity-js": "^3.2.0"
   }
 }
-
-//Schema
-input CreateSignUpUserInfoInput {
-	id: ID
-	createdDate: String
-	ipAddress: String
-	regularUserName: String!
-	password: String!
-	status: String
-}
-
-input GetIpAddressListInput {
-	ipAddress: String!
-}
-
-type IpAddress {
-	ipAddress: String!
-}
-
-type IpAddressList {
-	ipAddressList: [IpAddress!]!
-}
-
-type Mutation {
-	createSignUpUserInfo(input: CreateSignUpUserInfoInput!): RegularUserName
-	setStatus(input: SetStatusInput!): Status
-}
-
-type Query {
-	getIpAddressList(input: GetIpAddressListInput!): IpAddressList
-}
-
-type RegularUserName {
-	regularUserName: String!
-}
-
-input SetStatusInput {
-	id: ID!
-	createdDate: String!
-	status: String!
-}
-
-type SignUpUserInfo {
-	id: ID
-	createdDate: String
-	ipAddress: String
-	regularUserName: String!
-	password: String
-	status: String
-}
-
-type Status {
-	status: String!
-}
-
-type Subscription {
-	onSetStatus: Status
-		@aws_subscribe(mutations: ["setStatus"])
-}
-
-schema {
-	query: Query
-	mutation: Mutation
-	subscription: Subscription
-}
-
-//Mutation.createSignUpUserInfo Resolver
-{
-  "version": "2017-02-28",
-  "operation": "PutItem",
-  "key": {
-  	 "id" : { "S" : "${util.autoId()}" },
-     "createdDate": { "S" : "$util.time.nowFormatted("yyyy-MM-dd HH:mm:ssZ")" }
-  },
-  
-  "attributeValues" : {
-      "ipAddress" : { "S" : "${context.identity.sourceIp[0]}"},
-      "regularUserName": { "S" : "${context.arguments.input.regularUserName}" },
-      "password": { "S" : "${context.arguments.input.password}" },
-      "status": { "S" : "init" }
-  },
-  "condition": {
-    "expression": "attribute_not_exists(#id)",
-    "expressionNames": {
-      "#id": "id"
-    },
-  }
-}
-
-$util.toJson($context.result)
-
-//Mutation.setStatus Resolver
-{
-  "version" : "2017-02-28",
-  "operation" : "UpdateItem",
-  "key" : {
-      "id" : { "S" : "${context.arguments.input.id}" },
-      "createdDate" : { "S" : "${context.arguments.input.createdDate}"}
-  },
-  "update" : {
-      "expression" : "SET #status = :status",
-      "expressionNames": {
-          "#status" : "status"
-      },
-      "expressionValues": {
-          ":status" : { "S": "${context.arguments.input.status}" }
-      }
-  }
-}
-
-$util.toJson($context.result)
-
-//Query.getIpAddressList Resolver
-{
-  "version" : "2017-02-28",
-  "operation" : "Query",
-  "index" : "ipAddress-index",
-  "query" : {
-    "expression": "ipAddress = :ipAddress",
-      "expressionValues" : {
-        ":ipAddress" : { "S" : "${context.arguments.input.ipAddress}" }
-      }
-  }
-}
-
-{
-  "ipAddressList": $utils.toJson($context.result.items)
-}
-
-
-//pre-signup
-exports.handler = (event, context, callback) => {
-  const userName = event.userName.slice(96);
-  const userNamePrefix = event.userName.slice(0, 96);
-  console.log('usernameeee', userName);
-  if (
-    !userName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/) ||
-    !userNamePrefix.match(/^[a-f0-9]{96}$/)
-  ) {
-    callback(new Error('invalid fullUserName'), event);
-  } else {
-    event.response.autoConfirmUser = true;
-    callback(null, event);
-  }
-};
+*/
