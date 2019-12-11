@@ -1,0 +1,23 @@
+type Mutation {
+  create(userName: String!, createdDate: String, jsonString: String): UserName
+}
+
+type Query {
+  getUserName(userName: String!): UserName
+  getUserData(userName: String!): UserData
+}
+
+type UserData {
+  userName: String!
+  createdDate: String
+  jsonString: String
+}
+
+type UserName {
+  userName: String!
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+}

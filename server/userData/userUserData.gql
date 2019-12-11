@@ -1,0 +1,11 @@
+type Query {
+  getUserName(userName: String!): UserName
+}
+
+type UserName {
+  userName: String!
+}
+
+schema {
+  query: Query
+}
