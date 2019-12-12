@@ -12,12 +12,6 @@
       "regularUserName": { "S" : "${context.arguments.input.regularUserName}" },
       "password": { "S" : "${context.arguments.input.password}" },
       "status": { "S" : "init" }
-  },
-  "condition": {
-    "expression": "attribute_not_exists(#id)",
-    "expressionNames": {
-      "#id": "id"
-    },
   }
 }
 

@@ -10,14 +10,14 @@ const AWS = require('aws-sdk');
 const AmazonCognitoIdentity = require('amazon-cognito-identity-js');
 const gql = require('graphql-tag');
 
-AWS.config.region = process.env.REGION;
-const credentials = new AWS.CognitoIdentityCredentials({
-  IdentityPoolId: process.env.IDENTITYPOOLID
+AWS.config.update({
+  region: process.env.REGION
 });
+const credentials = AWS.config.credentials;
 
 const poolData = {
-  UserPoolId: process.env.USERPOOLID,
-  ClientId: process.env.CLIENTID
+  UserPoolId: process.env.USER_POOL_ID,
+  ClientId: process.env.CLIENT_ID
 };
 const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
@@ -38,7 +38,7 @@ const mutationSetStatus = gql(`
   }`);
 
 const client = new AWSAppSyncClient({
-  url: process.env.ENDPOINT,
+  url: process.env.END_POINT,
   region: process.env.REGION,
   auth: {
     type: AUTH_TYPE.AWS_IAM,
@@ -75,7 +75,7 @@ exports.handler = (event, context, callback) => {
       console.log('yuyu', result.data);
       ipAddressCount = result.data.getIpAddressList.ipAddressList.length;
       console.log('ipaddresscount', ipAddressCount);
-      if (ipAddressCount > process.env.ACCESSLIMIT) {
+      if (ipAddressCount > process.env.ACCESS_LIMIT) {
         const SetStatusInput = {
           id: record.dynamodb.NewImage.id.S,
           createdDate: record.dynamodb.NewImage.createdDate.S,
@@ -109,7 +109,7 @@ exports.handler = (event, context, callback) => {
   });
 };
 
-//pre-signup
+//presignup
 exports.handler = (event, context, callback) => {
   const userName = event.userName.slice(96);
   const userNamePrefix = event.userName.slice(0, 96);
