@@ -1,4 +1,4 @@
-//hsoSignUp function triggered by dynamodb stream
+//hsoSignUp function triggered by DynamoDB stream
 'use strict';
 
 global.WebSocket = require('ws');
@@ -9,10 +9,6 @@ const AWSAppSyncClient = require('aws-appsync').default;
 const AWS = require('aws-sdk');
 const AmazonCognitoIdentity = require('amazon-cognito-identity-js');
 const gql = require('graphql-tag');
-
-AWS.config.update({
-  region: process.env.REGION
-});
 const credentials = AWS.config.credentials;
 
 const poolData = {
@@ -52,11 +48,8 @@ exports.handler = (event, context, callback) => {
     if (record.eventName !== 'INSERT') {
       return;
     }
-    console.log('eventName', record.eventName);
-    console.log('DynamoDB Record: %j', record.dynamodb);
-    console.log('heyhey', record.dynamodb.NewImage.ipAddress.S);
 
-    const GetIpAddressListInput = {
+    const getIpAddressListInput = {
       ipAddress: record.dynamodb.NewImage.ipAddress.S
     };
     let ipAddressCount;
@@ -67,26 +60,22 @@ exports.handler = (event, context, callback) => {
       const result = await client
         .query({
           query: queryGetIpAddressList,
-          variables: { input: GetIpAddressListInput },
+          variables: { input: getIpAddressListInput },
           fetchPolicy: 'network-only'
         })
         .catch(error => console.log(error));
-      console.log(result.data.getIpAddressList.ipAddressList.length);
-      console.log('yuyu', result.data);
       ipAddressCount = result.data.getIpAddressList.ipAddressList.length;
-      console.log('ipaddresscount', ipAddressCount);
       if (ipAddressCount > process.env.ACCESS_LIMIT) {
-        const SetStatusInput = {
+        const setStatusInput = {
           id: record.dynamodb.NewImage.id.S,
           createdDate: record.dynamodb.NewImage.createdDate.S,
           status: 'accessLimitExceeded'
         };
-        console.log('SetStatusInput', SetStatusInput);
 
         await client
           .mutate({
             mutation: mutationSetStatus,
-            variables: { input: SetStatusInput },
+            variables: { input: setStatusInput },
             fetchPolicy: 'no-cache'
           })
           .catch(error => console.log(error));
@@ -107,22 +96,6 @@ exports.handler = (event, context, callback) => {
       );
     })();
   });
-};
-
-//presignup
-exports.handler = (event, context, callback) => {
-  const userName = event.userName.slice(96);
-  const userNamePrefix = event.userName.slice(0, 96);
-  console.log('usernameeee', userName);
-  if (
-    !userName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/) ||
-    !userNamePrefix.match(/^[a-f0-9]{96}$/)
-  ) {
-    callback(new Error('invalid fullUserName'), event);
-  } else {
-    event.response.autoConfirmUser = true;
-    callback(null, event);
-  }
 };
 
 /* layer package.json

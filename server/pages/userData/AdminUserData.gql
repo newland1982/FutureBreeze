@@ -1,5 +1,10 @@
+input CreateUserDataInput {
+  userName: String!
+  jsonString: String
+}
+
 type Mutation {
-  create(userName: String!, createdDate: String, jsonString: String): UserName
+  createUserData(input: CreateUserDataInput!): UserName
 }
 
 type Query {
