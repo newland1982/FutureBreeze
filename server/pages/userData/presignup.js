@@ -6,7 +6,6 @@ require('isomorphic-fetch');
 const AUTH_TYPE = require('aws-appsync/lib/link/auth-link').AUTH_TYPE;
 const AWSAppSyncClient = require('aws-appsync').default;
 const AWS = require('aws-sdk');
-const AmazonCognitoIdentity = require('amazon-cognito-identity-js');
 const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 
@@ -43,7 +42,8 @@ exports.handler = (event, context, callback) => {
     await client.hydrated();
 
     const createUserDataInput = {
-      userName
+      userName,
+      jsonString: '{}'
     };
 
     await client

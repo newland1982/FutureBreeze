@@ -1,5 +1,4 @@
-##Mutation.createSignUpUserInfo Resolver
-{
+## Resolver for Mutation.createSignUpUserInfo
   "version": "2017-02-28",
   "operation": "PutItem",
   "key": {
@@ -17,7 +16,7 @@
 
 $util.toJson($context.result)
 
-##Mutation.setStatus Resolver
+## Resolver for Mutation.setStatus
 {
   "version" : "2017-02-28",
   "operation" : "UpdateItem",
@@ -38,7 +37,7 @@ $util.toJson($context.result)
 
 $util.toJson($context.result)
 
-##Query.getIpAddressList Resolver
+## Resolver for Query.getIpAddressList
 {
   "version" : "2017-02-28",
   "operation" : "Query",

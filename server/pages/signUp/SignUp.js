@@ -81,6 +81,7 @@ exports.handler = (event, context, callback) => {
           .catch(error => console.log(error));
         return;
       }
+      console.log('userpoolllll', userPool);
       userPool.signUp(
         record.dynamodb.NewImage.regularUserName.S,
         record.dynamodb.NewImage.password.S,
