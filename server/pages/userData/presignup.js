@@ -16,8 +16,18 @@ const mutationCreateUserData = gql(`
     }
   }`);
 
-const client = new AWSAppSyncClient({
-  url: process.env.END_POINT,
+const clientAdminUserData = new AWSAppSyncClient({
+  url: process.env.END_POINT_AdminUserData,
+  region: process.env.REGION,
+  auth: {
+    type: AUTH_TYPE.AWS_IAM,
+    credentials
+  },
+  disableOffline: true
+});
+
+const clientSignUpUserInfo = new AWSAppSyncClient({
+  url: process.env.END_POINT_SignUpUserInfo,
   region: process.env.REGION,
   auth: {
     type: AUTH_TYPE.AWS_IAM,
@@ -29,7 +39,8 @@ const client = new AWSAppSyncClient({
 exports.handler = (event, context, callback) => {
   const userName = event.userName.slice(96);
   const userNamePrefix = event.userName.slice(0, 96);
-
+  console.log('eventtttt', event);
+  console.log('contexttt', context);
   if (
     !userName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/) ||
     !userNamePrefix.match(/^[a-f0-9]{96}$/)
@@ -39,14 +50,14 @@ exports.handler = (event, context, callback) => {
   }
 
   (async () => {
-    await client.hydrated();
+    await clientAdminUserData.hydrated();
 
     const createUserDataInput = {
       userName,
       jsonString: '{}'
     };
 
-    await client
+    await clientAdminUserData
       .mutate({
         mutation: mutationCreateUserData,
         variables: { input: createUserDataInput },

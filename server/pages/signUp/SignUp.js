@@ -81,6 +81,8 @@ exports.handler = (event, context, callback) => {
           .catch(error => console.log(error));
         return;
       }
+
+      console.log('userpoolwwww', userPool);
       console.log('userpoolllll', userPool);
       userPool.signUp(
         record.dynamodb.NewImage.regularUserName.S,
@@ -93,6 +95,10 @@ exports.handler = (event, context, callback) => {
             return;
           }
           console.log('user name is ', result);
+        },
+        {
+          id: record.dynamodb.NewImage.id.S,
+          createdDate: record.dynamodb.NewImage.createdDate.S
         }
       );
     })();
