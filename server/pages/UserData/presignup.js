@@ -16,6 +16,13 @@ const mutationCreateUserData = gql(`
     }
   }`);
 
+const mutationSetStatus = gql(`
+mutation SetStatus($input: SetStatusInput!) {
+  setStatus(input: $input) {
+    status
+  }
+}`);
+
 const clientAdminUserData = new AWSAppSyncClient({
   url: process.env.END_POINT_AdminUserData,
   region: process.env.REGION,
@@ -41,6 +48,18 @@ exports.handler = (event, context, callback) => {
   const userNamePrefix = event.userName.slice(0, 96);
   console.log('eventtttt', event);
   console.log('contexttt', context);
+
+  const createUserDataInput = {
+    userName,
+    jsonString: '{}'
+  };
+
+  const setStatusInput = {
+    id: event.request.clientMetadata.id,
+    createdDate: event.request.clientMetadata.createdDate,
+    status: 'presignupError'
+  };
+
   if (
     !userName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/) ||
     !userNamePrefix.match(/^[a-f0-9]{96}$/)
@@ -52,22 +71,32 @@ exports.handler = (event, context, callback) => {
   (async () => {
     await clientAdminUserData.hydrated();
 
-    const createUserDataInput = {
-      userName,
-      jsonString: '{}'
-    };
-
-    await clientAdminUserData
+    const result = await clientAdminUserData
       .mutate({
         mutation: mutationCreateUserData,
         variables: { input: createUserDataInput },
         fetchPolicy: 'no-cache'
       })
-      .catch(error => console.log(error));
-  })();
+      .catch(() => {});
 
-  event.response.autoConfirmUser = true;
-  callback(null, event);
+    console.log('resultttt', result);
+    if (!result) {
+      console.log('1111');
+      await clientSignUpUserInfo
+        .mutate({
+          mutation: mutationSetStatus,
+          variables: { input: setStatusInput },
+          fetchPolicy: 'no-cache'
+        })
+        .catch(() => {
+          return;
+        });
+    }
+
+    console.log(2222);
+    event.response.autoConfirmUser = true;
+    callback(null, event);
+  })();
 };
 
 /* layer package.json
