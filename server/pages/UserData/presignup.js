@@ -77,7 +77,9 @@ exports.handler = (event, context, callback) => {
         variables: { input: createUserDataInput },
         fetchPolicy: 'no-cache'
       })
-      .catch(() => {});
+      .catch(() => {
+        return;
+      });
 
     console.log('resultttt', result);
     if (!result) {
@@ -91,6 +93,7 @@ exports.handler = (event, context, callback) => {
         .catch(() => {
           return;
         });
+      return;
     }
 
     console.log(2222);
