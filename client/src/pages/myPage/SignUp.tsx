@@ -155,55 +155,17 @@ const SignUp = () => {
     };
 
     try {
-      const subscription = await API.graphql(graphqlOperation(setStatus));
-      if ('subscribe' in subscription) {
-        subscription
-          .subscribe({
-            next: (eventData: eventData) =>
-              console.log('wqwqwq', eventData.value.data.onSetStatus.status)
-          })
-          .unsubscribe();
+      const subscriber = await API.graphql(graphqlOperation(setStatus));
+      if ('subscribe' in subscriber) {
+        const subscription = subscriber.subscribe({
+          next: (eventData: eventData) =>
+            console.log('wqwqwq', eventData.value.data.onSetStatus.status)
+        });
+        // subscription.unsubscribe();
       }
     } catch (error) {
       console.log('errorrrr', error);
     }
-
-    // const setStatus = `subscription OnSetStatus {
-    //   onSetStatus {
-    //     status
-    //   }
-    //  }`;
-
-    // const observable: Observable<object> = (await API.graphql(
-    //   graphqlOperation(setStatus)
-    // )) as Observable<object>;
-
-    // type eventData = {
-    //   value: { data: { onSetStatus: { status: string } } };
-    // };
-
-    // observable.subscribe({
-    //   next: (eventData: eventData) => {
-    //     console.log('wqwqwq', eventData.value.data.onSetStatus.status);
-    //   },
-    //   error: () => {
-    //     console.log('Finished with error');
-    //   },
-    //   complete: () => {
-    //     console.log('Finished');
-    //   }
-    // });
-
-    // const signUpResult = await Auth.signUp({
-    //   username: userName,
-    //   password: `${userNamePrefix}${randomNumber}`
-    // }).catch(error => {
-    //   console.log(error);
-    //   setUserName('');
-    //   localStorage.setItem('returnLocation', JSON.stringify(location.pathname));
-    //   history.push('/failure/erroror');
-    // });
-    // console.log(signUpResult);
   };
 
   return (
