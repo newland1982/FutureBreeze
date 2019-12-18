@@ -64,8 +64,19 @@ exports.handler = (event, context, callback) => {
     !userName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/) ||
     !userNamePrefix.match(/^[a-f0-9]{96}$/)
   ) {
-    callback(new Error('invalidRegularUserName'), event);
-    return;
+    (async () => {
+      await clientSignUpUserInfo.hydrated();
+      console.log('1111');
+      await clientSignUpUserInfo
+        .mutate({
+          mutation: mutationSetStatus,
+          variables: { input: setStatusInput },
+          fetchPolicy: 'no-cache'
+        })
+        .catch(() => {});
+      callback(new Error('invalidRegularUserName'), event);
+      return;
+    })();
   }
 
   (async () => {
@@ -81,6 +92,7 @@ exports.handler = (event, context, callback) => {
         return;
       });
 
+    await clientSignUpUserInfo.hydrated();
     console.log('resultttt', result);
     if (!result) {
       console.log('1111');
