@@ -44,6 +44,7 @@ const client = new AWSAppSyncClient({
 });
 
 exports.handler = (event, context, callback) => {
+  console.log('eventttttt', event.Records);
   event.Records.forEach(record => {
     if (record.eventName !== 'INSERT') {
       return;
@@ -94,7 +95,6 @@ exports.handler = (event, context, callback) => {
             console.log(error);
             return;
           }
-          console.log('user name is ', result);
         },
         {
           id: record.dynamodb.NewImage.id.S,

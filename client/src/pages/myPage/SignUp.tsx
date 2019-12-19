@@ -154,17 +154,21 @@ const SignUp = () => {
       value: { data: { onSetStatus: { status: string } } };
     };
 
+    let subscription;
+
     try {
       const subscriber = await API.graphql(graphqlOperation(setStatus));
       if ('subscribe' in subscriber) {
-        const subscription = subscriber.subscribe({
+        subscription = subscriber.subscribe({
           next: (eventData: eventData) =>
             console.log('wqwqwq', eventData.value.data.onSetStatus.status)
         });
-        // subscription.unsubscribe();
       }
     } catch (error) {
       console.log('errorrrr', error);
+      if (subscription) {
+        subscription.unsubscribe();
+      }
     }
   };
 

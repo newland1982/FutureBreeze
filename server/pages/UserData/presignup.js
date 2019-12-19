@@ -74,11 +74,10 @@ exports.handler = (event, context, callback) => {
           fetchPolicy: 'no-cache'
         })
         .catch(() => {});
-      callback(new Error('invalidRegularUserName'), event);
-      return;
     })();
+    return;
   }
-
+  console.log('callbackkkkk');
   (async () => {
     await clientAdminUserData.hydrated();
 
@@ -88,13 +87,11 @@ exports.handler = (event, context, callback) => {
         variables: { input: createUserDataInput },
         fetchPolicy: 'no-cache'
       })
-      .catch(() => {
-        return;
-      });
+      .catch(() => {});
 
-    await clientSignUpUserInfo.hydrated();
     console.log('resultttt', result);
     if (!result) {
+      await clientSignUpUserInfo.hydrated();
       console.log('1111');
       await clientSignUpUserInfo
         .mutate({
@@ -102,9 +99,7 @@ exports.handler = (event, context, callback) => {
           variables: { input: setStatusInput },
           fetchPolicy: 'no-cache'
         })
-        .catch(() => {
-          return;
-        });
+        .catch(() => {});
       return;
     }
 
