@@ -50,10 +50,17 @@ exports.handler = (event, context, callback) => {
       return;
     }
 
+    let ipAddressCount;
+
     const getIpAddressListInput = {
       ipAddress: record.dynamodb.NewImage.ipAddress.S
     };
-    let ipAddressCount;
+
+    const setStatusInput = {
+      id: record.dynamodb.NewImage.id.S,
+      createdDate: record.dynamodb.NewImage.createdDate.S,
+      status: ''
+    };
 
     (async () => {
       await client.hydrated();
@@ -64,19 +71,27 @@ exports.handler = (event, context, callback) => {
           variables: { input: getIpAddressListInput },
           fetchPolicy: 'network-only'
         })
-        .catch(error => console.log(error));
-      ipAddressCount = result.data.getIpAddressList.ipAddressList.length;
-      if (ipAddressCount > process.env.ACCESS_LIMIT) {
-        const setStatusInput = {
-          id: record.dynamodb.NewImage.id.S,
-          createdDate: record.dynamodb.NewImage.createdDate.S,
-          status: 'accessLimitExceeded'
-        };
+        .catch(() => {
+          client
+            .mutate({
+              mutation: mutationSetStatus,
+              variables: {
+                input: { ...setStatusInput, status: 'SignUpError' }
+              },
+              fetchPolicy: 'no-cache'
+            })
+            .catch(() => {});
+        });
 
+      ipAddressCount = result.data.getIpAddressList.ipAddressList.length;
+
+      if (ipAddressCount > process.env.ACCESS_LIMIT) {
         await client
           .mutate({
             mutation: mutationSetStatus,
-            variables: { input: setStatusInput },
+            variables: {
+              input: { ...setStatusInput, status: 'accessLimitExceeded' }
+            },
             fetchPolicy: 'no-cache'
           })
           .catch(error => console.log(error));
