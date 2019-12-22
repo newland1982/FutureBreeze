@@ -44,7 +44,6 @@ const client = new AWSAppSyncClient({
 });
 
 exports.handler = (event, context, callback) => {
-  console.log('eventttttt', event.Records);
   event.Records.forEach(record => {
     if (record.eventName !== 'INSERT') {
       return;
@@ -71,12 +70,12 @@ exports.handler = (event, context, callback) => {
           variables: { input: getIpAddressListInput },
           fetchPolicy: 'network-only'
         })
-        .catch(() => {
-          client
+        .catch(async () => {
+          await client
             .mutate({
               mutation: mutationSetStatus,
               variables: {
-                input: { ...setStatusInput, status: 'SignUpError' }
+                input: { ...setStatusInput, status: 'signUpError' }
               },
               fetchPolicy: 'no-cache'
             })
@@ -94,20 +93,26 @@ exports.handler = (event, context, callback) => {
             },
             fetchPolicy: 'no-cache'
           })
-          .catch(error => console.log(error));
+          .catch(() => {});
         return;
       }
 
-      console.log('userpoolwwww', userPool);
-      console.log('userpoolllll', userPool);
       userPool.signUp(
         record.dynamodb.NewImage.regularUserName.S,
         record.dynamodb.NewImage.password.S,
         [],
         null,
-        (error, result) => {
+        async (error, result) => {
           if (error) {
-            console.log(error);
+            await client
+              .mutate({
+                mutation: mutationSetStatus,
+                variables: {
+                  input: { ...setStatusInput, status: 'signUpError' }
+                },
+                fetchPolicy: 'no-cache'
+              })
+              .catch(() => {});
             return;
           }
         },

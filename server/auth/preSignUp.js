@@ -46,8 +46,6 @@ const clientSignUpUserInfo = new AWSAppSyncClient({
 exports.handler = (event, context, callback) => {
   const userName = event.userName.slice(96);
   const userNamePrefix = event.userName.slice(0, 96);
-  console.log('eventtttt', event);
-  console.log('contexttt', context);
 
   const createUserDataInput = {
     userName,
@@ -57,7 +55,7 @@ exports.handler = (event, context, callback) => {
   const setStatusInput = {
     id: event.request.clientMetadata.id,
     createdDate: event.request.clientMetadata.createdDate,
-    status: 'presignupError'
+    status: 'preSignUpError'
   };
 
   if (
@@ -66,7 +64,6 @@ exports.handler = (event, context, callback) => {
   ) {
     (async () => {
       await clientSignUpUserInfo.hydrated();
-      console.log('1111');
       await clientSignUpUserInfo
         .mutate({
           mutation: mutationSetStatus,
@@ -77,7 +74,7 @@ exports.handler = (event, context, callback) => {
     })();
     return;
   }
-  console.log('callbackkkkk');
+
   (async () => {
     await clientAdminUserData.hydrated();
 
@@ -89,10 +86,8 @@ exports.handler = (event, context, callback) => {
       })
       .catch(() => {});
 
-    console.log('resultttt', result);
     if (!result) {
       await clientSignUpUserInfo.hydrated();
-      console.log('1111');
       await clientSignUpUserInfo
         .mutate({
           mutation: mutationSetStatus,
@@ -103,7 +98,6 @@ exports.handler = (event, context, callback) => {
       return;
     }
 
-    console.log(2222);
     event.response.autoConfirmUser = true;
     callback(null, event);
   })();
