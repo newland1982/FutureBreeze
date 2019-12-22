@@ -104,18 +104,32 @@ const SignUp = () => {
 
   useEffect(() => {
     const userNameCheck = async () => {
-      const fullUserName = `${userNamePrefix}${userName}`;
-      if (userName) {
-        await Auth.signIn(fullUserName, 'password').catch(error => {
-          console.log(error);
-          error.code === 'UserNotFoundException'
-            ? setIsUniqueUserName(true)
-            : setIsUniqueUserName(false);
-        });
-        userName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)
-          ? setIsValidUserName(true)
-          : setIsValidUserName(false);
+      if (!userName) {
+        return;
       }
+      const getUserName = `query GetUserName($userName: String!) {
+        getUserName(userName: $userName) {
+          userName
+        }
+       }`;
+
+      const fullUserName = `${userNamePrefix}${userName}`;
+
+      // const result = await API.graphql(
+      //   graphqlOperation(getUserName, {
+      //     userName
+      //   })
+      // );
+      console.log('resuletttqqq');
+      await Auth.signIn(fullUserName, 'password').catch(error => {
+        console.log(error);
+        error.code === 'UserNotFoundException'
+          ? setIsUniqueUserName(true)
+          : setIsUniqueUserName(false);
+      });
+      userName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)
+        ? setIsValidUserName(true)
+        : setIsValidUserName(false);
     };
     userNameCheck();
   }, [userNamePrefix, userName]);

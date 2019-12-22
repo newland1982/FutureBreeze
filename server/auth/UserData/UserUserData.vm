@@ -1,0 +1,16 @@
+## Resolver for Query.getUserName
+{
+  "version" : "2017-02-28",
+  "operation" : "Query",
+  "index" : "userName",
+  "query" : {
+    "expression": "userName = :userName",
+      "expressionValues" : {
+        ":userName" : { "S" : "${context.arguments.userName}" }
+      }
+  }
+}
+
+{
+  $utils.toJson($context.result.items)
+}
