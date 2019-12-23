@@ -2,7 +2,7 @@
 {
   "version" : "2017-02-28",
   "operation" : "Query",
-  "index" : "userName-index",
+  "index" : "userName",
   "query" : {
     "expression": "userName = :userName",
       "expressionValues" : {
@@ -12,5 +12,5 @@
 }
 
 {
-  $utils.toJson($context.result.items)
+  "userNameList": $utils.toJson($context.result.items)
 }

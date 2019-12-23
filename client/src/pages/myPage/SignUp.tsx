@@ -125,12 +125,12 @@ const SignUp = () => {
         process.env
           .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_userUserData
       );
-      // const result = await API.graphql(
-      //   graphqlOperation(getUserName, {
-      //     userName
-      //   })
-      // );
-      // console.log('resuletttqqq', result);
+      const result = await API.graphql(
+        graphqlOperation(getUserName, {
+          userName
+        })
+      );
+      console.log('resuletttqqq', result);
       await Auth.signIn(fullUserName, 'password').catch(error => {
         console.log(error);
         error.code === 'UserNotFoundException'
