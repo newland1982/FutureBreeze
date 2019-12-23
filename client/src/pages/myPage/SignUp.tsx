@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-Amplify.configure({
+const amplifyCommonConfig = {
   Auth: {
     identityPoolId:
       process.env.REACT_APP_AWS_COGNITO_HsoUnauthenticatedIdPool_identityPoolId,
@@ -49,12 +49,19 @@ Amplify.configure({
     userPoolId: process.env.REACT_APP_AWS_COGNITO_userPoolId,
     userPoolWebClientId: process.env.REACT_APP_AWS_COGNITO_userPoolWebClientId
   },
-  aws_appsync_graphqlEndpoint:
-    process.env.REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint,
   aws_appsync_region: process.env.REACT_APP_AWS_APPSYNC_aws_appsync_region,
   aws_appsync_authenticationType:
     process.env.REACT_APP_AWS_APPSYNC_aws_appsync_authenticationType
-});
+};
+
+Amplify.configure({ ...amplifyCommonConfig });
+
+const setEndpoint = (endpoint: string | undefined) => {
+  Amplify.configure({
+    ...amplifyCommonConfig,
+    aws_appsync_graphqlEndpoint: endpoint
+  });
+};
 
 const SignUp = () => {
   const classes = useStyles();
@@ -114,13 +121,16 @@ const SignUp = () => {
        }`;
 
       const fullUserName = `${userNamePrefix}${userName}`;
-
+      setEndpoint(
+        process.env
+          .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_userUserData
+      );
       // const result = await API.graphql(
       //   graphqlOperation(getUserName, {
       //     userName
       //   })
       // );
-      console.log('resuletttqqq');
+      // console.log('resuletttqqq', result);
       await Auth.signIn(fullUserName, 'password').catch(error => {
         console.log(error);
         error.code === 'UserNotFoundException'
@@ -135,6 +145,10 @@ const SignUp = () => {
   }, [userNamePrefix, userName]);
 
   const signUp = async () => {
+    setEndpoint(
+      process.env
+        .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_signUpUserInfo
+    );
     const createSignUpUserInfo = `mutation CreateSignUpUserInfo($input: CreateSignUpUserInfoInput!) {
       createSignUpUserInfo(input: $input) {
         regularUserName
