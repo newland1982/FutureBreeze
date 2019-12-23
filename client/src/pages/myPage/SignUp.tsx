@@ -116,7 +116,9 @@ const SignUp = () => {
       }
       const getUserName = `query GetUserName($userName: String!) {
         getUserName(userName: $userName) {
-          userName
+          userNameList {
+            userName
+          }
         }
        }`;
 
