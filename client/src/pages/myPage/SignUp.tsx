@@ -1,4 +1,4 @@
-import Amplify, { API, Auth, graphqlOperation } from 'aws-amplify';
+import Amplify, { API, graphqlOperation } from 'aws-amplify';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Menu from '../../components/Menu';
@@ -122,7 +122,6 @@ const SignUp = () => {
         }
        }`;
 
-      const fullUserName = `${userNamePrefix}${userName}`;
       setEndpoint(
         process.env
           .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_userUserData
@@ -133,28 +132,15 @@ const SignUp = () => {
             userName
           })
         );
-        console.log('resuletttqqq', result);
-        type result = {
-          data: { getUserName: { userNameList: { userName: string }[] } };
-        };
-        if ('data' in result) {
-          console.log(
-            'resuletttaaa',
-            result.data
-            // .getUserName.userNameList.length
-          );
-        }
-      } catch (error) {
-        console.log('errorrrr', error);
-      } finally {
-      }
-
-      await Auth.signIn(fullUserName, 'password').catch(error => {
-        console.log(error);
-        error.code === 'UserNotFoundException'
+        const userNameAlreadyExists = Boolean(
+          result?.data?.getUserName?.userNameList?.length
+        );
+        !userNameAlreadyExists
           ? setIsUniqueUserName(true)
           : setIsUniqueUserName(false);
-      });
+      } catch (error) {
+      } finally {
+      }
       userName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)
         ? setIsValidUserName(true)
         : setIsValidUserName(false);
@@ -204,17 +190,13 @@ const SignUp = () => {
 
     try {
       const subscriber = await API.graphql(graphqlOperation(setStatus));
-      if ('subscribe' in subscriber) {
-        subscription = subscriber.subscribe({
-          next: (eventData: eventData) =>
-            console.log('wqwqwq', eventData.value.data.onSetStatus.status)
-        });
-      }
+      subscription = subscriber?.subscribe({
+        next: (eventData: eventData) =>
+          console.log('wqwqwq', eventData.value.data.onSetStatus.status)
+      });
     } catch (error) {
       console.log('errorrrr', error);
-      if (subscription) {
-        subscription.unsubscribe();
-      }
+      subscription?.unsubscribe();
     }
   };
 
