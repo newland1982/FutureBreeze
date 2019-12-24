@@ -116,9 +116,7 @@ const SignUp = () => {
       }
       const getUserName = `query GetUserName($userName: String!) {
         getUserName(userName: $userName) {
-          userNameList {
             userName
-          }
         }
        }`;
 
@@ -126,6 +124,7 @@ const SignUp = () => {
         process.env
           .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_userUserData
       );
+
       try {
         const result = await API.graphql(
           graphqlOperation(getUserName, {
@@ -133,7 +132,7 @@ const SignUp = () => {
           })
         );
         const userNameAlreadyExists = Boolean(
-          result?.data?.getUserName?.userNameList?.length
+          result?.data?.getUserName?.userName
         );
         !userNameAlreadyExists
           ? setIsUniqueUserName(true)

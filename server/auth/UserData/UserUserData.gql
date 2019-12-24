@@ -1,13 +1,9 @@
 type Query {
-  getUserName(userName: String!): UserNameList
+  getUserName(userName: String!): UserName
 }
 
 type UserName {
   userName: String!
-}
-
-type UserNameList {
-  userNameList: [UserName]
 }
 
 schema {

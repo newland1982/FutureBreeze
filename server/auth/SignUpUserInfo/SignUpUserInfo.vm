@@ -53,3 +53,17 @@ $util.toJson($context.result)
 {
   "ipAddressList": $utils.toJson($context.result.items)
 }
+
+## Resolver for Query.getStatus
+{
+    "version": "2017-02-28",
+    "operation": "GetItem",
+    "key": {
+      "id" : { "S" : "${context.arguments.input.id}" },
+      "createdDate" : { "S" : "${context.arguments.input.createdDate}"}
+    }
+}
+
+{
+  "status": $utils.toJson($context.result.status)
+}
