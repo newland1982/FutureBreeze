@@ -7,6 +7,11 @@ input GetIpAddressListInput {
   ipAddress: String!
 }
 
+input GetStatusInput {
+  id: ID!
+  createdDate: String!
+}
+
 type IpAddress {
   ipAddress: String!
 }
@@ -22,6 +27,7 @@ type Mutation {
 
 type Query {
   getIpAddressList(input: GetIpAddressListInput!): IpAddressList
+  getStatus(input: GetStatusInput!): Status
 }
 
 type RegularUserName {

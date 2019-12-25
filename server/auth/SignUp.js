@@ -17,6 +17,13 @@ const poolData = {
 };
 const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
+const mutationSetStatus = gql(`
+  mutation SetStatus($input: SetStatusInput!) {
+    setStatus(input: $input) {
+      status
+    }
+  }`);
+
 const queryGetIpAddressList = gql(`
   query GetIpAddressList($input: GetIpAddressListInput!) {
     getIpAddressList(input: $input) {
@@ -26,9 +33,9 @@ const queryGetIpAddressList = gql(`
     }
   }`);
 
-const mutationSetStatus = gql(`
-  mutation SetStatus($input: SetStatusInput!) {
-    setStatus(input: $input) {
+const queryGetStatus = gql(`
+  query GetStatus($input: GetStatusInput!) {
+    getStatus(input: $input) {
       status
     }
   }`);
@@ -51,18 +58,57 @@ exports.handler = (event, context, callback) => {
 
     let ipAddressCount;
 
+    const commonSetStatusInput = {
+      id: record.dynamodb.NewImage.id.S,
+      createdDate: record.dynamodb.NewImage.createdDate.S
+    };
+
     const getIpAddressListInput = {
       ipAddress: record.dynamodb.NewImage.ipAddress.S
     };
 
-    const setStatusInput = {
+    const GetStatusInput = {
       id: record.dynamodb.NewImage.id.S,
-      createdDate: record.dynamodb.NewImage.createdDate.S,
-      status: ''
+      createdDate: record.dynamodb.NewImage.createdDate.S
     };
 
     (async () => {
       await client.hydrated();
+
+      const queryGetStatusResult = await client
+        .query({
+          query: queryGetStatus,
+          variables: { input: GetStatusInput },
+          fetchPolicy: 'network-only'
+        })
+        .catch(async () => {
+          await client
+            .mutate({
+              mutation: mutationSetStatus,
+              variables: {
+                input: { ...commonSetStatusInput, status: 'signUpError' }
+              },
+              fetchPolicy: 'no-cache'
+            })
+            .catch(() => {});
+        });
+      console.log('queryGetStatusResul!!!!!', queryGetStatusResult);
+      if (
+        queryGetStatusResult.data.getStatus.status === 'beingProcessed' ||
+        queryGetStatusResult.data.getStatus.status === 'hasSignedUp'
+      ) {
+        return;
+      }
+
+      await client
+        .mutate({
+          mutation: mutationSetStatus,
+          variables: {
+            input: { ...commonSetStatusInput, status: 'beingProcessed' }
+          },
+          fetchPolicy: 'no-cache'
+        })
+        .catch(() => {});
 
       const result = await client
         .query({
@@ -75,7 +121,7 @@ exports.handler = (event, context, callback) => {
             .mutate({
               mutation: mutationSetStatus,
               variables: {
-                input: { ...setStatusInput, status: 'signUpError' }
+                input: { ...commonSetStatusInput, status: 'signUpError' }
               },
               fetchPolicy: 'no-cache'
             })
@@ -89,7 +135,7 @@ exports.handler = (event, context, callback) => {
           .mutate({
             mutation: mutationSetStatus,
             variables: {
-              input: { ...setStatusInput, status: 'accessLimitExceeded' }
+              input: { ...commonSetStatusInput, status: 'accessLimitExceeded' }
             },
             fetchPolicy: 'no-cache'
           })
@@ -108,7 +154,7 @@ exports.handler = (event, context, callback) => {
               .mutate({
                 mutation: mutationSetStatus,
                 variables: {
-                  input: { ...setStatusInput, status: 'signUpError' }
+                  input: { ...commonSetStatusInput, status: 'signUpError' }
                 },
                 fetchPolicy: 'no-cache'
               })
