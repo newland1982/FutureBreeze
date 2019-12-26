@@ -92,7 +92,7 @@ exports.handler = (event, context, callback) => {
             })
             .catch(() => {});
         });
-      console.log('queryGetStatusResul!!!!!', queryGetStatusResult);
+
       if (
         queryGetStatusResult.data.getStatus.status === 'beingProcessed' ||
         queryGetStatusResult.data.getStatus.status === 'hasSignedUp'
