@@ -76,7 +76,6 @@ const SignUp = () => {
   const [userName, setUserName] = useState('');
   const [isValidUserName, setIsValidUserName] = useState(false);
   const [isUniqueUserName, setIsUniqueUserName] = useState(true);
-  const [signUpStatus, setSignUpStatus] = useState('');
 
   const userNamePrefix = useMemo(() => {
     let uint32HexArray = [];
@@ -148,25 +147,7 @@ const SignUp = () => {
     userNameCheck();
   }, [userNamePrefix, userName]);
 
-  let subscription: any;
-
-  useEffect(() => {
-    if (
-      !(
-        signUpStatus === '' ||
-        signUpStatus === 'beingProcessed' ||
-        signUpStatus === 'hasSignedUp'
-      )
-    ) {
-      subscription?.unsubscribe();
-      localStorage.setItem('returnLocation', JSON.stringify(location.pathname));
-      history.push('/failure/error');
-    }
-
-    return () => {
-      subscription?.unsubscribe();
-    };
-  }, [history, location.pathname, subscription, signUpStatus]);
+  let subscription: { unsubscribe(): void };
 
   const signUp = async () => {
     setEndpoint(
@@ -207,23 +188,25 @@ const SignUp = () => {
     };
 
     try {
-      const subscriber = await API.graphql(graphqlOperation(setStatus));
-
-      subscription = subscriber?.subscribe({
+      subscription = await API.graphql(graphqlOperation(setStatus))?.subscribe({
         next: (eventData: eventData) => {
           console.log('wqwqwq', eventData.value.data.onSetStatus.status);
-          setSignUpStatus(eventData.value.data.onSetStatus.status);
+          if (
+            !(
+              eventData.value.data.onSetStatus.status === 'beingProcessed' ||
+              eventData.value.data.onSetStatus.status === 'hasSignedUp'
+            )
+          ) {
+            subscription?.unsubscribe();
+            localStorage.setItem(
+              'returnLocation',
+              JSON.stringify(location.pathname)
+            );
+            history.push('/failure/error');
+          }
         }
       });
-
-      // if (!(status === 'beingProcessed' || status === 'hasSignedUp')) {
-      //   subscription?.unsubscribe();
-      //   localStorage.setItem(
-      //     'returnLocation',
-      //     JSON.stringify(location.pathname)
-      //   );
-      //   history.push('/failure/error');
-      // }
+      console.log('typeeee', subscription);
     } catch (error) {
       console.log('errorrrr', error);
       subscription?.unsubscribe();
@@ -231,7 +214,6 @@ const SignUp = () => {
       history.push('/failure/error');
     }
   };
-  subscription?.unsubscribe();
 
   return (
     <Fragment>
