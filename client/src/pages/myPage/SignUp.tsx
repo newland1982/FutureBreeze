@@ -76,6 +76,7 @@ const SignUp = () => {
   const [userName, setUserName] = useState('');
   const [isValidUserName, setIsValidUserName] = useState(false);
   const [isUniqueUserName, setIsUniqueUserName] = useState(true);
+  const [hasBeenClicked, setHasBeenClicked] = useState(false);
 
   const userNamePrefix = useMemo(() => {
     let uint32HexArray = [];
@@ -114,6 +115,12 @@ const SignUp = () => {
       if (!userName) {
         return;
       }
+      if (!userName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)) {
+        setIsValidUserName(false);
+        return;
+      } else {
+        setIsValidUserName(true);
+      }
       const getUserName = `query GetUserName($userName: String!) {
         getUserName(userName: $userName) {
             userName
@@ -140,9 +147,6 @@ const SignUp = () => {
       } catch (error) {
       } finally {
       }
-      userName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)
-        ? setIsValidUserName(true)
-        : setIsValidUserName(false);
     };
     userNameCheck();
   }, [userNamePrefix, userName]);
@@ -150,6 +154,7 @@ const SignUp = () => {
   let subscription: { unsubscribe(): void };
 
   const signUp = async () => {
+    setHasBeenClicked(true);
     setEndpoint(
       process.env
         .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_signUpUserInfo
@@ -235,7 +240,7 @@ const SignUp = () => {
             className={classes.button}
             variant='contained'
             size='medium'
-            disabled={!isUniqueUserName || !isValidUserName}
+            disabled={!isUniqueUserName || !isValidUserName || hasBeenClicked}
             onClick={() => signUp()}
           >
             Sign Up
