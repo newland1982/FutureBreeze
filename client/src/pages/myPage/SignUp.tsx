@@ -16,11 +16,6 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
       height: `calc(100vh - 112px)`
     },
-    button: {
-      width: '88%',
-      minWidth: 240,
-      margin: theme.spacing(1)
-    },
     paper: {
       display: 'flex',
       flexDirection: 'column',
@@ -37,6 +32,11 @@ const useStyles = makeStyles((theme: Theme) =>
     textField: {
       width: '88%',
       minWidth: 240
+    },
+    button: {
+      width: '88%',
+      minWidth: 240,
+      margin: theme.spacing(1)
     }
   })
 );
@@ -118,8 +118,6 @@ const SignUp = () => {
       if (!userName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)) {
         setIsValidUserName(false);
         return;
-      } else {
-        setIsValidUserName(true);
       }
       const getUserName = `query GetUserName($userName: String!) {
         getUserName(userName: $userName) {
@@ -147,6 +145,7 @@ const SignUp = () => {
       } catch (error) {
       } finally {
       }
+      setIsValidUserName(true);
     };
     userNameCheck();
   }, [userNamePrefix, userName]);
@@ -154,24 +153,25 @@ const SignUp = () => {
   let subscription: { unsubscribe(): void };
 
   const signUp = async () => {
-    setHasBeenClicked(true);
+    // setHasBeenClicked(true);
     setEndpoint(
       process.env
         .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_signUpUserInfo
     );
     const createSignUpUserInfo = `mutation CreateSignUpUserInfo($input: CreateSignUpUserInfoInput!) {
       createSignUpUserInfo(input: $input) {
-        regularUserName
+        fullUserName
       }
      }`;
 
     const createSignUpUserInfoInput = {
-      regularUserName: `${userNamePrefix}${userName}`,
+      fullUserName: `${userNamePrefix}${userName}`,
       password: `${userNamePrefix}${randomNumber}`
     };
     console.log('password', createSignUpUserInfoInput.password);
 
     try {
+      console.log('whyyy', createSignUpUserInfoInput);
       const result = await API.graphql(
         graphqlOperation(createSignUpUserInfo, {
           input: createSignUpUserInfoInput
@@ -179,7 +179,7 @@ const SignUp = () => {
       );
       console.log('result1', result);
     } catch (error) {
-      console.log('errorrrr', error);
+      console.log('erroooor', error);
     }
 
     const setStatus = `subscription OnSetStatus {

@@ -5,10 +5,9 @@
   	 "id" : { "S" : "${util.autoId()}" },
      "createdDate": { "S" : "$util.time.nowFormatted("yyyy-MM-dd HH:mm:ssZ")" }
   },
-  
   "attributeValues" : {
       "ipAddress" : { "S" : "${context.identity.sourceIp[0]}"},
-      "regularUserName": { "S" : "${context.arguments.input.regularUserName}" },
+      "fullUserName": { "S" : "${context.arguments.input.fullUserName}" },
       "password": { "S" : "${context.arguments.input.password}" },
       "status": { "S" : "init" }
   }

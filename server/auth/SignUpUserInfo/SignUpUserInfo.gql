@@ -1,6 +1,10 @@
 input CreateSignUpUserInfoInput {
-  regularUserName: String!
+  fullUserName: String!
   password: String!
+}
+
+type FullUserName {
+  fullUserName: String!
 }
 
 input GetIpAddressListInput {
@@ -21,17 +25,13 @@ type IpAddressList {
 }
 
 type Mutation {
-  createSignUpUserInfo(input: CreateSignUpUserInfoInput!): RegularUserName
+  createSignUpUserInfo(input: CreateSignUpUserInfoInput!): FullUserName
   setStatus(input: SetStatusInput!): Status
 }
 
 type Query {
   getIpAddressList(input: GetIpAddressListInput!): IpAddressList
   getStatus(input: GetStatusInput!): Status
-}
-
-type RegularUserName {
-  regularUserName: String!
 }
 
 input SetStatusInput {
@@ -44,7 +44,7 @@ type SignUpUserInfo {
   id: ID
   createdDate: String
   ipAddress: String
-  regularUserName: String!
+  fullUserName: String!
   password: String
   status: String
 }
