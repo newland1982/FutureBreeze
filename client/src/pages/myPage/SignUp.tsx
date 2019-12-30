@@ -150,12 +150,15 @@ const SignUp = () => {
           })
         );
         const userNameAlreadyExists = Boolean(
-          result?.data?.getUserName?.userName
+          result?.data?.getUserName?.userName === userName
         );
+        console.log(userNameAlreadyExists);
         !userNameAlreadyExists
           ? setIsUniqueUserName(true)
           : setIsUniqueUserName(false);
       } catch (error) {
+        setIsValidUserName(false);
+        return;
       } finally {
       }
       setIsValidUserName(true);
@@ -167,6 +170,7 @@ const SignUp = () => {
 
   const signUp = async () => {
     setHasBeenClicked(true);
+
     setEndpoint(
       process.env
         .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_signUpUserInfo
