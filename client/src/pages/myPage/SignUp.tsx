@@ -3,9 +3,16 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Menu from '../../components/Menu';
 import Paper from '@material-ui/core/Paper';
-import React, { Fragment, useEffect, useMemo, useState } from 'react';
+import React, {
+  Fragment,
+  useContext,
+  useEffect,
+  useMemo,
+  useState
+} from 'react';
 import TextField from '@material-ui/core/TextField';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
+import { UserContext } from '../../contexts/UserContext';
 import { useHistory, useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -73,6 +80,8 @@ const SignUp = () => {
     );
   }, [location]);
 
+  const { dispatch } = useContext(UserContext);
+
   const [userName, setUserName] = useState('');
   const [isValidUserName, setIsValidUserName] = useState(false);
   const [isUniqueUserName, setIsUniqueUserName] = useState(true);
@@ -101,6 +110,10 @@ const SignUp = () => {
     }
     return uint32HexArray.join('');
   }, []);
+
+  const fullUserName = `${userNamePrefix}${userName}`;
+  const password = `${userNamePrefix}${randomNumber}`;
+  const signInCode = `${userName}${userNamePrefix}${randomNumber}`;
 
   const history = useHistory();
 
@@ -165,8 +178,8 @@ const SignUp = () => {
      }`;
 
     const createSignUpUserInfoInput = {
-      fullUserName: `${userNamePrefix}${userName}`,
-      password: `${userNamePrefix}${randomNumber}`
+      fullUserName,
+      password
     };
     console.log('password', createSignUpUserInfoInput.password);
 
@@ -180,6 +193,9 @@ const SignUp = () => {
       console.log('result1', result);
     } catch (error) {
       console.log('erroooor', error);
+      localStorage.setItem('returnLocation', JSON.stringify(location.pathname));
+      history.push('/failure/error');
+      return;
     }
 
     const setStatus = `subscription OnSetStatus {
@@ -208,6 +224,15 @@ const SignUp = () => {
               JSON.stringify(location.pathname)
             );
             history.push('/failure/error');
+          }
+          if (eventData.value.data.onSetStatus.status === 'hasSignedUp') {
+            subscription?.unsubscribe();
+            dispatch({ type: 'SET_USER', payload: { signInCode } });
+            localStorage.setItem(
+              'returnLocation',
+              JSON.stringify(location.pathname)
+            );
+            history.push('/mypage/signincode');
           }
         }
       });

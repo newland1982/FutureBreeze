@@ -7,7 +7,7 @@ import SignuUp from './pages/myPage/SignUp';
 import SignInCode from './pages/myPage/SignInCode';
 import ThemeContextProvider from './contexts/ThemeContext';
 import ThemeOption from './pages/myPage/ThemeOption';
-import UserInfoContextProvider from './contexts/UserInfoContext';
+import UserContextProvider from './contexts/UserContext';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 const App: React.FC = () => {
@@ -15,7 +15,7 @@ const App: React.FC = () => {
     <BrowserRouter>
       <div>
         <ThemeContextProvider>
-          <UserInfoContextProvider>
+          <UserContextProvider>
             <CssBaseline />
             <Switch>
               <Route exact path='/mypage/signup' component={SignuUp} />
@@ -24,7 +24,7 @@ const App: React.FC = () => {
               <Route exact path='/failure/error' component={Error} />
               <Route component={NotFound} />
             </Switch>
-          </UserInfoContextProvider>
+          </UserContextProvider>
         </ThemeContextProvider>
       </div>
     </BrowserRouter>
