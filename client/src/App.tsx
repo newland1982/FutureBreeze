@@ -4,6 +4,7 @@ import Error from './pages/failure/Error';
 import NotFound from './pages/failure/NotFound';
 import React from 'react';
 import SignUp from './pages/myPage/SignUp';
+import SignOut from './pages/myPage/SignOut';
 import SignInCodeShow from './pages/myPage/SignInCodeShow';
 import ThemeContextProvider from './contexts/ThemeContext';
 import ThemeOption from './pages/myPage/ThemeOption';
@@ -19,6 +20,7 @@ const App: React.FC = () => {
             <CssBaseline />
             <Switch>
               <Route exact path='/mypage/signup' component={SignUp} />
+              <Route exact path='/mypage/signout' component={SignOut} />
               <Route
                 exact
                 path='/mypage/signincodeshow'

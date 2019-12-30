@@ -15,11 +15,6 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
       height: `calc(100vh - 112px)`
     },
-    button: {
-      width: '88%',
-      minWidth: 240,
-      margin: theme.spacing(1)
-    },
     paper: {
       display: 'flex',
       flexDirection: 'column',
@@ -38,10 +33,6 @@ const useStyles = makeStyles((theme: Theme) =>
       minWidth: 252,
       maxWidth: 360,
       wordWrap: 'break-word'
-    },
-    textField: {
-      width: '88%',
-      minWidth: 240
     }
   })
 );

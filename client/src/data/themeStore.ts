@@ -34,7 +34,9 @@ const themeStore = {
     typography: {
       button: {
         textTransform: 'none'
-      }
+      },
+      fontSize: 16,
+      fontStyle: 'bold'
     }
   },
 
