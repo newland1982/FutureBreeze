@@ -1,8 +1,9 @@
 import Box from '@material-ui/core/Box';
 import Menu from '../../components/Menu';
 import Paper from '@material-ui/core/Paper';
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useContext, useEffect } from 'react';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
+import { UserContext } from '../../contexts/UserContext';
 import { useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -31,6 +32,12 @@ const useStyles = makeStyles((theme: Theme) =>
       maxHeight: 360,
       padding: theme.spacing(3, 2)
     },
+    display: {
+      width: '48%',
+      minWidth: 252,
+      maxWidth: 360,
+      wordWrap: 'break-word'
+    },
     textField: {
       width: '88%',
       minWidth: 240
@@ -48,11 +55,15 @@ const SignUp = () => {
     );
   }, [location]);
 
+  const { user } = useContext(UserContext);
+
   return (
     <Fragment>
       <Menu />
       <Box className={classes.root}>
-        <Paper className={classes.paper}>sasas</Paper>
+        <Paper className={classes.paper}>
+          <Box className={classes.display}>{user.signInCode}</Box>
+        </Paper>
       </Box>
     </Fragment>
   );
