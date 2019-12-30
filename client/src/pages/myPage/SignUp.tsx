@@ -152,7 +152,7 @@ const SignUp = () => {
         const userNameAlreadyExists = Boolean(
           result?.data?.getUserName?.userName === userName
         );
-        console.log(userNameAlreadyExists);
+
         !userNameAlreadyExists
           ? setIsUniqueUserName(true)
           : setIsUniqueUserName(false);
@@ -185,18 +185,14 @@ const SignUp = () => {
       fullUserName,
       password
     };
-    console.log('password', createSignUpUserInfoInput.password);
 
     try {
-      console.log('whyyy', createSignUpUserInfoInput);
-      const result = await API.graphql(
+      await API.graphql(
         graphqlOperation(createSignUpUserInfo, {
           input: createSignUpUserInfoInput
         })
       );
-      console.log('result1', result);
     } catch (error) {
-      console.log('erroooor', error);
       localStorage.setItem('returnLocation', JSON.stringify(location.pathname));
       history.push('/failure/error');
       return;
@@ -215,7 +211,6 @@ const SignUp = () => {
     try {
       subscription = await API.graphql(graphqlOperation(setStatus))?.subscribe({
         next: (eventData: eventData) => {
-          console.log('wqwqwq', eventData.value.data.onSetStatus.status);
           if (
             !(
               eventData.value.data.onSetStatus.status === 'beingProcessed' ||
@@ -243,9 +238,7 @@ const SignUp = () => {
           }
         }
       });
-      console.log('typeeee', subscription);
     } catch (error) {
-      console.log('errorrrr', error);
       subscription?.unsubscribe();
       localStorage.setItem('returnLocation', JSON.stringify(location.pathname));
       history.push('/failure/error');
