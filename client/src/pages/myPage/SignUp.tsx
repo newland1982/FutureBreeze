@@ -166,7 +166,7 @@ const SignUp = () => {
   let subscription: { unsubscribe(): void };
 
   const signUp = async () => {
-    // setHasBeenClicked(true);
+    setHasBeenClicked(true);
     setEndpoint(
       process.env
         .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_signUpUserInfo
@@ -227,12 +227,15 @@ const SignUp = () => {
           }
           if (eventData.value.data.onSetStatus.status === 'hasSignedUp') {
             subscription?.unsubscribe();
-            dispatch({ type: 'SET_USER', payload: { signInCode } });
+            dispatch({
+              type: 'SET_USER',
+              payload: { fullUserName, password, signInCode }
+            });
             localStorage.setItem(
               'returnLocation',
               JSON.stringify(location.pathname)
             );
-            history.push('/mypage/signincode');
+            history.push('/mypage/signincodeshow');
           }
         }
       });

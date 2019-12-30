@@ -1,10 +1,11 @@
+import { Auth } from 'aws-amplify';
 import Box from '@material-ui/core/Box';
 import Menu from '../../components/Menu';
 import Paper from '@material-ui/core/Paper';
 import React, { Fragment, useContext, useEffect } from 'react';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../../contexts/UserContext';
-import { useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -45,8 +46,10 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const SignUp = () => {
+const SignInCodeShow = () => {
   const classes = useStyles();
+
+  const history = useHistory();
 
   const location = useLocation();
   useEffect(() => {
@@ -56,6 +59,41 @@ const SignUp = () => {
   }, [location]);
 
   const { user } = useContext(UserContext);
+
+  useEffect(() => {
+    if (!user.fullUserName) {
+      return;
+    }
+
+    const signOut = async () => {
+      try {
+        await Auth.signOut();
+      } catch {
+        localStorage.setItem(
+          'returnLocation',
+          JSON.stringify('/mypage/signUp')
+        );
+        history.push('/failure/error');
+        return;
+      }
+    };
+
+    const signIn = async () => {
+      try {
+        await Auth.signIn(user.fullUserName, user.password);
+      } catch {
+        localStorage.setItem(
+          'returnLocation',
+          JSON.stringify('/mypage/signUp')
+        );
+        history.push('/failure/error');
+        return;
+      }
+    };
+
+    signOut();
+    signIn();
+  }, [history, user]);
 
   return (
     <Fragment>
@@ -69,4 +107,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default SignInCodeShow;

@@ -3,8 +3,8 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Error from './pages/failure/Error';
 import NotFound from './pages/failure/NotFound';
 import React from 'react';
-import SignuUp from './pages/myPage/SignUp';
-import SignInCode from './pages/myPage/SignInCode';
+import SignUp from './pages/myPage/SignUp';
+import SignInCodeShow from './pages/myPage/SignInCodeShow';
 import ThemeContextProvider from './contexts/ThemeContext';
 import ThemeOption from './pages/myPage/ThemeOption';
 import UserContextProvider from './contexts/UserContext';
@@ -18,8 +18,12 @@ const App: React.FC = () => {
           <UserContextProvider>
             <CssBaseline />
             <Switch>
-              <Route exact path='/mypage/signup' component={SignuUp} />
-              <Route exact path='/mypage/signincode' component={SignInCode} />
+              <Route exact path='/mypage/signup' component={SignUp} />
+              <Route
+                exact
+                path='/mypage/signincodeshow'
+                component={SignInCodeShow}
+              />
               <Route exact path='/mypage/themeoption' component={ThemeOption} />
               <Route exact path='/failure/error' component={Error} />
               <Route component={NotFound} />

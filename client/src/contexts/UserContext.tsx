@@ -2,16 +2,22 @@ import React, { createContext, useReducer } from 'react';
 import userReducer from '../reducers/userReducer';
 
 type user = {
+  fullUserName: string;
+  password: string;
   signInCode: string;
 };
 
 const initState = {
+  fullUserName: '',
+  password: '',
   signInCode: ''
 };
 
 type action = {
   type: string;
   payload: {
+    fullUserName: string;
+    password: string;
     signInCode: string;
   };
 };
