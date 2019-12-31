@@ -16,11 +16,6 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
       height: `calc(100vh - 112px)`
     },
-    button: {
-      width: '88%',
-      minWidth: 240,
-      margin: theme.spacing(1)
-    },
     paper: {
       display: 'flex',
       flexDirection: 'column',
@@ -33,6 +28,11 @@ const useStyles = makeStyles((theme: Theme) =>
       minHeight: 204,
       maxHeight: 360,
       padding: theme.spacing(3, 2)
+    },
+    button: {
+      width: '88%',
+      minWidth: 240,
+      margin: theme.spacing(1)
     }
   })
 );

@@ -5,7 +5,7 @@ import Paper from '@material-ui/core/Paper';
 import React, { Fragment, useContext, useEffect } from 'react';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../../contexts/UserContext';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,13 +41,6 @@ const SignInCodeShow = () => {
   const classes = useStyles();
 
   const history = useHistory();
-
-  const location = useLocation();
-  useEffect(() => {
-    Array.from(document.getElementsByTagName('input')).forEach(inputElement =>
-      inputElement.setAttribute('spellcheck', 'false')
-    );
-  }, [location]);
 
   const { user } = useContext(UserContext);
 

@@ -73,6 +73,8 @@ const setEndpoint = (endpoint: string | undefined) => {
 const SignUp = () => {
   const classes = useStyles();
 
+  const history = useHistory();
+
   const location = useLocation();
   useEffect(() => {
     Array.from(document.getElementsByTagName('input')).forEach(inputElement =>
@@ -115,8 +117,6 @@ const SignUp = () => {
   const password = `${userNamePrefix}${randomNumber}`;
   const signInCode = `${userName}${userNamePrefix}${randomNumber}`;
 
-  const history = useHistory();
-
   const inputUserName = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -126,6 +126,7 @@ const SignUp = () => {
   useEffect(() => {
     const userNameCheck = async () => {
       if (!userName) {
+        setIsValidUserName(false);
         return;
       }
       if (!userName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)) {
