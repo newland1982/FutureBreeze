@@ -7,6 +7,7 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState
 } from 'react';
 import TextField from '@material-ui/core/TextField';
@@ -51,14 +52,12 @@ const useStyles = makeStyles((theme: Theme) =>
 const ChangePassword = () => {
   const classes = useStyles();
 
+  const textFieldRef = useRef<HTMLInputElement>(null);
+  textFieldRef.current?.setAttribute('spellcheck', 'false');
+
   const history = useHistory();
 
   const location = useLocation();
-  useEffect(() => {
-    Array.from(document.getElementsByTagName('input')).forEach(inputElement =>
-      inputElement.setAttribute('spellcheck', 'false')
-    );
-  }, [location]);
 
   const { dispatch } = useContext(UserContext);
 
@@ -163,6 +162,7 @@ const ChangePassword = () => {
       <Box className={classes.root}>
         <Paper className={classes.paper}>
           <TextField
+            ref={textFieldRef}
             className={classes.textField}
             label='Password'
             margin='dense'

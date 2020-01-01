@@ -6,7 +6,13 @@ import Icon from '@mdi/react';
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Menu from '../../components/Menu';
-import React, { Fragment, useContext, useEffect, useState } from 'react';
+import React, {
+  Fragment,
+  useContext,
+  useEffect,
+  useRef,
+  useState
+} from 'react';
 import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
 import themeStore from '../../data/themeStore';
@@ -59,6 +65,9 @@ const useStyles = makeStyles((theme: Theme) =>
 const ThemeOption = () => {
   const classes = useStyles();
 
+  const textFieldRef = useRef<HTMLInputElement>(null);
+  textFieldRef.current?.setAttribute('spellcheck', 'false');
+
   const location = useLocation();
   useEffect(() => {
     Array.from(document.getElementsByTagName('input')).forEach(inputElement =>
@@ -105,6 +114,7 @@ const ThemeOption = () => {
         <Toolbar variant='dense'>
           <Box className={classes.searchBox}>
             <TextField
+              ref={textFieldRef}
               margin='dense'
               variant='outlined'
               inputProps={{ 'aria-label': 'bare' }}

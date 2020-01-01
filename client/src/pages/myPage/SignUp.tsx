@@ -8,6 +8,7 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState
 } from 'react';
 import TextField from '@material-ui/core/TextField';
@@ -73,14 +74,12 @@ const setEndpoint = (endpoint: string | undefined) => {
 const SignUp = () => {
   const classes = useStyles();
 
+  const textFieldRef = useRef<HTMLInputElement>(null);
+  textFieldRef.current?.setAttribute('spellcheck', 'false');
+
   const history = useHistory();
 
   const location = useLocation();
-  useEffect(() => {
-    Array.from(document.getElementsByTagName('input')).forEach(inputElement =>
-      inputElement.setAttribute('spellcheck', 'false')
-    );
-  }, [location]);
 
   const { dispatch } = useContext(UserContext);
 
@@ -260,6 +259,7 @@ const SignUp = () => {
       <Box className={classes.root}>
         <Paper className={classes.paper}>
           <TextField
+            ref={textFieldRef}
             className={classes.textField}
             label='Name'
             margin='dense'
