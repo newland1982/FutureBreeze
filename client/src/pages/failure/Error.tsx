@@ -3,7 +3,7 @@ import Container from '@material-ui/core/Container';
 import Menu from '../../components/Menu';
 import React, { Fragment } from 'react';
 import Typography from '@material-ui/core/Typography';
-import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -14,10 +14,6 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
       alignItems: 'center',
       height: `calc(100vh - 124px)`
-    },
-    button: {
-      width: 196,
-      margin: theme.spacing(2.4)
     }
   })
 );
@@ -38,7 +34,7 @@ const Error = () => {
     <Fragment>
       <Menu />
       <Box onClick={() => goBack()}>
-        <Container maxWidth='md'>
+        <Container>
           <Box className={classes.root}>
             <Typography variant='h1'>Error.</Typography>
           </Box>

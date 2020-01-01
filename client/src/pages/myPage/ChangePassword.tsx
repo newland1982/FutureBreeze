@@ -60,24 +60,13 @@ const ChangePassword = () => {
     );
   }, [location]);
 
-  const { user, dispatch } = useContext(UserContext);
+  const { dispatch } = useContext(UserContext);
 
-  const [signInCode, setSignInCode] = useState('');
+  const [oldSignInCode, setOldSignInCode] = useState('');
   const [isValidSignInCode, setIsValidSignInCode] = useState(false);
+  const [hasBeenClicked, setHasBeenClicked] = useState(false);
 
-  const userNamePrefix = useMemo(() => {
-    let uint32HexArray = [];
-    for (let i = 0; i < 12; i++) {
-      uint32HexArray.push(
-        `00000000${crypto
-          .getRandomValues(new Uint32Array(1))[0]
-          .toString(16)}`.slice(-8)
-      );
-    }
-    return uint32HexArray.join('');
-  }, []);
-
-  const randomNumber = useMemo(() => {
+  const newRandomNumber = useMemo(() => {
     let uint32HexArray = [];
     for (let i = 0; i < 20; i++) {
       uint32HexArray.push(
@@ -89,19 +78,25 @@ const ChangePassword = () => {
     return uint32HexArray.join('');
   }, []);
 
-  const newPassword = `${userNamePrefix}${randomNumber}`;
+  const userNamePrefix = oldSignInCode.slice(-256, -160);
+  const userName = oldSignInCode.slice(0, -256);
+  const fullUserName = `${userNamePrefix}${userName}`;
+
+  const oldPassword = oldSignInCode.slice(-256);
+
+  const newPassword = `${userNamePrefix}${newRandomNumber}`;
+
+  const newSignInCode = `${userName}${userNamePrefix}${newRandomNumber}`;
 
   const inputSignInCode = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setSignInCode(e.target.value);
+    setOldSignInCode(e.target.value);
   };
 
   useEffect(() => {
-    const signInCodeCheck = async () => {
-      const userName = signInCode.slice(0, -256);
-      const password = signInCode.slice(-256);
-      if (!signInCode) {
+    const oldSignInCodeCheck = async () => {
+      if (!oldSignInCode) {
         setIsValidSignInCode(false);
         return;
       }
@@ -109,34 +104,55 @@ const ChangePassword = () => {
         setIsValidSignInCode(false);
         return;
       }
-      if (!password.match(/^[a-f0-9]{256}$/)) {
+      if (!oldPassword.match(/^[a-f0-9]{256}$/)) {
         setIsValidSignInCode(false);
         return;
       }
+      setIsValidSignInCode(true);
     };
-    signInCodeCheck();
-  }, [signInCode]);
+    oldSignInCodeCheck();
+  }, [oldPassword, oldSignInCode, userName]);
 
   const changePassword = async () => {
-    const x = await Auth.currentAuthenticatedUser();
-    console.log('xxx', x);
+    setHasBeenClicked(true);
+
+    try {
+      await Auth.signOut();
+    } catch {
+      localStorage.setItem('returnLocation', JSON.stringify(location.pathname));
+      history.push('/failure/error');
+      return;
+    }
+
+    try {
+      await Auth.signIn(fullUserName, oldPassword);
+    } catch {
+      localStorage.setItem('returnLocation', JSON.stringify(location.pathname));
+      history.push('/failure/error');
+      return;
+    }
+
     try {
       const currentAuthenticatedUser = await Auth.currentAuthenticatedUser();
       await Auth.changePassword(
         currentAuthenticatedUser,
-        user.password,
+        oldPassword,
         newPassword
       );
-      console.log('xxx', user);
-      //   await Auth.signOut();
-      //   dispatch({
-      //     type: 'SET_USER',
-      //     payload: { fullUserName: '', password: '', signInCode: '' }
-      //   });
-      //   history.goBack();
+
+      dispatch({
+        type: 'SET_USER',
+        payload: {
+          fullUserName,
+          password: newPassword,
+          signInCode: newSignInCode
+        }
+      });
+
+      history.push('/mypage/signincodeshow');
     } catch {
-      //   localStorage.setItem('returnLocation', JSON.stringify(location.pathname));
-      //   history.push('/failure/error');
+      localStorage.setItem('returnLocation', JSON.stringify(location.pathname));
+      history.push('/failure/error');
       return;
     }
   };
@@ -151,7 +167,7 @@ const ChangePassword = () => {
             label='Password'
             margin='dense'
             variant='outlined'
-            value={signInCode}
+            value={oldSignInCode}
             onChange={(
               e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
             ) => inputSignInCode(e)}
@@ -160,7 +176,7 @@ const ChangePassword = () => {
             className={classes.button}
             variant='contained'
             size='medium'
-            disabled={!isValidSignInCode}
+            disabled={!isValidSignInCode || hasBeenClicked}
             onClick={() => changePassword()}
           >
             Change Password

@@ -3,13 +3,7 @@ import Container from '@material-ui/core/Container';
 import Menu from '../../components/Menu';
 import React, { Fragment } from 'react';
 import Typography from '@material-ui/core/Typography';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import {
-  createStyles,
-  makeStyles,
-  Theme,
-  useTheme
-} from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -23,22 +17,19 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const Error = () => {
+const NotFound = () => {
   const classes = useStyles();
-  const isXsSize = useMediaQuery(useTheme().breakpoints.only('xs'));
-
-  const typographyVariant = isXsSize ? 'h2' : 'h1';
 
   return (
     <Fragment>
       <Menu />
-      <Container maxWidth='xl'>
+      <Container>
         <Box className={classes.root}>
-          <Typography variant={typographyVariant}>Not Found</Typography>
+          <Typography variant='h1'>Error.</Typography>
         </Box>
       </Container>
     </Fragment>
   );
 };
 
-export default Error;
+export default NotFound;

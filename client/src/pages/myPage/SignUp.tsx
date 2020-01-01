@@ -1,4 +1,4 @@
-import Amplify, { API, graphqlOperation } from 'aws-amplify';
+import Amplify, { API, Auth, graphqlOperation } from 'aws-amplify';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Menu from '../../components/Menu';
@@ -211,7 +211,7 @@ const SignUp = () => {
 
     try {
       subscription = await API.graphql(graphqlOperation(setStatus))?.subscribe({
-        next: (eventData: eventData) => {
+        next: async (eventData: eventData) => {
           if (
             !(
               eventData.value.data.onSetStatus.status === 'beingProcessed' ||
@@ -219,18 +219,26 @@ const SignUp = () => {
             )
           ) {
             subscription?.unsubscribe();
+
             localStorage.setItem(
               'returnLocation',
               JSON.stringify(location.pathname)
             );
             history.push('/failure/error');
+
+            return;
           }
           if (eventData.value.data.onSetStatus.status === 'hasSignedUp') {
             subscription?.unsubscribe();
+
+            await Auth.signOut();
+            await Auth.signIn(fullUserName, password);
+
             dispatch({
               type: 'SET_USER',
               payload: { fullUserName, password, signInCode }
             });
+
             localStorage.setItem(
               'returnLocation',
               JSON.stringify(location.pathname)
@@ -239,7 +247,7 @@ const SignUp = () => {
           }
         }
       });
-    } catch (error) {
+    } catch {
       subscription?.unsubscribe();
       localStorage.setItem('returnLocation', JSON.stringify(location.pathname));
       history.push('/failure/error');

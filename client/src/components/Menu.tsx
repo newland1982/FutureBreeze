@@ -79,7 +79,8 @@ const Menu = () => {
           { name: 'Sign Up', path: '/mypage/signup' },
           { name: 'Sign In', path: '/mypage/themeoption' },
           { name: 'Sign Out', path: '/mypage/signout' },
-          { name: 'Themes', path: '/mypage/themeoption' }
+          { name: 'Password', path: '/mypage/changepassword' },
+          { name: 'Picture', path: '/mypage/themeoption' }
         ].map(link => (
           <Link
             to={link.path}
