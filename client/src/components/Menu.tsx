@@ -77,10 +77,10 @@ const Menu = () => {
         <br />
         {[
           { name: 'Sign Up', path: '/mypage/signup' },
-          { name: 'Sign In', path: '/mypage/themeoption' },
+          { name: 'Sign In', path: '/mypage/signin' },
           { name: 'Sign Out', path: '/mypage/signout' },
           { name: 'AuthCode', path: '/mypage/changeauthcode' },
-          { name: 'Picture', path: '/mypage/themeoption' }
+          { name: 'Background', path: '/mypage/themeoption' }
         ].map(link => (
           <Link
             to={link.path}

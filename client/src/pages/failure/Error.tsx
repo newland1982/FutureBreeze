@@ -23,10 +23,10 @@ const Error = () => {
   const history = useHistory();
 
   const goBack = () => {
-    const storedReturnLocation = localStorage.getItem('returnLocation');
-    if (typeof storedReturnLocation === 'string') {
-      const returnLocation = JSON.parse(storedReturnLocation);
-      history.push(returnLocation);
+    const returnLocation = localStorage.getItem('returnLocation');
+    if (returnLocation) {
+      const parsedReturnLocation = JSON.parse(returnLocation);
+      history.push(parsedReturnLocation);
     }
   };
 

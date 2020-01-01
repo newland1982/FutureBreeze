@@ -1,10 +1,11 @@
 import './App.css';
+import AuthCodeShow from './pages/myPage/AuthCodeShow';
 import ChangeAuthCode from './pages/myPage/ChangeAuthCode';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Error from './pages/failure/Error';
 import NotFound from './pages/failure/NotFound';
 import React from 'react';
-import AuthCodeShow from './pages/myPage/AuthCodeShow';
+import SignIn from './pages/myPage/SignIn';
 import SignOut from './pages/myPage/SignOut';
 import SignUp from './pages/myPage/SignUp';
 import ThemeContextProvider from './contexts/ThemeContext';
@@ -21,6 +22,7 @@ const App: React.FC = () => {
             <CssBaseline />
             <Switch>
               <Route exact path='/mypage/signup' component={SignUp} />
+              <Route exact path='/mypage/signin' component={SignIn} />
               <Route exact path='/mypage/signout' component={SignOut} />
               <Route
                 exact
