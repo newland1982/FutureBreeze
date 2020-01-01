@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const ChangePassword = () => {
+const ChangeAuthCode = () => {
   const classes = useStyles();
 
   const textFieldRef = useRef<HTMLInputElement>(null);
@@ -61,8 +61,8 @@ const ChangePassword = () => {
 
   const { dispatch } = useContext(UserContext);
 
-  const [oldSignInCode, setOldSignInCode] = useState('');
-  const [isValidSignInCode, setIsValidSignInCode] = useState(false);
+  const [oldAuthCode, setOldAuthCode] = useState('');
+  const [isValidAuthCode, setIsValidAuthCode] = useState(false);
   const [hasBeenClicked, setHasBeenClicked] = useState(false);
 
   const newRandomNumber = useMemo(() => {
@@ -77,42 +77,42 @@ const ChangePassword = () => {
     return uint32HexArray.join('');
   }, []);
 
-  const userNamePrefix = oldSignInCode.slice(-256, -160);
-  const userName = oldSignInCode.slice(0, -256);
+  const userNamePrefix = oldAuthCode.slice(-256, -160);
+  const userName = oldAuthCode.slice(0, -256);
   const fullUserName = `${userNamePrefix}${userName}`;
 
-  const oldPassword = oldSignInCode.slice(-256);
+  const oldPassword = oldAuthCode.slice(-256);
 
   const newPassword = `${userNamePrefix}${newRandomNumber}`;
 
-  const newSignInCode = `${userName}${userNamePrefix}${newRandomNumber}`;
+  const newAuthCode = `${userName}${userNamePrefix}${newRandomNumber}`;
 
-  const inputSignInCode = (
+  const inputAuthCode = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setOldSignInCode(e.target.value);
+    setOldAuthCode(e.target.value);
   };
 
   useEffect(() => {
-    const oldSignInCodeCheck = async () => {
-      if (!oldSignInCode) {
-        setIsValidSignInCode(false);
+    const oldAuthCodeCheck = async () => {
+      if (!oldAuthCode) {
+        setIsValidAuthCode(false);
         return;
       }
       if (!userName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)) {
-        setIsValidSignInCode(false);
+        setIsValidAuthCode(false);
         return;
       }
       if (!oldPassword.match(/^[a-f0-9]{256}$/)) {
-        setIsValidSignInCode(false);
+        setIsValidAuthCode(false);
         return;
       }
-      setIsValidSignInCode(true);
+      setIsValidAuthCode(true);
     };
-    oldSignInCodeCheck();
-  }, [oldPassword, oldSignInCode, userName]);
+    oldAuthCodeCheck();
+  }, [oldPassword, oldAuthCode, userName]);
 
-  const changePassword = async () => {
+  const changeAuthCode = async () => {
     setHasBeenClicked(true);
 
     try {
@@ -144,11 +144,11 @@ const ChangePassword = () => {
         payload: {
           fullUserName,
           password: newPassword,
-          signInCode: newSignInCode
+          authCode: newAuthCode
         }
       });
 
-      history.push('/mypage/signincodeshow');
+      history.push('/mypage/authcodeshow');
     } catch {
       localStorage.setItem('returnLocation', JSON.stringify(location.pathname));
       history.push('/failure/error');
@@ -164,22 +164,22 @@ const ChangePassword = () => {
           <TextField
             ref={textFieldRef}
             className={classes.textField}
-            label='Password'
+            label='AuthCode'
             margin='dense'
             variant='outlined'
-            value={oldSignInCode}
+            value={oldAuthCode}
             onChange={(
               e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-            ) => inputSignInCode(e)}
+            ) => inputAuthCode(e)}
           />
           <Button
             className={classes.button}
             variant='contained'
             size='medium'
-            disabled={!isValidSignInCode || hasBeenClicked}
-            onClick={() => changePassword()}
+            disabled={!isValidAuthCode || hasBeenClicked}
+            onClick={() => changeAuthCode()}
           >
-            Change Password
+            Change AuthCode
           </Button>
         </Paper>
       </Box>
@@ -187,4 +187,4 @@ const ChangePassword = () => {
   );
 };
 
-export default ChangePassword;
+export default ChangeAuthCode;

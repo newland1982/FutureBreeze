@@ -4,13 +4,13 @@ import userReducer from '../reducers/userReducer';
 type user = {
   fullUserName: string;
   password: string;
-  signInCode: string;
+  authCode: string;
 };
 
 const initState = {
   fullUserName: '',
   password: '',
-  signInCode: ''
+  authCode: ''
 };
 
 type action = {
@@ -18,7 +18,7 @@ type action = {
   payload: {
     fullUserName: string;
     password: string;
-    signInCode: string;
+    authCode: string;
   };
 };
 

@@ -50,7 +50,7 @@ const SignOut = () => {
       await Auth.signOut();
       dispatch({
         type: 'SET_USER',
-        payload: { fullUserName: '', password: '', signInCode: '' }
+        payload: { fullUserName: '', password: '', authCode: '' }
       });
       history.goBack();
     } catch {

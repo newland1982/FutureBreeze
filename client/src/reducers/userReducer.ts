@@ -1,7 +1,7 @@
 type user = {
   fullUserName: string;
   password: string;
-  signInCode: string;
+  authCode: string;
 };
 
 type action = {
@@ -9,7 +9,7 @@ type action = {
   payload: {
     fullUserName: string;
     password: string;
-    signInCode: string;
+    authCode: string;
   };
 };
 
@@ -19,7 +19,7 @@ const userReducer = (state: user, action: action) => {
       return {
         fullUserName: action.payload.fullUserName,
         password: action.payload.password,
-        signInCode: action.payload.signInCode
+        authCode: action.payload.authCode
       };
     default:
       return state;

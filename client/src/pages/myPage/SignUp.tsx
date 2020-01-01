@@ -114,7 +114,7 @@ const SignUp = () => {
 
   const fullUserName = `${userNamePrefix}${userName}`;
   const password = `${userNamePrefix}${randomNumber}`;
-  const signInCode = `${userName}${userNamePrefix}${randomNumber}`;
+  const authCode = `${userName}${userNamePrefix}${randomNumber}`;
 
   const inputUserName = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -235,14 +235,14 @@ const SignUp = () => {
 
             dispatch({
               type: 'SET_USER',
-              payload: { fullUserName, password, signInCode }
+              payload: { fullUserName, password, authCode }
             });
 
             localStorage.setItem(
               'returnLocation',
               JSON.stringify(location.pathname)
             );
-            history.push('/mypage/signincodeshow');
+            history.push('/mypage/authcodeshow');
           }
         }
       });
@@ -261,9 +261,9 @@ const SignUp = () => {
           <TextField
             ref={textFieldRef}
             className={classes.textField}
-            label='Name'
+            label='User Name'
             margin='dense'
-            placeholder='e.g.  user_name1,  user_123'
+            placeholder='e.g.  user_name1,  name_123'
             variant='outlined'
             value={userName}
             onChange={(

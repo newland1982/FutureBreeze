@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const SignInCodeShow = () => {
+const AuthCodeShow = () => {
   const classes = useStyles();
 
   const { user } = useContext(UserContext);
@@ -45,11 +45,11 @@ const SignInCodeShow = () => {
       <Menu />
       <Box className={classes.root}>
         <Paper className={classes.paper}>
-          <Box className={classes.display}>{user.signInCode}</Box>
+          <Box className={classes.display}>{user.authCode}</Box>
         </Paper>
       </Box>
     </Fragment>
   );
 };
 
-export default SignInCodeShow;
+export default AuthCodeShow;
