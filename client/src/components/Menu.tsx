@@ -76,12 +76,28 @@ const Menu = () => {
         ))}
         <br />
         {[
-          { name: 'Sign Up', path: '/mypage/signup' },
+          { name: 'Edit', path: '/mypage/signin' },
           { name: 'Sign In', path: '/mypage/signin' },
+          { name: 'Sign Up', path: '/mypage/signup' },
           { name: 'Sign Out', path: '/mypage/signout' },
           { name: 'AuthCode', path: '/mypage/changeauthcode' },
           { name: 'Background', path: '/mypage/themeoption' }
         ].map(link => (
+          <Link
+            to={link.path}
+            key={link.name}
+            style={{ textDecoration: 'none' }}
+          >
+            <ListItem button>
+              <ListItemText
+                className={classes.listItemText}
+                primary={link.name}
+              />
+            </ListItem>
+          </Link>
+        ))}
+        <br />
+        {[{ name: 'Quit', path: '/mypage/quit' }].map(link => (
           <Link
             to={link.path}
             key={link.name}

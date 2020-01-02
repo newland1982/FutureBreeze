@@ -2,6 +2,7 @@ import './App.css';
 import AuthCodeShow from './pages/myPage/AuthCodeShow';
 import ChangeAuthCode from './pages/myPage/ChangeAuthCode';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import Quit from './pages/myPage/Quit';
 import Error from './pages/failure/Error';
 import NotFound from './pages/failure/NotFound';
 import React from 'react';
@@ -35,6 +36,7 @@ const App: React.FC = () => {
                 component={ChangeAuthCode}
               />
               <Route exact path='/mypage/themeoption' component={ThemeOption} />
+              <Route exact path='/mypage/quit' component={Quit} />
               <Route exact path='/failure/error' component={Error} />
               <Route component={NotFound} />
             </Switch>
