@@ -10,7 +10,6 @@ const themeStore = {
         main: 'rgba(0, 0, 0, 0.36)'
       },
       secondary: {
-        // main: 'rgba(105, 105, 105, 0.42)'
         main: 'rgba(0, 0, 0, 0.6)'
       },
       text: {
@@ -26,17 +25,11 @@ const themeStore = {
         disabledBackground: 'rgba(255, 255, 255, 0.36)'
       }
     },
-    props: {
-      IconButton: {
-        size: 'small'
-      }
-    },
     typography: {
       button: {
         textTransform: 'none'
       },
-      fontSize: 16,
-      fontStyle: 'bold'
+      fontSize: 16
     }
   },
 

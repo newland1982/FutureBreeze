@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: '0 auto'
     },
     list: {
-      width: 120,
+      width: 144,
       paddingTop: '24%'
     },
     listItemText: {
@@ -81,7 +81,7 @@ const Menu = () => {
           { name: 'Sign Up', path: '/mypage/signup' },
           { name: 'Sign Out', path: '/mypage/signout' },
           { name: 'AuthCode', path: '/mypage/changeauthcode' },
-          { name: 'Background', path: '/mypage/themeoption' }
+          { name: 'Images', path: '/mypage/themeoption' }
         ].map(link => (
           <Link
             to={link.path}

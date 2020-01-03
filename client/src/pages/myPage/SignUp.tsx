@@ -261,7 +261,7 @@ const SignUp = () => {
           <TextField
             ref={textFieldRef}
             className={classes.textField}
-            label='Username'
+            label='UserName'
             margin='dense'
             placeholder='e.g.  user_name,  name_123'
             variant='outlined'
