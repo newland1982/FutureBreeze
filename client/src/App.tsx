@@ -3,6 +3,7 @@ import AuthCodeShow from './pages/myPage/AuthCodeShow';
 import ChangeAuthCode from './pages/myPage/ChangeAuthCode';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Error from './pages/failure/Error';
+import Images from './pages/myPage/Images';
 import NotFound from './pages/failure/NotFound';
 import Quit from './pages/myPage/Quit';
 import React from 'react';
@@ -24,10 +25,12 @@ const App: React.FC = () => {
         <UserContextProvider>
           <CssBaseline />
           <Switch>
-            <Route exact path='/mypage/signup' component={SignUp} />
             <Route exact path='/mypage/signin' component={SignIn} />
+            <Route exact path='/mypage/signup' component={SignUp} />
             <Route exact path='/mypage/signout' component={SignOut} />
             <Route exact path='/mypage/authcodeshow' component={AuthCodeShow} />
+            <Route exact path='/mypage/edit' component={SignUp} />
+            <Route exact path='/mypage/images' component={Images} />
             <Route
               exact
               path='/mypage/changeauthcode'
