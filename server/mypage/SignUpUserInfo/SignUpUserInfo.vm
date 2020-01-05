@@ -6,11 +6,15 @@
   	 "id" : { "S" : "${util.autoId()}" },
      "createdDate": { "S" : "$util.time.nowFormatted("yyyy-MM-dd HH:mm:ssZ")" }
   },
+
+  #set( $expirationDate = $util.time.nowEpochSeconds() +  86400)
+
   "attributeValues" : {
       "ipAddress" : { "S" : "${context.identity.sourceIp[0]}"},
       "fullUserName": { "S" : "${context.arguments.input.fullUserName}" },
       "password": { "S" : "${context.arguments.input.password}" },
-      "status": { "S" : "init" }
+      "status": { "S" : "init" },
+      "expirationDate": { "N" : "$expirationDate" }
   }
 }
 
