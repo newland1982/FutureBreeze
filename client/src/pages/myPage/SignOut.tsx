@@ -43,14 +43,14 @@ const SignOut = () => {
   const history = useHistory();
   const location = useLocation();
 
-  const { dispatch } = useContext(UserContext);
+  const { user, dispatch } = useContext(UserContext);
 
   const signOut = async () => {
     try {
       await Auth.signOut();
       dispatch({
         type: 'SET_USER',
-        payload: { fullUserName: '', password: '', authCode: '' }
+        payload: { ...user, fullUserName: '', password: '', authCode: '' }
       });
       history.goBack();
     } catch {

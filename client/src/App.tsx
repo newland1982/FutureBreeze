@@ -1,4 +1,4 @@
-import './App.css';
+import './stylingData/App.css';
 import AuthCodeShow from './pages/myPage/AuthCodeShow';
 import ChangeAuthCode from './pages/myPage/ChangeAuthCode';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -10,18 +10,15 @@ import React from 'react';
 import SignIn from './pages/myPage/SignIn';
 import SignOut from './pages/myPage/SignOut';
 import SignUp from './pages/myPage/SignUp';
-import theme from './stylingData/theme';
-import ThemeContextProvider from './contexts/ThemeContext';
-import ThemeOption from './pages/myPage/ThemeOption';
 import UserContextProvider from './contexts/UserContext';
+import theme from './stylingData/theme';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/core/styles';
 
 const App: React.FC = () => {
   return (
     <BrowserRouter>
-      {/* <ThemeProvider theme={theme}> */}
-      <ThemeContextProvider>
+      <ThemeProvider theme={theme}>
         <UserContextProvider>
           <CssBaseline />
           <Switch>
@@ -36,14 +33,12 @@ const App: React.FC = () => {
               path='/mypage/changeauthcode'
               component={ChangeAuthCode}
             />
-            <Route exact path='/mypage/themeoption' component={ThemeOption} />
             <Route exact path='/mypage/quit' component={Quit} />
             <Route exact path='/failure/error' component={Error} />
             <Route component={NotFound} />
           </Switch>
         </UserContextProvider>
-      </ThemeContextProvider>
-      {/* </ThemeProvider> */}
+      </ThemeProvider>
     </BrowserRouter>
   );
 };

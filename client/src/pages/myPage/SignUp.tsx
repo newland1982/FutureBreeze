@@ -81,7 +81,7 @@ const SignUp = () => {
 
   const location = useLocation();
 
-  const { dispatch } = useContext(UserContext);
+  const { user, dispatch } = useContext(UserContext);
 
   const [userName, setUserName] = useState('');
   const [isValidUserName, setIsValidUserName] = useState(false);
@@ -235,7 +235,7 @@ const SignUp = () => {
 
             dispatch({
               type: 'SET_USER',
-              payload: { fullUserName, password, authCode }
+              payload: { ...user, fullUserName, password, authCode }
             });
 
             localStorage.setItem(

@@ -58,7 +58,7 @@ const SignIn = () => {
 
   const location = useLocation();
 
-  const { dispatch } = useContext(UserContext);
+  const { user, dispatch } = useContext(UserContext);
 
   const [authCode, setAuthCode] = useState('');
   const [isValidAuthCode, setIsValidAuthCode] = useState(false);
@@ -112,6 +112,7 @@ const SignIn = () => {
       dispatch({
         type: 'SET_USER',
         payload: {
+          ...user,
           fullUserName,
           password,
           authCode

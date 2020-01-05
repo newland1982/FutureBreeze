@@ -59,7 +59,7 @@ const ChangeAuthCode = () => {
 
   const location = useLocation();
 
-  const { dispatch } = useContext(UserContext);
+  const { user, dispatch } = useContext(UserContext);
 
   const [oldAuthCode, setOldAuthCode] = useState('');
   const [isValidAuthCode, setIsValidAuthCode] = useState(false);
@@ -142,6 +142,7 @@ const ChangeAuthCode = () => {
       dispatch({
         type: 'SET_USER',
         payload: {
+          ...user,
           fullUserName,
           password: newPassword,
           authCode: newAuthCode
