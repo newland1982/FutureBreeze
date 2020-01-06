@@ -15,42 +15,12 @@ import React, {
 } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
+import tileSizeCalc from '../../utilities/tileSizeCalc';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../../contexts/UserContext';
 import { mdiClose } from '@mdi/js';
 import { useTheme } from '@material-ui/core/styles';
-
-let lastInnerWidth: number = window.innerWidth;
-
-const tileWidthCalc = (lastInnerWidth: number) => {
-  const maxTileWidth = 480;
-  const minTileWidth = 241;
-
-  let tileColumnsNumber = 0;
-  let isFound = false;
-  let tileWidth = 0;
-
-  while (isFound) {
-    ++tileColumnsNumber;
-    if (tileColumnsNumber > 96) {
-      break;
-    }
-    const result = lastInnerWidth / tileColumnsNumber;
-
-    if (result > maxTileWidth) {
-      tileWidth = maxTileWidth;
-      continue;
-    }
-
-    if (result < minTileWidth) {
-      break;
-    }
-  }
-  return tileWidth;
-};
-
-tileWidthCalc(lastInnerWidth);
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -63,13 +33,13 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     gridContainer: {
       display: 'grid',
-      gridAutoRows: 180,
-      gridTemplateColumns: 'repeat(auto-fit, 244px)',
+      gridAutoRows: 175,
+      gridTemplateColumns: 'repeat(auto-fit, 248px)',
       justifyContent: 'center',
-      gridRowGap: 6,
-      gridColumnGap: 6,
-      paddingRight: 36,
-      paddingLeft: 36,
+      gridRowGap: 16,
+      gridColumnGap: 0,
+      paddingRight: 4,
+      paddingLeft: 4,
       paddingTop: 0,
       paddingBottom: 48,
       marginTop: 30
@@ -77,10 +47,14 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 const Images = () => {
+  let lastInnerWidth: number = window.innerWidth;
+  tileSizeCalc(lastInnerWidth);
   window.addEventListener('resize', () => {
     if (lastInnerWidth !== window.innerWidth) {
       lastInnerWidth = window.innerWidth;
       console.log('lastInnerWidthhfgf', lastInnerWidth);
+
+      tileSizeCalc(lastInnerWidth);
     }
   });
   console.log('innnerwidthhh', window.innerWidth);
