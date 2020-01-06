@@ -21,6 +21,37 @@ import { UserContext } from '../../contexts/UserContext';
 import { mdiClose } from '@mdi/js';
 import { useTheme } from '@material-ui/core/styles';
 
+let lastInnerWidth: number = window.innerWidth;
+
+const tileWidthCalc = (lastInnerWidth: number) => {
+  const maxTileWidth = 480;
+  const minTileWidth = 241;
+
+  let tileColumnsNumber = 0;
+  let isFound = false;
+  let tileWidth = 0;
+
+  while (isFound) {
+    ++tileColumnsNumber;
+    if (tileColumnsNumber > 96) {
+      break;
+    }
+    const result = lastInnerWidth / tileColumnsNumber;
+
+    if (result > maxTileWidth) {
+      tileWidth = maxTileWidth;
+      continue;
+    }
+
+    if (result < minTileWidth) {
+      break;
+    }
+  }
+  return tileWidth;
+};
+
+tileWidthCalc(lastInnerWidth);
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     searchBox: {
@@ -46,6 +77,14 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 const Images = () => {
+  window.addEventListener('resize', () => {
+    if (lastInnerWidth !== window.innerWidth) {
+      lastInnerWidth = window.innerWidth;
+      console.log('lastInnerWidthhfgf', lastInnerWidth);
+    }
+  });
+  console.log('innnerwidthhh', window.innerWidth);
+
   const classes = useStyles();
 
   const textFieldRef = useRef<HTMLInputElement>(null);
