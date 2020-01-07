@@ -77,15 +77,15 @@ const ChangeAuthCode = () => {
     return uint32HexArray.join('');
   }, []);
 
-  const userNamePrefix = oldAuthCode.slice(-256, -160);
-  const userName = oldAuthCode.slice(0, -256);
-  const fullUserName = `${userNamePrefix}${userName}`;
+  const usernamePrefix = oldAuthCode.slice(-256, -160);
+  const username = oldAuthCode.slice(0, -256);
+  const fullUsername = `${usernamePrefix}${username}`;
 
   const oldPassword = oldAuthCode.slice(-256);
 
-  const newPassword = `${userNamePrefix}${newRandomNumber}`;
+  const newPassword = `${usernamePrefix}${newRandomNumber}`;
 
-  const newAuthCode = `${userName}${userNamePrefix}${newRandomNumber}`;
+  const newAuthCode = `${username}${usernamePrefix}${newRandomNumber}`;
 
   const inputAuthCode = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -99,7 +99,7 @@ const ChangeAuthCode = () => {
         setIsValidAuthCode(false);
         return;
       }
-      if (!userName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)) {
+      if (!username.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)) {
         setIsValidAuthCode(false);
         return;
       }
@@ -110,7 +110,7 @@ const ChangeAuthCode = () => {
       setIsValidAuthCode(true);
     };
     oldAuthCodeCheck();
-  }, [oldPassword, oldAuthCode, userName]);
+  }, [oldPassword, oldAuthCode, username]);
 
   const changeAuthCode = async () => {
     setHasBeenClicked(true);
@@ -124,7 +124,7 @@ const ChangeAuthCode = () => {
     }
 
     try {
-      await Auth.signIn(fullUserName, oldPassword);
+      await Auth.signIn(fullUsername, oldPassword);
     } catch {
       localStorage.setItem('returnLocation', JSON.stringify(location.pathname));
       history.push('/failure/error');
@@ -143,7 +143,7 @@ const ChangeAuthCode = () => {
         type: 'SET_USER',
         payload: {
           ...user,
-          fullUserName,
+          fullUsername,
           password: newPassword,
           authCode: newAuthCode
         }

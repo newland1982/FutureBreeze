@@ -1,12 +1,12 @@
-## Resolver for Query.getUserName
+## Resolver for Query.getUsername
 {
     "version" : "2017-02-28",
     "operation" : "GetItem",
     "key" : {
-        "userName" : { "S" : "${context.arguments.userName}" }
+        "username" : { "S" : "${context.arguments.username}" }
     }
 }
 
 {
-  "userName": $utils.toJson($context.result.userName)
+  "username": $utils.toJson($context.result.username)
 }

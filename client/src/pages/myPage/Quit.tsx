@@ -64,9 +64,9 @@ const Quit = () => {
   const [isValidAuthCode, setIsValidAuthCode] = useState(false);
   const [hasBeenClicked, setHasBeenClicked] = useState(false);
 
-  const userNamePrefix = authCode.slice(-256, -160);
-  const userName = authCode.slice(0, -256);
-  const fullUserName = `${userNamePrefix}${userName}`;
+  const usernamePrefix = authCode.slice(-256, -160);
+  const username = authCode.slice(0, -256);
+  const fullUsername = `${usernamePrefix}${username}`;
 
   const password = authCode.slice(-256);
 
@@ -82,7 +82,7 @@ const Quit = () => {
         setIsValidAuthCode(false);
         return;
       }
-      if (!userName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)) {
+      if (!username.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)) {
         setIsValidAuthCode(false);
         return;
       }
@@ -93,7 +93,7 @@ const Quit = () => {
       setIsValidAuthCode(true);
     };
     authCodeCheck();
-  }, [password, authCode, userName]);
+  }, [password, authCode, username]);
 
   const deleteAccount = async () => {
     setHasBeenClicked(true);
@@ -107,13 +107,13 @@ const Quit = () => {
     }
 
     try {
-      await Auth.signIn(fullUserName, password);
+      await Auth.signIn(fullUsername, password);
 
       dispatch({
         type: 'SET_USER',
         payload: {
           ...user,
-          fullUserName,
+          fullUsername,
           password,
           authCode
         }

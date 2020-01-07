@@ -3,7 +3,7 @@
   "version": "2017-02-28",
   "operation": "PutItem",
   "key": {
-  	 "userName" : { "S" : "${context.arguments.input.userName}" }
+  	 "username" : { "S" : "${context.arguments.input.username}" }
   },
 
   "attributeValues" : {
@@ -11,9 +11,9 @@
       "jsonString": { "S" : "${context.arguments.input.jsonString}" }
   },
   "condition": {
-    "expression": "attribute_not_exists(#userName)",
+    "expression": "attribute_not_exists(#username)",
     "expressionNames": {
-      "#userName": "userName"
+      "#username": "username"
     }
   }
 }

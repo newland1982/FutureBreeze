@@ -12,7 +12,7 @@ const credentials = AWS.config.credentials;
 const mutationCreateUserData = gql(`
   mutation CreateUserData($input: CreateUserDataInput!) {
     createUserData(input: $input) {
-      userName
+      username
     }
   }`);
 
@@ -44,11 +44,11 @@ const clientSignUpUserInfo = new AWSAppSyncClient({
 });
 
 exports.handler = (event, context, callback) => {
-  const userName = event.userName.slice(96);
-  const userNamePrefix = event.userName.slice(0, 96);
+  const username = event.userName.slice(96);
+  const usernamePrefix = event.userName.slice(0, 96);
 
   const createUserDataInput = {
-    userName,
+    username,
     jsonString: '{}'
   };
 
@@ -59,8 +59,8 @@ exports.handler = (event, context, callback) => {
   };
 
   if (
-    !userName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/) ||
-    !userNamePrefix.match(/^[a-f0-9]{96}$/)
+    !username.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/) ||
+    !usernamePrefix.match(/^[a-f0-9]{96}$/)
   ) {
     (async () => {
       await clientSignUpUserInfo.hydrated();

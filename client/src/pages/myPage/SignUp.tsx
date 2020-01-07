@@ -83,12 +83,12 @@ const SignUp = () => {
 
   const { user, dispatch } = useContext(UserContext);
 
-  const [userName, setUserName] = useState('');
-  const [isValidUserName, setIsValidUserName] = useState(false);
-  const [isUniqueUserName, setIsUniqueUserName] = useState(true);
+  const [username, setUsername] = useState('');
+  const [isValidUsername, setIsValidUsername] = useState(false);
+  const [isUniqueUsername, setIsUniqueUsername] = useState(true);
   const [hasBeenClicked, setHasBeenClicked] = useState(false);
 
-  const userNamePrefix = useMemo(() => {
+  const usernamePrefix = useMemo(() => {
     let uint32HexArray = [];
     for (let i = 0; i < 12; i++) {
       uint32HexArray.push(
@@ -112,29 +112,29 @@ const SignUp = () => {
     return uint32HexArray.join('');
   }, []);
 
-  const fullUserName = `${userNamePrefix}${userName}`;
-  const password = `${userNamePrefix}${randomNumber}`;
-  const authCode = `${userName}${userNamePrefix}${randomNumber}`;
+  const fullUsername = `${usernamePrefix}${username}`;
+  const password = `${usernamePrefix}${randomNumber}`;
+  const authCode = `${username}${usernamePrefix}${randomNumber}`;
 
-  const inputUserName = (
+  const inputUsername = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setUserName(e.target.value);
+    setUsername(e.target.value);
   };
 
   useEffect(() => {
-    const userNameCheck = async () => {
-      if (!userName) {
-        setIsValidUserName(false);
+    const usernameCheck = async () => {
+      if (!username) {
+        setIsValidUsername(false);
         return;
       }
-      if (!userName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)) {
-        setIsValidUserName(false);
+      if (!username.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)) {
+        setIsValidUsername(false);
         return;
       }
-      const getUserName = `query GetUserName($userName: String!) {
-        getUserName(userName: $userName) {
-            userName
+      const getUsername = `query GetUsername($username: String!) {
+        getUsername(username: $username) {
+            username
         }
        }`;
 
@@ -145,26 +145,26 @@ const SignUp = () => {
 
       try {
         const result = await API.graphql(
-          graphqlOperation(getUserName, {
-            userName
+          graphqlOperation(getUsername, {
+            username
           })
         );
-        const userNameAlreadyExists = Boolean(
-          result?.data?.getUserName?.userName === userName
+        const usernameAlreadyExists = Boolean(
+          result?.data?.getUsername?.username === username
         );
 
-        !userNameAlreadyExists
-          ? setIsUniqueUserName(true)
-          : setIsUniqueUserName(false);
+        !usernameAlreadyExists
+          ? setIsUniqueUsername(true)
+          : setIsUniqueUsername(false);
       } catch (error) {
-        setIsValidUserName(false);
+        setIsValidUsername(false);
         return;
       } finally {
       }
-      setIsValidUserName(true);
+      setIsValidUsername(true);
     };
-    userNameCheck();
-  }, [userNamePrefix, userName]);
+    usernameCheck();
+  }, [usernamePrefix, username]);
 
   let subscription: { unsubscribe(): void };
 
@@ -177,12 +177,12 @@ const SignUp = () => {
     );
     const createSignUpUserInfo = `mutation CreateSignUpUserInfo($input: CreateSignUpUserInfoInput!) {
       createSignUpUserInfo(input: $input) {
-        fullUserName
+        fullUsername
       }
      }`;
 
     const createSignUpUserInfoInput = {
-      fullUserName,
+      fullUsername,
       password
     };
 
@@ -231,11 +231,11 @@ const SignUp = () => {
             subscription?.unsubscribe();
 
             await Auth.signOut();
-            await Auth.signIn(fullUserName, password);
+            await Auth.signIn(fullUsername, password);
 
             dispatch({
               type: 'SET_USER',
-              payload: { ...user, fullUserName, password, authCode }
+              payload: { ...user, fullUsername, password, authCode }
             });
 
             localStorage.setItem(
@@ -261,20 +261,20 @@ const SignUp = () => {
           <TextField
             ref={textFieldRef}
             className={classes.textField}
-            label='UserName'
+            label='Username'
             margin='dense'
             placeholder='e.g.  user_name,  name_123'
             variant='outlined'
-            value={userName}
+            value={username}
             onChange={(
               e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-            ) => inputUserName(e)}
+            ) => inputUsername(e)}
           />
           <Button
             className={classes.button}
             variant='contained'
             size='medium'
-            disabled={!isUniqueUserName || !isValidUserName || hasBeenClicked}
+            disabled={!isUniqueUsername || !isValidUsername || hasBeenClicked}
             onClick={() => signUp()}
           >
             Sign Up

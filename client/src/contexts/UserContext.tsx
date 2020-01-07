@@ -4,14 +4,14 @@ import userReducer from '../reducers/userReducer';
 import { useTheme } from '@material-ui/core/styles';
 
 type user = {
-  fullUserName: string;
+  fullUsername: string;
   password: string;
   authCode: string;
   selectedImage: string;
 };
 
 let initState = {
-  fullUserName: '',
+  fullUsername: '',
   password: '',
   authCode: '',
   selectedImage: 'ArtTower_0.jpg'
@@ -20,7 +20,7 @@ let initState = {
 type action = {
   type: string;
   payload: {
-    fullUserName: string;
+    fullUsername: string;
     password: string;
     authCode: string;
     selectedImage: string;

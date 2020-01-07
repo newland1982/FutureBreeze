@@ -144,7 +144,7 @@ exports.handler = (event, context, callback) => {
       }
 
       userPool.signUp(
-        record.dynamodb.NewImage.fullUserName.S,
+        record.dynamodb.NewImage.fullUsername.S,
         record.dynamodb.NewImage.password.S,
         [],
         null,

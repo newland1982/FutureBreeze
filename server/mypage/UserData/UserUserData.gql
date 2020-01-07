@@ -1,9 +1,9 @@
 type Query {
-  getUserName(userName: String!): UserName
+  getUsername(username: String!): Username
 }
 
-type UserName {
-  userName: String!
+type Username {
+  username: String!
 }
 
 schema {

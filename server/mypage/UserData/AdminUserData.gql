@@ -1,25 +1,25 @@
 input CreateUserDataInput {
-  userName: String!
+  username: String!
   jsonString: String
 }
 
 type Mutation {
-  createUserData(input: CreateUserDataInput!): UserName
+  createUserData(input: CreateUserDataInput!): Username
 }
 
 type Query {
-  getUserName(userName: String!): UserName
-  getUserData(userName: String!): UserData
+  getUsername(username: String!): Username
+  getUserData(username: String!): UserData
 }
 
 type UserData {
-  userName: String!
+  username: String!
   createdDate: String
   jsonString: String
 }
 
-type UserName {
-  userName: String!
+type Username {
+  username: String!
 }
 
 schema {
