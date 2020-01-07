@@ -5,6 +5,9 @@ const tileSizeCalc = (lastInnerWidth: number) => {
   let tileColumnsNumber = 0;
   let tileWidth = 0;
 
+  const aspectRatio = 0.707;
+  const tileSize = { width: 0, height: 0 };
+
   while (true) {
     ++tileColumnsNumber;
     if (tileColumnsNumber > 96) {
@@ -24,7 +27,11 @@ const tileSizeCalc = (lastInnerWidth: number) => {
     tileWidth = result;
   }
   console.log('tileWidthhhhh', tileWidth);
-  return tileWidth;
+
+  tileSize.width = tileWidth;
+  tileSize.height = tileWidth * aspectRatio;
+
+  return tileSize;
 };
 
 export default tileSizeCalc;
