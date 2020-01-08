@@ -1,4 +1,4 @@
-const tileSizeCalc = (lastInnerWidth: number) => {
+const tileSizeCalc = (lastInnerWidth: number, gridColumnGap: number) => {
   const maxTileWidth = 480;
   const minTileWidth = 241;
 

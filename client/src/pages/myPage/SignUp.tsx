@@ -156,7 +156,7 @@ const SignUp = () => {
         !usernameAlreadyExists
           ? setIsUniqueUsername(true)
           : setIsUniqueUsername(false);
-      } catch (error) {
+      } catch {
         setIsValidUsername(false);
         return;
       } finally {
@@ -192,7 +192,7 @@ const SignUp = () => {
           input: createSignUpUserInfoInput
         })
       );
-    } catch (error) {
+    } catch {
       localStorage.setItem('returnLocation', JSON.stringify(location.pathname));
       history.push('/failure/error');
       return;

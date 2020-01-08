@@ -22,6 +22,8 @@ import { UserContext } from '../../contexts/UserContext';
 import { mdiClose } from '@mdi/js';
 import { useTheme } from '@material-ui/core/styles';
 
+const gridColumnGap = 14;
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     searchBox: {
@@ -34,12 +36,12 @@ const useStyles = makeStyles((theme: Theme) =>
     gridContainer: {
       display: 'grid',
       gridAutoRows: 175,
-      gridTemplateColumns: 'repeat(auto-fit, 248px)',
+      gridTemplateColumns: 'repeat(auto-fit, 268px)',
       justifyContent: 'center',
-      gridRowGap: 16,
-      gridColumnGap: 0,
-      paddingRight: 4,
-      paddingLeft: 4,
+      gridRowGap: gridColumnGap,
+      gridColumnGap: gridColumnGap,
+      paddingRight: 0,
+      paddingLeft: 0,
       paddingTop: 0,
       paddingBottom: 48,
       marginTop: 30
@@ -47,14 +49,22 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 const Images = () => {
+  const gridContainerRef = useRef<HTMLDivElement>(null);
+  console.log('containaerrrr1', gridContainerRef.current?.clientWidth);
+  // gridContainerRef.current?.setAttribute('spellcheck', 'false');
+  useEffect(() => {
+    console.log('containaerrrr3', gridContainerRef.current?.clientWidth);
+  }, []);
+
   let lastInnerWidth: number = window.innerWidth;
-  tileSizeCalc(lastInnerWidth);
+  tileSizeCalc(lastInnerWidth, gridColumnGap);
   window.addEventListener('resize', () => {
+    console.log('containaerrrr2', gridContainerRef.current?.clientWidth);
     if (lastInnerWidth !== window.innerWidth) {
       lastInnerWidth = window.innerWidth;
       console.log('lastInnerWidthhfgf', lastInnerWidth);
 
-      tileSizeCalc(lastInnerWidth);
+      tileSizeCalc(lastInnerWidth, gridColumnGap);
     }
   });
   console.log('innnerwidthhh', window.innerWidth);
@@ -144,7 +154,7 @@ const Images = () => {
         </Toolbar>
       </Box>
       <Container maxWidth='xl'>
-        <div className={classes.gridContainer}>
+        <div ref={gridContainerRef} className={classes.gridContainer}>
           {tileData.map(tile => (
             <GridListTile
               className={classes.gridListTile}
