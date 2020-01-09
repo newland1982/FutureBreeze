@@ -1,19 +1,21 @@
-const tileSizeCalc = (lastInnerWidth: number, gridColumnGap: number) => {
-  const maxTileWidth = 480;
-  const minTileWidth = 241;
+const tileSizeCalc = (gridContainerWidth: number, gridColumnGap: number) => {
+  const maxTileWidth = 408;
+  const minTileWidth = 252;
 
-  let tileColumnsNumber = 0;
+  let gridColumnsNumber = 0;
   let tileWidth = 0;
 
-  const aspectRatio = 0.707;
-  const tileSize = { width: 0, height: 0 };
+  const tileAspectRatio = 0.707;
+  const tileSize = { tileWidth: 0, tileHeight: 0 };
 
   while (true) {
-    ++tileColumnsNumber;
-    if (tileColumnsNumber > 96) {
+    ++gridColumnsNumber;
+    if (gridColumnsNumber > 96) {
       break;
     }
-    const result = lastInnerWidth / tileColumnsNumber;
+    const result =
+      (gridContainerWidth - (gridColumnsNumber - 1) * gridColumnGap) /
+      gridColumnsNumber;
 
     if (result > maxTileWidth) {
       tileWidth = maxTileWidth;
@@ -26,10 +28,9 @@ const tileSizeCalc = (lastInnerWidth: number, gridColumnGap: number) => {
 
     tileWidth = result;
   }
-  console.log('tileWidthhhhh', tileWidth);
 
-  tileSize.width = tileWidth;
-  tileSize.height = tileWidth * aspectRatio;
+  tileSize.tileWidth = tileWidth;
+  tileSize.tileHeight = tileWidth * tileAspectRatio;
 
   return tileSize;
 };

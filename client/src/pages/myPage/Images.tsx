@@ -22,7 +22,12 @@ import { UserContext } from '../../contexts/UserContext';
 import { mdiClose } from '@mdi/js';
 import { useTheme } from '@material-ui/core/styles';
 
+let gridContainerWidth = 0;
+const gridRowGap = 14;
 const gridColumnGap = 14;
+
+let tileWidth = 0;
+let tileHeight = 0;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -35,10 +40,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     gridContainer: {
       display: 'grid',
-      gridAutoRows: 175,
-      gridTemplateColumns: 'repeat(auto-fit, 268px)',
+      gridAutoRows: tileHeight,
+      gridTemplateColumns: `repeat(auto-fit, ${tileWidth})`,
       justifyContent: 'center',
-      gridRowGap: gridColumnGap,
+      gridRowGap: gridRowGap,
       gridColumnGap: gridColumnGap,
       paddingRight: 0,
       paddingLeft: 0,
@@ -50,24 +55,37 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 const Images = () => {
   const gridContainerRef = useRef<HTMLDivElement>(null);
-  console.log('containaerrrr1', gridContainerRef.current?.clientWidth);
-  // gridContainerRef.current?.setAttribute('spellcheck', 'false');
-  useEffect(() => {
-    console.log('containaerrrr3', gridContainerRef.current?.clientWidth);
-  }, []);
+
+  // useEffect(() => {
+  //   console.log('containaerrrr3', gridContainerRef.current?.clientWidth);
+  //   if (!gridContainerRef.current?.clientWidth) {
+  //     gridContainerWidth = window.innerWidth;
+  //   } else {
+  //     gridContainerWidth = gridContainerRef.current?.clientWidth;
+  //   }
+  //   // ({ tileWidth, tileHeight } = tileSizeCalc(
+  //   //   gridContainerWidth,
+  //   //   gridColumnGap
+  //   // ));
+  // });
 
   let lastInnerWidth: number = window.innerWidth;
-  tileSizeCalc(lastInnerWidth, gridColumnGap);
+  tileSizeCalc(gridContainerWidth, gridColumnGap);
   window.addEventListener('resize', () => {
-    console.log('containaerrrr2', gridContainerRef.current?.clientWidth);
+    console.log('gridContainerReffff', gridContainerRef);
     if (lastInnerWidth !== window.innerWidth) {
       lastInnerWidth = window.innerWidth;
-      console.log('lastInnerWidthhfgf', lastInnerWidth);
 
-      tileSizeCalc(lastInnerWidth, gridColumnGap);
+      gridContainerRef.current?.clientWidth
+        ? (gridContainerWidth = gridContainerRef.current?.clientWidth)
+        : (gridContainerWidth = window.innerWidth);
+
+      ({ tileWidth, tileHeight } = tileSizeCalc(
+        gridContainerWidth,
+        gridColumnGap
+      ));
     }
   });
-  console.log('innnerwidthhh', window.innerWidth);
 
   const classes = useStyles();
 
