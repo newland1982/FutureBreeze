@@ -15,19 +15,11 @@ import React, {
 } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
-import tileSizeCalc from '../../utilities/tileSizeCalc';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../../contexts/UserContext';
 import { mdiClose } from '@mdi/js';
 import { useTheme } from '@material-ui/core/styles';
-
-let gridContainerWidth = 0;
-const gridRowGap = 14;
-const gridColumnGap = 14;
-
-let tileWidth = 0;
-let tileHeight = 0;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -35,58 +27,38 @@ const useStyles = makeStyles((theme: Theme) =>
       width: 244,
       margin: '0 auto'
     },
-    gridListTile: {
-      cursor: 'pointer'
-    },
     gridContainer: {
       display: 'grid',
-      gridAutoRows: tileHeight,
-      gridTemplateColumns: `repeat(auto-fit, ${tileWidth})`,
-      justifyContent: 'center',
-      gridRowGap: gridRowGap,
-      gridColumnGap: gridColumnGap,
+      // justifyContent: 'center',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(252px, 1fr))',
+      gridTemplateRows: '1fr',
+      // gridAutoRows: '300px',
+      gridRowGap: 16,
+      gridColumnGap: 16,
       paddingRight: 0,
       paddingLeft: 0,
       paddingTop: 0,
       paddingBottom: 48,
-      marginTop: 30
+      marginTop: 48
+    },
+    gridListTile: {
+      cursor: 'pointer',
+      display: 'flex',
+      justifyContent: 'center',
+      width: '100%',
+      paddingTop: '70%',
+      position: 'relative',
+      '& .MuiGridListTile-tile': {
+        width: '100%',
+        height: '100%',
+        position: 'absolute',
+        top: 0,
+        objectFit: 'cover'
+      }
     }
   })
 );
 const Images = () => {
-  const gridContainerRef = useRef<HTMLDivElement>(null);
-
-  // useEffect(() => {
-  //   console.log('containaerrrr3', gridContainerRef.current?.clientWidth);
-  //   if (!gridContainerRef.current?.clientWidth) {
-  //     gridContainerWidth = window.innerWidth;
-  //   } else {
-  //     gridContainerWidth = gridContainerRef.current?.clientWidth;
-  //   }
-  //   // ({ tileWidth, tileHeight } = tileSizeCalc(
-  //   //   gridContainerWidth,
-  //   //   gridColumnGap
-  //   // ));
-  // });
-
-  let lastInnerWidth: number = window.innerWidth;
-  tileSizeCalc(gridContainerWidth, gridColumnGap);
-  window.addEventListener('resize', () => {
-    console.log('gridContainerReffff', gridContainerRef);
-    if (lastInnerWidth !== window.innerWidth) {
-      lastInnerWidth = window.innerWidth;
-
-      gridContainerRef.current?.clientWidth
-        ? (gridContainerWidth = gridContainerRef.current?.clientWidth)
-        : (gridContainerWidth = window.innerWidth);
-
-      ({ tileWidth, tileHeight } = tileSizeCalc(
-        gridContainerWidth,
-        gridColumnGap
-      ));
-    }
-  });
-
   const classes = useStyles();
 
   const textFieldRef = useRef<HTMLInputElement>(null);
@@ -172,12 +144,11 @@ const Images = () => {
         </Toolbar>
       </Box>
       <Container maxWidth='xl'>
-        <div ref={gridContainerRef} className={classes.gridContainer}>
+        <div className={classes.gridContainer}>
           {tileData.map(tile => (
             <GridListTile
               className={classes.gridListTile}
               key={tile.imageId}
-              cols={1}
               onClick={() =>
                 dispatch({
                   type: 'SET_USER',
