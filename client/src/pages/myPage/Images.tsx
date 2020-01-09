@@ -29,10 +29,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     gridContainer: {
       display: 'grid',
-      // justifyContent: 'center',
       gridTemplateColumns: 'repeat(auto-fit, minmax(252px, 1fr))',
       gridTemplateRows: '1fr',
-      // gridAutoRows: '300px',
       gridRowGap: 16,
       gridColumnGap: 16,
       paddingRight: 0,
@@ -43,8 +41,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     gridListTile: {
       cursor: 'pointer',
-      display: 'flex',
-      justifyContent: 'center',
       width: '100%',
       paddingTop: '70%',
       position: 'relative',
