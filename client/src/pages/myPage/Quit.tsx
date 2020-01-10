@@ -60,40 +60,40 @@ const Quit = () => {
 
   const { user, dispatch } = useContext(UserContext);
 
-  const [authCode, setAuthCode] = useState('');
-  const [isValidAuthCode, setIsValidAuthCode] = useState(false);
+  const [authcode, setAuthcode] = useState('');
+  const [isValidAuthcode, setIsValidAuthcode] = useState(false);
   const [hasBeenClicked, setHasBeenClicked] = useState(false);
 
-  const usernamePrefix = authCode.slice(-256, -160);
-  const username = authCode.slice(0, -256);
+  const usernamePrefix = authcode.slice(-256, -160);
+  const username = authcode.slice(0, -256);
   const fullUsername = `${usernamePrefix}${username}`;
 
-  const password = authCode.slice(-256);
+  const password = authcode.slice(-256);
 
-  const inputAuthCode = (
+  const inputAuthcode = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setAuthCode(e.target.value);
+    setAuthcode(e.target.value);
   };
 
   useEffect(() => {
-    const authCodeCheck = async () => {
-      if (!authCode) {
-        setIsValidAuthCode(false);
+    const authcodeCheck = async () => {
+      if (!authcode) {
+        setIsValidAuthcode(false);
         return;
       }
       if (!username.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)) {
-        setIsValidAuthCode(false);
+        setIsValidAuthcode(false);
         return;
       }
       if (!password.match(/^[a-f0-9]{256}$/)) {
-        setIsValidAuthCode(false);
+        setIsValidAuthcode(false);
         return;
       }
-      setIsValidAuthCode(true);
+      setIsValidAuthcode(true);
     };
-    authCodeCheck();
-  }, [password, authCode, username]);
+    authcodeCheck();
+  }, [password, authcode, username]);
 
   const deleteAccount = async () => {
     setHasBeenClicked(true);
@@ -115,7 +115,7 @@ const Quit = () => {
           ...user,
           fullUsername,
           password,
-          authCode
+          authcode
         }
       });
 
@@ -139,19 +139,19 @@ const Quit = () => {
           <TextField
             ref={textFieldRef}
             className={classes.textField}
-            label='AuthCode'
+            label='Authcode'
             margin='dense'
             variant='outlined'
-            value={authCode}
+            value={authcode}
             onChange={(
               e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-            ) => inputAuthCode(e)}
+            ) => inputAuthcode(e)}
           />
           <Button
             className={classes.button}
             variant='contained'
             size='medium'
-            disabled={!isValidAuthCode || hasBeenClicked}
+            disabled={!isValidAuthcode || hasBeenClicked}
             onClick={() => deleteAccount()}
           >
             Quit

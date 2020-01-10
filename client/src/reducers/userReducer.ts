@@ -1,7 +1,7 @@
 type user = {
   fullUsername: string;
   password: string;
-  authCode: string;
+  authcode: string;
   selectedImage: string;
 };
 
@@ -10,7 +10,7 @@ type action = {
   payload: {
     fullUsername: string;
     password: string;
-    authCode: string;
+    authcode: string;
     selectedImage: string;
   };
 };
@@ -21,7 +21,7 @@ const userReducer = (state: user, action: action) => {
       return {
         fullUsername: action.payload.fullUsername,
         password: action.payload.password,
-        authCode: action.payload.authCode,
+        authcode: action.payload.authcode,
         selectedImage: action.payload.selectedImage
       };
     default:

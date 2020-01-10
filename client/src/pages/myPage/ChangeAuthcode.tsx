@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const ChangeAuthCode = () => {
+const ChangeAuthcode = () => {
   const classes = useStyles();
 
   const textFieldRef = useRef<HTMLInputElement>(null);
@@ -61,8 +61,8 @@ const ChangeAuthCode = () => {
 
   const { user, dispatch } = useContext(UserContext);
 
-  const [oldAuthCode, setOldAuthCode] = useState('');
-  const [isValidAuthCode, setIsValidAuthCode] = useState(false);
+  const [oldAuthcode, setOldAuthcode] = useState('');
+  const [isValidAuthcode, setIsValidAuthcode] = useState(false);
   const [hasBeenClicked, setHasBeenClicked] = useState(false);
 
   const newRandomNumber = useMemo(() => {
@@ -77,42 +77,42 @@ const ChangeAuthCode = () => {
     return uint32HexArray.join('');
   }, []);
 
-  const usernamePrefix = oldAuthCode.slice(-256, -160);
-  const username = oldAuthCode.slice(0, -256);
+  const usernamePrefix = oldAuthcode.slice(-256, -160);
+  const username = oldAuthcode.slice(0, -256);
   const fullUsername = `${usernamePrefix}${username}`;
 
-  const oldPassword = oldAuthCode.slice(-256);
+  const oldPassword = oldAuthcode.slice(-256);
 
   const newPassword = `${usernamePrefix}${newRandomNumber}`;
 
-  const newAuthCode = `${username}${usernamePrefix}${newRandomNumber}`;
+  const newAuthcode = `${username}${usernamePrefix}${newRandomNumber}`;
 
-  const inputAuthCode = (
+  const inputAuthcode = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setOldAuthCode(e.target.value);
+    setOldAuthcode(e.target.value);
   };
 
   useEffect(() => {
-    const oldAuthCodeCheck = async () => {
-      if (!oldAuthCode) {
-        setIsValidAuthCode(false);
+    const oldAuthcodeCheck = async () => {
+      if (!oldAuthcode) {
+        setIsValidAuthcode(false);
         return;
       }
       if (!username.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)) {
-        setIsValidAuthCode(false);
+        setIsValidAuthcode(false);
         return;
       }
       if (!oldPassword.match(/^[a-f0-9]{256}$/)) {
-        setIsValidAuthCode(false);
+        setIsValidAuthcode(false);
         return;
       }
-      setIsValidAuthCode(true);
+      setIsValidAuthcode(true);
     };
-    oldAuthCodeCheck();
-  }, [oldPassword, oldAuthCode, username]);
+    oldAuthcodeCheck();
+  }, [oldPassword, oldAuthcode, username]);
 
-  const changeAuthCode = async () => {
+  const changeAuthcode = async () => {
     setHasBeenClicked(true);
 
     try {
@@ -145,7 +145,7 @@ const ChangeAuthCode = () => {
           ...user,
           fullUsername,
           password: newPassword,
-          authCode: newAuthCode
+          authcode: newAuthcode
         }
       });
 
@@ -165,22 +165,22 @@ const ChangeAuthCode = () => {
           <TextField
             ref={textFieldRef}
             className={classes.textField}
-            label='AuthCode'
+            label='Authcode'
             margin='dense'
             variant='outlined'
-            value={oldAuthCode}
+            value={oldAuthcode}
             onChange={(
               e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-            ) => inputAuthCode(e)}
+            ) => inputAuthcode(e)}
           />
           <Button
             className={classes.button}
             variant='contained'
             size='medium'
-            disabled={!isValidAuthCode || hasBeenClicked}
-            onClick={() => changeAuthCode()}
+            disabled={!isValidAuthcode || hasBeenClicked}
+            onClick={() => changeAuthcode()}
           >
-            Change AuthCode
+            Change Authcode
           </Button>
         </Paper>
       </Box>
@@ -188,4 +188,4 @@ const ChangeAuthCode = () => {
   );
 };
 
-export default ChangeAuthCode;
+export default ChangeAuthcode;

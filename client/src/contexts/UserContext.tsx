@@ -6,14 +6,14 @@ import { useTheme } from '@material-ui/core/styles';
 type user = {
   fullUsername: string;
   password: string;
-  authCode: string;
+  authcode: string;
   selectedImage: string;
 };
 
 let initState = {
   fullUsername: '',
   password: '',
-  authCode: '',
+  authcode: '',
   selectedImage: 'ArtTower_0.jpg'
 };
 
@@ -22,7 +22,7 @@ type action = {
   payload: {
     fullUsername: string;
     password: string;
-    authCode: string;
+    authcode: string;
     selectedImage: string;
   };
 };

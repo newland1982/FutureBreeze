@@ -79,7 +79,7 @@ const Menu = () => {
           { name: 'Sign In', path: '/mypage/signin' },
           { name: 'Sign Up', path: '/mypage/signup' },
           { name: 'Sign Out', path: '/mypage/signout' },
-          { name: 'AuthCode', path: '/mypage/changeauthcode' },
+          { name: 'Authcode', path: '/mypage/changeauthcode' },
           { name: 'Edit', path: '/mypage/signin' },
           { name: 'Images', path: '/mypage/images' }
         ].map(link => (

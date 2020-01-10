@@ -114,7 +114,7 @@ const SignUp = () => {
 
   const fullUsername = `${usernamePrefix}${username}`;
   const password = `${usernamePrefix}${randomNumber}`;
-  const authCode = `${username}${usernamePrefix}${randomNumber}`;
+  const authcode = `${username}${usernamePrefix}${randomNumber}`;
 
   const inputUsername = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -208,6 +208,7 @@ const SignUp = () => {
       value: { data: { onSetStatus: { status: string } } };
     };
 
+    let timerId!: number;
     try {
       subscription = await API.graphql(graphqlOperation(setStatus))?.subscribe({
         next: async (eventData: eventData) => {
@@ -218,6 +219,7 @@ const SignUp = () => {
             )
           ) {
             subscription?.unsubscribe();
+            clearTimeout(timerId);
 
             localStorage.setItem(
               'returnLocation',
@@ -229,13 +231,14 @@ const SignUp = () => {
           }
           if (eventData.value.data.onSetStatus.status === 'hasSignedUp') {
             subscription?.unsubscribe();
+            clearTimeout(timerId);
 
             await Auth.signOut();
             await Auth.signIn(fullUsername, password);
 
             dispatch({
               type: 'SET_USER',
-              payload: { ...user, fullUsername, password, authCode }
+              payload: { ...user, fullUsername, password, authcode }
             });
 
             localStorage.setItem(
@@ -248,9 +251,16 @@ const SignUp = () => {
       });
     } catch {
       subscription?.unsubscribe();
+      clearTimeout(timerId);
       localStorage.setItem('returnLocation', JSON.stringify(location.pathname));
       history.push('/failure/error');
     }
+    timerId = window.setTimeout(() => {
+      subscription?.unsubscribe();
+      console.log('unsubsccc', subscription);
+      localStorage.setItem('returnLocation', JSON.stringify(location.pathname));
+      history.push('/failure/error');
+    }, 12000);
   };
 
   return (

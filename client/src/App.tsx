@@ -1,6 +1,6 @@
 import './stylingData/App.css';
-import AuthCodeShow from './pages/myPage/AuthCodeShow';
-import ChangeAuthCode from './pages/myPage/ChangeAuthCode';
+import AuthcodeShow from './pages/myPage/AuthcodeShow';
+import ChangeAuthcode from './pages/myPage/ChangeAuthcode';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Error from './pages/failure/Error';
 import Images from './pages/myPage/Images';
@@ -25,13 +25,13 @@ const App: React.FC = () => {
             <Route exact path='/mypage/signin' component={SignIn} />
             <Route exact path='/mypage/signup' component={SignUp} />
             <Route exact path='/mypage/signout' component={SignOut} />
-            <Route exact path='/mypage/authcodeshow' component={AuthCodeShow} />
+            <Route exact path='/mypage/authcodeshow' component={AuthcodeShow} />
             <Route exact path='/mypage/edit' component={SignUp} />
             <Route exact path='/mypage/images' component={Images} />
             <Route
               exact
               path='/mypage/changeauthcode'
-              component={ChangeAuthCode}
+              component={ChangeAuthcode}
             />
             <Route exact path='/mypage/quit' component={Quit} />
             <Route exact path='/failure/error' component={Error} />

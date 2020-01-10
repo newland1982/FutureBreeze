@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     gridContainer: {
       display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(252px, 1fr))',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(276px, 1fr))',
       gridTemplateRows: '1fr',
       gridRowGap: 16,
       gridColumnGap: 16,
