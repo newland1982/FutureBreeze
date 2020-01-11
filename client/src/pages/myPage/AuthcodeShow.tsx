@@ -22,12 +22,12 @@ const useStyles = makeStyles((theme: Theme) =>
       minWidth: 276,
       maxWidth: 360,
       height: 'auto',
-      minHeight: 240
+      minHeight: 260
     },
     display: {
+      wordWrap: 'break-word',
       width: '100%',
-      padding: '20px',
-      wordWrap: 'break-word'
+      padding: '20px'
     }
   })
 );
