@@ -257,7 +257,6 @@ const SignUp = () => {
     }
     timerId = window.setTimeout(() => {
       subscription?.unsubscribe();
-      console.log('unsubsccc', subscription);
       localStorage.setItem('returnLocation', JSON.stringify(location.pathname));
       history.push('/failure/error');
     }, 12000);

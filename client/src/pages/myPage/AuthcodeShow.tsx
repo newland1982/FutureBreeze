@@ -21,15 +21,12 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '48%',
       minWidth: 276,
       maxWidth: 360,
-      height: '48%',
-      minHeight: 264,
-      maxHeight: 360,
-      padding: theme.spacing(3, 2)
+      height: 'auto',
+      minHeight: 240
     },
     display: {
-      width: '48%',
-      minWidth: 252,
-      maxWidth: 360,
+      width: '100%',
+      padding: '20px',
       wordWrap: 'break-word'
     }
   })
