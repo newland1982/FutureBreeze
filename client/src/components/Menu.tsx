@@ -10,11 +10,12 @@ import Toolbar from '@material-ui/core/Toolbar';
 import { Link } from 'react-router-dom';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { mdiMenu } from '@mdi/js';
+import { createMuiTheme } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     toolBar: {
-      maxWidth: 1630,
+      maxWidth: createMuiTheme().breakpoints.values.xl,
       paddingTop: 16,
       margin: '0 auto'
     },

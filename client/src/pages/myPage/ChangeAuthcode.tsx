@@ -1,5 +1,6 @@
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
+import LoadingAnimation from '../../components/LoadingAnimation';
 import Menu from '../../components/Menu';
 import Paper from '@material-ui/core/Paper';
 import React, {
@@ -160,30 +161,37 @@ const ChangeAuthcode = () => {
   return (
     <Fragment>
       <Menu />
-      <Box className={classes.root}>
-        <Paper className={classes.paper}>
-          <TextField
-            ref={textFieldRef}
-            className={classes.textField}
-            label='Authcode'
-            margin='dense'
-            variant='outlined'
-            value={oldAuthcode}
-            onChange={(
-              e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-            ) => inputAuthcode(e)}
-          />
-          <Button
-            className={classes.button}
-            variant='contained'
-            size='medium'
-            disabled={!isValidAuthcode || hasBeenClicked}
-            onClick={() => changeAuthcode()}
-          >
-            Change Authcode
-          </Button>
-        </Paper>
-      </Box>
+      <div
+        style={{
+          display: `${hasBeenClicked ? 'none' : 'inline'}`
+        }}
+      >
+        <Box className={classes.root}>
+          <Paper className={classes.paper}>
+            <TextField
+              ref={textFieldRef}
+              className={classes.textField}
+              label='Authcode'
+              margin='dense'
+              variant='outlined'
+              value={oldAuthcode}
+              onChange={(
+                e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+              ) => inputAuthcode(e)}
+            />
+            <Button
+              className={classes.button}
+              variant='contained'
+              size='medium'
+              disabled={!isValidAuthcode || hasBeenClicked}
+              onClick={() => changeAuthcode()}
+            >
+              Change Authcode
+            </Button>
+          </Paper>
+        </Box>
+      </div>
+      <LoadingAnimation hasBeenClicked={hasBeenClicked} />
     </Fragment>
   );
 };

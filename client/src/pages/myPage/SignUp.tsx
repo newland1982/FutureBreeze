@@ -1,6 +1,7 @@
 import Amplify, { API, Auth, graphqlOperation } from 'aws-amplify';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
+import LoadingAnimation from '../../components/LoadingAnimation';
 import Menu from '../../components/Menu';
 import Paper from '@material-ui/core/Paper';
 import React, {
@@ -256,31 +257,38 @@ const SignUp = () => {
   return (
     <Fragment>
       <Menu />
-      <Box className={classes.root}>
-        <Paper className={classes.paper}>
-          <TextField
-            ref={textFieldRef}
-            className={classes.textField}
-            label='Username'
-            margin='dense'
-            placeholder='e.g.  user_name,  name_123'
-            variant='outlined'
-            value={username}
-            onChange={(
-              e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-            ) => inputUsername(e)}
-          />
-          <Button
-            className={classes.button}
-            variant='contained'
-            size='medium'
-            disabled={!isUniqueUsername || !isValidUsername || hasBeenClicked}
-            onClick={() => signUp()}
-          >
-            Sign Up
-          </Button>
-        </Paper>
-      </Box>
+      <div
+        style={{
+          display: `${hasBeenClicked ? 'none' : 'inline'}`
+        }}
+      >
+        <Box className={classes.root}>
+          <Paper className={classes.paper}>
+            <TextField
+              ref={textFieldRef}
+              className={classes.textField}
+              label='Username'
+              margin='dense'
+              placeholder='e.g.  user_name,  name_123'
+              variant='outlined'
+              value={username}
+              onChange={(
+                e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+              ) => inputUsername(e)}
+            />
+            <Button
+              className={classes.button}
+              variant='contained'
+              size='medium'
+              disabled={!isUniqueUsername || !isValidUsername || hasBeenClicked}
+              onClick={() => signUp()}
+            >
+              Sign Up
+            </Button>
+          </Paper>
+        </Box>
+      </div>
+      <LoadingAnimation hasBeenClicked={hasBeenClicked} />
     </Fragment>
   );
 };
