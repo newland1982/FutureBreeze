@@ -15,7 +15,7 @@ import React, {
 import TextField from '@material-ui/core/TextField';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../../contexts/UserContext';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -79,8 +79,6 @@ const SignUp = () => {
   textFieldRef.current?.setAttribute('spellcheck', 'false');
 
   const history = useHistory();
-
-  const location = useLocation();
 
   const { user, dispatch } = useContext(UserContext);
 
@@ -194,7 +192,6 @@ const SignUp = () => {
         })
       );
     } catch {
-      localStorage.setItem('returnLocation', JSON.stringify(location.pathname));
       history.push('/failure/error');
       return;
     }
@@ -219,13 +216,7 @@ const SignUp = () => {
             )
           ) {
             subscription?.unsubscribe();
-
-            localStorage.setItem(
-              'returnLocation',
-              JSON.stringify(location.pathname)
-            );
             history.push('/failure/error');
-
             return;
           }
           if (eventData.value.data.onSetStatus.status === 'hasSignedUp') {
@@ -239,17 +230,12 @@ const SignUp = () => {
               payload: { ...user, fullUsername, password, authcode }
             });
 
-            localStorage.setItem(
-              'returnLocation',
-              JSON.stringify(location.pathname)
-            );
             history.push('/mypage/authcodeshow');
           }
         }
       });
     } catch {
       subscription?.unsubscribe();
-      localStorage.setItem('returnLocation', JSON.stringify(location.pathname));
       history.push('/failure/error');
     }
   };

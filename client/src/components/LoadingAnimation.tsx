@@ -6,8 +6,7 @@ const useStyles = makeStyles({
   loadingAnimation: {
     justifySelf: 'center',
     alignSelf: 'center',
-    color: '#fff',
-    marginBottom: '112px'
+    color: '#fff'
   }
 });
 

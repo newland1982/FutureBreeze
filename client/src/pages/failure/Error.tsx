@@ -23,11 +23,7 @@ const Error = () => {
   const history = useHistory();
 
   const goBack = () => {
-    const returnLocation = localStorage.getItem('returnLocation');
-    if (returnLocation) {
-      const parsedReturnLocation = JSON.parse(returnLocation);
-      history.push(parsedReturnLocation);
-    }
+    history.goBack();
   };
 
   return (

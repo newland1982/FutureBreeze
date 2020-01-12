@@ -15,7 +15,7 @@ import TextField from '@material-ui/core/TextField';
 import { Auth } from 'aws-amplify';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../../contexts/UserContext';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -57,8 +57,6 @@ const ChangeAuthcode = () => {
   textFieldRef.current?.setAttribute('spellcheck', 'false');
 
   const history = useHistory();
-
-  const location = useLocation();
 
   const { user, dispatch } = useContext(UserContext);
 
@@ -119,7 +117,6 @@ const ChangeAuthcode = () => {
     try {
       await Auth.signOut();
     } catch {
-      localStorage.setItem('returnLocation', JSON.stringify(location.pathname));
       history.push('/failure/error');
       return;
     }
@@ -127,7 +124,6 @@ const ChangeAuthcode = () => {
     try {
       await Auth.signIn(fullUsername, oldPassword);
     } catch {
-      localStorage.setItem('returnLocation', JSON.stringify(location.pathname));
       history.push('/failure/error');
       return;
     }
@@ -152,7 +148,6 @@ const ChangeAuthcode = () => {
 
       history.push('/mypage/authcodeshow');
     } catch {
-      localStorage.setItem('returnLocation', JSON.stringify(location.pathname));
       history.push('/failure/error');
       return;
     }
