@@ -208,7 +208,6 @@ const SignUp = () => {
       value: { data: { onSetStatus: { status: string } } };
     };
 
-    let timerId!: number;
     try {
       subscription = await API.graphql(graphqlOperation(setStatus))?.subscribe({
         next: async (eventData: eventData) => {
@@ -219,7 +218,6 @@ const SignUp = () => {
             )
           ) {
             subscription?.unsubscribe();
-            clearTimeout(timerId);
 
             localStorage.setItem(
               'returnLocation',
@@ -231,7 +229,6 @@ const SignUp = () => {
           }
           if (eventData.value.data.onSetStatus.status === 'hasSignedUp') {
             subscription?.unsubscribe();
-            clearTimeout(timerId);
 
             await Auth.signOut();
             await Auth.signIn(fullUsername, password);
@@ -251,15 +248,9 @@ const SignUp = () => {
       });
     } catch {
       subscription?.unsubscribe();
-      clearTimeout(timerId);
       localStorage.setItem('returnLocation', JSON.stringify(location.pathname));
       history.push('/failure/error');
     }
-    timerId = window.setTimeout(() => {
-      subscription?.unsubscribe();
-      localStorage.setItem('returnLocation', JSON.stringify(location.pathname));
-      history.push('/failure/error');
-    }, 12000);
   };
 
   return (

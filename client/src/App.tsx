@@ -22,18 +22,19 @@ const App: React.FC = () => {
         <UserContextProvider>
           <CssBaseline />
           <Switch>
-            <Route exact path='/mypage/signin' component={SignIn} />
-            <Route exact path='/mypage/signup' component={SignUp} />
-            <Route exact path='/mypage/signout' component={SignOut} />
             <Route exact path='/mypage/authcodeshow' component={AuthcodeShow} />
-            <Route exact path='/mypage/edit' component={SignUp} />
-            <Route exact path='/mypage/images' component={Images} />
             <Route
               exact
               path='/mypage/changeauthcode'
               component={ChangeAuthcode}
             />
+            <Route exact path='/mypage/edit' component={SignUp} />
+            <Route exact path='/mypage/images' component={Images} />
             <Route exact path='/mypage/quit' component={Quit} />
+            <Route exact path='/mypage/signin' component={SignIn} />
+            <Route exact path='/mypage/signout' component={SignOut} />
+            <Route exact path='/mypage/signup' component={SignUp} />
+
             <Route exact path='/failure/error' component={Error} />
             <Route component={NotFound} />
           </Switch>
