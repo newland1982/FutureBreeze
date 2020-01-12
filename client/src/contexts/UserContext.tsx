@@ -49,13 +49,23 @@ const UserContextProvider: React.FC<Props> = props => {
 
   const isXsSize = useMediaQuery(useTheme().breakpoints.down('xs'));
   const deviceType = isXsSize ? 'mobile' : 'pc';
-
-  document.body.style.backgroundImage = `url(../backgroundImage/${deviceType}/${user.selectedImage})`;
-  document.body.style.backgroundPosition = `center center`;
-  document.body.style.backgroundRepeat = `no-repeat`;
-  document.body.style.backgroundAttachment = `fixed`;
-  document.body.style.backgroundSize = `cover`;
-  document.body.style.height = `100vh`;
+  const element = document.getElementById('style');
+  if (element) {
+    element.textContent = `
+    body:before {
+      content: '';
+      display: block;
+      position: fixed;
+      z-index: -1;
+      transform: translateZ(0);
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background-size: cover;
+      background: url(../backgroundImage/${deviceType}/${user.selectedImage}) center no-repeat;
+    }`;
+  }
 
   useEffect(() => {
     localStorage.setItem('selectedImage', JSON.stringify(user.selectedImage));

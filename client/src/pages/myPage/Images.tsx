@@ -6,20 +6,12 @@ import Icon from '@mdi/react';
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Menu from '../../components/Menu';
-import React, {
-  Fragment,
-  useContext,
-  useEffect,
-  useRef,
-  useState
-} from 'react';
+import React, { Fragment, useContext, useRef, useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../../contexts/UserContext';
 import { mdiClose } from '@mdi/js';
-import { useTheme } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -76,19 +68,6 @@ const Images = () => {
     { imageId: 'Pixabay_1.jpg', img: 'Pixabay_1.jpg', by: 'Pixabay' },
     { imageId: 'garageband_0.jpg', img: 'garageband_0.jpg', by: 'garageband' }
   ];
-
-  const isXsSize = useMediaQuery(useTheme().breakpoints.down('xs'));
-  const deviceType = isXsSize ? 'mobile' : 'pc';
-  useEffect(() => {
-    document.body.style.backgroundImage = `url(../backgroundImage/${deviceType}/${user.selectedImage})`;
-    document.body.style.backgroundPosition = `center center`;
-    document.body.style.backgroundRepeat = `no-repeat`;
-    document.body.style.backgroundAttachment = `fixed`;
-    document.body.style.backgroundSize = `cover`;
-    document.body.style.height = `100vh`;
-
-    localStorage.setItem('selectedImage', JSON.stringify(user.selectedImage));
-  }, [user.selectedImage, deviceType]);
 
   return (
     <Fragment>
