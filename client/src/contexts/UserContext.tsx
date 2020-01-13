@@ -49,9 +49,9 @@ const UserContextProvider: React.FC<Props> = props => {
 
   const isXsSize = useMediaQuery(useTheme().breakpoints.down('xs'));
   const deviceType = isXsSize ? 'mobile' : 'pc';
-  const element = document.getElementById('style');
-  if (element) {
-    element.textContent = `
+  const styleElement = document.getElementById('style');
+  if (styleElement) {
+    styleElement.textContent = `
     body:before {
       content: '';
       display: block;
@@ -60,10 +60,9 @@ const UserContextProvider: React.FC<Props> = props => {
       transform: translateZ(0);
       top: 0;
       left: 0;
-      width: 100%;
+      width: 100vw;
       height: 100vh;
-      background-size: cover;
-      background: url(../backgroundImage/${deviceType}/${user.selectedImage}) center no-repeat;
+      background: url(../backgroundImage/${deviceType}/${user.selectedImage}) no-repeat center/cover;
     }`;
   }
 
