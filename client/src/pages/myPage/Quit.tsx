@@ -69,9 +69,9 @@ const Quit = () => {
   const password = authcode.slice(-256);
 
   const inputAuthcode = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setAuthcode(e.target.value);
+    setAuthcode(event.target.value);
   };
 
   useEffect(() => {
@@ -136,8 +136,8 @@ const Quit = () => {
             variant='outlined'
             value={authcode}
             onChange={(
-              e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-            ) => inputAuthcode(e)}
+              event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+            ) => inputAuthcode(event)}
           />
           <Button
             className={classes.button}

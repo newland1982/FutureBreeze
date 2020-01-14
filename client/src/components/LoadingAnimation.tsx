@@ -12,6 +12,8 @@ const useStyles = makeStyles({
 
 type props = {
   hasBeenClicked: boolean;
+  size: number;
+  thickness: number;
 };
 
 const LoadingAnimation = (props: props) => {

@@ -87,9 +87,9 @@ const ChangeAuthcode = () => {
   const newAuthcode = `${username}${usernamePrefix}${newRandomNumber}`;
 
   const inputAuthcode = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setOldAuthcode(e.target.value);
+    setOldAuthcode(event.target.value);
   };
 
   useEffect(() => {
@@ -171,8 +171,8 @@ const ChangeAuthcode = () => {
               variant='outlined'
               value={oldAuthcode}
               onChange={(
-                e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-              ) => inputAuthcode(e)}
+                event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+              ) => inputAuthcode(event)}
             />
             <Button
               className={classes.button}
@@ -186,7 +186,11 @@ const ChangeAuthcode = () => {
           </Paper>
         </Box>
       </div>
-      <LoadingAnimation hasBeenClicked={hasBeenClicked} />
+      <LoadingAnimation
+        hasBeenClicked={hasBeenClicked}
+        size={124}
+        thickness={4}
+      />
     </Fragment>
   );
 };

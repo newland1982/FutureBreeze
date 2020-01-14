@@ -116,9 +116,9 @@ const SignUp = () => {
   const authcode = `${username}${usernamePrefix}${randomNumber}`;
 
   const inputUsername = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setUsername(e.target.value);
+    setUsername(event.target.value);
   };
 
   useEffect(() => {
@@ -259,8 +259,8 @@ const SignUp = () => {
               variant='outlined'
               value={username}
               onChange={(
-                e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-              ) => inputUsername(e)}
+                event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+              ) => inputUsername(event)}
             />
             <Button
               className={classes.button}
@@ -274,7 +274,11 @@ const SignUp = () => {
           </Paper>
         </Box>
       </div>
-      <LoadingAnimation hasBeenClicked={hasBeenClicked} />
+      <LoadingAnimation
+        hasBeenClicked={hasBeenClicked}
+        size={124}
+        thickness={4}
+      />
     </Fragment>
   );
 };

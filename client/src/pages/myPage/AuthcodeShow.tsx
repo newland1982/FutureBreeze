@@ -44,6 +44,9 @@ const AuthcodeShow = () => {
   const { user } = useContext(UserContext);
 
   const copy = () => {
+    const paperElement = document.getElementsByClassName('MuiPaper-root')[0];
+    paperElement.removeAttribute('style');
+
     const textareaElement = document.createElement('textarea');
     textareaElement.textContent = user.authcode;
     const bodyElement = document.getElementsByTagName('body')[0];
@@ -51,6 +54,8 @@ const AuthcodeShow = () => {
     textareaElement.select();
     document.execCommand('copy');
     bodyElement.removeChild(textareaElement);
+
+    paperElement.setAttribute('style', 'animation: copyToClipboard 60ms 48ms;');
   };
 
   return (

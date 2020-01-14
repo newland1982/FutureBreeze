@@ -70,9 +70,9 @@ const SignIn = () => {
   const password = authcode.slice(-256);
 
   const inputAuthcode = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setAuthcode(e.target.value);
+    setAuthcode(event.target.value);
   };
 
   useEffect(() => {
@@ -142,8 +142,8 @@ const SignIn = () => {
               variant='outlined'
               value={authcode}
               onChange={(
-                e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-              ) => inputAuthcode(e)}
+                event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+              ) => inputAuthcode(event)}
             />
             <Button
               className={classes.button}
@@ -157,7 +157,11 @@ const SignIn = () => {
           </Paper>
         </Box>
       </div>
-      <LoadingAnimation hasBeenClicked={hasBeenClicked} />
+      <LoadingAnimation
+        hasBeenClicked={hasBeenClicked}
+        size={124}
+        thickness={4}
+      />
     </Fragment>
   );
 };
