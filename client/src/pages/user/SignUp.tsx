@@ -230,7 +230,7 @@ const SignUp = () => {
               payload: { ...user, fullUsername, password, authcode }
             });
 
-            history.push('/mypage/authcodeshow');
+            history.push('/user/authcodeshow');
           }
         }
       });

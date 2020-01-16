@@ -58,9 +58,9 @@ const Menu = () => {
     >
       <List>
         {[
-          { name: 'Sign Up', path: '/mypage/signup' },
-          { name: 'Sign In', path: '/mypage/signin' },
-          { name: 'Themes', path: '/mypage/themeoption' }
+          { name: 'Sign Up', path: '/user/signup' },
+          { name: 'Sign In', path: '/user/signin' },
+          { name: 'Themes', path: '/user/themeoption' }
         ].map(link => (
           <Link
             to={link.path}
@@ -77,10 +77,10 @@ const Menu = () => {
         ))}
         <br />
         {[
-          { name: 'Edit', path: '/mypage/signin' },
-          { name: 'Images', path: '/mypage/images' },
-          { name: 'Authcode', path: '/mypage/changeauthcode' },
-          { name: 'Sign Out', path: '/mypage/signout' }
+          { name: 'Edit', path: '/user/signin' },
+          { name: 'Images', path: '/user/images' },
+          { name: 'Authcode', path: '/user/changeauthcode' },
+          { name: 'Sign Out', path: '/user/signout' }
         ].map(link => (
           <Link
             to={link.path}
@@ -96,7 +96,7 @@ const Menu = () => {
           </Link>
         ))}
         <br />
-        {[{ name: 'Quit', path: '/mypage/quit' }].map(link => (
+        {[{ name: 'Quit', path: '/user/quit' }].map(link => (
           <Link
             to={link.path}
             key={link.name}

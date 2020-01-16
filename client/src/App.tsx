@@ -1,15 +1,15 @@
 import './stylingData/App.css';
-import AuthcodeShow from './pages/myPage/AuthcodeShow';
-import ChangeAuthcode from './pages/myPage/ChangeAuthcode';
+import AuthcodeShow from './pages/user/AuthcodeShow';
+import ChangeAuthcode from './pages/user/ChangeAuthcode';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Error from './pages/failure/Error';
-import Images from './pages/myPage/Images';
+import Images from './pages/user/Images';
 import NotFound from './pages/failure/NotFound';
-import Quit from './pages/myPage/Quit';
+import Quit from './pages/user/Quit';
 import React from 'react';
-import SignIn from './pages/myPage/SignIn';
-import SignOut from './pages/myPage/SignOut';
-import SignUp from './pages/myPage/SignUp';
+import SignIn from './pages/user/SignIn';
+import SignOut from './pages/user/SignOut';
+import SignUp from './pages/user/SignUp';
 import UserContextProvider from './contexts/UserContext';
 import theme from './stylingData/theme';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
@@ -22,18 +22,18 @@ const App: React.FC = () => {
         <UserContextProvider>
           <CssBaseline />
           <Switch>
-            <Route exact path='/mypage/authcodeshow' component={AuthcodeShow} />
+            <Route exact path='/user/authcodeshow' component={AuthcodeShow} />
             <Route
               exact
-              path='/mypage/changeauthcode'
+              path='/user/changeauthcode'
               component={ChangeAuthcode}
             />
-            <Route exact path='/mypage/edit' component={SignUp} />
-            <Route exact path='/mypage/images' component={Images} />
-            <Route exact path='/mypage/quit' component={Quit} />
-            <Route exact path='/mypage/signin' component={SignIn} />
-            <Route exact path='/mypage/signout' component={SignOut} />
-            <Route exact path='/mypage/signup' component={SignUp} />
+            <Route exact path='/user/edit' component={SignUp} />
+            <Route exact path='/user/images' component={Images} />
+            <Route exact path='/user/quit' component={Quit} />
+            <Route exact path='/user/signin' component={SignIn} />
+            <Route exact path='/user/signout' component={SignOut} />
+            <Route exact path='/user/signup' component={SignUp} />
 
             <Route exact path='/failure/error' component={Error} />
             <Route component={NotFound} />

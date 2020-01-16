@@ -146,7 +146,7 @@ const ChangeAuthcode = () => {
         }
       });
 
-      history.push('/mypage/authcodeshow');
+      history.push('/user/authcodeshow');
     } catch {
       history.push('/failure/error');
       return;

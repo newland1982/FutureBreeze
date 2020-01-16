@@ -2,7 +2,8 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Menu from '../../components/Menu';
 import Paper from '@material-ui/core/Paper';
-import React, { Fragment, useContext } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
+import Typography from '@material-ui/core/Typography';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../../contexts/UserContext';
 
@@ -12,9 +13,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      height: `calc(100vh - 112px)`,
-      marginTop: 24,
-      marginBottom: 96
+      height: `calc(100vh - 112px)`
     },
     paper: {
       display: 'flex',
@@ -43,6 +42,27 @@ const AuthcodeShow = () => {
 
   const { user } = useContext(UserContext);
 
+  const [fontSize, setFontSize] = useState('body1');
+
+  const typedFontSize = fontSize as 'body1' | 'body2';
+
+  useEffect(() => {
+    const mediaQueryList = window.matchMedia('(max-height: 374px)');
+
+    const handleMediaQueryList = () => {
+      if (window.matchMedia('(max-height: 374px)').matches) {
+        setFontSize('body2');
+      } else {
+        setFontSize('body1');
+      }
+    };
+
+    handleMediaQueryList();
+    mediaQueryList.addListener(handleMediaQueryList);
+
+    return () => mediaQueryList.removeListener(handleMediaQueryList);
+  }, []);
+
   const copy = () => {
     const paperElement = document.getElementsByClassName('MuiPaper-root')[0];
     paperElement.removeAttribute('style');
@@ -63,7 +83,11 @@ const AuthcodeShow = () => {
       <Menu />
       <Box className={classes.root}>
         <Paper className={classes.paper}>
-          <Box className={classes.display}>{user.authcode}</Box>
+          <Box className={classes.display}>
+            <Typography variant={typedFontSize} gutterBottom>
+              {user.authcode}
+            </Typography>
+          </Box>
           <Box
             mb={2}
             style={{
