@@ -43,6 +43,7 @@ const AuthcodeShow = () => {
   const { user } = useContext(UserContext);
 
   const [fontSize, setFontSize] = useState('body1');
+  const [hasBeenClicked, setHasBeenClicked] = useState(false);
 
   const typedFontSize = fontSize as 'body1' | 'body2';
 
@@ -65,19 +66,30 @@ const AuthcodeShow = () => {
     return () => mediaQueryList.removeListener(handleMediaQueryList);
   }, []);
 
+  const paperElement = document.getElementsByClassName('MuiPaper-root')[0];
+
+  useEffect(() => {
+    if (hasBeenClicked) {
+      paperElement.setAttribute(
+        'style',
+        'animation: copyToClipboard 60ms 48ms;'
+      );
+      setHasBeenClicked(false);
+    }
+  }, [hasBeenClicked, paperElement]);
+
   const copy = () => {
-    const paperElement = document.getElementsByClassName('MuiPaper-root')[0];
     paperElement.removeAttribute('style');
+    setHasBeenClicked(true);
 
     const textareaElement = document.createElement('textarea');
     textareaElement.textContent = user.authcode;
     const bodyElement = document.getElementsByTagName('body')[0];
     bodyElement.appendChild(textareaElement);
+    textareaElement.readOnly = true;
     textareaElement.select();
     document.execCommand('copy');
     bodyElement.removeChild(textareaElement);
-
-    paperElement.setAttribute('style', 'animation: copyToClipboard 60ms 48ms;');
   };
 
   return (
