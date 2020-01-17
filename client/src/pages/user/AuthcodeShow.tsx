@@ -49,15 +49,17 @@ const AuthcodeShow = () => {
   useEffect(() => {
     const mediaQueryList = window.matchMedia('(max-height: 374px)');
 
-    const handleMediaQueryList = () => {
-      if (window.matchMedia('(max-height: 374px)').matches) {
+    const handleMediaQueryList = (
+      mediaQueryList: MediaQueryList | MediaQueryListEvent
+    ) => {
+      if (mediaQueryList.matches) {
         setFontSize('body2');
       } else {
         setFontSize('body1');
       }
     };
 
-    handleMediaQueryList();
+    handleMediaQueryList(mediaQueryList);
     mediaQueryList.addListener(handleMediaQueryList);
 
     return () => mediaQueryList.removeListener(handleMediaQueryList);
