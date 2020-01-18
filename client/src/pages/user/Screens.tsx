@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) =>
     }
   })
 );
-const Images = () => {
+const Screens = () => {
   const classes = useStyles();
 
   const textFieldRef = useRef<HTMLInputElement>(null);
@@ -146,4 +146,4 @@ const Images = () => {
   );
 };
 
-export default Images;
+export default Screens;

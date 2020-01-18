@@ -78,7 +78,7 @@ const Menu = () => {
         <br />
         {[
           { name: 'Edit', path: '/user/signin' },
-          { name: 'Images', path: '/user/images' },
+          { name: 'Screens', path: '/user/screens' },
           { name: 'Authcode', path: '/user/changeauthcode' },
           { name: 'Sign Out', path: '/user/signout' }
         ].map(link => (

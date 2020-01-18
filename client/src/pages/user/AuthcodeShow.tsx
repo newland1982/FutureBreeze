@@ -43,7 +43,6 @@ const AuthcodeShow = () => {
   const { user } = useContext(UserContext);
 
   const [fontSize, setFontSize] = useState('body1');
-  const [hasBeenClicked, setHasBeenClicked] = useState(false);
 
   const typedFontSize = fontSize as 'body1' | 'body2';
 
@@ -66,21 +65,17 @@ const AuthcodeShow = () => {
     return () => mediaQueryList.removeListener(handleMediaQueryList);
   }, []);
 
-  const paperElement = document.getElementsByClassName('MuiPaper-root')[0];
-
-  useEffect(() => {
-    if (hasBeenClicked) {
-      paperElement.setAttribute(
-        'style',
-        'animation: copyToClipboard 60ms 48ms;'
-      );
-      setHasBeenClicked(false);
-    }
-  }, [hasBeenClicked, paperElement]);
-
   const copy = () => {
-    paperElement.removeAttribute('style');
-    setHasBeenClicked(true);
+    const paperElement = document.getElementsByClassName('MuiPaper-root')[0];
+    paperElement.setAttribute(
+      'style',
+      'background-color: rgba(0, 0, 0, 0.88);'
+    );
+
+    const resetPaperElementStyle = () => {
+      paperElement.removeAttribute('style');
+    };
+    setTimeout(resetPaperElementStyle, 60);
 
     const textareaElement = document.createElement('textarea');
     textareaElement.textContent = user.authcode;
