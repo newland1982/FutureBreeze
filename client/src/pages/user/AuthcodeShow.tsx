@@ -2,7 +2,13 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Menu from '../../components/Menu';
 import Paper from '@material-ui/core/Paper';
-import React, { Fragment, useContext, useEffect, useState } from 'react';
+import React, {
+  Fragment,
+  useContext,
+  useEffect,
+  useRef,
+  useState
+} from 'react';
 import Typography from '@material-ui/core/Typography';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../../contexts/UserContext';
@@ -40,6 +46,8 @@ const useStyles = makeStyles((theme: Theme) =>
 const AuthcodeShow = () => {
   const classes = useStyles();
 
+  const paperRef = useRef<HTMLDivElement>(null);
+
   const { user } = useContext(UserContext);
 
   const [fontSize, setFontSize] = useState('body1');
@@ -66,16 +74,14 @@ const AuthcodeShow = () => {
   }, []);
 
   const copy = () => {
-    const paperElement = document.getElementsByClassName('MuiPaper-root')[0];
-    paperElement.setAttribute(
+    paperRef.current?.setAttribute(
       'style',
       'background-color: rgba(0, 0, 0, 0.88);'
     );
-
-    const resetPaperElementStyle = () => {
-      paperElement.removeAttribute('style');
+    const resetPaperRefStyle = () => {
+      paperRef.current?.removeAttribute('style');
     };
-    setTimeout(resetPaperElementStyle, 60);
+    setTimeout(resetPaperRefStyle, 60);
 
     const textareaElement = document.createElement('textarea');
     textareaElement.textContent = user.authcode;
@@ -91,7 +97,7 @@ const AuthcodeShow = () => {
     <Fragment>
       <Menu />
       <Box className={classes.root}>
-        <Paper className={classes.paper}>
+        <Paper className={classes.paper} ref={paperRef}>
           <Box className={classes.display}>
             <Typography variant={typedFontSize} gutterBottom>
               {user.authcode}

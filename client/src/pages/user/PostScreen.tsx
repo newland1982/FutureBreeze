@@ -63,6 +63,7 @@ const PostScreen = () => {
       <Menu />
       <Box className={classes.root}>
         <Paper className={classes.paper}>
+          <input type='file' />
           <Button
             className={classes.button}
             variant='contained'
