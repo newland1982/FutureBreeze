@@ -2,7 +2,7 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Menu from '../../components/Menu';
 import Paper from '@material-ui/core/Paper';
-import React, { Fragment, useContext } from 'react';
+import React, { Fragment, useContext, useEffect, useRef } from 'react';
 import { Auth } from 'aws-amplify';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../../contexts/UserContext';
@@ -43,6 +43,8 @@ const useStyles = makeStyles((theme: Theme) =>
 const PostScreen = () => {
   const classes = useStyles();
 
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const history = useHistory();
 
   const { user, dispatch } = useContext(UserContext);
@@ -51,6 +53,10 @@ const PostScreen = () => {
     const selectedFile = event.target.value;
     console.log('selectedfileee', selectedFile);
   };
+
+  useEffect(() => {
+    inputRef?.current?.click();
+  }, []);
 
   const signOut = async () => {
     try {
@@ -72,6 +78,7 @@ const PostScreen = () => {
       <Box className={classes.root}>
         <Paper className={classes.paper}>
           <input
+            ref={inputRef}
             className={classes.input}
             type='file'
             onChange={handleInputChange}
