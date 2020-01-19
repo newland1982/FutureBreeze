@@ -29,6 +29,9 @@ const useStyles = makeStyles((theme: Theme) =>
       maxHeight: 360,
       padding: theme.spacing(3, 2)
     },
+    input: {
+      display: 'none'
+    },
     button: {
       width: '88%',
       minWidth: 240,
@@ -43,6 +46,11 @@ const PostScreen = () => {
   const history = useHistory();
 
   const { user, dispatch } = useContext(UserContext);
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.value;
+    console.log('selectedfileee', selectedFile);
+  };
 
   const signOut = async () => {
     try {
@@ -63,7 +71,11 @@ const PostScreen = () => {
       <Menu />
       <Box className={classes.root}>
         <Paper className={classes.paper}>
-          <input type='file' />
+          <input
+            className={classes.input}
+            type='file'
+            onChange={handleInputChange}
+          />
           <Button
             className={classes.button}
             variant='contained'

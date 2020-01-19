@@ -97,7 +97,7 @@ const AuthcodeShow = () => {
     <Fragment>
       <Menu />
       <Box className={classes.root}>
-        <Paper className={classes.paper} ref={paperRef}>
+        <Paper ref={paperRef} className={classes.paper}>
           <Box className={classes.display}>
             <Typography variant={typedFontSize} gutterBottom>
               {user.authcode}
