@@ -29,8 +29,13 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const Menu = () => {
+type props = {
+  path?: string;
+};
+
+const Menu = (props: props) => {
   const classes = useStyles();
+
   const [state, setState] = React.useState({
     isOpen: false
   });
@@ -49,70 +54,78 @@ const Menu = () => {
     setState({ isOpen });
   };
 
-  const sideList = () => (
-    <div
-      className={classes.list}
-      role='presentation'
-      onClick={toggleDrawer(false)}
-      onKeyDown={toggleDrawer(false)}
-    >
-      <List>
-        {[
-          { name: 'Sign Up', path: '/user/signup' },
-          { name: 'Sign In', path: '/user/signin' },
-          { name: 'Themes', path: '/user/themeoption' }
-        ].map(link => (
-          <Link
-            to={link.path}
-            key={link.name}
-            style={{ textDecoration: 'none' }}
-          >
-            <ListItem button>
-              <ListItemText
-                className={classes.listItemText}
-                primary={link.name}
-              />
-            </ListItem>
-          </Link>
-        ))}
-        <br />
-        {[
-          { name: 'Edit', path: '/user/signin' },
-          { name: 'Screens', path: '/user/screens' },
-          { name: 'Authcode', path: '/user/changeauthcode' },
-          { name: 'Sign Out', path: '/user/signout' }
-        ].map(link => (
-          <Link
-            to={link.path}
-            key={link.name}
-            style={{ textDecoration: 'none' }}
-          >
-            <ListItem button>
-              <ListItemText
-                className={classes.listItemText}
-                primary={link.name}
-              />
-            </ListItem>
-          </Link>
-        ))}
-        <br />
-        {[{ name: 'Quit', path: '/user/quit' }].map(link => (
-          <Link
-            to={link.path}
-            key={link.name}
-            style={{ textDecoration: 'none' }}
-          >
-            <ListItem button>
-              <ListItemText
-                className={classes.listItemText}
-                primary={link.name}
-              />
-            </ListItem>
-          </Link>
-        ))}
-      </List>
-    </div>
-  );
+  const sideList = () => {
+    const linkArray = [
+      { name: 'Edit', path: '/user/signin' },
+      { name: 'Screens', path: '/user/screens' },
+      { name: 'Authcode', path: '/user/changeauthcode' },
+      { name: 'Sign Out', path: '/user/signout' }
+    ];
+
+    if (props.path) {
+      linkArray.splice(0, 0, { name: 'Post', path: `${props.path}` });
+    }
+
+    return (
+      <div
+        className={classes.list}
+        role='presentation'
+        onClick={toggleDrawer(false)}
+        onKeyDown={toggleDrawer(false)}
+      >
+        <List>
+          {[
+            { name: 'Sign Up', path: '/user/signup' },
+            { name: 'Sign In', path: '/user/signin' },
+            { name: 'Themes', path: '/user/themeoption' }
+          ].map(link => (
+            <Link
+              to={link.path}
+              key={link.name}
+              style={{ textDecoration: 'none' }}
+            >
+              <ListItem button>
+                <ListItemText
+                  className={classes.listItemText}
+                  primary={link.name}
+                />
+              </ListItem>
+            </Link>
+          ))}
+          <br />
+          {linkArray.map(link => (
+            <Link
+              to={link.path}
+              key={link.name}
+              style={{ textDecoration: 'none' }}
+            >
+              <ListItem button>
+                <ListItemText
+                  className={classes.listItemText}
+                  primary={link.name}
+                />
+              </ListItem>
+            </Link>
+          ))}
+          <br />
+          {[{ name: 'Quit', path: '/user/quit' }].map(link => (
+            <Link
+              to={link.path}
+              key={link.name}
+              style={{ textDecoration: 'none' }}
+            >
+              <ListItem button>
+                <ListItemText
+                  className={classes.listItemText}
+                  primary={link.name}
+                />
+              </ListItem>
+            </Link>
+          ))}
+        </List>
+      </div>
+    );
+  };
 
   return (
     <Fragment>
