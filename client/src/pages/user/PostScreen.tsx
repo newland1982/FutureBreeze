@@ -1,5 +1,6 @@
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
+import GridListTile from '@material-ui/core/GridListTile';
 import Menu from '../../components/Menu';
 import Paper from '@material-ui/core/Paper';
 import React, {
@@ -30,13 +31,26 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '48%',
       minWidth: 276,
       maxWidth: 360,
-      height: '48%',
+      // height: '48%',
+      height: '88%',
       minHeight: 204,
       maxHeight: 360,
       padding: theme.spacing(3, 2)
     },
     input: {
       display: 'none'
+    },
+    gridListTile: {
+      width: '100%',
+      paddingTop: '70%',
+      position: 'relative',
+      '& .MuiGridListTile-tile': {
+        width: '100%',
+        height: '100%',
+        position: 'absolute',
+        top: 0,
+        objectFit: 'cover'
+      }
     },
     button: {
       width: '88%',
@@ -55,39 +69,76 @@ const PostScreen = () => {
 
   const { user, dispatch } = useContext(UserContext);
 
-  // const [selectedFile, setSelectedFile] = useState('');
+  const [objectUrl, setObjectUrl] = useState('');
 
   useEffect(() => {
     inputRef?.current?.click();
   }, []);
 
-  const adjustSelectedFile = (selectedFile: File) => {
+  const resizeSelectedFile = (selectedFile: File) => {
     if (!selectedFile) {
       return;
     }
+
     const roughCanvas = document.createElement('canvas');
-    const roughCanvasContext = roughCanvas.getContext('2d');
-    const formalCanvas = document.createElement('canvas');
-    const formalCanvasContext = formalCanvas.getContext('2d');
+
     const imageElement = new Image();
-    console.log('imageobjecttt', imageElement);
     const url = window.URL.createObjectURL(selectedFile);
     imageElement.src = url;
-    imageElement.onload = () => {
-      console.log('imageElementtttwidthh', imageElement.width);
-      console.log('imageElementtttheighttt', imageElement.height);
-    };
+
+    roughCanvas.width = imageElement.naturalWidth;
+    roughCanvas.height = imageElement.naturalHeight;
+
+    const roughCanvasContext = roughCanvas.getContext('2d');
+    roughCanvasContext?.drawImage(imageElement, 0, 0);
+
+    const canvasPattern = roughCanvasContext?.createPattern(
+      roughCanvas,
+      'no-repeat'
+    );
+
+    if (!roughCanvasContext || !canvasPattern) {
+      return;
+    }
+
+    roughCanvas.width /= 2;
+    roughCanvas.height /= 2;
+
+    roughCanvasContext?.scale(0.5, 0.5);
+
+    roughCanvasContext.fillStyle = canvasPattern;
+    roughCanvasContext?.fillRect(
+      0,
+      0,
+      roughCanvas.width * 2,
+      roughCanvas.height * 2
+    );
+
+    const formalCanvas = document.createElement('canvas');
+
+    formalCanvas.width = roughCanvas.width;
+    formalCanvas.height = roughCanvas.height;
+
+    const formalCanvasContext = formalCanvas.getContext('2d');
+
+    formalCanvasContext?.drawImage(roughCanvas, 0, 0);
+
+    formalCanvas.toBlob(blob => {
+      setObjectUrl(window.URL.createObjectURL(blob));
+    });
+
     // window.URL.revokeObjectURL(url);
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) {
+      console.log('nothingggg');
       return;
     }
     console.log('eventtt', event.target.files);
     const selectedFile = event.target.files[0];
     console.log('selectedfileee', selectedFile);
-    adjustSelectedFile(selectedFile);
+    resizeSelectedFile(selectedFile);
   };
 
   const signOut = async () => {
@@ -115,13 +166,16 @@ const PostScreen = () => {
             type='file'
             onChange={handleInputChange}
           />
+          <GridListTile className={classes.gridListTile}>
+            <img src={objectUrl} alt='alt' />
+          </GridListTile>
           <Button
             className={classes.button}
             variant='contained'
             size='medium'
             onClick={() => signOut()}
           >
-            Sign Out
+            Choose File
           </Button>
         </Paper>
       </Box>
