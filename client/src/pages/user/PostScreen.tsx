@@ -2,7 +2,13 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Menu from '../../components/Menu';
 import Paper from '@material-ui/core/Paper';
-import React, { Fragment, useContext, useEffect, useRef } from 'react';
+import React, {
+  Fragment,
+  useContext,
+  useEffect,
+  useRef,
+  useState
+} from 'react';
 import { Auth } from 'aws-amplify';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../../contexts/UserContext';
@@ -49,14 +55,40 @@ const PostScreen = () => {
 
   const { user, dispatch } = useContext(UserContext);
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = event.target.value;
-    console.log('selectedfileee', selectedFile);
-  };
+  // const [selectedFile, setSelectedFile] = useState('');
 
   useEffect(() => {
     inputRef?.current?.click();
   }, []);
+
+  const adjustSelectedFile = (selectedFile: File) => {
+    if (!selectedFile) {
+      return;
+    }
+    const roughCanvas = document.createElement('canvas');
+    const roughCanvasContext = roughCanvas.getContext('2d');
+    const formalCanvas = document.createElement('canvas');
+    const formalCanvasContext = formalCanvas.getContext('2d');
+    const imageElement = new Image();
+    console.log('imageobjecttt', imageElement);
+    const url = window.URL.createObjectURL(selectedFile);
+    imageElement.src = url;
+    imageElement.onload = () => {
+      console.log('imageElementtttwidthh', imageElement.width);
+      console.log('imageElementtttheighttt', imageElement.height);
+    };
+    // window.URL.revokeObjectURL(url);
+  };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) {
+      return;
+    }
+    console.log('eventtt', event.target.files);
+    const selectedFile = event.target.files[0];
+    console.log('selectedfileee', selectedFile);
+    adjustSelectedFile(selectedFile);
+  };
 
   const signOut = async () => {
     try {
