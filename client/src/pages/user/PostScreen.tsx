@@ -69,65 +69,74 @@ const PostScreen = () => {
 
   const { user, dispatch } = useContext(UserContext);
 
-  const [objectUrl, setObjectUrl] = useState('');
+  const [objectURLForPC, setObjectURLForPC] = useState('');
+  const [objectURLForMobile, setObjectURLForMobile] = useState('');
+  const [objectURLForThumbnail, setObjectURLForThumbnail] = useState('');
 
   useEffect(() => {
     inputRef?.current?.click();
   }, []);
+
+  const getResizedCanvas = (
+    imageElement: HTMLImageElement
+  ): HTMLCanvasElement | undefined => {
+    const roughCanvas = document.createElement('canvas');
+
+    roughCanvas.width = imageElement.naturalWidth;
+    roughCanvas.height = imageElement.naturalHeight;
+    console.log('naturalwidthhh', imageElement.naturalWidth);
+    console.log('naturalheighthhh', imageElement.naturalHeight);
+
+    const roughCanvasContext = roughCanvas.getContext('2d');
+    roughCanvasContext?.drawImage(imageElement, 0, 0);
+
+    for (let i = 0; i < 1; i++) {
+      const canvasPattern = roughCanvasContext?.createPattern(
+        roughCanvas,
+        'no-repeat'
+      );
+
+      if (!roughCanvasContext || !canvasPattern) {
+        return;
+      }
+
+      roughCanvas.width /= 2;
+      roughCanvas.height /= 2;
+
+      roughCanvasContext?.scale(0.5, 0.5);
+
+      roughCanvasContext.fillStyle = canvasPattern;
+      roughCanvasContext?.fillRect(
+        0,
+        0,
+        roughCanvas.width * 2,
+        roughCanvas.height * 2
+      );
+    }
+
+    const formalCanvas = document.createElement('canvas');
+
+    formalCanvas.width = roughCanvas.width;
+    formalCanvas.height = roughCanvas.height;
+
+    const formalCanvasContext = formalCanvas.getContext('2d');
+
+    formalCanvasContext?.drawImage(roughCanvas, 0, 0);
+
+    return formalCanvas;
+  };
 
   const resizeSelectedFile = (selectedFile: File) => {
     if (!selectedFile) {
       return;
     }
 
-    const roughCanvas = document.createElement('canvas');
-
     const imageElement = new Image();
 
     imageElement.onload = () => {
-      roughCanvas.width = imageElement.naturalWidth;
-      roughCanvas.height = imageElement.naturalHeight;
-      console.log('naturalwidthhh', imageElement.naturalWidth);
-      console.log('naturalheighthhh', imageElement.naturalHeight);
-
-      const roughCanvasContext = roughCanvas.getContext('2d');
-      roughCanvasContext?.drawImage(imageElement, 0, 0);
-
-      for (let i = 0; i < 3; i++) {
-        const canvasPattern = roughCanvasContext?.createPattern(
-          roughCanvas,
-          'no-repeat'
-        );
-
-        if (!roughCanvasContext || !canvasPattern) {
-          return;
-        }
-
-        roughCanvas.width /= 2;
-        roughCanvas.height /= 2;
-
-        roughCanvasContext?.scale(0.5, 0.5);
-
-        roughCanvasContext.fillStyle = canvasPattern;
-        roughCanvasContext?.fillRect(
-          0,
-          0,
-          roughCanvas.width * 2,
-          roughCanvas.height * 2
-        );
-      }
-
-      const formalCanvas = document.createElement('canvas');
-
-      formalCanvas.width = roughCanvas.width;
-      formalCanvas.height = roughCanvas.height;
-
-      const formalCanvasContext = formalCanvas.getContext('2d');
-
-      formalCanvasContext?.drawImage(roughCanvas, 0, 0);
-
-      formalCanvas.toBlob(blob => {
-        setObjectUrl(window.URL.createObjectURL(blob));
+      const resizedCanvas = getResizedCanvas(imageElement);
+      resizedCanvas?.toBlob(blob => {
+        setObjectURLForPC(window.URL.createObjectURL(blob));
       });
     };
 
@@ -174,7 +183,7 @@ const PostScreen = () => {
             onChange={handleInputChange}
           />
           <GridListTile className={classes.gridListTile}>
-            <img src={objectUrl} alt='alt' />
+            <img src={objectURLForPC} alt='alt' />
           </GridListTile>
           <Button
             className={classes.button}
