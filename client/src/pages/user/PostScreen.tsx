@@ -14,6 +14,7 @@ import { Auth } from 'aws-amplify';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../../contexts/UserContext';
 import { useHistory } from 'react-router-dom';
+import getCanvas from '../../utilities/getCanvas';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -73,88 +74,45 @@ const PostScreen = () => {
   const [objectURLForMobile, setObjectURLForMobile] = useState('');
   const [objectURLForThumbnail, setObjectURLForThumbnail] = useState('');
 
+  const imageWidthForPC = 1980;
+  const imageWidthForMobile = 744;
+  const imageWidthForThumbnail = 312;
+
   useEffect(() => {
     inputRef?.current?.click();
   }, []);
 
-  const getResizedCanvas = (
-    imageElement: HTMLImageElement
-  ): HTMLCanvasElement | undefined => {
-    const roughCanvas = document.createElement('canvas');
-
-    roughCanvas.width = imageElement.naturalWidth;
-    roughCanvas.height = imageElement.naturalHeight;
-    console.log('naturalwidthhh', imageElement.naturalWidth);
-    console.log('naturalheighthhh', imageElement.naturalHeight);
-
-    const roughCanvasContext = roughCanvas.getContext('2d');
-    roughCanvasContext?.drawImage(imageElement, 0, 0);
-
-    for (let i = 0; i < 1; i++) {
-      const canvasPattern = roughCanvasContext?.createPattern(
-        roughCanvas,
-        'no-repeat'
-      );
-
-      if (!roughCanvasContext || !canvasPattern) {
-        return;
-      }
-
-      roughCanvas.width /= 2;
-      roughCanvas.height /= 2;
-
-      roughCanvasContext?.scale(0.5, 0.5);
-
-      roughCanvasContext.fillStyle = canvasPattern;
-      roughCanvasContext?.fillRect(
-        0,
-        0,
-        roughCanvas.width * 2,
-        roughCanvas.height * 2
-      );
-    }
-
-    const formalCanvas = document.createElement('canvas');
-
-    formalCanvas.width = roughCanvas.width;
-    formalCanvas.height = roughCanvas.height;
-
-    const formalCanvasContext = formalCanvas.getContext('2d');
-
-    formalCanvasContext?.drawImage(roughCanvas, 0, 0);
-
-    return formalCanvas;
-  };
-
-  const resizeSelectedFile = (selectedFile: File) => {
-    if (!selectedFile) {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) {
       return;
     }
 
     const imageElement = new Image();
 
     imageElement.onload = () => {
-      const resizedCanvas = getResizedCanvas(imageElement);
-      resizedCanvas?.toBlob(blob => {
+      const canvasForPC = getCanvas(imageElement, imageWidthForPC);
+      canvasForPC?.toBlob(blob => {
         setObjectURLForPC(window.URL.createObjectURL(blob));
+      });
+
+      const canvasForMobile = getCanvas(imageElement, imageWidthForMobile);
+      canvasForMobile?.toBlob(blob => {
+        setObjectURLForMobile(window.URL.createObjectURL(blob));
+      });
+
+      const canvasForThumbnail = getCanvas(
+        imageElement,
+        imageWidthForThumbnail
+      );
+      canvasForThumbnail?.toBlob(blob => {
+        setObjectURLForThumbnail(window.URL.createObjectURL(blob));
       });
     };
 
-    const url = window.URL.createObjectURL(selectedFile);
-    imageElement.src = url;
+    const selectedFile = event.target.files[0];
+    imageElement.src = window.URL.createObjectURL(selectedFile);
 
     // window.URL.revokeObjectURL(url);
-  };
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!event.target.files) {
-      console.log('nothingggg');
-      return;
-    }
-    console.log('eventtt', event.target.files);
-    const selectedFile = event.target.files[0];
-    console.log('selectedfileee', selectedFile);
-    resizeSelectedFile(selectedFile);
   };
 
   const signOut = async () => {
