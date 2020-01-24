@@ -1,6 +1,5 @@
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import GridListTile from '@material-ui/core/GridListTile';
 import Menu from '../../components/Menu';
 import Paper from '@material-ui/core/Paper';
 import React, {
@@ -32,26 +31,13 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '48%',
       minWidth: 276,
       maxWidth: 360,
-      // height: '48%',
-      height: '88%',
+      height: '48%',
       minHeight: 204,
       maxHeight: 360,
       padding: theme.spacing(3, 2)
     },
     input: {
       display: 'none'
-    },
-    gridListTile: {
-      width: '100%',
-      paddingTop: '70%',
-      position: 'relative',
-      '& .MuiGridListTile-tile': {
-        width: '100%',
-        height: '100%',
-        position: 'absolute',
-        top: 0,
-        objectFit: 'cover'
-      }
     },
     button: {
       width: '88%',
@@ -79,8 +65,26 @@ const PostScreen = () => {
   const imageWidthForThumbnail = 312;
 
   useEffect(() => {
-    inputRef?.current?.click();
-  }, []);
+    if (!objectURLForPC) {
+      return;
+    }
+    const styleElement = document.getElementById('style');
+    if (styleElement) {
+      styleElement.textContent = `
+      body:before {
+        content: '';
+        display: block;
+        position: fixed;
+        z-index: -1;
+        transform: translateZ(0);
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: url(${objectURLForPC}) no-repeat center/cover;
+      }`;
+    }
+  }, [objectURLForPC]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) {
@@ -111,22 +115,14 @@ const PostScreen = () => {
 
     const selectedFile = event.target.files[0];
     imageElement.src = window.URL.createObjectURL(selectedFile);
-
-    // window.URL.revokeObjectURL(url);
   };
 
-  const signOut = async () => {
-    try {
-      await Auth.signOut();
-      dispatch({
-        type: 'SET_USER',
-        payload: { ...user, fullUsername: '', password: '', authcode: '' }
-      });
-      history.goBack();
-    } catch {
-      history.push('/failure/error');
-      return;
-    }
+  const cancel = () => {
+    window.URL.revokeObjectURL(objectURLForPC);
+    window.URL.revokeObjectURL(objectURLForMobile);
+    window.URL.revokeObjectURL(objectURLForThumbnail);
+
+    history.goBack();
   };
 
   return (
@@ -140,16 +136,50 @@ const PostScreen = () => {
             type='file'
             onChange={handleInputChange}
           />
-          <GridListTile className={classes.gridListTile}>
-            <img src={objectURLForPC} alt='alt' />
-          </GridListTile>
           <Button
             className={classes.button}
             variant='contained'
             size='medium'
-            onClick={() => signOut()}
+            onClick={() => inputRef?.current?.click()}
+            style={{
+              display: `${
+                objectURLForPC && objectURLForMobile && objectURLForThumbnail
+                  ? 'none'
+                  : 'inline'
+              }`
+            }}
           >
             Choose File
+          </Button>
+          <Button
+            className={classes.button}
+            variant='contained'
+            size='medium'
+            onClick={() => cancel()}
+            style={{
+              display: `${
+                objectURLForPC && objectURLForMobile && objectURLForThumbnail
+                  ? 'inline'
+                  : 'none'
+              }`
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            className={classes.button}
+            variant='contained'
+            size='medium'
+            onClick={() => {}}
+            style={{
+              display: `${
+                objectURLForPC && objectURLForMobile && objectURLForThumbnail
+                  ? 'inline'
+                  : 'none'
+              }`
+            }}
+          >
+            OK
           </Button>
         </Paper>
       </Box>
