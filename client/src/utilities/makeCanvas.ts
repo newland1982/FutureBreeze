@@ -1,4 +1,4 @@
-const getCanvas = (
+const makeCanvas = (
   imageElement: HTMLImageElement,
   targetWidth: number
 ): HTMLCanvasElement | undefined => {
@@ -52,4 +52,4 @@ const getCanvas = (
   return formalCanvas;
 };
 
-export default getCanvas;
+export default makeCanvas;

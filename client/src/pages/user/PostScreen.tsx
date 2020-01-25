@@ -6,6 +6,7 @@ import React, {
   Fragment,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState
 } from 'react';
@@ -13,7 +14,7 @@ import { Auth } from 'aws-amplify';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../../contexts/UserContext';
 import { useHistory } from 'react-router-dom';
-import getCanvas from '../../utilities/getCanvas';
+import makeCanvas from '../../utilities/makeCanvas';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -94,17 +95,17 @@ const PostScreen = () => {
     const imageElement = new Image();
 
     imageElement.onload = () => {
-      const canvasForPC = getCanvas(imageElement, imageWidthForPC);
+      const canvasForPC = makeCanvas(imageElement, imageWidthForPC);
       canvasForPC?.toBlob(blob => {
         setObjectURLForPC(window.URL.createObjectURL(blob));
       });
 
-      const canvasForMobile = getCanvas(imageElement, imageWidthForMobile);
+      const canvasForMobile = makeCanvas(imageElement, imageWidthForMobile);
       canvasForMobile?.toBlob(blob => {
         setObjectURLForMobile(window.URL.createObjectURL(blob));
       });
 
-      const canvasForThumbnail = getCanvas(
+      const canvasForThumbnail = makeCanvas(
         imageElement,
         imageWidthForThumbnail
       );
