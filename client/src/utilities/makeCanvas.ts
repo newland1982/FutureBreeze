@@ -1,22 +1,20 @@
 const makeCanvas = (
   imageElement: HTMLImageElement,
-  targetWidth: number
+  appropriateImageWidth: number
 ): HTMLCanvasElement | undefined => {
   const roughCanvas = document.createElement('canvas');
 
   roughCanvas.width = imageElement.naturalWidth;
   roughCanvas.height = imageElement.naturalHeight;
-  console.log('naturalwidthhh', imageElement.naturalWidth);
-  console.log('naturalheighthhh', imageElement.naturalHeight);
 
   const roughCanvasContext = roughCanvas.getContext('2d');
   roughCanvasContext?.drawImage(imageElement, 0, 0);
 
-  let resizingStepCount = Math.floor(
-    Math.log2(roughCanvas.width / targetWidth)
+  let resizingStepNumber = Math.floor(
+    Math.log2(roughCanvas.width / appropriateImageWidth)
   );
-  console.log('stepsssss', resizingStepCount);
-  for (let i = 0; i < resizingStepCount; i++) {
+
+  for (let i = 0; i < resizingStepNumber; i++) {
     const canvasPattern = roughCanvasContext?.createPattern(
       roughCanvas,
       'no-repeat'
@@ -26,8 +24,8 @@ const makeCanvas = (
       return;
     }
 
-    roughCanvas.width /= 2;
-    roughCanvas.height /= 2;
+    roughCanvas.width *= 0.5;
+    roughCanvas.height *= 0.5;
 
     roughCanvasContext?.scale(0.5, 0.5);
 
@@ -39,6 +37,30 @@ const makeCanvas = (
       roughCanvas.height * 2
     );
   }
+
+  const finalTouchRatio = appropriateImageWidth / roughCanvas.width;
+
+  const canvasPattern = roughCanvasContext?.createPattern(
+    roughCanvas,
+    'no-repeat'
+  );
+
+  if (!roughCanvasContext || !canvasPattern) {
+    return;
+  }
+
+  roughCanvas.width *= finalTouchRatio;
+  roughCanvas.height *= finalTouchRatio;
+
+  roughCanvasContext?.scale(finalTouchRatio, finalTouchRatio);
+
+  roughCanvasContext.fillStyle = canvasPattern;
+  roughCanvasContext?.fillRect(
+    0,
+    0,
+    roughCanvas.width * (1 / finalTouchRatio),
+    roughCanvas.height * (1 / finalTouchRatio)
+  );
 
   const formalCanvas = document.createElement('canvas');
 

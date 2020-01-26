@@ -10,11 +10,17 @@ import React, {
   useRef,
   useState
 } from 'react';
-import { Auth } from 'aws-amplify';
-import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
-import { UserContext } from '../../contexts/UserContext';
-import { useHistory } from 'react-router-dom';
 import makeCanvas from '../../utilities/makeCanvas';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { Auth } from 'aws-amplify';
+import { UserContext } from '../../contexts/UserContext';
+import {
+  Theme,
+  createStyles,
+  makeStyles,
+  useTheme
+} from '@material-ui/core/styles';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -61,16 +67,26 @@ const PostScreen = () => {
   const [objectURLForMobile, setObjectURLForMobile] = useState('');
   const [objectURLForThumbnail, setObjectURLForThumbnail] = useState('');
 
-  const imageWidthForPC = 1980;
-  const imageWidthForMobile = 744;
-  const imageWidthForThumbnail = 312;
+  const appropriateImageWidthForPC = 1980;
+  const appropriateImageWidthForMobile = 744;
+  const appropriateImageWidthForThumbnail = 312;
+
+  const styleElementTextContent = useMemo(() => {
+    const styleElement = document.getElementById('style');
+    if (styleElement) {
+      return styleElement.textContent;
+    }
+  }, []);
+
+  const isXsSize = useMediaQuery(useTheme().breakpoints.down('xs'));
+  const deviceType = isXsSize ? 'mobile' : 'pc';
 
   useEffect(() => {
-    if (!objectURLForPC) {
+    if (!objectURLForPC || !objectURLForMobile) {
       return;
     }
     const styleElement = document.getElementById('style');
-    if (styleElement) {
+    if (styleElement && deviceType === 'pc') {
       styleElement.textContent = `
       body:before {
         content: '';
@@ -84,8 +100,27 @@ const PostScreen = () => {
         height: 100vh;
         background: url(${objectURLForPC}) no-repeat center/cover;
       }`;
+    } else if (styleElement && deviceType === 'mobile') {
+      styleElement.textContent = `
+      body:before {
+        content: '';
+        display: block;
+        position: fixed;
+        z-index: -1;
+        transform: translateZ(0);
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: url(${objectURLForMobile}) no-repeat center/cover;
+      }`;
     }
-  }, [objectURLForPC]);
+    return () => {
+      if (styleElement && styleElementTextContent) {
+        styleElement.textContent = styleElementTextContent;
+      }
+    };
+  }, [deviceType, objectURLForMobile, objectURLForPC, styleElementTextContent]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) {
@@ -95,19 +130,22 @@ const PostScreen = () => {
     const imageElement = new Image();
 
     imageElement.onload = () => {
-      const canvasForPC = makeCanvas(imageElement, imageWidthForPC);
+      const canvasForPC = makeCanvas(imageElement, appropriateImageWidthForPC);
       canvasForPC?.toBlob(blob => {
         setObjectURLForPC(window.URL.createObjectURL(blob));
       });
 
-      const canvasForMobile = makeCanvas(imageElement, imageWidthForMobile);
+      const canvasForMobile = makeCanvas(
+        imageElement,
+        appropriateImageWidthForMobile
+      );
       canvasForMobile?.toBlob(blob => {
         setObjectURLForMobile(window.URL.createObjectURL(blob));
       });
 
       const canvasForThumbnail = makeCanvas(
         imageElement,
-        imageWidthForThumbnail
+        appropriateImageWidthForThumbnail
       );
       canvasForThumbnail?.toBlob(blob => {
         setObjectURLForThumbnail(window.URL.createObjectURL(blob));
