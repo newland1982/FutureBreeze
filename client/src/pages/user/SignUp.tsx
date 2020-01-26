@@ -52,8 +52,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const amplifyCommonConfig = {
   Auth: {
-    identityPoolId:
-      process.env.REACT_APP_AWS_COGNITO_HsoUnauthenticatedIdPool_identityPoolId,
+    identityPoolId: process.env.REACT_APP_AWS_COGNITO_identityPoolId,
     region: process.env.REACT_APP_AWS_COGNITO_region,
     userPoolId: process.env.REACT_APP_AWS_COGNITO_userPoolId,
     userPoolWebClientId: process.env.REACT_APP_AWS_COGNITO_userPoolWebClientId
@@ -139,7 +138,7 @@ const SignUp = () => {
 
       setEndpoint(
         process.env
-          .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_userUserData
+          .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_UserUserData
       );
 
       try {
@@ -172,7 +171,7 @@ const SignUp = () => {
 
     setEndpoint(
       process.env
-        .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_signUpUserInfo
+        .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_SignUpUserInfo
     );
     const createSignUpUserInfo = `mutation CreateSignUpUserInfo($input: CreateSignUpUserInfoInput!) {
       createSignUpUserInfo(input: $input) {
