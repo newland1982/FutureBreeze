@@ -9,9 +9,9 @@ const AWS = require('aws-sdk');
 const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 
-const mutationCreateUserData = gql(`
-  mutation CreateUserData($input: CreateUserDataInput!) {
-    createUserData(input: $input) {
+const mutationCreateRegisteredUser = gql(`
+  mutation CreateRegisteredUser($input: CreateRegisteredUserInput!) {
+    createRegisteredUser(input: $input) {
       username
     }
   }`);
@@ -23,8 +23,8 @@ mutation SetStatus($input: SetStatusInput!) {
   }
 }`);
 
-const clientAdminUserData = new AWSAppSyncClient({
-  url: process.env.END_POINT_AdminUserData,
+const clientRegisteredUsers = new AWSAppSyncClient({
+  url: process.env.END_POINT_RegisteredUsers,
   region: process.env.REGION,
   auth: {
     type: AUTH_TYPE.AWS_IAM,
@@ -33,8 +33,8 @@ const clientAdminUserData = new AWSAppSyncClient({
   disableOffline: true
 });
 
-const clientSignUpUserInfo = new AWSAppSyncClient({
-  url: process.env.END_POINT_SignUpUserInfo,
+const clientSignUpUsers = new AWSAppSyncClient({
+  url: process.env.END_POINT_SignUpUsers,
   region: process.env.REGION,
   auth: {
     type: AUTH_TYPE.AWS_IAM,
@@ -47,7 +47,7 @@ exports.handler = (event, context, callback) => {
   const username = event.userName.slice(96);
   const usernamePrefix = event.userName.slice(0, 96);
 
-  const createUserDataInput = {
+  const createRegisteredUserInput = {
     username,
     jsonString: '{}'
   };
@@ -63,8 +63,8 @@ exports.handler = (event, context, callback) => {
     !usernamePrefix.match(/^[a-f0-9]{96}$/)
   ) {
     (async () => {
-      await clientSignUpUserInfo.hydrated();
-      await clientSignUpUserInfo
+      await clientSignUpUsers.hydrated();
+      await clientSignUpUsers
         .mutate({
           mutation: mutationSetStatus,
           variables: { input: setStatusInput },
@@ -76,19 +76,19 @@ exports.handler = (event, context, callback) => {
   }
 
   (async () => {
-    await clientAdminUserData.hydrated();
+    await clientRegisteredUsers.hydrated();
 
-    const result = await clientAdminUserData
+    const result = await clientRegisteredUsers
       .mutate({
-        mutation: mutationCreateUserData,
-        variables: { input: createUserDataInput },
+        mutation: mutationCreateRegisteredUser,
+        variables: { input: createRegisteredUserInput },
         fetchPolicy: 'no-cache'
       })
       .catch(() => {});
 
     if (!result) {
-      await clientSignUpUserInfo.hydrated();
-      await clientSignUpUserInfo
+      await clientSignUpUsers.hydrated();
+      await clientSignUpUsers
         .mutate({
           mutation: mutationSetStatus,
           variables: { input: setStatusInput },

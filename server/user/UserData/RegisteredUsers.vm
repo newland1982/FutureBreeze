@@ -1,0 +1,21 @@
+## Resolver for Mutation.createRegisteredUser
+{
+  "version": "2017-02-28",
+  "operation": "PutItem",
+  "key": {
+  	 "username" : { "S" : "${context.arguments.input.username}" }
+  },
+
+  "attributeValues" : {
+      "createdDate": { "S" : "$util.time.nowFormatted("yyyy-MM-dd HH:mm:ssZ")" },
+      "jsonString": { "S" : "${context.arguments.input.jsonString}" }
+  },
+  "condition": {
+    "expression": "attribute_not_exists(#username)",
+    "expressionNames": {
+      "#username": "username"
+    }
+  }
+}
+
+$util.toJson($context.result)

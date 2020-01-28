@@ -41,7 +41,7 @@ const queryGetStatus = gql(`
   }`);
 
 const client = new AWSAppSyncClient({
-  url: process.env.END_POINT_SignUpUserInfo,
+  url: process.env.END_POINT_SignUpUsers,
   region: process.env.REGION,
   auth: {
     type: AUTH_TYPE.AWS_IAM,

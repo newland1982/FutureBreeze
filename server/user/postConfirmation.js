@@ -16,8 +16,8 @@ mutation SetStatus($input: SetStatusInput!) {
   }
 }`);
 
-const clientSignUpUserInfo = new AWSAppSyncClient({
-  url: process.env.END_POINT_SignUpUserInfo,
+const clientSignUpUsers = new AWSAppSyncClient({
+  url: process.env.END_POINT_SignUpUsers,
   region: process.env.REGION,
   auth: {
     type: AUTH_TYPE.AWS_IAM,
@@ -34,8 +34,8 @@ exports.handler = (event, context, callback) => {
   };
 
   (async () => {
-    await clientSignUpUserInfo.hydrated();
-    await clientSignUpUserInfo
+    await clientSignUpUsers.hydrated();
+    await clientSignUpUsers
       .mutate({
         mutation: mutationSetStatus,
         variables: { input: setStatusInput },

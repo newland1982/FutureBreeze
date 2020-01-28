@@ -1,0 +1,28 @@
+input CreateRegisteredUserInput {
+  username: String!
+  jsonString: String
+}
+
+type Mutation {
+  createRegisteredUser(input: CreateRegisteredUserInput!): Username
+}
+
+type Query {
+  getUsername(username: String!): Username
+  getRegisteredUser(username: String!): RegisteredUser
+}
+
+type RegisteredUser {
+  username: String!
+  createdDate: String
+  jsonString: String
+}
+
+type Username {
+  username: String!
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+}
