@@ -1,4 +1,4 @@
-// hsoSignUp function triggered by DynamoDB stream
+// triggered by DynamoDB stream
 'use strict';
 
 global.WebSocket = require('ws');

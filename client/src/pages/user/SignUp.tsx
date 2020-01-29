@@ -130,7 +130,7 @@ const SignUp = () => {
         setIsValidUsername(false);
         return;
       }
-      const getUsername = `query GetUsername($username: String!) {
+      const queryGetUsername = `query GetUsername($username: String!) {
         getUsername(username: $username) {
             username
         }
@@ -138,12 +138,12 @@ const SignUp = () => {
 
       setEndpoint(
         process.env
-          .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_UserUserData
+          .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers
       );
 
       try {
         const result = await API.graphql(
-          graphqlOperation(getUsername, {
+          graphqlOperation(queryGetUsername, {
             username
           })
         );
@@ -170,24 +170,23 @@ const SignUp = () => {
     setHasBeenClicked(true);
 
     setEndpoint(
-      process.env
-        .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_SignUpUserInfo
+      process.env.REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_SignUpUsers
     );
-    const createSignUpUserInfo = `mutation CreateSignUpUserInfo($input: CreateSignUpUserInfoInput!) {
-      createSignUpUserInfo(input: $input) {
+    const mutationCreateSignUpUser = `mutation CreateSignUpUser($input: CreateSignUpUserInput!) {
+      createSignUpUser(input: $input) {
         fullUsername
       }
      }`;
 
-    const createSignUpUserInfoInput = {
+    const createSignUpUserInput = {
       fullUsername,
       password
     };
 
     try {
       await API.graphql(
-        graphqlOperation(createSignUpUserInfo, {
-          input: createSignUpUserInfoInput
+        graphqlOperation(mutationCreateSignUpUser, {
+          input: createSignUpUserInput
         })
       );
     } catch {
@@ -195,7 +194,7 @@ const SignUp = () => {
       return;
     }
 
-    const setStatus = `subscription OnSetStatus {
+    const subscriptionOnSetStatus = `subscription OnSetStatus {
       onSetStatus {
         status
       }
@@ -206,7 +205,9 @@ const SignUp = () => {
     };
 
     try {
-      subscription = await API.graphql(graphqlOperation(setStatus))?.subscribe({
+      subscription = await API.graphql(
+        graphqlOperation(subscriptionOnSetStatus)
+      )?.subscribe({
         next: async (eventData: eventData) => {
           if (
             !(
