@@ -71,7 +71,7 @@ const PostScreen = () => {
   const appropriateImageWidthForMobile = 744;
   const appropriateImageWidthForThumbnail = 312;
 
-  const styleElementTextContent = useMemo(() => {
+  const initialStyleElementTextContent = useMemo(() => {
     const styleElement = document.getElementById('style');
     if (styleElement) {
       return styleElement.textContent;
@@ -116,11 +116,16 @@ const PostScreen = () => {
       }`;
     }
     return () => {
-      if (styleElement && styleElementTextContent) {
-        styleElement.textContent = styleElementTextContent;
+      if (styleElement && initialStyleElementTextContent) {
+        styleElement.textContent = initialStyleElementTextContent;
       }
     };
-  }, [deviceType, objectURLForMobile, objectURLForPC, styleElementTextContent]);
+  }, [
+    deviceType,
+    objectURLForMobile,
+    objectURLForPC,
+    initialStyleElementTextContent
+  ]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) {
@@ -163,6 +168,8 @@ const PostScreen = () => {
 
     history.goBack();
   };
+
+  const ok = () => {};
 
   return (
     <Fragment>
@@ -209,7 +216,9 @@ const PostScreen = () => {
             className={classes.button}
             variant='contained'
             size='medium'
-            onClick={() => {}}
+            onClick={() => {
+              ok();
+            }}
             style={{
               display: `${
                 objectURLForPC && objectURLForMobile && objectURLForThumbnail
