@@ -14,7 +14,7 @@ let initState = {
   fullUsername: '',
   password: '',
   authcode: '',
-  selectedImage: 'ArtTower_0.jpg'
+  selectedImage: ''
 };
 
 type action = {
