@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 import Menu from '../../components/Menu';
 import Paper from '@material-ui/core/Paper';
 import React, { Fragment, useContext } from 'react';
-import { Auth } from 'aws-amplify';
+import Amplify, { Auth } from 'aws-amplify';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../../contexts/UserContext';
 import { useHistory } from 'react-router-dom';
@@ -45,6 +45,16 @@ const SignOut = () => {
   const { user, dispatch } = useContext(UserContext);
 
   const signOut = async () => {
+    Amplify.configure({
+      Auth: {
+        identityPoolId: process.env.REACT_APP_AWS_COGNITO_identityPoolId,
+        region: process.env.REACT_APP_AWS_COGNITO_region,
+        userPoolId: process.env.REACT_APP_AWS_COGNITO_userPoolId,
+        userPoolWebClientId:
+          process.env.REACT_APP_AWS_COGNITO_userPoolWebClientId
+      }
+    });
+
     try {
       await Auth.signOut();
       dispatch({

@@ -68,7 +68,7 @@ const PostScreen = () => {
   const [objectURLForMobile, setObjectURLForMobile] = useState('');
   const [objectURLForThumbnail, setObjectURLForThumbnail] = useState('');
   const [hasPost, setHasPost] = useState(false);
-  const [hasCanceled, setHasCanceled] = useState(false);
+  const [hasCanceled, setHasCanceled] = useState(true);
 
   const appropriateImageWidthForPC = 1980;
   const appropriateImageWidthForMobile = 744;
@@ -85,6 +85,7 @@ const PostScreen = () => {
   const deviceType = isXsSize ? 'mobile' : 'pc';
 
   useEffect(() => {
+    console.log('backkkk', hasCanceled);
     if (!objectURLForPC || !objectURLForMobile) {
       return;
     }
@@ -201,6 +202,7 @@ const PostScreen = () => {
     }).catch(() => {});
 
     if (!currentAuthenticatedUser) {
+      setHasCanceled(false);
       history.push('/user/signin');
     }
   };

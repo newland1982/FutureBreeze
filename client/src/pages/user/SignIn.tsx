@@ -11,7 +11,7 @@ import React, {
   useState
 } from 'react';
 import TextField from '@material-ui/core/TextField';
-import { Auth } from 'aws-amplify';
+import Amplify, { Auth } from 'aws-amplify';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../../contexts/UserContext';
 import { useHistory } from 'react-router-dom';
@@ -96,6 +96,16 @@ const SignIn = () => {
 
   const signIn = async () => {
     setHasBeenClicked(true);
+
+    Amplify.configure({
+      Auth: {
+        identityPoolId: process.env.REACT_APP_AWS_COGNITO_identityPoolId,
+        region: process.env.REACT_APP_AWS_COGNITO_region,
+        userPoolId: process.env.REACT_APP_AWS_COGNITO_userPoolId,
+        userPoolWebClientId:
+          process.env.REACT_APP_AWS_COGNITO_userPoolWebClientId
+      }
+    });
 
     try {
       await Auth.signOut();
