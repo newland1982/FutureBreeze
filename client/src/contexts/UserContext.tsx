@@ -7,6 +7,7 @@ type user = {
   fullUsername: string;
   password: string;
   authcode: string;
+  baseLocation: string;
   selectedImage: string;
 };
 
@@ -14,6 +15,7 @@ let initState = {
   fullUsername: '',
   password: '',
   authcode: '',
+  baseLocation: '',
   selectedImage: ''
 };
 
@@ -23,6 +25,7 @@ type action = {
     fullUsername: string;
     password: string;
     authcode: string;
+    baseLocation: string;
     selectedImage: string;
   };
 };

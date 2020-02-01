@@ -69,6 +69,19 @@ const Screens = () => {
     { imageId: 'garageband_0.jpg', img: 'garageband_0.jpg', by: 'garageband' }
   ];
 
+  type tile = {
+    imageId: string;
+    img: string;
+    by: string;
+  };
+
+  const setScreen = (tile: tile) => {
+    dispatch({
+      type: 'SET_USER',
+      payload: { ...user, selectedImage: tile.imageId }
+    });
+  };
+
   return (
     <Fragment>
       <Menu path={'/user/postscreen'} />
@@ -124,12 +137,7 @@ const Screens = () => {
             <GridListTile
               className={classes.gridListTile}
               key={tile.imageId}
-              onClick={() =>
-                dispatch({
-                  type: 'SET_USER',
-                  payload: { ...user, selectedImage: tile.imageId }
-                })
-              }
+              onClick={() => setScreen(tile)}
               style={{
                 display: `${
                   tile.imageId === user.selectedImage ? 'none' : 'inline'
