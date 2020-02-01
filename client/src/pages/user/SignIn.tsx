@@ -127,7 +127,7 @@ const SignIn = () => {
         }
       });
 
-      history.goBack();
+      history.push(user.baseLocation);
     } catch {
       history.push('/failure/error');
       return;

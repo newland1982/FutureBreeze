@@ -15,7 +15,7 @@ let initState = {
   fullUsername: '',
   password: '',
   authcode: '',
-  baseLocation: '',
+  baseLocation: '/user/changeauthcode',
   selectedImage: ''
 };
 

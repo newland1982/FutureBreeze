@@ -71,7 +71,7 @@ const AuthcodeShow = () => {
     mediaQueryList.addListener(handleMediaQueryList);
 
     return () => mediaQueryList.removeListener(handleMediaQueryList);
-  }, []);
+  });
 
   const copy = () => {
     paperRef.current?.setAttribute(

@@ -15,7 +15,7 @@ import makeCanvas from '../../utilities/makeCanvas';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Auth } from 'aws-amplify';
 import { UserContext } from '../../contexts/UserContext';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import {
   Theme,
   createStyles,
@@ -60,6 +60,7 @@ const PostScreen = () => {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const location = useLocation();
   const history = useHistory();
 
   const { user, dispatch } = useContext(UserContext);
@@ -67,8 +68,6 @@ const PostScreen = () => {
   const [objectURLForPC, setObjectURLForPC] = useState('');
   const [objectURLForMobile, setObjectURLForMobile] = useState('');
   const [objectURLForThumbnail, setObjectURLForThumbnail] = useState('');
-  const [hasPost, setHasPost] = useState(false);
-  const [hasCanceled, setHasCanceled] = useState(true);
 
   const appropriateImageWidthForPC = 1980;
   const appropriateImageWidthForMobile = 744;
@@ -85,7 +84,40 @@ const PostScreen = () => {
   const deviceType = isXsSize ? 'mobile' : 'pc';
 
   useEffect(() => {
-    console.log('backkkk', hasCanceled);
+    const authenticationCheck = async () => {
+      Amplify.configure({
+        Auth: {
+          identityPoolId: process.env.REACT_APP_AWS_COGNITO_identityPoolId,
+          region: process.env.REACT_APP_AWS_COGNITO_region,
+          userPoolId: process.env.REACT_APP_AWS_COGNITO_userPoolId,
+          userPoolWebClientId:
+            process.env.REACT_APP_AWS_COGNITO_userPoolWebClientId
+        },
+        Storage: {
+          AWSS3: {
+            bucket: process.env.REACT_APP_AWS_S3_bucket_screens,
+            region: process.env.REACT_APP_AWS_APPSYNC_aws_appsync_region
+          }
+        }
+      });
+
+      const currentAuthenticatedUser = await Auth.currentAuthenticatedUser({
+        bypassCache: true
+      }).catch(() => {});
+
+      if (!currentAuthenticatedUser) {
+        dispatch({
+          type: 'SET_USER',
+          payload: { ...user, baseLocation: location.pathname }
+        });
+        history.push('/user/signin');
+      }
+    };
+
+    authenticationCheck();
+  });
+
+  useEffect(() => {
     if (!objectURLForPC || !objectURLForMobile) {
       return;
     }
@@ -120,22 +152,14 @@ const PostScreen = () => {
       }`;
     }
     return () => {
-      if (
-        styleElement &&
-        initialStyleElementTextContent &&
-        (hasPost || hasCanceled)
-      ) {
+      if (styleElement && initialStyleElementTextContent) {
         styleElement.textContent = initialStyleElementTextContent;
+        window.URL.revokeObjectURL(objectURLForPC);
+        window.URL.revokeObjectURL(objectURLForMobile);
+        window.URL.revokeObjectURL(objectURLForThumbnail);
       }
     };
-  }, [
-    deviceType,
-    hasPost,
-    hasCanceled,
-    initialStyleElementTextContent,
-    objectURLForMobile,
-    objectURLForPC
-  ]);
+  });
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) {
@@ -172,40 +196,10 @@ const PostScreen = () => {
   };
 
   const cancel = () => {
-    setHasCanceled(true);
-    window.URL.revokeObjectURL(objectURLForPC);
-    window.URL.revokeObjectURL(objectURLForMobile);
-    window.URL.revokeObjectURL(objectURLForThumbnail);
-
     history.goBack();
   };
 
-  const ok = async () => {
-    Amplify.configure({
-      Auth: {
-        identityPoolId: process.env.REACT_APP_AWS_COGNITO_identityPoolId,
-        region: process.env.REACT_APP_AWS_COGNITO_region,
-        userPoolId: process.env.REACT_APP_AWS_COGNITO_userPoolId,
-        userPoolWebClientId:
-          process.env.REACT_APP_AWS_COGNITO_userPoolWebClientId
-      },
-      Storage: {
-        AWSS3: {
-          bucket: process.env.REACT_APP_AWS_S3_bucket_screens,
-          region: process.env.REACT_APP_AWS_APPSYNC_aws_appsync_region
-        }
-      }
-    });
-
-    const currentAuthenticatedUser = await Auth.currentAuthenticatedUser({
-      bypassCache: true
-    }).catch(() => {});
-
-    if (!currentAuthenticatedUser) {
-      setHasCanceled(false);
-      history.push('/user/signin');
-    }
-  };
+  const ok = async () => {};
 
   return (
     <Fragment>
