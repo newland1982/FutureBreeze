@@ -58,11 +58,8 @@ const amplifyCommonConfig = {
     userPoolWebClientId: process.env.REACT_APP_AWS_COGNITO_userPoolWebClientId
   },
   aws_appsync_region: process.env.REACT_APP_AWS_APPSYNC_aws_appsync_region,
-  aws_appsync_authenticationType:
-    process.env.REACT_APP_AWS_APPSYNC_aws_appsync_authenticationType
+  aws_appsync_authenticationType: 'AWS_IAM'
 };
-
-Amplify.configure({ ...amplifyCommonConfig });
 
 const setEndpoint = (endpoint: string | undefined) => {
   Amplify.configure({

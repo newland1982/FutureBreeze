@@ -1,3 +1,4 @@
+import Amplify from 'aws-amplify';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Menu from '../../components/Menu';
@@ -14,13 +15,13 @@ import makeCanvas from '../../utilities/makeCanvas';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Auth } from 'aws-amplify';
 import { UserContext } from '../../contexts/UserContext';
+import { useHistory } from 'react-router-dom';
 import {
   Theme,
   createStyles,
   makeStyles,
   useTheme
 } from '@material-ui/core/styles';
-import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -169,7 +170,27 @@ const PostScreen = () => {
     history.goBack();
   };
 
-  const ok = () => {};
+  const ok = async () => {
+    Amplify.configure({
+      Auth: {
+        identityPoolId: process.env.REACT_APP_AWS_COGNITO_identityPoolId,
+        region: process.env.REACT_APP_AWS_COGNITO_region,
+        userPoolId: process.env.REACT_APP_AWS_COGNITO_userPoolId,
+        userPoolWebClientId:
+          process.env.REACT_APP_AWS_COGNITO_userPoolWebClientId
+      },
+      Storage: {
+        AWSS3: {
+          bucket: process.env.REACT_APP_AWS_S3_bucket_screens,
+          region: process.env.REACT_APP_AWS_APPSYNC_aws_appsync_region
+        }
+      }
+    });
+
+    const currentAuthenticatedUser = await Auth.currentAuthenticatedUser({
+      bypassCache: true
+    }).catch(() => {});
+  };
 
   return (
     <Fragment>
