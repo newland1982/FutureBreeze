@@ -67,6 +67,8 @@ const PostScreen = () => {
   const [objectURLForPC, setObjectURLForPC] = useState('');
   const [objectURLForMobile, setObjectURLForMobile] = useState('');
   const [objectURLForThumbnail, setObjectURLForThumbnail] = useState('');
+  const [hasPost, setHasPost] = useState(false);
+  const [hasCanceled, setHasCanceled] = useState(false);
 
   const appropriateImageWidthForPC = 1980;
   const appropriateImageWidthForMobile = 744;
@@ -117,15 +119,21 @@ const PostScreen = () => {
       }`;
     }
     return () => {
-      if (styleElement && initialStyleElementTextContent) {
+      if (
+        styleElement &&
+        initialStyleElementTextContent &&
+        (hasPost || hasCanceled)
+      ) {
         styleElement.textContent = initialStyleElementTextContent;
       }
     };
   }, [
     deviceType,
+    hasPost,
+    hasCanceled,
+    initialStyleElementTextContent,
     objectURLForMobile,
-    objectURLForPC,
-    initialStyleElementTextContent
+    objectURLForPC
   ]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -163,6 +171,7 @@ const PostScreen = () => {
   };
 
   const cancel = () => {
+    setHasCanceled(true);
     window.URL.revokeObjectURL(objectURLForPC);
     window.URL.revokeObjectURL(objectURLForMobile);
     window.URL.revokeObjectURL(objectURLForThumbnail);
@@ -190,6 +199,10 @@ const PostScreen = () => {
     const currentAuthenticatedUser = await Auth.currentAuthenticatedUser({
       bypassCache: true
     }).catch(() => {});
+
+    if (!currentAuthenticatedUser) {
+      history.push('/user/signin');
+    }
   };
 
   return (
