@@ -110,16 +110,11 @@ const PostScreen = () => {
 
   useEffect(() => {
     setAmplifyConfig(undefined);
-
     const authenticationCheck = async () => {
       const currentAuthenticatedUser = await Auth.currentAuthenticatedUser({
         bypassCache: true
       }).catch(() => {});
 
-      console.log(
-        'currentAuthenticatedUserrrr',
-        currentAuthenticatedUser.username
-      );
       if (!currentAuthenticatedUser) {
         dispatch({
           type: 'SET_USER',
@@ -238,17 +233,13 @@ const PostScreen = () => {
      }`;
 
     try {
-      console.log('fullusernameee', fullUsername);
       const result = await API.graphql(
         graphqlOperation(queryGetCreatedDate, {
           username
         })
       );
       RegisteredUsersCreatedDate = result.data.getCreatedDate.createdDate;
-      console.log('createddatee', RegisteredUsersCreatedDate);
-    } catch (error) {
-      console.log('errrror???', error);
-    }
+    } catch {}
 
     const fileForPC = new File([objectURLForPC], fileName, {
       type: 'image/jpeg'
@@ -257,10 +248,8 @@ const PostScreen = () => {
     const putFileForPCResult = await Storage.put(
       `${username}${RegisteredUsersCreatedDate}/pc/${fileName}`,
       fileForPC
-    ).catch(error => {
-      console.log('s333errrroor', error);
-    });
-    console.log('s3resulttt', putFileForPCResult);
+    ).catch(() => {});
+    console.log(putFileForPCResult);
   };
 
   return (
