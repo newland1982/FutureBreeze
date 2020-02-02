@@ -61,7 +61,7 @@ const amplifyCommonConfig = {
   aws_appsync_authenticationType: 'AWS_IAM'
 };
 
-const setEndpoint = (endpoint: string | undefined) => {
+const setAmplifyConfig = (endpoint: string | undefined) => {
   Amplify.configure({
     ...amplifyCommonConfig,
     aws_appsync_graphqlEndpoint: endpoint
@@ -133,7 +133,7 @@ const SignUp = () => {
         }
        }`;
 
-      setEndpoint(
+      setAmplifyConfig(
         process.env
           .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers
       );
@@ -166,7 +166,7 @@ const SignUp = () => {
   const signUp = async () => {
     setHasBeenClicked(true);
 
-    setEndpoint(
+    setAmplifyConfig(
       process.env.REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_SignUpUsers
     );
     const mutationCreateSignUpUser = `mutation CreateSignUpUser($input: CreateSignUpUserInput!) {

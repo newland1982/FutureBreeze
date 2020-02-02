@@ -55,6 +55,30 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+const amplifyCommonConfig = {
+  Auth: {
+    identityPoolId: process.env.REACT_APP_AWS_COGNITO_identityPoolId,
+    region: process.env.REACT_APP_AWS_COGNITO_region,
+    userPoolId: process.env.REACT_APP_AWS_COGNITO_userPoolId,
+    userPoolWebClientId: process.env.REACT_APP_AWS_COGNITO_userPoolWebClientId
+  },
+  aws_appsync_region: process.env.REACT_APP_AWS_APPSYNC_aws_appsync_region,
+  aws_appsync_authenticationType: 'AWS_IAM',
+  Storage: {
+    AWSS3: {
+      bucket: process.env.REACT_APP_AWS_S3_bucket_screens,
+      region: process.env.REACT_APP_AWS_APPSYNC_aws_appsync_region
+    }
+  }
+};
+
+const setAmplifyConfig = (endpoint: string | undefined) => {
+  Amplify.configure({
+    ...amplifyCommonConfig,
+    aws_appsync_graphqlEndpoint: endpoint
+  });
+};
+
 const PostScreen = () => {
   const classes = useStyles();
 
@@ -84,23 +108,9 @@ const PostScreen = () => {
   const deviceType = isXsSize ? 'mobile' : 'pc';
 
   useEffect(() => {
-    const authenticationCheck = async () => {
-      Amplify.configure({
-        Auth: {
-          identityPoolId: process.env.REACT_APP_AWS_COGNITO_identityPoolId,
-          region: process.env.REACT_APP_AWS_COGNITO_region,
-          userPoolId: process.env.REACT_APP_AWS_COGNITO_userPoolId,
-          userPoolWebClientId:
-            process.env.REACT_APP_AWS_COGNITO_userPoolWebClientId
-        },
-        Storage: {
-          AWSS3: {
-            bucket: process.env.REACT_APP_AWS_S3_bucket_screens,
-            region: process.env.REACT_APP_AWS_APPSYNC_aws_appsync_region
-          }
-        }
-      });
+    setAmplifyConfig(undefined);
 
+    const authenticationCheck = async () => {
       const currentAuthenticatedUser = await Auth.currentAuthenticatedUser({
         bypassCache: true
       }).catch(() => {});
@@ -206,12 +216,17 @@ const PostScreen = () => {
   };
 
   const ok = async () => {
-    const imageFileForPC = new File([objectURLForPC], `bar`, {
+    setAmplifyConfig(
+      process.env
+        .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers
+    );
+
+    const imageFileForPC = new File([objectURLForPC], `bar3`, {
       type: 'image/jpeg'
     });
 
     const putImageFileForPCResult = await Storage.put(
-      'michael/bar',
+      'michael/bar3',
       imageFileForPC
     ).catch(error => {
       console.log('s333errrroor', error);
