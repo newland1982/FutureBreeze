@@ -206,12 +206,12 @@ const PostScreen = () => {
   };
 
   const ok = async () => {
-    const imageFileForPC = new File([objectURLForPC], `foo`, {
+    const imageFileForPC = new File([objectURLForPC], `bar`, {
       type: 'image/jpeg'
     });
 
     const putImageFileForPCResult = await Storage.put(
-      'michael/foo',
+      'michael/bar',
       imageFileForPC
     ).catch(error => {
       console.log('s333errrroor', error);
