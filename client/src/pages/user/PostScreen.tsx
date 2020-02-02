@@ -13,7 +13,7 @@ import React, {
 } from 'react';
 import makeCanvas from '../../utilities/makeCanvas';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { Auth } from 'aws-amplify';
+import { Auth, Storage } from 'aws-amplify';
 import { UserContext } from '../../contexts/UserContext';
 import { useHistory, useLocation } from 'react-router-dom';
 import {
@@ -159,7 +159,13 @@ const PostScreen = () => {
         window.URL.revokeObjectURL(objectURLForThumbnail);
       }
     };
-  });
+  }, [
+    deviceType,
+    initialStyleElementTextContent,
+    objectURLForMobile,
+    objectURLForPC,
+    objectURLForThumbnail
+  ]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) {
@@ -199,7 +205,19 @@ const PostScreen = () => {
     history.goBack();
   };
 
-  const ok = async () => {};
+  const ok = async () => {
+    const imageFileForPC = new File([objectURLForPC], `foo`, {
+      type: 'image/jpeg'
+    });
+
+    const putImageFileForPCResult = await Storage.put(
+      'michael/foo',
+      imageFileForPC
+    ).catch(error => {
+      console.log('s333errrroor', error);
+    });
+    console.log('s3resulttt', putImageFileForPCResult);
+  };
 
   return (
     <Fragment>
