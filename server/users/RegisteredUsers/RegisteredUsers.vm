@@ -19,3 +19,29 @@
 }
 
 $util.toJson($context.result)
+
+## Resolver for Query.getUsername
+{
+    "version" : "2017-02-28",
+    "operation" : "GetItem",
+    "key" : {
+        "username" : { "S" : "${context.arguments.username}" }
+    }
+}
+
+{
+  "username": $utils.toJson($context.result.username)
+}
+
+## Resolver for Query.getCreatedDate
+{
+    "version" : "2017-02-28",
+    "operation" : "GetItem",
+    "key" : {
+        "username" : { "S" : "${context.arguments.username}" }
+    }
+}
+
+{
+  "createdDate": $utils.toJson($context.result.createdDate)
+}

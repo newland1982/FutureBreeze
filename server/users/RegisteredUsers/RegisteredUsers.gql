@@ -3,13 +3,17 @@ input CreateRegisteredUserInput {
   jsonString: String
 }
 
+type CreatedDate {
+  createdDate: String!
+}
+
 type Mutation {
   createRegisteredUser(input: CreateRegisteredUserInput!): Username
 }
 
 type Query {
   getUsername(username: String!): Username
-  getRegisteredUser(username: String!): RegisteredUser
+  getCreatedDate(username: String!): CreatedDate
 }
 
 type RegisteredUser {
