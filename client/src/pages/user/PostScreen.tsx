@@ -13,7 +13,7 @@ import React, {
 } from 'react';
 import makeCanvas from '../../utilities/makeCanvas';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { Auth, Storage } from 'aws-amplify';
+import { API, Auth, graphqlOperation, Storage } from 'aws-amplify';
 import { UserContext } from '../../contexts/UserContext';
 import { useHistory, useLocation } from 'react-router-dom';
 import {
@@ -92,6 +92,7 @@ const PostScreen = () => {
   const [objectURLForPC, setObjectURLForPC] = useState('');
   const [objectURLForMobile, setObjectURLForMobile] = useState('');
   const [objectURLForThumbnail, setObjectURLForThumbnail] = useState('');
+  const [fullUsername, setFullUsername] = useState('');
 
   const appropriateImageWidthForPC = 1980;
   const appropriateImageWidthForMobile = 744;
@@ -115,6 +116,10 @@ const PostScreen = () => {
         bypassCache: true
       }).catch(() => {});
 
+      console.log(
+        'currentAuthenticatedUserrrr',
+        currentAuthenticatedUser.username
+      );
       if (!currentAuthenticatedUser) {
         dispatch({
           type: 'SET_USER',
@@ -122,6 +127,8 @@ const PostScreen = () => {
         });
         history.push('/user/signin');
       }
+
+      setFullUsername(currentAuthenticatedUser.username);
     };
 
     authenticationCheck();
@@ -216,22 +223,44 @@ const PostScreen = () => {
   };
 
   const ok = async () => {
+    let RegisteredUsersCreatedDate;
+    const username = fullUsername.slice(96);
+    const fileName = String(new Date().getTime());
+
     setAmplifyConfig(
       process.env
         .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers
     );
+    const queryGetCreatedDate = `query GetCreatedDate($username: String!) {
+      getCreatedDate(username: $username) {
+        createdDate
+      }
+     }`;
 
-    const imageFileForPC = new File([objectURLForPC], `bar3`, {
+    try {
+      console.log('fullusernameee', fullUsername);
+      const result = await API.graphql(
+        graphqlOperation(queryGetCreatedDate, {
+          username
+        })
+      );
+      RegisteredUsersCreatedDate = result.data.getCreatedDate.createdDate;
+      console.log('createddatee', RegisteredUsersCreatedDate);
+    } catch (error) {
+      console.log('errrror???', error);
+    }
+
+    const fileForPC = new File([objectURLForPC], fileName, {
       type: 'image/jpeg'
     });
 
-    const putImageFileForPCResult = await Storage.put(
-      'michael/bar3',
-      imageFileForPC
+    const putFileForPCResult = await Storage.put(
+      `${username}${RegisteredUsersCreatedDate}/pc/${fileName}`,
+      fileForPC
     ).catch(error => {
       console.log('s333errrroor', error);
     });
-    console.log('s3resulttt', putImageFileForPCResult);
+    console.log('s3resulttt', putFileForPCResult);
   };
 
   return (

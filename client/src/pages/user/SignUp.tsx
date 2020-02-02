@@ -127,16 +127,16 @@ const SignUp = () => {
         setIsValidUsername(false);
         return;
       }
-      const queryGetUsername = `query GetUsername($username: String!) {
-        getUsername(username: $username) {
-            username
-        }
-       }`;
 
       setAmplifyConfig(
         process.env
           .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers
       );
+      const queryGetUsername = `query GetUsername($username: String!) {
+        getUsername(username: $username) {
+            username
+        }
+       }`;
 
       try {
         const result = await API.graphql(
