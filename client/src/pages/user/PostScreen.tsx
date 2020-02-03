@@ -92,6 +92,9 @@ const PostScreen = () => {
   const [objectURLForPC, setObjectURLForPC] = useState('');
   const [objectURLForMobile, setObjectURLForMobile] = useState('');
   const [objectURLForThumbnail, setObjectURLForThumbnail] = useState('');
+  const [blobForPC, setBlobForPC] = useState(new Blob());
+  const [blobForMobile, setBlobForMobile] = useState(new Blob());
+  const [blobForThumbnail, setBlobForThumbnail] = useState(new Blob());
   const [fullUsername, setFullUsername] = useState('');
 
   const appropriateImageWidthForPC = 1980;
@@ -189,7 +192,11 @@ const PostScreen = () => {
     imageElement.onload = () => {
       const canvasForPC = makeCanvas(imageElement, appropriateImageWidthForPC);
       canvasForPC?.toBlob(blob => {
+        if (!blob) {
+          return;
+        }
         setObjectURLForPC(window.URL.createObjectURL(blob));
+        setBlobForPC(blob);
       });
 
       const canvasForMobile = makeCanvas(
@@ -197,7 +204,11 @@ const PostScreen = () => {
         appropriateImageWidthForMobile
       );
       canvasForMobile?.toBlob(blob => {
+        if (!blob) {
+          return;
+        }
         setObjectURLForMobile(window.URL.createObjectURL(blob));
+        setBlobForMobile(blob);
       });
 
       const canvasForThumbnail = makeCanvas(
@@ -205,7 +216,11 @@ const PostScreen = () => {
         appropriateImageWidthForThumbnail
       );
       canvasForThumbnail?.toBlob(blob => {
+        if (!blob) {
+          return;
+        }
         setObjectURLForThumbnail(window.URL.createObjectURL(blob));
+        setBlobForThumbnail(blob);
       });
     };
 
@@ -241,13 +256,13 @@ const PostScreen = () => {
       RegisteredUsersCreatedDate = result.data.getCreatedDate.createdDate;
     } catch {}
 
-    const fileForPC = new File([objectURLForPC], fileName, {
-      type: 'image/jpeg'
-    });
-
     const putFileForPCResult = await Storage.put(
       `${username}${RegisteredUsersCreatedDate}/pc/${fileName}`,
-      fileForPC
+      blobForPC,
+      {
+        level: 'protected',
+        contentType: 'image/jpeg'
+      }
     ).catch(() => {});
     console.log(putFileForPCResult);
   };
