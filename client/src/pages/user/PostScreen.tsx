@@ -235,7 +235,7 @@ const PostScreen = () => {
   const ok = async () => {
     let RegisteredUsersCreatedDate;
     const username = fullUsername.slice(96);
-    const fileName = String(new Date().getTime());
+    const unixTimestamp = String(Date.now());
 
     setAmplifyConfig(
       process.env
@@ -257,7 +257,7 @@ const PostScreen = () => {
     } catch {}
 
     const putFileForPCResult = await Storage.put(
-      `${username}${RegisteredUsersCreatedDate}/pc/${fileName}`,
+      `${username}${RegisteredUsersCreatedDate}/pc${unixTimestamp}`,
       blobForPC,
       {
         level: 'protected',
