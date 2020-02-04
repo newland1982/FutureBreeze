@@ -117,6 +117,7 @@ const PostScreen = () => {
       const currentAuthenticatedUser = await Auth.currentAuthenticatedUser({
         bypassCache: true
       }).catch(() => {});
+      console.log('autheuserrrl', currentAuthenticatedUser);
 
       if (!currentAuthenticatedUser) {
         dispatch({
@@ -257,7 +258,7 @@ const PostScreen = () => {
     } catch {}
 
     const putFileForPCResult = await Storage.put(
-      `${username}${RegisteredUsersCreatedDate}/pc${unixTimestamp}`,
+      `${username}_${RegisteredUsersCreatedDate}/pc${unixTimestamp}`,
       blobForPC,
       {
         level: 'protected',
@@ -265,6 +266,26 @@ const PostScreen = () => {
       }
     ).catch(() => {});
     console.log(putFileForPCResult);
+
+    const putFileForMobileResult = await Storage.put(
+      `${username}_${RegisteredUsersCreatedDate}/Mobile${unixTimestamp}`,
+      blobForMobile,
+      {
+        level: 'protected',
+        contentType: 'image/jpeg'
+      }
+    ).catch(() => {});
+    console.log(putFileForMobileResult);
+
+    const putFileForThumbnailResult = await Storage.put(
+      `${username}_${RegisteredUsersCreatedDate}/Thumbnail${unixTimestamp}`,
+      blobForThumbnail,
+      {
+        level: 'protected',
+        contentType: 'image/jpeg'
+      }
+    ).catch(() => {});
+    console.log(putFileForThumbnailResult);
   };
 
   return (
