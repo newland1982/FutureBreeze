@@ -3,8 +3,8 @@ import AuthcodeShow from './pages/user/AuthcodeShow';
 import ChangeAuthcode from './pages/user/ChangeAuthcode';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Error from './pages/failure/Error';
-import PostScreen from './pages/user/PostScreen';
-import Screens from './pages/user/Screens';
+import PostScreen from './pages/screen/PostScreen';
+import Screens from './pages/screen/Screens';
 import NotFound from './pages/failure/NotFound';
 import Quit from './pages/user/Quit';
 import React from 'react';
@@ -30,13 +30,13 @@ const App: React.FC = () => {
               component={ChangeAuthcode}
             />
             <Route exact path='/user/edit' component={SignUp} />
-            <Route exact path='/user/screens' component={Screens} />
+            <Route exact path='/screen/screens' component={Screens} />
             <Route exact path='/user/quit' component={Quit} />
             <Route exact path='/user/signin' component={SignIn} />
             <Route exact path='/user/signout' component={SignOut} />
             <Route exact path='/user/signup' component={SignUp} />
 
-            <Route exact path='/user/postscreen' component={PostScreen} />
+            <Route exact path='/screen/postscreen' component={PostScreen} />
 
             <Route exact path='/failure/error' component={Error} />
             <Route component={NotFound} />

@@ -84,7 +84,7 @@ const Screens = () => {
 
   return (
     <Fragment>
-      <Menu path={'/user/postscreen'} />
+      <Menu path={'/screen/postscreen'} />
       <Box mt={3} mb={2}>
         <Toolbar variant='dense'>
           <Box className={classes.searchBox}>

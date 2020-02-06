@@ -57,7 +57,7 @@ const Menu = (props: props) => {
   const sideList = () => {
     const linkArray = [
       { name: 'Edit', path: '/user/signin' },
-      { name: 'Screens', path: '/user/screens' },
+      { name: 'Screens', path: '/screen/screens' },
       { name: 'Authcode', path: '/user/changeauthcode' },
       { name: 'Sign Out', path: '/user/signout' }
     ];
