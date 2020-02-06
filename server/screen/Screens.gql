@@ -1,0 +1,46 @@
+input CreateScreenInput {
+  objectKey: String!
+}
+
+input GetStatusInput {
+  objectKey: String!
+}
+
+type Mutation {
+  createScreen(input: CreateScreenInput!): ObjectKey
+  setStatus(input: SetStatusInput!): Status
+}
+
+type ObjectKey {
+  objectKey: String!
+}
+
+type Query {
+  getStatus(input: GetStatusInput!): Status
+}
+
+type Screen {
+  objectKey: String!
+  poster: String!
+  createdDate: String
+  userCount: Int
+  status: String
+}
+
+input SetStatusInput {
+  objectKey: String!
+  status: String!
+}
+
+type Status {
+  status: String!
+}
+
+type Subscription {
+  onSetStatus: Status @aws_subscribe(mutations: ["setStatus"])
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+}
