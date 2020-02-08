@@ -1,5 +1,6 @@
 input CreateScreenInput {
   objectKey: String!
+  posterId: String!
 }
 
 input GetStatusInput {
@@ -21,7 +22,7 @@ type Query {
 
 type Screen {
   objectKey: String!
-  poster: String!
+  posterId: String!
   createdDate: String
   userCount: Int
   status: String
