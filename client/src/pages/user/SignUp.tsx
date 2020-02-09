@@ -222,6 +222,30 @@ const SignUp = () => {
             await Auth.signOut();
             await Auth.signIn(fullUsername, password);
 
+            // setAmplifyConfig(
+            //   process.env
+            //     .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers
+            // );
+            // const mutationSetCognitoIdentityId = `mutation SetCognitoIdentityId($input: SetCognitoIdentityIdInput!) {
+            //   setCognitoIdentityId(input: $input) {
+            //       username
+            //   }
+            //  }`;
+            // const setCognitoIdentityIdInput = {
+            //   fullUsername
+            // };
+            // try {
+            //   await API.graphql(
+            //     graphqlOperation(mutationSetCognitoIdentityId, {
+            //       input: setCognitoIdentityIdInput
+            //     })
+            //   );
+            // } catch (error) {
+            //   console.log('setcong', error);
+            //   history.push('/failure/error');
+            //   return;
+            // }
+
             dispatch({
               type: 'SET_USER',
               payload: { ...user, fullUsername, password, authcode }

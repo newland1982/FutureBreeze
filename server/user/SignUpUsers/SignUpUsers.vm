@@ -4,17 +4,17 @@
   "operation": "PutItem",
   "key": {
   	 "id" : { "S" : "${util.autoId()}" },
-     "createdDate": { "S" : "$util.time.nowFormatted("yyyy-MM-dd HH:mm:ssZ")" }
+     "createdDate": { "S" : "${util.time.nowFormatted("yyyy-MM-dd HH:mm:ssZ")}" }
   },
 
-  #set( $expirationDate = $util.time.nowEpochSeconds() +  86400)
+  #set( $expirationDate = $util.time.nowEpochSeconds() + 86400)
 
   "attributeValues" : {
       "ipAddress" : { "S" : "${context.identity.sourceIp[0]}"},
       "fullUsername": { "S" : "${context.arguments.input.fullUsername}" },
       "password": { "S" : "${context.arguments.input.password}" },
       "status": { "S" : "init" },
-      "expirationDate": { "N" : "$expirationDate" }
+      "expirationDate": { "N" : "${expirationDate}" }
   }
 }
 

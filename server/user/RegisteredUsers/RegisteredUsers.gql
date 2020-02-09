@@ -9,7 +9,6 @@ type CreatedDate {
 
 type Mutation {
   createRegisteredUser(input: CreateRegisteredUserInput!): Username
-  setCognitoIdentityId(input: SetCognitoIdentityIdInput!): Username
 }
 
 type Query {
@@ -19,13 +18,8 @@ type Query {
 
 type RegisteredUser {
   username: String!
-  createdDate: String
-  cognitoIdentityId: String
-  jsonString: String
-}
-
-input SetCognitoIdentityIdInput {
-  username: String!
+  createdDate: String!
+  jsonString: String!
 }
 
 type Username {

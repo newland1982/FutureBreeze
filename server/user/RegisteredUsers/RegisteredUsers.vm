@@ -7,7 +7,7 @@
   },
 
   "attributeValues" : {
-      "createdDate": { "S" : "$util.time.nowEpochMilliSeconds()" },
+      "createdDate": { "S" : "${util.time.nowEpochMilliSeconds()}" },
       "jsonString": { "S" : "${context.arguments.input.jsonString}" }
   },
   "condition": {
