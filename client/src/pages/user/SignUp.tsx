@@ -57,14 +57,17 @@ const amplifyCommonConfig = {
     userPoolId: process.env.REACT_APP_AWS_COGNITO_userPoolId,
     userPoolWebClientId: process.env.REACT_APP_AWS_COGNITO_userPoolWebClientId
   },
-  aws_appsync_region: process.env.REACT_APP_AWS_APPSYNC_aws_appsync_region,
-  aws_appsync_authenticationType: 'AWS_IAM'
+  aws_appsync_region: process.env.REACT_APP_AWS_APPSYNC_aws_appsync_region
 };
 
-const setAmplifyConfig = (endpoint: string | undefined) => {
+const setAmplifyConfig = (
+  endpoint: string | undefined,
+  authenticationType: string | undefined
+) => {
   Amplify.configure({
     ...amplifyCommonConfig,
-    aws_appsync_graphqlEndpoint: endpoint
+    aws_appsync_graphqlEndpoint: endpoint,
+    aws_appsync_authenticationType: authenticationType
   });
 };
 
@@ -130,7 +133,8 @@ const SignUp = () => {
 
       setAmplifyConfig(
         process.env
-          .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers
+          .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers,
+        'AWS_IAM'
       );
       const queryGetUsername = `query GetUsername($username: String!) {
         getUsername(username: $username) {
@@ -167,7 +171,8 @@ const SignUp = () => {
     setHasBeenClicked(true);
 
     setAmplifyConfig(
-      process.env.REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_SignUpUsers
+      process.env.REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_SignUpUsers,
+      'AWS_IAM'
     );
     const mutationCreateSignUpUser = `mutation CreateSignUpUser($input: CreateSignUpUserInput!) {
       createSignUpUser(input: $input) {
