@@ -20,6 +20,27 @@
 
 $util.toJson($context.result)
 
+## Resolver for Mutation.setCognitoIdentityId
+{
+  "version" : "2017-02-28",
+  "operation" : "UpdateItem",
+  
+  #set ($fullUsername = $context.identity.username)
+  #set ($username = $fullUsername.substring(96))
+  
+  "key" : {
+      "username" : { "S" : "${username}" }
+  },
+  "update" : {
+      "expression" : "SET cognitoIdentityId = :cognitoIdentityId",
+      "expressionValues": {
+          ":cognitoIdentityId" : { "S": "${context.arguments.input.cognitoIdentityId}" }
+      }
+  }
+}
+
+$util.toJson($context.result)
+
 ## Resolver for Query.getUsername
 {
     "version" : "2017-02-28",

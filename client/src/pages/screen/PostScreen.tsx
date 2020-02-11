@@ -113,11 +113,11 @@ const PostScreen = () => {
 
   useEffect(() => {
     setAmplifyConfig(undefined);
+
     const authenticationCheck = async () => {
       const currentAuthenticatedUser = await Auth.currentAuthenticatedUser({
         bypassCache: true
       }).catch(() => {});
-      console.log('autheuserrrl', currentAuthenticatedUser);
 
       if (!currentAuthenticatedUser) {
         dispatch({
@@ -125,9 +125,9 @@ const PostScreen = () => {
           payload: { ...user, baseLocation: location.pathname }
         });
         history.push('/user/signin');
+      } else {
+        setFullUsername(currentAuthenticatedUser.username);
       }
-
-      setFullUsername(currentAuthenticatedUser.username);
     };
 
     authenticationCheck();

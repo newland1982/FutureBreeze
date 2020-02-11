@@ -1,3 +1,7 @@
+type CognitoIdentityId @aws_cognito_user_pools {
+  cognitoIdentityId: String!
+}
+
 input CreateRegisteredUserInput {
   username: String!
   jsonString: String
@@ -9,17 +13,25 @@ type CreatedDate {
 
 type Mutation {
   createRegisteredUser(input: CreateRegisteredUserInput!): Username
+  setCognitoIdentityId(input: SetCognitoIdentityIdInput!): CognitoIdentityId
+    @aws_cognito_user_pools
 }
 
 type Query {
   getUsername(username: String!): Username
   getCreatedDate(username: String!): CreatedDate
+  confirmUsername(username: String!): CognitoIdentityId
 }
 
 type RegisteredUser {
   username: String!
   createdDate: String!
+  cognitoIdentityId: String
   jsonString: String!
+}
+
+input SetCognitoIdentityIdInput {
+  cognitoIdentityId: String!
 }
 
 type Username {

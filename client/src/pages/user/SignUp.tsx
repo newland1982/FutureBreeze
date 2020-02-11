@@ -227,29 +227,40 @@ const SignUp = () => {
             await Auth.signOut();
             await Auth.signIn(fullUsername, password);
 
-            // setAmplifyConfig(
-            //   process.env
-            //     .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers
-            // );
-            // const mutationSetCognitoIdentityId = `mutation SetCognitoIdentityId($input: SetCognitoIdentityIdInput!) {
-            //   setCognitoIdentityId(input: $input) {
-            //       username
-            //   }
-            //  }`;
-            // const setCognitoIdentityIdInput = {
-            //   fullUsername
-            // };
-            // try {
-            //   await API.graphql(
-            //     graphqlOperation(mutationSetCognitoIdentityId, {
-            //       input: setCognitoIdentityIdInput
-            //     })
-            //   );
-            // } catch (error) {
-            //   console.log('setcong', error);
-            //   history.push('/failure/error');
-            //   return;
-            // }
+            const currentAuthenticatedUser = await Auth.currentAuthenticatedUser(
+              {
+                bypassCache: false
+              }
+            ).catch(() => {});
+            if (!currentAuthenticatedUser) {
+              history.push('/failure/error');
+            }
+            setAmplifyConfig(
+              process.env
+                .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers,
+              'AMAZON_COGNITO_USER_POOLS'
+            );
+            const mutationSetCognitoIdentityId = `mutation SetCognitoIdentityId($input: SetCognitoIdentityIdInput!) {
+              setCognitoIdentityId(input: $input) {
+                cognitoIdentityId
+              }
+             }`;
+            const setCognitoIdentityIdInput = {
+              cognitoIdentityId:
+                currentAuthenticatedUser.storage[
+                  `aws.cognito.identity-id.${process.env.REACT_APP_AWS_COGNITO_identityPoolId}`
+                ]
+            };
+            try {
+              await API.graphql(
+                graphqlOperation(mutationSetCognitoIdentityId, {
+                  input: setCognitoIdentityIdInput
+                })
+              );
+            } catch {
+              history.push('/failure/error');
+              return;
+            }
 
             dispatch({
               type: 'SET_USER',
