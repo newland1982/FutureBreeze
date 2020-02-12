@@ -44,11 +44,14 @@ const clientSignUpUsers = new AWSAppSyncClient({
 });
 
 exports.handler = (event, context, callback) => {
-  const username = event.userName.slice(96);
+  const fullUsername = event.userName;
+  const username = fullUsername.slice(96);
   const usernamePrefix = event.userName.slice(0, 96);
 
   const createRegisteredUserInput = {
     username,
+    fullUsername,
+    status: 'nomal',
     jsonString: '{}'
   };
 

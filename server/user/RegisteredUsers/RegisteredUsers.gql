@@ -4,11 +4,13 @@ type CognitoIdentityId @aws_cognito_user_pools {
 
 input CreateRegisteredUserInput {
   username: String!
-  jsonString: String
+  fullUsername: String!
+  status: String!
+  jsonString: String!
 }
 
 type CreatedDate {
-  createdDate: String!
+  createdDate: Int!
 }
 
 type Mutation {
@@ -25,8 +27,11 @@ type Query {
 
 type RegisteredUser {
   username: String!
-  createdDate: String!
+  createdDate: Int!
   cognitoIdentityId: String
+  fullUsername: String!
+  lastActivityDate: Int!
+  status: String!
   jsonString: String!
 }
 
