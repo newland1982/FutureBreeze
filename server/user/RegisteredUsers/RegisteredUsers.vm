@@ -7,9 +7,9 @@
   },
 
   "attributeValues" : {
-      "createdDate": { "N" : "${util.time.nowEpochMilliSeconds()}" },
+      "createdDate": { "S" : "${util.time.nowEpochMilliSeconds()}" },
       "fullUsername" : { "S" : "${context.arguments.input.fullUsername}" },
-      "lastActivityDate": { "N" : "${util.time.nowEpochMilliSeconds()}" },
+      "lastActivityDate": { "S" : "${util.time.nowEpochMilliSeconds()}" },
       "status": { "S": "${context.arguments.input.status}" },
       "jsonString": { "S" : "${context.arguments.input.jsonString}" }
   },

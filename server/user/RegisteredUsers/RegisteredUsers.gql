@@ -10,7 +10,7 @@ input CreateRegisteredUserInput {
 }
 
 type CreatedDate {
-  createdDate: Int!
+  createdDate: String!
 }
 
 type Mutation {
@@ -27,10 +27,10 @@ type Query {
 
 type RegisteredUser {
   username: String!
-  createdDate: Int!
+  createdDate: String!
   cognitoIdentityId: String
   fullUsername: String!
-  lastActivityDate: Int!
+  lastActivityDate: String!
   status: String!
   jsonString: String!
 }
