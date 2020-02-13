@@ -89,8 +89,7 @@ const PostScreen = () => {
 
   const { user, dispatch } = useContext(UserContext);
 
-  const [objectURLForPC, setObjectURLForPC] = useState('');
-  const [objectURLForMobile, setObjectURLForMobile] = useState('');
+  const [sampleImageObjectURL, setSampleImageObjectURL] = useState('');
   const [blobForPC, setBlobForPC] = useState(new Blob());
   const [blobForMobile, setBlobForMobile] = useState(new Blob());
   const [blobForThumbnail, setBlobForThumbnail] = useState(new Blob());
@@ -135,11 +134,11 @@ const PostScreen = () => {
   });
 
   useEffect(() => {
-    if (!objectURLForPC || !objectURLForMobile) {
+    if (!sampleImageObjectURL) {
       return;
     }
     const styleElement = document.getElementById('style');
-    if (styleElement && deviceType === 'pc') {
+    if (styleElement) {
       styleElement.textContent = `
       body:before {
         content: '';
@@ -151,36 +150,16 @@ const PostScreen = () => {
         left: 0;
         width: 100vw;
         height: 100vh;
-        background: url(${objectURLForPC}) no-repeat center/cover;
-      }`;
-    } else if (styleElement && deviceType === 'mobile') {
-      styleElement.textContent = `
-      body:before {
-        content: '';
-        display: block;
-        position: fixed;
-        z-index: -1;
-        transform: translateZ(0);
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: url(${objectURLForMobile}) no-repeat center/cover;
+        background: url(${sampleImageObjectURL}) no-repeat center/cover;
       }`;
     }
     return () => {
       if (styleElement && initialStyleElementTextContent) {
         styleElement.textContent = initialStyleElementTextContent;
-        window.URL.revokeObjectURL(objectURLForPC);
-        window.URL.revokeObjectURL(objectURLForMobile);
+        window.URL.revokeObjectURL(sampleImageObjectURL);
       }
     };
-  }, [
-    deviceType,
-    initialStyleElementTextContent,
-    objectURLForMobile,
-    objectURLForPC
-  ]);
+  }, [deviceType, initialStyleElementTextContent, sampleImageObjectURL]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files || event.target.files[0].size > maxFileSize) {
@@ -196,7 +175,9 @@ const PostScreen = () => {
         if (!blob) {
           return;
         }
-        setObjectURLForPC(window.URL.createObjectURL(blob));
+        if (deviceType === 'pc') {
+          setSampleImageObjectURL(window.URL.createObjectURL(blob));
+        }
         setBlobForPC(blob);
       });
 
@@ -208,7 +189,9 @@ const PostScreen = () => {
         if (!blob) {
           return;
         }
-        setObjectURLForMobile(window.URL.createObjectURL(blob));
+        if (deviceType === 'mobile') {
+          setSampleImageObjectURL(window.URL.createObjectURL(blob));
+        }
         setBlobForMobile(blob);
       });
 
@@ -305,9 +288,7 @@ const PostScreen = () => {
             size='medium'
             onClick={() => inputRef?.current?.click()}
             style={{
-              display: `${
-                objectURLForPC && objectURLForMobile ? 'none' : 'inline'
-              }`
+              display: `${sampleImageObjectURL ? 'none' : 'inline'}`
             }}
           >
             Choose File
@@ -318,9 +299,7 @@ const PostScreen = () => {
             size='medium'
             onClick={() => cancel()}
             style={{
-              display: `${
-                objectURLForPC && objectURLForMobile ? 'inline' : 'none'
-              }`
+              display: `${sampleImageObjectURL ? 'inline' : 'none'}`
             }}
           >
             Cancel
@@ -333,9 +312,7 @@ const PostScreen = () => {
               ok();
             }}
             style={{
-              display: `${
-                objectURLForPC && objectURLForMobile ? 'inline' : 'none'
-              }`
+              display: `${sampleImageObjectURL ? 'inline' : 'none'}`
             }}
           >
             OK
