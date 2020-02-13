@@ -91,11 +91,12 @@ const PostScreen = () => {
 
   const [objectURLForPC, setObjectURLForPC] = useState('');
   const [objectURLForMobile, setObjectURLForMobile] = useState('');
-  const [objectURLForThumbnail, setObjectURLForThumbnail] = useState('');
   const [blobForPC, setBlobForPC] = useState(new Blob());
   const [blobForMobile, setBlobForMobile] = useState(new Blob());
   const [blobForThumbnail, setBlobForThumbnail] = useState(new Blob());
   const [fullUsername, setFullUsername] = useState('');
+
+  const maxFileSize = 8 * 1000 * 1000;
 
   const appropriateImageWidthForPC = 1980;
   const appropriateImageWidthForMobile = 744;
@@ -172,19 +173,18 @@ const PostScreen = () => {
         styleElement.textContent = initialStyleElementTextContent;
         window.URL.revokeObjectURL(objectURLForPC);
         window.URL.revokeObjectURL(objectURLForMobile);
-        window.URL.revokeObjectURL(objectURLForThumbnail);
       }
     };
   }, [
     deviceType,
     initialStyleElementTextContent,
     objectURLForMobile,
-    objectURLForPC,
-    objectURLForThumbnail
+    objectURLForPC
   ]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!event.target.files) {
+    if (!event.target.files || event.target.files[0].size > maxFileSize) {
+      history.push('/failure/error');
       return;
     }
 
@@ -220,7 +220,6 @@ const PostScreen = () => {
         if (!blob) {
           return;
         }
-        setObjectURLForThumbnail(window.URL.createObjectURL(blob));
         setBlobForThumbnail(blob);
       });
     };
@@ -297,6 +296,7 @@ const PostScreen = () => {
             ref={inputRef}
             className={classes.input}
             type='file'
+            accept='image/jpg, image/jpeg, image/png'
             onChange={handleInputChange}
           />
           <Button
@@ -306,9 +306,7 @@ const PostScreen = () => {
             onClick={() => inputRef?.current?.click()}
             style={{
               display: `${
-                objectURLForPC && objectURLForMobile && objectURLForThumbnail
-                  ? 'none'
-                  : 'inline'
+                objectURLForPC && objectURLForMobile ? 'none' : 'inline'
               }`
             }}
           >
@@ -321,9 +319,7 @@ const PostScreen = () => {
             onClick={() => cancel()}
             style={{
               display: `${
-                objectURLForPC && objectURLForMobile && objectURLForThumbnail
-                  ? 'inline'
-                  : 'none'
+                objectURLForPC && objectURLForMobile ? 'inline' : 'none'
               }`
             }}
           >
@@ -338,9 +334,7 @@ const PostScreen = () => {
             }}
             style={{
               display: `${
-                objectURLForPC && objectURLForMobile && objectURLForThumbnail
-                  ? 'inline'
-                  : 'none'
+                objectURLForPC && objectURLForMobile ? 'inline' : 'none'
               }`
             }}
           >
