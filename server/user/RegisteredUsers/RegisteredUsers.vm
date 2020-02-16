@@ -53,9 +53,7 @@ $util.toJson($context.result)
     }
 }
 
-{
-  "username": $utils.toJson($context.result.username)
-}
+$util.toJson($context.result)
 
 ## Resolver for Query.getCreatedDate
 {
@@ -66,6 +64,4 @@ $util.toJson($context.result)
     }
 }
 
-{
-  "createdDate": $utils.toJson($context.result.createdDate)
-}
+$util.toJson($context.result)
