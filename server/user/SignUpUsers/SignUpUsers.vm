@@ -68,6 +68,4 @@ $util.toJson($context.result)
     }
 }
 
-{
-  "status": $utils.toJson($context.result.status)
-}
+$util.toJson($context.result)
