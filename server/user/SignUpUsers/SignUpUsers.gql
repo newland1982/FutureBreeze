@@ -13,7 +13,6 @@ input GetIpAddressListInput {
 
 input GetStatusInput {
   id: ID!
-  createdDate: String!
 }
 
 type IpAddress {
@@ -36,7 +35,6 @@ type Query {
 
 input SetStatusInput {
   id: ID!
-  createdDate: String!
   status: String!
 }
 

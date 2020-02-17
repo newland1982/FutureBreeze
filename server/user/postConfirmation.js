@@ -29,7 +29,6 @@ const clientSignUpUsers = new AWSAppSyncClient({
 exports.handler = (event, context, callback) => {
   const setStatusInput = {
     id: event.request.clientMetadata.id,
-    createdDate: event.request.clientMetadata.createdDate,
     status: 'hasSignedUp'
   };
 

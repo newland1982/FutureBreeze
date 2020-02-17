@@ -3,13 +3,13 @@
   "version": "2017-02-28",
   "operation": "PutItem",
   "key": {
-  	 "id" : { "S" : "${util.autoId()}" },
-     "createdDate": { "S" : "${util.time.nowFormatted("yyyy-MM-dd HH:mm:ssZ")}" }
+  	 "id" : { "S" : "${util.autoId()}" }
   },
 
   #set( $expirationDate = $util.time.nowEpochSeconds() + 86400)
 
   "attributeValues" : {
+      "createdDate": { "S" : "${util.time.nowEpochMilliSeconds()}" },
       "ipAddress" : { "S" : "${context.identity.sourceIp[0]}"},
       "fullUsername": { "S" : "${context.arguments.input.fullUsername}" },
       "password": { "S" : "${context.arguments.input.password}" },
@@ -25,8 +25,7 @@ $util.toJson($context.result)
   "version" : "2017-02-28",
   "operation" : "UpdateItem",
   "key" : {
-      "id" : { "S" : "${context.arguments.input.id}" },
-      "createdDate" : { "S" : "${context.arguments.input.createdDate}"}
+      "id" : { "S" : "${context.arguments.input.id}" }
   },
   "update" : {
       "expression" : "SET #status = :status",
@@ -63,8 +62,7 @@ $util.toJson($context.result)
     "version": "2017-02-28",
     "operation": "GetItem",
     "key": {
-      "id" : { "S" : "${context.arguments.input.id}" },
-      "createdDate" : { "S" : "${context.arguments.input.createdDate}"}
+      "id" : { "S" : "${context.arguments.input.id}" }
     }
 }
 

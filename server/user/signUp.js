@@ -58,8 +58,7 @@ exports.handler = (event, context, callback) => {
     let ipAddressCount;
 
     const commonSetStatusInput = {
-      id: record.dynamodb.NewImage.id.S,
-      createdDate: record.dynamodb.NewImage.createdDate.S
+      id: record.dynamodb.NewImage.id.S
     };
 
     const getIpAddressListInput = {
@@ -67,8 +66,7 @@ exports.handler = (event, context, callback) => {
     };
 
     const getStatusInput = {
-      id: record.dynamodb.NewImage.id.S,
-      createdDate: record.dynamodb.NewImage.createdDate.S
+      id: record.dynamodb.NewImage.id.S
     };
 
     (async () => {
@@ -162,8 +160,7 @@ exports.handler = (event, context, callback) => {
           }
         },
         {
-          id: record.dynamodb.NewImage.id.S,
-          createdDate: record.dynamodb.NewImage.createdDate.S
+          id: record.dynamodb.NewImage.id.S
         }
       );
     })();
