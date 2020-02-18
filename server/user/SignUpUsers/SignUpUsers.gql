@@ -39,12 +39,13 @@ input SetStatusInput {
 }
 
 type SignUpUser {
-  id: ID
-  createdDate: String
-  ipAddress: String
+  id: ID!
+  createdDate: String!
+  ipAddress: String!
   fullUsername: String!
-  password: String
-  status: String
+  password: String!
+  status: String!
+  expirationDate: Int!
 }
 
 type Status {
