@@ -95,7 +95,7 @@ const PostScreen = () => {
   const [blobForThumbnail, setBlobForThumbnail] = useState(new Blob());
   const [fullUsername, setFullUsername] = useState('');
 
-  const maxFileSize = 8 * 1000 * 1000;
+  const blobSizeLimit = 8 * 1000 * 1000;
 
   const appropriateImageWidthForPC = 1980;
   const appropriateImageWidthForMobile = 744;
@@ -162,7 +162,7 @@ const PostScreen = () => {
   }, [deviceType, initialStyleElementTextContent, sampleImageObjectURL]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!event.target.files || event.target.files[0].size > maxFileSize) {
+    if (!event.target.files) {
       history.push('/failure/error');
       return;
     }
@@ -216,6 +216,11 @@ const PostScreen = () => {
   };
 
   const ok = async () => {
+    if (blobForPC.size > blobSizeLimit) {
+      history.push('/failure/error');
+      return;
+    }
+
     let RegisteredUsersCreatedDate;
     const username = fullUsername.slice(96);
     const unixTimestamp = String(Date.now());
