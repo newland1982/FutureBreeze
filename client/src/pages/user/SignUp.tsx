@@ -179,7 +179,7 @@ const SignUp = () => {
     );
     const mutationCreateSignUpUser = `mutation CreateSignUpUser($input: CreateSignUpUserInput!) {
       createSignUpUser(input: $input) {
-        fullUsername
+        id
       }
      }`;
     const createSignUpUserInput = {
@@ -199,11 +199,11 @@ const SignUp = () => {
     }
 
     // begin
-    // const queryGetStatus = `query GetStatus($input: CreateSignUpUserInput!) {
-    //   createSignUpUser(input: $input) {
-    //     fullUsername
-    //   }
-    //  }`;
+    const queryGetStatus = `query GetStatus($input: GetStatusInput!) {
+      getStatus(input: $input) {
+        status
+      }
+     }`;
     // end
 
     const subscriptionOnSetStatus = `subscription OnSetStatus {

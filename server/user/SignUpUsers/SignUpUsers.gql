@@ -3,8 +3,8 @@ input CreateSignUpUserInput {
   password: String!
 }
 
-type FullUsername {
-  fullUsername: String!
+type Id {
+  id: ID!
 }
 
 input GetIpAddressListInput {
@@ -24,7 +24,7 @@ type IpAddressList {
 }
 
 type Mutation {
-  createSignUpUser(input: CreateSignUpUserInput!): FullUsername
+  createSignUpUser(input: CreateSignUpUserInput!): Id
   setStatus(input: SetStatusInput!): Status
 }
 
