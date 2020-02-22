@@ -49,7 +49,7 @@ $util.toJson($context.result)
     "version" : "2017-02-28",
     "operation" : "GetItem",
     "key" : {
-        "username" : { "S" : "${context.arguments.username}" }
+        "username" : { "S" : "${context.arguments.input.username}" }
     }
 }
 
@@ -60,7 +60,7 @@ $util.toJson($context.result)
     "version" : "2017-02-28",
     "operation" : "GetItem",
     "key" : {
-        "username" : { "S" : "${context.arguments.username}" }
+        "username" : { "S" : "${context.arguments.input.username}" }
     }
 }
 

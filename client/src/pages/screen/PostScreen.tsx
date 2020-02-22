@@ -229,16 +229,18 @@ const PostScreen = () => {
       process.env
         .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers
     );
-    const queryGetCreatedDate = `query GetCreatedDate($username: String!) {
-      getCreatedDate(username: $username) {
+    const queryGetCreatedDate = `query GetCreatedDate($input: GetCreatedDateInput!) {
+      getCreatedDate(input: $input) {
         createdDate
       }
      }`;
-
+    const getCreatedDateInput = {
+      username
+    };
     try {
       const result = await API.graphql(
         graphqlOperation(queryGetCreatedDate, {
-          username
+          input: getCreatedDateInput
         })
       );
       RegisteredUsersCreatedDate = result.data.getCreatedDate.createdDate;

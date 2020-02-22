@@ -20,9 +20,9 @@ type Mutation {
 }
 
 type Query {
-  getUsername(username: String!): Username
-  getCreatedDate(username: String!): CreatedDate
-  confirmUsername(username: String!): CognitoIdentityId
+  getUsername(input: GetUsernameInput!): Username
+  getCreatedDate(input: GetCreatedDateInput!): CreatedDate
+  confirmUsername(input: ConfirmUsernameInput!): CognitoIdentityId
 }
 
 type RegisteredUser {
@@ -37,6 +37,18 @@ type RegisteredUser {
 
 input SetCognitoIdentityIdInput {
   cognitoIdentityId: String!
+}
+
+input GetUsernameInput {
+  username: String!
+}
+
+input GetCreatedDateInput {
+  username: String!
+}
+
+input ConfirmUsernameInput {
+  username: String!
 }
 
 type Username {

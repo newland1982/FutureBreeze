@@ -136,16 +136,19 @@ const SignUp = () => {
           .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers,
         'AWS_IAM'
       );
-      const queryGetUsername = `query GetUsername($username: String!) {
-        getUsername(username: $username) {
+      const queryGetUsername = `query GetUsername($input: GetUsernameInput!) {
+        getUsername(input: $input) {
             username
         }
        }`;
+      const getUsernameInput = {
+        username
+      };
 
       try {
         const result = await API.graphql(
           graphqlOperation(queryGetUsername, {
-            username
+            input: getUsernameInput
           })
         );
         const usernameAlreadyExists = Boolean(
@@ -179,7 +182,6 @@ const SignUp = () => {
         fullUsername
       }
      }`;
-
     const createSignUpUserInput = {
       fullUsername,
       password
@@ -195,6 +197,14 @@ const SignUp = () => {
       history.push('/failure/error');
       return;
     }
+
+    // begin
+    // const queryGetStatus = `query GetStatus($input: CreateSignUpUserInput!) {
+    //   createSignUpUser(input: $input) {
+    //     fullUsername
+    //   }
+    //  }`;
+    // end
 
     const subscriptionOnSetStatus = `subscription OnSetStatus {
       onSetStatus {
