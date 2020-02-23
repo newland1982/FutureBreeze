@@ -85,6 +85,13 @@ const SignUp = () => {
   const [isValidUsername, setIsValidUsername] = useState(false);
   const [isUniqueUsername, setIsUniqueUsername] = useState(true);
   const [hasBeenClicked, setHasBeenClicked] = useState(false);
+  const [intervalTimerId, setIntervalTimerId] = useState(0);
+  const [signUpUsersStatus, setSignUpUsersStatus] = useState('');
+  const [hasSignedUp, setHasSignedUp] = useState(false);
+  const [
+    mutationSetCognitoIdentityIdIsCompleted,
+    setMutationSetCognitoIdentityIdIsCompleted
+  ] = useState(false);
 
   const usernamePrefix = useMemo(() => {
     let uint32HexArray = [];
@@ -168,7 +175,96 @@ const SignUp = () => {
     usernameCheck();
   }, [usernamePrefix, username]);
 
-  let subscription: { unsubscribe(): void };
+  useEffect(() => {
+    if (
+      !(
+        signUpUsersStatus === '' ||
+        signUpUsersStatus === 'init' ||
+        signUpUsersStatus === 'beingProcessed' ||
+        signUpUsersStatus === 'hasSignedUp'
+      )
+    ) {
+      clearInterval(intervalTimerId);
+      history.push('/failure/error');
+      return;
+    }
+    if (signUpUsersStatus === 'hasSignedUp') {
+      clearInterval(intervalTimerId);
+      setHasSignedUp(true);
+    }
+  }, [history, intervalTimerId, signUpUsersStatus]);
+
+  useEffect(() => {
+    if (!hasSignedUp) {
+      return;
+    }
+
+    const OperateMutationSetCognitoIdentityId = async () => {
+      const currentAuthenticatedUser = await Auth.currentAuthenticatedUser({
+        bypassCache: false
+      }).catch(() => {});
+
+      if (!currentAuthenticatedUser) {
+        history.push('/failure/error');
+        return;
+      }
+      setAmplifyConfig(
+        process.env
+          .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers,
+        'AMAZON_COGNITO_USER_POOLS'
+      );
+      const mutationSetCognitoIdentityId = `mutation SetCognitoIdentityId($input: SetCognitoIdentityIdInput!) {
+        setCognitoIdentityId(input: $input) {
+          cognitoIdentityId
+        }
+       }`;
+      const setCognitoIdentityIdInput = {
+        cognitoIdentityId:
+          currentAuthenticatedUser.storage[
+            `aws.cognito.identity-id.${process.env.REACT_APP_AWS_COGNITO_identityPoolId}`
+          ]
+      };
+      try {
+        await API.graphql(
+          graphqlOperation(mutationSetCognitoIdentityId, {
+            input: setCognitoIdentityIdInput
+          })
+        );
+        setMutationSetCognitoIdentityIdIsCompleted(true);
+      } catch {
+        history.push('/failure/error');
+        return;
+      }
+    };
+
+    const signOutAndSignIn = async () => {
+      await Auth.signOut();
+      await Auth.signIn(fullUsername, password);
+      OperateMutationSetCognitoIdentityId();
+    };
+
+    signOutAndSignIn();
+  }, [fullUsername, hasSignedUp, history, password]);
+
+  useEffect(() => {
+    if (!mutationSetCognitoIdentityIdIsCompleted) {
+      return;
+    }
+    dispatch({
+      type: 'SET_USER',
+      payload: { ...user, fullUsername, password, authcode }
+    });
+
+    history.push('/user/authcodeshow');
+  }, [
+    authcode,
+    dispatch,
+    fullUsername,
+    history,
+    mutationSetCognitoIdentityIdIsCompleted,
+    password,
+    user
+  ]);
 
   const signUp = async () => {
     setHasBeenClicked(true);
@@ -199,167 +295,26 @@ const SignUp = () => {
       return;
     }
 
-    // begin
-    // const queryGetStatus = `query GetStatus($input: GetStatusInput!) {
-    //   getStatus(input: $input) {
-    //     status
-    //   }
-    //  }`;
-    // const getStatusInput = {
-    //   id
-    // };
-    // const OperateQueryGetStatus = async () => {
-    //   try {
-    //     const result = await API.graphql(
-    //       graphqlOperation(queryGetStatus, {
-    //         input: getStatusInput
-    //       })
-    //     );
-    //     console.log('result', result);
-    //     if (
-    //       !(
-    //         result.data.getStatus.status === 'beingProcessed' ||
-    //         result.data.getStatus.status === 'hasSignedUp'
-    //       )
-    //     ) {
-    //       subscription?.unsubscribe();
-    //       history.push('/failure/error');
-    //       return;
-    //     }
-    //     if (result.data.getStatus.status === 'hasSignedUp') {
-    //       subscription?.unsubscribe();
-
-    //       await Auth.signOut();
-    //       await Auth.signIn(fullUsername, password);
-
-    //       const currentAuthenticatedUser = await Auth.currentAuthenticatedUser({
-    //         bypassCache: false
-    //       }).catch(() => {});
-    //       if (!currentAuthenticatedUser) {
-    //         history.push('/failure/error');
-    //       }
-    //       setAmplifyConfig(
-    //         process.env
-    //           .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers,
-    //         'AMAZON_COGNITO_USER_POOLS'
-    //       );
-    //       const mutationSetCognitoIdentityId = `mutation SetCognitoIdentityId($input: SetCognitoIdentityIdInput!) {
-    //         setCognitoIdentityId(input: $input) {
-    //           cognitoIdentityId
-    //         }
-    //        }`;
-    //       const setCognitoIdentityIdInput = {
-    //         cognitoIdentityId:
-    //           currentAuthenticatedUser.storage[
-    //             `aws.cognito.identity-id.${process.env.REACT_APP_AWS_COGNITO_identityPoolId}`
-    //           ]
-    //       };
-    //       try {
-    //         await API.graphql(
-    //           graphqlOperation(mutationSetCognitoIdentityId, {
-    //             input: setCognitoIdentityIdInput
-    //           })
-    //         );
-    //       } catch {
-    //         history.push('/failure/error');
-    //         return;
-    //       }
-
-    //       dispatch({
-    //         type: 'SET_USER',
-    //         payload: { ...user, fullUsername, password, authcode }
-    //       });
-
-    //       history.push('/user/authcodeshow');
-    //     }
-    //   } catch (error) {
-    //     console.log('whyyyy', error);
-    //     history.push('/failure/error');
-    //     return;
-    //   }
-    // };
-    // OperateQueryGetStatus();
-    // end
-
-    const subscriptionOnSetStatus = `subscription OnSetStatus {
-      onSetStatus {
+    const queryGetStatus = `query GetStatus($input: GetStatusInput!) {
+      getStatus(input: $input) {
         status
       }
      }`;
-
-    type eventData = {
-      value: { data: { onSetStatus: { status: string } } };
+    const getStatusInput = {
+      id
+    };
+    const watchSignUpUsersStatus = async () => {
+      try {
+        const result = await API.graphql(
+          graphqlOperation(queryGetStatus, {
+            input: getStatusInput
+          })
+        );
+        setSignUpUsersStatus(`${result.data.getStatus.status}`);
+      } catch {}
     };
 
-    try {
-      subscription = await API.graphql(
-        graphqlOperation(subscriptionOnSetStatus)
-      )?.subscribe({
-        next: async (eventData: eventData) => {
-          if (
-            !(
-              eventData.value.data.onSetStatus.status === 'beingProcessed' ||
-              eventData.value.data.onSetStatus.status === 'hasSignedUp'
-            )
-          ) {
-            subscription?.unsubscribe();
-            history.push('/failure/error');
-            return;
-          }
-          if (eventData.value.data.onSetStatus.status === 'hasSignedUp') {
-            subscription?.unsubscribe();
-
-            await Auth.signOut();
-            await Auth.signIn(fullUsername, password);
-
-            const currentAuthenticatedUser = await Auth.currentAuthenticatedUser(
-              {
-                bypassCache: false
-              }
-            ).catch(() => {});
-            if (!currentAuthenticatedUser) {
-              history.push('/failure/error');
-            }
-            setAmplifyConfig(
-              process.env
-                .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers,
-              'AMAZON_COGNITO_USER_POOLS'
-            );
-            const mutationSetCognitoIdentityId = `mutation SetCognitoIdentityId($input: SetCognitoIdentityIdInput!) {
-              setCognitoIdentityId(input: $input) {
-                cognitoIdentityId
-              }
-             }`;
-            const setCognitoIdentityIdInput = {
-              cognitoIdentityId:
-                currentAuthenticatedUser.storage[
-                  `aws.cognito.identity-id.${process.env.REACT_APP_AWS_COGNITO_identityPoolId}`
-                ]
-            };
-            try {
-              await API.graphql(
-                graphqlOperation(mutationSetCognitoIdentityId, {
-                  input: setCognitoIdentityIdInput
-                })
-              );
-            } catch {
-              history.push('/failure/error');
-              return;
-            }
-
-            dispatch({
-              type: 'SET_USER',
-              payload: { ...user, fullUsername, password, authcode }
-            });
-
-            history.push('/user/authcodeshow');
-          }
-        }
-      });
-    } catch {
-      subscription?.unsubscribe();
-      history.push('/failure/error');
-    }
+    setIntervalTimerId(window.setInterval(watchSignUpUsersStatus, 2400));
   };
 
   return (
