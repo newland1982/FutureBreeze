@@ -172,6 +172,7 @@ const SignUp = () => {
 
   const signUp = async () => {
     setHasBeenClicked(true);
+    let id: string;
 
     setAmplifyConfig(
       process.env.REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_SignUpUsers,
@@ -186,24 +187,98 @@ const SignUp = () => {
       fullUsername,
       password
     };
-
     try {
-      await API.graphql(
+      const result = await API.graphql(
         graphqlOperation(mutationCreateSignUpUser, {
           input: createSignUpUserInput
         })
       );
+      id = result?.data?.createSignUpUser?.id;
     } catch {
       history.push('/failure/error');
       return;
     }
 
     // begin
-    const queryGetStatus = `query GetStatus($input: GetStatusInput!) {
-      getStatus(input: $input) {
-        status
-      }
-     }`;
+    // const queryGetStatus = `query GetStatus($input: GetStatusInput!) {
+    //   getStatus(input: $input) {
+    //     status
+    //   }
+    //  }`;
+    // const getStatusInput = {
+    //   id
+    // };
+    // const OperateQueryGetStatus = async () => {
+    //   try {
+    //     const result = await API.graphql(
+    //       graphqlOperation(queryGetStatus, {
+    //         input: getStatusInput
+    //       })
+    //     );
+    //     console.log('result', result);
+    //     if (
+    //       !(
+    //         result.data.getStatus.status === 'beingProcessed' ||
+    //         result.data.getStatus.status === 'hasSignedUp'
+    //       )
+    //     ) {
+    //       subscription?.unsubscribe();
+    //       history.push('/failure/error');
+    //       return;
+    //     }
+    //     if (result.data.getStatus.status === 'hasSignedUp') {
+    //       subscription?.unsubscribe();
+
+    //       await Auth.signOut();
+    //       await Auth.signIn(fullUsername, password);
+
+    //       const currentAuthenticatedUser = await Auth.currentAuthenticatedUser({
+    //         bypassCache: false
+    //       }).catch(() => {});
+    //       if (!currentAuthenticatedUser) {
+    //         history.push('/failure/error');
+    //       }
+    //       setAmplifyConfig(
+    //         process.env
+    //           .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers,
+    //         'AMAZON_COGNITO_USER_POOLS'
+    //       );
+    //       const mutationSetCognitoIdentityId = `mutation SetCognitoIdentityId($input: SetCognitoIdentityIdInput!) {
+    //         setCognitoIdentityId(input: $input) {
+    //           cognitoIdentityId
+    //         }
+    //        }`;
+    //       const setCognitoIdentityIdInput = {
+    //         cognitoIdentityId:
+    //           currentAuthenticatedUser.storage[
+    //             `aws.cognito.identity-id.${process.env.REACT_APP_AWS_COGNITO_identityPoolId}`
+    //           ]
+    //       };
+    //       try {
+    //         await API.graphql(
+    //           graphqlOperation(mutationSetCognitoIdentityId, {
+    //             input: setCognitoIdentityIdInput
+    //           })
+    //         );
+    //       } catch {
+    //         history.push('/failure/error');
+    //         return;
+    //       }
+
+    //       dispatch({
+    //         type: 'SET_USER',
+    //         payload: { ...user, fullUsername, password, authcode }
+    //       });
+
+    //       history.push('/user/authcodeshow');
+    //     }
+    //   } catch (error) {
+    //     console.log('whyyyy', error);
+    //     history.push('/failure/error');
+    //     return;
+    //   }
+    // };
+    // OperateQueryGetStatus();
     // end
 
     const subscriptionOnSetStatus = `subscription OnSetStatus {
