@@ -199,7 +199,7 @@ const SignUp = () => {
       return;
     }
 
-    const OperateMutationSetCognitoIdentityId = async () => {
+    const ExecuteMutationSetCognitoIdentityId = async () => {
       const currentAuthenticatedUser = await Auth.currentAuthenticatedUser({
         bypassCache: false
       }).catch(() => {});
@@ -240,7 +240,7 @@ const SignUp = () => {
     const signOutAndSignIn = async () => {
       await Auth.signOut();
       await Auth.signIn(fullUsername, password);
-      OperateMutationSetCognitoIdentityId();
+      ExecuteMutationSetCognitoIdentityId();
     };
 
     signOutAndSignIn();
