@@ -82,15 +82,15 @@ const SignUp = () => {
   const { user, dispatch } = useContext(UserContext);
 
   const [username, setUsername] = useState('');
-  const [isValidUsername, setIsValidUsername] = useState(false);
-  const [isUniqueUsername, setIsUniqueUsername] = useState(true);
+  const [usernameIsValid, setUsernameIsValid] = useState(false);
+  const [usernameIsUnique, setUsernameIsUnique] = useState(true);
   const [hasBeenClicked, setHasBeenClicked] = useState(false);
   const [intervalTimerId, setIntervalTimerId] = useState(0);
   const [signUpUsersStatus, setSignUpUsersStatus] = useState('');
   const [hasSignedUp, setHasSignedUp] = useState(false);
   const [
     registeredUsersMutationSetCognitoIdentityIdIsCompleted,
-    setMutationSetCognitoIdentityIdIsCompleted
+    setRegisteredUsersMutationSetCognitoIdentityIdIsCompleted
   ] = useState(false);
 
   const usernamePrefix = useMemo(() => {
@@ -130,11 +130,11 @@ const SignUp = () => {
   useEffect(() => {
     const usernameCheck = async () => {
       if (!username) {
-        setIsValidUsername(false);
+        setUsernameIsValid(false);
         return;
       }
       if (!username.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)) {
-        setIsValidUsername(false);
+        setUsernameIsValid(false);
         return;
       }
 
@@ -163,14 +163,14 @@ const SignUp = () => {
         );
 
         !usernameAlreadyExists
-          ? setIsUniqueUsername(true)
-          : setIsUniqueUsername(false);
+          ? setUsernameIsUnique(true)
+          : setUsernameIsUnique(false);
       } catch {
-        setIsValidUsername(false);
+        setUsernameIsValid(false);
         return;
       } finally {
       }
-      setIsValidUsername(true);
+      setUsernameIsValid(true);
     };
     usernameCheck();
   }, [usernamePrefix, username]);
@@ -230,7 +230,7 @@ const SignUp = () => {
             input: setCognitoIdentityIdInput
           })
         );
-        setMutationSetCognitoIdentityIdIsCompleted(true);
+        setRegisteredUsersMutationSetCognitoIdentityIdIsCompleted(true);
       } catch {
         history.push('/failure/error');
         return;
@@ -343,7 +343,7 @@ const SignUp = () => {
               className={classes.button}
               variant='contained'
               size='medium'
-              disabled={!isUniqueUsername || !isValidUsername || hasBeenClicked}
+              disabled={!usernameIsUnique || !usernameIsValid || hasBeenClicked}
               onClick={() => signUp()}
             >
               Sign Up
