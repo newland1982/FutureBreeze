@@ -89,7 +89,7 @@ const SignUp = () => {
   const [signUpUsersStatus, setSignUpUsersStatus] = useState('');
   const [hasSignedUp, setHasSignedUp] = useState(false);
   const [
-    mutationSetCognitoIdentityIdIsCompleted,
+    registeredUsersMutationSetCognitoIdentityIdIsCompleted,
     setMutationSetCognitoIdentityIdIsCompleted
   ] = useState(false);
 
@@ -143,7 +143,7 @@ const SignUp = () => {
           .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers,
         'AWS_IAM'
       );
-      const queryGetUsername = `query GetUsername($input: GetUsernameInput!) {
+      const registeredUsersQueryGetUsername = `query GetUsername($input: GetUsernameInput!) {
         getUsername(input: $input) {
             username
         }
@@ -154,7 +154,7 @@ const SignUp = () => {
 
       try {
         const result = await API.graphql(
-          graphqlOperation(queryGetUsername, {
+          graphqlOperation(registeredUsersQueryGetUsername, {
             input: getUsernameInput
           })
         );
@@ -199,7 +199,7 @@ const SignUp = () => {
       return;
     }
 
-    const ExecuteMutationSetCognitoIdentityId = async () => {
+    const registeredUsersMutationSetCognitoIdentityIdExecution = async () => {
       const currentAuthenticatedUser = await Auth.currentAuthenticatedUser({
         bypassCache: false
       }).catch(() => {});
@@ -213,7 +213,7 @@ const SignUp = () => {
           .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers,
         'AMAZON_COGNITO_USER_POOLS'
       );
-      const mutationSetCognitoIdentityId = `mutation SetCognitoIdentityId($input: SetCognitoIdentityIdInput!) {
+      const registeredUsersMutationSetCognitoIdentityId = `mutation SetCognitoIdentityId($input: SetCognitoIdentityIdInput!) {
         setCognitoIdentityId(input: $input) {
           cognitoIdentityId
         }
@@ -226,7 +226,7 @@ const SignUp = () => {
       };
       try {
         await API.graphql(
-          graphqlOperation(mutationSetCognitoIdentityId, {
+          graphqlOperation(registeredUsersMutationSetCognitoIdentityId, {
             input: setCognitoIdentityIdInput
           })
         );
@@ -240,14 +240,14 @@ const SignUp = () => {
     const signOutAndSignIn = async () => {
       await Auth.signOut();
       await Auth.signIn(fullUsername, password);
-      ExecuteMutationSetCognitoIdentityId();
+      registeredUsersMutationSetCognitoIdentityIdExecution();
     };
 
     signOutAndSignIn();
   }, [fullUsername, hasSignedUp, history, password]);
 
   useEffect(() => {
-    if (!mutationSetCognitoIdentityIdIsCompleted) {
+    if (!registeredUsersMutationSetCognitoIdentityIdIsCompleted) {
       return;
     }
     dispatch({
@@ -261,7 +261,7 @@ const SignUp = () => {
     dispatch,
     fullUsername,
     history,
-    mutationSetCognitoIdentityIdIsCompleted,
+    registeredUsersMutationSetCognitoIdentityIdIsCompleted,
     password,
     user
   ]);
@@ -274,7 +274,7 @@ const SignUp = () => {
       process.env.REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_SignUpUsers,
       'AWS_IAM'
     );
-    const mutationCreateSignUpUser = `mutation CreateSignUpUser($input: CreateSignUpUserInput!) {
+    const signUpUsersMutationCreateSignUpUser = `mutation CreateSignUpUser($input: CreateSignUpUserInput!) {
       createSignUpUser(input: $input) {
         id
       }
@@ -285,7 +285,7 @@ const SignUp = () => {
     };
     try {
       const result = await API.graphql(
-        graphqlOperation(mutationCreateSignUpUser, {
+        graphqlOperation(signUpUsersMutationCreateSignUpUser, {
           input: createSignUpUserInput
         })
       );
@@ -295,7 +295,7 @@ const SignUp = () => {
       return;
     }
 
-    const queryGetStatus = `query GetStatus($input: GetStatusInput!) {
+    const signUpUsersQueryGetStatus = `query GetStatus($input: GetStatusInput!) {
       getStatus(input: $input) {
         status
       }
@@ -306,7 +306,7 @@ const SignUp = () => {
     const watchSignUpUsersStatus = async () => {
       try {
         const result = await API.graphql(
-          graphqlOperation(queryGetStatus, {
+          graphqlOperation(signUpUsersQueryGetStatus, {
             input: getStatusInput
           })
         );
