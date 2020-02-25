@@ -60,7 +60,7 @@ const SignIn = () => {
   const { user, dispatch } = useContext(UserContext);
 
   const [authcode, setAuthcode] = useState('');
-  const [isValidAuthcode, setIsValidAuthcode] = useState(false);
+  const [authcodeIsValid, setAuthcodeIsValid] = useState(false);
   const [hasBeenClicked, setHasBeenClicked] = useState(false);
 
   const usernamePrefix = authcode.slice(-256, -160);
@@ -78,18 +78,18 @@ const SignIn = () => {
   useEffect(() => {
     const authcodeCheck = async () => {
       if (!authcode) {
-        setIsValidAuthcode(false);
+        setAuthcodeIsValid(false);
         return;
       }
       if (!username.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)) {
-        setIsValidAuthcode(false);
+        setAuthcodeIsValid(false);
         return;
       }
       if (!password.match(/^[a-f0-9]{256}$/)) {
-        setIsValidAuthcode(false);
+        setAuthcodeIsValid(false);
         return;
       }
-      setIsValidAuthcode(true);
+      setAuthcodeIsValid(true);
     };
     authcodeCheck();
   }, [password, authcode, username]);
@@ -159,7 +159,7 @@ const SignIn = () => {
               className={classes.button}
               variant='contained'
               size='medium'
-              disabled={!isValidAuthcode || hasBeenClicked}
+              disabled={!authcodeIsValid || hasBeenClicked}
               onClick={() => signIn()}
             >
               Sign In
