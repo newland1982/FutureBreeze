@@ -91,8 +91,8 @@ exports.handler = (event, context, callback) => {
         });
 
       if (
-        queryGetStatusResult.data.getStatus.status === 'beingProcessed' ||
-        queryGetStatusResult.data.getStatus.status === 'hasSignedUp'
+        queryGetStatusResult.data.getStatus.status === 'processing' ||
+        queryGetStatusResult.data.getStatus.status === 'completed'
       ) {
         return;
       }
@@ -101,7 +101,7 @@ exports.handler = (event, context, callback) => {
         .mutate({
           mutation: mutationSetStatus,
           variables: {
-            input: { ...commonSetStatusInput, status: 'beingProcessed' }
+            input: { ...commonSetStatusInput, status: 'processing' }
           },
           fetchPolicy: 'no-cache'
         })

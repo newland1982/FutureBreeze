@@ -237,15 +237,15 @@ const SignUp = () => {
       !(
         signUpUsersStatus === '' ||
         signUpUsersStatus === 'init' ||
-        signUpUsersStatus === 'beingProcessed' ||
-        signUpUsersStatus === 'hasSignedUp'
+        signUpUsersStatus === 'processing' ||
+        signUpUsersStatus === 'completed'
       )
     ) {
       clearInterval(intervalTimerId);
       history.push('/failure/error');
       return;
     }
-    if (signUpUsersStatus === 'hasSignedUp') {
+    if (signUpUsersStatus === 'completed') {
       clearInterval(intervalTimerId);
       setUserHasSignedUp(true);
     }

@@ -29,7 +29,7 @@ const clientSignUpUsers = new AWSAppSyncClient({
 exports.handler = (event, context, callback) => {
   const setStatusInput = {
     id: event.request.clientMetadata.id,
-    status: 'hasSignedUp'
+    status: 'completed'
   };
 
   (async () => {
