@@ -84,10 +84,14 @@ const SignUp = () => {
   const [username, setUsername] = useState('');
   const [usernameIsValid, setUsernameIsValid] = useState(false);
   const [usernameIsUnique, setUsernameIsUnique] = useState(true);
-  const [hasBeenClicked, setHasBeenClicked] = useState(false);
+  const [signUpButtonhasBeenClicked, setSignUpButtonhasBeenClicked] = useState(
+    false
+  );
   const [intervalTimerId, setIntervalTimerId] = useState(0);
+  const intervalTime = 2400;
   const [signUpUsersStatus, setSignUpUsersStatus] = useState('');
-  const [hasSignedUp, setHasSignedUp] = useState(false);
+  const [userHasSignedUp, setUserHasSignedUp] = useState(false);
+  const [userHasSignedIn, setUserHasSignedIn] = useState(false);
   const [
     registeredUsersMutationSetCognitoIdentityIdIsCompleted,
     setRegisteredUsersMutationSetCognitoIdentityIdIsCompleted
@@ -175,6 +179,59 @@ const SignUp = () => {
     usernameCheck();
   }, [usernamePrefix, username]);
 
+  const signUp = async () => {
+    setSignUpButtonhasBeenClicked(true);
+    let id: string;
+
+    setAmplifyConfig(
+      process.env.REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_SignUpUsers,
+      'AWS_IAM'
+    );
+    const signUpUsersMutationCreateSignUpUser = `mutation CreateSignUpUser($input: CreateSignUpUserInput!) {
+      createSignUpUser(input: $input) {
+        id
+      }
+     }`;
+    const createSignUpUserInput = {
+      fullUsername,
+      password
+    };
+    try {
+      const result = await API.graphql(
+        graphqlOperation(signUpUsersMutationCreateSignUpUser, {
+          input: createSignUpUserInput
+        })
+      );
+      id = result?.data?.createSignUpUser?.id;
+    } catch {
+      history.push('/failure/error');
+      return;
+    }
+
+    const signUpUsersQueryGetStatus = `query GetStatus($input: GetStatusInput!) {
+      getStatus(input: $input) {
+        status
+      }
+     }`;
+    const getStatusInput = {
+      id
+    };
+    const signUpUsersStatusWatch = async () => {
+      try {
+        const result = await API.graphql(
+          graphqlOperation(signUpUsersQueryGetStatus, {
+            input: getStatusInput
+          })
+        );
+        setSignUpUsersStatus(`${result.data.getStatus.status}`);
+      } catch {}
+    };
+
+    setIntervalTimerId(
+      window.setInterval(signUpUsersStatusWatch, intervalTime)
+    );
+  };
+
   useEffect(() => {
     if (
       !(
@@ -190,12 +247,31 @@ const SignUp = () => {
     }
     if (signUpUsersStatus === 'hasSignedUp') {
       clearInterval(intervalTimerId);
-      setHasSignedUp(true);
+      setUserHasSignedUp(true);
     }
   }, [history, intervalTimerId, signUpUsersStatus]);
 
   useEffect(() => {
-    if (!hasSignedUp) {
+    if (!userHasSignedUp) {
+      return;
+    }
+
+    const signOutAndSignIn = async () => {
+      await Auth.signOut();
+
+      const result = await Auth.signIn(fullUsername, password);
+
+      if (result.username === fullUsername) {
+        setUserHasSignedIn(true);
+      }
+      return;
+    };
+
+    signOutAndSignIn();
+  }, [fullUsername, password, userHasSignedUp]);
+
+  useEffect(() => {
+    if (!userHasSignedIn) {
       return;
     }
 
@@ -237,14 +313,8 @@ const SignUp = () => {
       }
     };
 
-    const signOutAndSignIn = async () => {
-      await Auth.signOut();
-      await Auth.signIn(fullUsername, password);
-      registeredUsersMutationSetCognitoIdentityIdExecution();
-    };
-
-    signOutAndSignIn();
-  }, [fullUsername, hasSignedUp, history, password]);
+    registeredUsersMutationSetCognitoIdentityIdExecution();
+  }, [fullUsername, userHasSignedIn, history, password]);
 
   useEffect(() => {
     if (!registeredUsersMutationSetCognitoIdentityIdIsCompleted) {
@@ -266,63 +336,12 @@ const SignUp = () => {
     user
   ]);
 
-  const signUp = async () => {
-    setHasBeenClicked(true);
-    let id: string;
-
-    setAmplifyConfig(
-      process.env.REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_SignUpUsers,
-      'AWS_IAM'
-    );
-    const signUpUsersMutationCreateSignUpUser = `mutation CreateSignUpUser($input: CreateSignUpUserInput!) {
-      createSignUpUser(input: $input) {
-        id
-      }
-     }`;
-    const createSignUpUserInput = {
-      fullUsername,
-      password
-    };
-    try {
-      const result = await API.graphql(
-        graphqlOperation(signUpUsersMutationCreateSignUpUser, {
-          input: createSignUpUserInput
-        })
-      );
-      id = result?.data?.createSignUpUser?.id;
-    } catch {
-      history.push('/failure/error');
-      return;
-    }
-
-    const signUpUsersQueryGetStatus = `query GetStatus($input: GetStatusInput!) {
-      getStatus(input: $input) {
-        status
-      }
-     }`;
-    const getStatusInput = {
-      id
-    };
-    const watchSignUpUsersStatus = async () => {
-      try {
-        const result = await API.graphql(
-          graphqlOperation(signUpUsersQueryGetStatus, {
-            input: getStatusInput
-          })
-        );
-        setSignUpUsersStatus(`${result.data.getStatus.status}`);
-      } catch {}
-    };
-
-    setIntervalTimerId(window.setInterval(watchSignUpUsersStatus, 2400));
-  };
-
   return (
     <Fragment>
       <Menu />
       <div
         style={{
-          display: `${hasBeenClicked ? 'none' : 'inline'}`
+          display: `${signUpButtonhasBeenClicked ? 'none' : 'inline'}`
         }}
       >
         <Box className={classes.root}>
@@ -343,7 +362,11 @@ const SignUp = () => {
               className={classes.button}
               variant='contained'
               size='medium'
-              disabled={!usernameIsUnique || !usernameIsValid || hasBeenClicked}
+              disabled={
+                !usernameIsUnique ||
+                !usernameIsValid ||
+                signUpButtonhasBeenClicked
+              }
               onClick={() => signUp()}
             >
               Sign Up
@@ -352,7 +375,7 @@ const SignUp = () => {
         </Box>
       </div>
       <LoadingAnimation
-        hasBeenClicked={hasBeenClicked}
+        hasBeenClicked={signUpButtonhasBeenClicked}
         size={124}
         thickness={4}
       />
