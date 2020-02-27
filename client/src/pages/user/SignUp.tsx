@@ -93,8 +93,8 @@ const SignUp = () => {
   const [userHasSignedUp, setUserHasSignedUp] = useState(false);
   const [userHasSignedIn, setUserHasSignedIn] = useState(false);
   const [
-    registeredUsersMutationSetCognitoIdentityIdIsCompleted,
-    setRegisteredUsersMutationSetCognitoIdentityIdIsCompleted
+    registeredUsersMutationSetCognitoIdentityIdExecutionIsCompleted,
+    setRegisteredUsersMutationSetCognitoIdentityIdExecutionIsCompleted
   ] = useState(false);
 
   const usernamePrefix = useMemo(() => {
@@ -306,7 +306,9 @@ const SignUp = () => {
             input: setCognitoIdentityIdInput
           })
         );
-        setRegisteredUsersMutationSetCognitoIdentityIdIsCompleted(true);
+        setRegisteredUsersMutationSetCognitoIdentityIdExecutionIsCompleted(
+          true
+        );
       } catch {
         history.push('/failure/error');
         return;
@@ -317,7 +319,7 @@ const SignUp = () => {
   }, [fullUsername, userHasSignedIn, history, password]);
 
   useEffect(() => {
-    if (!registeredUsersMutationSetCognitoIdentityIdIsCompleted) {
+    if (!registeredUsersMutationSetCognitoIdentityIdExecutionIsCompleted) {
       return;
     }
     dispatch({
@@ -331,7 +333,7 @@ const SignUp = () => {
     dispatch,
     fullUsername,
     history,
-    registeredUsersMutationSetCognitoIdentityIdIsCompleted,
+    registeredUsersMutationSetCognitoIdentityIdExecutionIsCompleted,
     password,
     user
   ]);
