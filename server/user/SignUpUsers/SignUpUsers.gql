@@ -1,5 +1,5 @@
 input CreateSignUpUserInput {
-  fullUsername: String!
+  accountName: String!
   password: String!
 }
 
@@ -42,7 +42,7 @@ type SignUpUser {
   id: ID!
   createdDate: String!
   ipAddress: String!
-  fullUsername: String!
+  accountName: String!
   password: String!
   status: String!
   expirationDate: Int!
@@ -52,12 +52,7 @@ type Status {
   status: String!
 }
 
-type Subscription {
-  onSetStatus: Status @aws_subscribe(mutations: ["setStatus"])
-}
-
 schema {
   query: Query
   mutation: Mutation
-  subscription: Subscription
 }

@@ -78,7 +78,7 @@ const ChangeAuthcode = () => {
 
   const usernamePrefix = oldAuthcode.slice(-256, -160);
   const username = oldAuthcode.slice(0, -256);
-  const fullUsername = `${usernamePrefix}${username}`;
+  const accountName = `${usernamePrefix}${username}`;
 
   const oldPassword = oldAuthcode.slice(-256);
 
@@ -132,7 +132,7 @@ const ChangeAuthcode = () => {
     }
 
     try {
-      await Auth.signIn(fullUsername, oldPassword);
+      await Auth.signIn(accountName, oldPassword);
     } catch {
       history.push('/failure/error');
       return;
@@ -150,7 +150,7 @@ const ChangeAuthcode = () => {
         type: 'SET_USER',
         payload: {
           ...user,
-          fullUsername,
+          accountName,
           password: newPassword,
           authcode: newAuthcode
         }

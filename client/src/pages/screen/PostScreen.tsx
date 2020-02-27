@@ -93,7 +93,7 @@ const PostScreen = () => {
   const [blobForPC, setBlobForPC] = useState(new Blob());
   const [blobForMobile, setBlobForMobile] = useState(new Blob());
   const [blobForThumbnail, setBlobForThumbnail] = useState(new Blob());
-  const [fullUsername, setFullUsername] = useState('');
+  const [accountName, setAccountName] = useState('');
 
   const blobSizeLimit = 8 * 1000 * 1000;
 
@@ -126,7 +126,7 @@ const PostScreen = () => {
         });
         history.push('/user/signin');
       } else {
-        setFullUsername(currentAuthenticatedUser.username);
+        setAccountName(currentAuthenticatedUser.username);
       }
     };
 
@@ -222,7 +222,7 @@ const PostScreen = () => {
     }
 
     let RegisteredUsersCreatedDate;
-    const username = fullUsername.slice(96);
+    const username = accountName.slice(96);
     const unixTimestamp = String(Date.now());
 
     setAmplifyConfig(

@@ -4,7 +4,7 @@ import userReducer from '../reducers/userReducer';
 import { useTheme } from '@material-ui/core/styles';
 
 type user = {
-  fullUsername: string;
+  accountName: string;
   password: string;
   authcode: string;
   baseLocation: string;
@@ -12,7 +12,7 @@ type user = {
 };
 
 let initState = {
-  fullUsername: '',
+  accountName: '',
   password: '',
   authcode: '',
   baseLocation: '/user/changeauthcode',
@@ -22,7 +22,7 @@ let initState = {
 type action = {
   type: string;
   payload: {
-    fullUsername: string;
+    accountName: string;
     password: string;
     authcode: string;
     baseLocation: string;

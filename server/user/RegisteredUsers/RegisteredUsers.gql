@@ -4,7 +4,7 @@ type CognitoIdentityId @aws_cognito_user_pools {
 
 input CreateRegisteredUserInput {
   username: String!
-  fullUsername: String!
+  accountName: String!
   status: String!
   jsonString: String!
 }
@@ -29,7 +29,7 @@ type RegisteredUser {
   username: String!
   createdDate: String!
   cognitoIdentityId: String
-  fullUsername: String!
+  accountName: String!
   lastActivityDate: String!
   status: String!
   jsonString: String!

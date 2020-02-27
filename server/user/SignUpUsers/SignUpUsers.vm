@@ -11,7 +11,7 @@
   "attributeValues" : {
       "createdDate": { "S" : "${util.time.nowEpochMilliSeconds()}" },
       "ipAddress" : { "S" : "${context.identity.sourceIp[0]}"},
-      "fullUsername": { "S" : "${context.arguments.input.fullUsername}" },
+      "accountName": { "S" : "${context.arguments.input.accountName}" },
       "password": { "S" : "${context.arguments.input.password}" },
       "status": { "S" : "init" },
       "expirationDate": { "N" : "${expirationDate}" }

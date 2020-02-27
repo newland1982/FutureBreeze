@@ -64,7 +64,7 @@ const Quit = () => {
 
   const usernamePrefix = authcode.slice(-256, -160);
   const username = authcode.slice(0, -256);
-  const fullUsername = `${usernamePrefix}${username}`;
+  const accountName = `${usernamePrefix}${username}`;
 
   const password = authcode.slice(-256);
 
@@ -104,13 +104,13 @@ const Quit = () => {
     }
 
     try {
-      await Auth.signIn(fullUsername, password);
+      await Auth.signIn(accountName, password);
 
       dispatch({
         type: 'SET_USER',
         payload: {
           ...user,
-          fullUsername,
+          accountName,
           password,
           authcode
         }

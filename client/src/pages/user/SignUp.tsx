@@ -121,7 +121,7 @@ const SignUp = () => {
     return uint32HexArray.join('');
   }, []);
 
-  const fullUsername = `${usernamePrefix}${username}`;
+  const accountName = `${usernamePrefix}${username}`;
   const password = `${usernamePrefix}${randomNumber}`;
   const authcode = `${username}${usernamePrefix}${randomNumber}`;
 
@@ -193,7 +193,7 @@ const SignUp = () => {
       }
      }`;
     const createSignUpUserInput = {
-      fullUsername,
+      accountName,
       password
     };
     try {
@@ -259,16 +259,16 @@ const SignUp = () => {
     const signOutAndSignIn = async () => {
       await Auth.signOut();
 
-      const result = await Auth.signIn(fullUsername, password);
+      const result = await Auth.signIn(accountName, password);
 
-      if (result.username === fullUsername) {
+      if (result.username === accountName) {
         setUserHasSignedIn(true);
       }
       return;
     };
 
     signOutAndSignIn();
-  }, [fullUsername, password, userHasSignedUp]);
+  }, [accountName, password, userHasSignedUp]);
 
   useEffect(() => {
     if (!userHasSignedIn) {
@@ -316,7 +316,7 @@ const SignUp = () => {
     };
 
     registeredUsersMutationSetCognitoIdentityIdExecution();
-  }, [fullUsername, userHasSignedIn, history, password]);
+  }, [accountName, userHasSignedIn, history, password]);
 
   useEffect(() => {
     if (!registeredUsersMutationSetCognitoIdentityIdExecutionIsCompleted) {
@@ -324,14 +324,14 @@ const SignUp = () => {
     }
     dispatch({
       type: 'SET_USER',
-      payload: { ...user, fullUsername, password, authcode }
+      payload: { ...user, accountName, password, authcode }
     });
 
     history.push('/user/authcodeshow');
   }, [
     authcode,
     dispatch,
-    fullUsername,
+    accountName,
     history,
     registeredUsersMutationSetCognitoIdentityIdExecutionIsCompleted,
     password,

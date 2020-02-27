@@ -1,5 +1,5 @@
 type user = {
-  fullUsername: string;
+  accountName: string;
   password: string;
   authcode: string;
   baseLocation: string;
@@ -9,7 +9,7 @@ type user = {
 type action = {
   type: string;
   payload: {
-    fullUsername: string;
+    accountName: string;
     password: string;
     authcode: string;
     baseLocation: string;
@@ -21,7 +21,7 @@ const userReducer = (state: user, action: action) => {
   switch (action.type) {
     case 'SET_USER':
       return {
-        fullUsername: action.payload.fullUsername,
+        accountName: action.payload.accountName,
         password: action.payload.password,
         authcode: action.payload.authcode,
         baseLocation: action.payload.baseLocation,

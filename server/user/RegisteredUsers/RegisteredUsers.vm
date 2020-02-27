@@ -8,7 +8,7 @@
 
   "attributeValues" : {
       "createdDate": { "S" : "${util.time.nowEpochMilliSeconds()}" },
-      "fullUsername" : { "S" : "${context.arguments.input.fullUsername}" },
+      "accountName" : { "S" : "${context.arguments.input.accountName}" },
       "lastActivityDate": { "S" : "${util.time.nowEpochMilliSeconds()}" },
       "status": { "S": "${context.arguments.input.status}" },
       "jsonString": { "S" : "${context.arguments.input.jsonString}" }
@@ -28,8 +28,8 @@ $util.toJson($context.result)
   "version" : "2017-02-28",
   "operation" : "UpdateItem",
   
-  #set ($fullUsername = $context.identity.username)
-  #set ($username = $fullUsername.substring(96))
+  #set ($accountName = $context.identity.username)
+  #set ($username = $accountName.substring(96))
   
   "key" : {
       "username" : { "S" : "${username}" }
