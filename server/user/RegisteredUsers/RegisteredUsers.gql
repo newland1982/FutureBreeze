@@ -3,7 +3,7 @@ type CognitoIdentityId @aws_cognito_user_pools {
 }
 
 input CreateRegisteredUserInput {
-  username: String!
+  displayName: String!
   accountName: String!
   status: String!
   jsonString: String!
@@ -14,19 +14,19 @@ type CreatedDate {
 }
 
 type Mutation {
-  createRegisteredUser(input: CreateRegisteredUserInput!): Username
+  createRegisteredUser(input: CreateRegisteredUserInput!): DisplayName
   setCognitoIdentityId(input: SetCognitoIdentityIdInput!): CognitoIdentityId
     @aws_cognito_user_pools
 }
 
 type Query {
-  getUsername(input: GetUsernameInput!): Username
+  getDisplayName(input: GetDisplayNameInput!): DisplayName
   getCreatedDate(input: GetCreatedDateInput!): CreatedDate
-  confirmUsername(input: ConfirmUsernameInput!): CognitoIdentityId
+  confirmDisplayName(input: ConfirmDisplayNameInput!): CognitoIdentityId
 }
 
 type RegisteredUser {
-  username: String!
+  displayName: String!
   createdDate: String!
   cognitoIdentityId: String
   accountName: String!
@@ -39,20 +39,20 @@ input SetCognitoIdentityIdInput {
   cognitoIdentityId: String!
 }
 
-input GetUsernameInput {
-  username: String!
+input GetDisplayNameInput {
+  displayName: String!
 }
 
 input GetCreatedDateInput {
-  username: String!
+  displayName: String!
 }
 
-input ConfirmUsernameInput {
-  username: String!
+input ConfirmDisplayNameInput {
+  displayName: String!
 }
 
-type Username {
-  username: String!
+type DisplayName {
+  displayName: String!
 }
 
 schema {

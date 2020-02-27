@@ -12,7 +12,7 @@ const credentials = AWS.config.credentials;
 const mutationCreateRegisteredUser = gql(`
   mutation CreateRegisteredUser($input: CreateRegisteredUserInput!) {
     createRegisteredUser(input: $input) {
-      username
+      displayName
     }
   }`);
 
@@ -45,11 +45,11 @@ const clientSignUpUsers = new AWSAppSyncClient({
 
 exports.handler = (event, context, callback) => {
   const accountName = event.userName;
-  const username = accountName.slice(96);
-  const usernamePrefix = event.userName.slice(0, 96);
+  const displayName = accountName.slice(96);
+  const displayNamePrefix = event.userName.slice(0, 96);
 
   const createRegisteredUserInput = {
-    username,
+    displayName,
     accountName,
     status: 'nomal',
     jsonString: '{}'
@@ -61,8 +61,8 @@ exports.handler = (event, context, callback) => {
   };
 
   if (
-    !username.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/) ||
-    !usernamePrefix.match(/^[a-f0-9]{96}$/)
+    !displayName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/) ||
+    !displayNamePrefix.match(/^[a-f0-9]{96}$/)
   ) {
     (async () => {
       await clientSignUpUsers.hydrated();

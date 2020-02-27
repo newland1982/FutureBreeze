@@ -76,15 +76,15 @@ const ChangeAuthcode = () => {
     return uint32HexArray.join('');
   }, []);
 
-  const usernamePrefix = oldAuthcode.slice(-256, -160);
-  const username = oldAuthcode.slice(0, -256);
-  const accountName = `${usernamePrefix}${username}`;
+  const displayNamePrefix = oldAuthcode.slice(-256, -160);
+  const displayName = oldAuthcode.slice(0, -256);
+  const accountName = `${displayNamePrefix}${displayName}`;
 
   const oldPassword = oldAuthcode.slice(-256);
 
-  const newPassword = `${usernamePrefix}${newRandomNumber}`;
+  const newPassword = `${displayNamePrefix}${newRandomNumber}`;
 
-  const newAuthcode = `${username}${usernamePrefix}${newRandomNumber}`;
+  const newAuthcode = `${displayName}${displayNamePrefix}${newRandomNumber}`;
 
   const inputAuthcode = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -98,7 +98,7 @@ const ChangeAuthcode = () => {
         setIsValidAuthcode(false);
         return;
       }
-      if (!username.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)) {
+      if (!displayName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)) {
         setIsValidAuthcode(false);
         return;
       }
@@ -109,7 +109,7 @@ const ChangeAuthcode = () => {
       setIsValidAuthcode(true);
     };
     oldAuthcodeCheck();
-  }, [oldPassword, oldAuthcode, username]);
+  }, [oldPassword, oldAuthcode, displayName]);
 
   const changeAuthcode = async () => {
     setHasBeenClicked(true);

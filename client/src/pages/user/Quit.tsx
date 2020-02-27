@@ -62,9 +62,9 @@ const Quit = () => {
   const [isValidAuthcode, setIsValidAuthcode] = useState(false);
   const [hasBeenClicked, setHasBeenClicked] = useState(false);
 
-  const usernamePrefix = authcode.slice(-256, -160);
-  const username = authcode.slice(0, -256);
-  const accountName = `${usernamePrefix}${username}`;
+  const displayNamePrefix = authcode.slice(-256, -160);
+  const displayName = authcode.slice(0, -256);
+  const accountName = `${displayNamePrefix}${displayName}`;
 
   const password = authcode.slice(-256);
 
@@ -80,7 +80,7 @@ const Quit = () => {
         setIsValidAuthcode(false);
         return;
       }
-      if (!username.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)) {
+      if (!displayName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)) {
         setIsValidAuthcode(false);
         return;
       }
@@ -91,7 +91,7 @@ const Quit = () => {
       setIsValidAuthcode(true);
     };
     authcodeCheck();
-  }, [password, authcode, username]);
+  }, [password, authcode, displayName]);
 
   const deleteAccount = async () => {
     setHasBeenClicked(true);

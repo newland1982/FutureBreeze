@@ -3,7 +3,7 @@
   "version": "2017-02-28",
   "operation": "PutItem",
   "key": {
-  	 "username" : { "S" : "${context.arguments.input.username}" }
+  	 "displayName" : { "S" : "${context.arguments.input.displayName}" }
   },
 
   "attributeValues" : {
@@ -14,10 +14,7 @@
       "jsonString": { "S" : "${context.arguments.input.jsonString}" }
   },
   "condition": {
-    "expression": "attribute_not_exists(#username)",
-    "expressionNames": {
-      "#username": "username"
-    }
+    "expression": "attribute_not_exists(displayName)"
   }
 }
 
@@ -29,10 +26,10 @@ $util.toJson($context.result)
   "operation" : "UpdateItem",
   
   #set ($accountName = $context.identity.username)
-  #set ($username = $accountName.substring(96))
+  #set ($displayName = $accountName.substring(96))
   
   "key" : {
-      "username" : { "S" : "${username}" }
+      "displayName" : { "S" : "${displayName}" }
   },
   "update" : {
       "expression" : "SET cognitoIdentityId = :cognitoIdentityId",
@@ -44,12 +41,12 @@ $util.toJson($context.result)
 
 $util.toJson($context.result)
 
-## Resolver for Query.getUsername
+## Resolver for Query.getDisplayName
 {
     "version" : "2017-02-28",
     "operation" : "GetItem",
     "key" : {
-        "username" : { "S" : "${context.arguments.input.username}" }
+        "displayName" : { "S" : "${context.arguments.input.displayName}" }
     }
 }
 
@@ -60,7 +57,7 @@ $util.toJson($context.result)
     "version" : "2017-02-28",
     "operation" : "GetItem",
     "key" : {
-        "username" : { "S" : "${context.arguments.input.username}" }
+        "displayName" : { "S" : "${context.arguments.input.displayName}" }
     }
 }
 

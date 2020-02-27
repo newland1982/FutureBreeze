@@ -222,7 +222,7 @@ const PostScreen = () => {
     }
 
     let RegisteredUsersCreatedDate;
-    const username = accountName.slice(96);
+    const displayName = accountName.slice(96);
     const unixTimestamp = String(Date.now());
 
     setAmplifyConfig(
@@ -235,7 +235,7 @@ const PostScreen = () => {
       }
      }`;
     const getCreatedDateInput = {
-      username
+      displayName
     };
     try {
       const result = await API.graphql(
@@ -247,7 +247,7 @@ const PostScreen = () => {
     } catch {}
 
     const putFileForPCResult = await Storage.put(
-      `${username}_${RegisteredUsersCreatedDate}/pc${unixTimestamp}`,
+      `${displayName}_${RegisteredUsersCreatedDate}/pc${unixTimestamp}`,
       blobForPC,
       {
         level: 'protected',
@@ -257,7 +257,7 @@ const PostScreen = () => {
     console.log(putFileForPCResult);
 
     const putFileForMobileResult = await Storage.put(
-      `${username}_${RegisteredUsersCreatedDate}/Mobile${unixTimestamp}`,
+      `${displayName}_${RegisteredUsersCreatedDate}/Mobile${unixTimestamp}`,
       blobForMobile,
       {
         level: 'protected',
@@ -267,7 +267,7 @@ const PostScreen = () => {
     console.log(putFileForMobileResult);
 
     const putFileForThumbnailResult = await Storage.put(
-      `${username}_${RegisteredUsersCreatedDate}/Thumbnail${unixTimestamp}`,
+      `${displayName}_${RegisteredUsersCreatedDate}/Thumbnail${unixTimestamp}`,
       blobForThumbnail,
       {
         level: 'protected',

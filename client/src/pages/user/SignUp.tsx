@@ -81,9 +81,9 @@ const SignUp = () => {
 
   const { user, dispatch } = useContext(UserContext);
 
-  const [username, setUsername] = useState('');
-  const [usernameIsValid, setUsernameIsValid] = useState(false);
-  const [usernameIsUnique, setUsernameIsUnique] = useState(true);
+  const [displayName, setDisplayName] = useState('');
+  const [displayNameIsValid, setDisplayNameIsValid] = useState(false);
+  const [displayNameIsUnique, setDisplayNameIsUnique] = useState(true);
   const [signUpButtonhasBeenClicked, setSignUpButtonhasBeenClicked] = useState(
     false
   );
@@ -97,7 +97,7 @@ const SignUp = () => {
     setRegisteredUsersMutationSetCognitoIdentityIdExecutionIsCompleted
   ] = useState(false);
 
-  const usernamePrefix = useMemo(() => {
+  const displayNamePrefix = useMemo(() => {
     let uint32HexArray = [];
     for (let i = 0; i < 12; i++) {
       uint32HexArray.push(
@@ -121,24 +121,24 @@ const SignUp = () => {
     return uint32HexArray.join('');
   }, []);
 
-  const accountName = `${usernamePrefix}${username}`;
-  const password = `${usernamePrefix}${randomNumber}`;
-  const authcode = `${username}${usernamePrefix}${randomNumber}`;
+  const accountName = `${displayNamePrefix}${displayName}`;
+  const password = `${displayNamePrefix}${randomNumber}`;
+  const authcode = `${displayName}${displayNamePrefix}${randomNumber}`;
 
-  const inputUsername = (
+  const inputDisplayName = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setUsername(event.target.value);
+    setDisplayName(event.target.value);
   };
 
   useEffect(() => {
-    const usernameCheck = async () => {
-      if (!username) {
-        setUsernameIsValid(false);
+    const displayNameCheck = async () => {
+      if (!displayName) {
+        setDisplayNameIsValid(false);
         return;
       }
-      if (!username.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)) {
-        setUsernameIsValid(false);
+      if (!displayName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)) {
+        setDisplayNameIsValid(false);
         return;
       }
 
@@ -147,37 +147,37 @@ const SignUp = () => {
           .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers,
         'AWS_IAM'
       );
-      const registeredUsersQueryGetUsername = `query GetUsername($input: GetUsernameInput!) {
-        getUsername(input: $input) {
-            username
+      const registeredUsersQueryGetDisplayName = `query GetDisplayName($input: GetDisplayNameInput!) {
+        getDisplayName(input: $input) {
+            displayName
         }
        }`;
-      const getUsernameInput = {
-        username
+      const getDisplayNameInput = {
+        displayName
       };
 
       try {
         const result = await API.graphql(
-          graphqlOperation(registeredUsersQueryGetUsername, {
-            input: getUsernameInput
+          graphqlOperation(registeredUsersQueryGetDisplayName, {
+            input: getDisplayNameInput
           })
         );
-        const usernameAlreadyExists = Boolean(
-          result?.data?.getUsername?.username === username
+        const displayNameAlreadyExists = Boolean(
+          result?.data?.getDisplayName?.displayName === displayName
         );
 
-        !usernameAlreadyExists
-          ? setUsernameIsUnique(true)
-          : setUsernameIsUnique(false);
+        !displayNameAlreadyExists
+          ? setDisplayNameIsUnique(true)
+          : setDisplayNameIsUnique(false);
       } catch {
-        setUsernameIsValid(false);
+        setDisplayNameIsValid(false);
         return;
       } finally {
       }
-      setUsernameIsValid(true);
+      setDisplayNameIsValid(true);
     };
-    usernameCheck();
-  }, [usernamePrefix, username]);
+    displayNameCheck();
+  }, [displayNamePrefix, displayName]);
 
   const signUp = async () => {
     setSignUpButtonhasBeenClicked(true);
@@ -351,22 +351,22 @@ const SignUp = () => {
             <TextField
               ref={textFieldRef}
               className={classes.textField}
-              label='Username'
+              label='Name'
               margin='dense'
-              placeholder='e.g.  user_name,  name_123'
+              placeholder='e.g.  abc123_xyz,  abc_123'
               variant='outlined'
-              value={username}
+              value={displayName}
               onChange={(
                 event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-              ) => inputUsername(event)}
+              ) => inputDisplayName(event)}
             />
             <Button
               className={classes.button}
               variant='contained'
               size='medium'
               disabled={
-                !usernameIsUnique ||
-                !usernameIsValid ||
+                !displayNameIsUnique ||
+                !displayNameIsValid ||
                 signUpButtonhasBeenClicked
               }
               onClick={() => signUp()}

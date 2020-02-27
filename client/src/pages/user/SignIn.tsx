@@ -63,9 +63,9 @@ const SignIn = () => {
   const [authcodeIsValid, setAuthcodeIsValid] = useState(false);
   const [hasBeenClicked, setHasBeenClicked] = useState(false);
 
-  const usernamePrefix = authcode.slice(-256, -160);
-  const username = authcode.slice(0, -256);
-  const accountName = `${usernamePrefix}${username}`;
+  const displayNamePrefix = authcode.slice(-256, -160);
+  const displayName = authcode.slice(0, -256);
+  const accountName = `${displayNamePrefix}${displayName}`;
 
   const password = authcode.slice(-256);
 
@@ -81,7 +81,7 @@ const SignIn = () => {
         setAuthcodeIsValid(false);
         return;
       }
-      if (!username.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)) {
+      if (!displayName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)) {
         setAuthcodeIsValid(false);
         return;
       }
@@ -92,7 +92,7 @@ const SignIn = () => {
       setAuthcodeIsValid(true);
     };
     authcodeCheck();
-  }, [password, authcode, username]);
+  }, [password, authcode, displayName]);
 
   const signIn = async () => {
     setHasBeenClicked(true);
