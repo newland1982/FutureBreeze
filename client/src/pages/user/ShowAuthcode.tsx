@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const AuthcodeShow = () => {
+const ShowAuthcode = () => {
   const classes = useStyles();
 
   const paperRef = useRef<HTMLDivElement>(null);
@@ -124,4 +124,4 @@ const AuthcodeShow = () => {
   );
 };
 
-export default AuthcodeShow;
+export default ShowAuthcode;

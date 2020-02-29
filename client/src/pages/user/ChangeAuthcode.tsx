@@ -159,7 +159,7 @@ const ChangeAuthcode = () => {
         }
       });
 
-      history.push('/user/authcodeshow');
+      history.push('/user/showauthcode');
     } catch {
       history.push('/failure/error');
       return;
