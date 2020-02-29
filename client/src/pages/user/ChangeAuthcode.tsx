@@ -61,8 +61,11 @@ const ChangeAuthcode = () => {
   const { user, dispatch } = useContext(UserContext);
 
   const [oldAuthcode, setOldAuthcode] = useState('');
-  const [isValidAuthcode, setIsValidAuthcode] = useState(false);
-  const [hasBeenClicked, setHasBeenClicked] = useState(false);
+  const [authcodeIsValid, setAuthcodeIsValid] = useState(false);
+  const [
+    changeAuthcodeButtonHasBeenClicked,
+    setChangeAuthcodeButtonHasBeenClicked
+  ] = useState(false);
 
   const newRandomNumber = useMemo(() => {
     let uint32HexArray = [];
@@ -86,33 +89,33 @@ const ChangeAuthcode = () => {
 
   const newAuthcode = `${displayName}${displayNamePrefix}${newRandomNumber}`;
 
-  const inputAuthcode = (
+  const executeSetOldAuthcode = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setOldAuthcode(event.target.value);
   };
 
   useEffect(() => {
-    const oldAuthcodeCheck = async () => {
+    const checkOldAuthcode = async () => {
       if (!oldAuthcode) {
-        setIsValidAuthcode(false);
+        setAuthcodeIsValid(false);
         return;
       }
       if (!displayName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)) {
-        setIsValidAuthcode(false);
+        setAuthcodeIsValid(false);
         return;
       }
       if (!oldPassword.match(/^[a-f0-9]{256}$/)) {
-        setIsValidAuthcode(false);
+        setAuthcodeIsValid(false);
         return;
       }
-      setIsValidAuthcode(true);
+      setAuthcodeIsValid(true);
     };
-    oldAuthcodeCheck();
+    checkOldAuthcode();
   }, [oldPassword, oldAuthcode, displayName]);
 
   const changeAuthcode = async () => {
-    setHasBeenClicked(true);
+    setChangeAuthcodeButtonHasBeenClicked(true);
 
     Amplify.configure({
       Auth: {
@@ -168,7 +171,7 @@ const ChangeAuthcode = () => {
       <Menu />
       <div
         style={{
-          display: `${hasBeenClicked ? 'none' : 'inline'}`
+          display: `${changeAuthcodeButtonHasBeenClicked ? 'none' : 'inline'}`
         }}
       >
         <Box className={classes.root}>
@@ -182,13 +185,13 @@ const ChangeAuthcode = () => {
               value={oldAuthcode}
               onChange={(
                 event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-              ) => inputAuthcode(event)}
+              ) => executeSetOldAuthcode(event)}
             />
             <Button
               className={classes.button}
               variant='contained'
               size='medium'
-              disabled={!isValidAuthcode || hasBeenClicked}
+              disabled={!authcodeIsValid || changeAuthcodeButtonHasBeenClicked}
               onClick={() => changeAuthcode()}
             >
               Change Authcode
@@ -197,7 +200,7 @@ const ChangeAuthcode = () => {
         </Box>
       </div>
       <LoadingAnimation
-        hasBeenClicked={hasBeenClicked}
+        hasBeenClicked={changeAuthcodeButtonHasBeenClicked}
         size={124}
         thickness={4}
       />
