@@ -16,7 +16,7 @@ import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../../contexts/UserContext';
 import { useHistory } from 'react-router-dom';
 
-const useStyles = makeStyles((theme: Theme) =>
+const makeStylesExecution = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: 'flex',
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const SignIn = () => {
-  const classes = useStyles();
+  const classes = makeStylesExecution();
 
   const textFieldRef = useRef<HTMLInputElement>(null);
   textFieldRef.current?.setAttribute('spellcheck', 'false');
@@ -61,7 +61,9 @@ const SignIn = () => {
 
   const [authcode, setAuthcode] = useState('');
   const [authcodeIsValid, setAuthcodeIsValid] = useState(false);
-  const [hasBeenClicked, setHasBeenClicked] = useState(false);
+  const [signInButtonHasBeenClicked, setSignInButtonHasBeenClicked] = useState(
+    false
+  );
 
   const displayNamePrefix = authcode.slice(-256, -160);
   const displayName = authcode.slice(0, -256);
@@ -69,7 +71,7 @@ const SignIn = () => {
 
   const password = authcode.slice(-256);
 
-  const inputAuthcode = (
+  const authcodeInput = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setAuthcode(event.target.value);
@@ -95,7 +97,7 @@ const SignIn = () => {
   }, [password, authcode, displayName]);
 
   const signIn = async () => {
-    setHasBeenClicked(true);
+    setSignInButtonHasBeenClicked(true);
 
     Amplify.configure({
       Auth: {
@@ -139,7 +141,7 @@ const SignIn = () => {
       <Menu />
       <div
         style={{
-          display: `${hasBeenClicked ? 'none' : 'inline'}`
+          display: `${signInButtonHasBeenClicked ? 'none' : 'inline'}`
         }}
       >
         <Box className={classes.root}>
@@ -153,13 +155,13 @@ const SignIn = () => {
               value={authcode}
               onChange={(
                 event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-              ) => inputAuthcode(event)}
+              ) => authcodeInput(event)}
             />
             <Button
               className={classes.button}
               variant='contained'
               size='medium'
-              disabled={!authcodeIsValid || hasBeenClicked}
+              disabled={!authcodeIsValid || signInButtonHasBeenClicked}
               onClick={() => signIn()}
             >
               Sign In
@@ -168,7 +170,7 @@ const SignIn = () => {
         </Box>
       </div>
       <LoadingAnimation
-        hasBeenClicked={hasBeenClicked}
+        hasBeenClicked={signInButtonHasBeenClicked}
         size={124}
         thickness={4}
       />

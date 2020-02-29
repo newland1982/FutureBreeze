@@ -17,7 +17,7 @@ import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../../contexts/UserContext';
 import { useHistory } from 'react-router-dom';
 
-const useStyles = makeStyles((theme: Theme) =>
+const makeStylesExecution = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: 'flex',
@@ -60,7 +60,7 @@ const amplifyCommonConfig = {
   aws_appsync_region: process.env.REACT_APP_AWS_APPSYNC_aws_appsync_region
 };
 
-const setAmplifyConfig = (
+const amplifyConfigSetting = (
   endpoint: string | undefined,
   authenticationType: string | undefined
 ) => {
@@ -72,7 +72,7 @@ const setAmplifyConfig = (
 };
 
 const SignUp = () => {
-  const classes = useStyles();
+  const classes = makeStylesExecution();
 
   const textFieldRef = useRef<HTMLInputElement>(null);
   textFieldRef.current?.setAttribute('spellcheck', 'false');
@@ -84,7 +84,7 @@ const SignUp = () => {
   const [displayName, setDisplayName] = useState('');
   const [displayNameIsValid, setDisplayNameIsValid] = useState(false);
   const [displayNameIsUnique, setDisplayNameIsUnique] = useState(true);
-  const [signUpButtonhasBeenClicked, setSignUpButtonhasBeenClicked] = useState(
+  const [signUpButtonHasBeenClicked, setSignUpButtonHasBeenClicked] = useState(
     false
   );
   const [intervalTimerId, setIntervalTimerId] = useState(0);
@@ -125,7 +125,7 @@ const SignUp = () => {
   const password = `${displayNamePrefix}${randomNumber}`;
   const authcode = `${displayName}${displayNamePrefix}${randomNumber}`;
 
-  const inputDisplayName = (
+  const displayNameInput = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setDisplayName(event.target.value);
@@ -142,7 +142,7 @@ const SignUp = () => {
         return;
       }
 
-      setAmplifyConfig(
+      amplifyConfigSetting(
         process.env
           .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers,
         'AWS_IAM'
@@ -180,10 +180,10 @@ const SignUp = () => {
   }, [displayNamePrefix, displayName]);
 
   const signUp = async () => {
-    setSignUpButtonhasBeenClicked(true);
+    setSignUpButtonHasBeenClicked(true);
     let id: string;
 
-    setAmplifyConfig(
+    amplifyConfigSetting(
       process.env.REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_SignUpUsers,
       'AWS_IAM'
     );
@@ -284,7 +284,7 @@ const SignUp = () => {
         history.push('/failure/error');
         return;
       }
-      setAmplifyConfig(
+      amplifyConfigSetting(
         process.env
           .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers,
         'AMAZON_COGNITO_USER_POOLS'
@@ -343,7 +343,7 @@ const SignUp = () => {
       <Menu />
       <div
         style={{
-          display: `${signUpButtonhasBeenClicked ? 'none' : 'inline'}`
+          display: `${signUpButtonHasBeenClicked ? 'none' : 'inline'}`
         }}
       >
         <Box className={classes.root}>
@@ -358,7 +358,7 @@ const SignUp = () => {
               value={displayName}
               onChange={(
                 event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-              ) => inputDisplayName(event)}
+              ) => displayNameInput(event)}
             />
             <Button
               className={classes.button}
@@ -367,7 +367,7 @@ const SignUp = () => {
               disabled={
                 !displayNameIsUnique ||
                 !displayNameIsValid ||
-                signUpButtonhasBeenClicked
+                signUpButtonHasBeenClicked
               }
               onClick={() => signUp()}
             >
@@ -377,7 +377,7 @@ const SignUp = () => {
         </Box>
       </div>
       <LoadingAnimation
-        hasBeenClicked={signUpButtonhasBeenClicked}
+        hasBeenClicked={signUpButtonHasBeenClicked}
         size={124}
         thickness={4}
       />

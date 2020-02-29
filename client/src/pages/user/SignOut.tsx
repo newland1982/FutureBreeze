@@ -8,7 +8,7 @@ import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../../contexts/UserContext';
 import { useHistory } from 'react-router-dom';
 
-const useStyles = makeStyles((theme: Theme) =>
+const makeStylesExecution = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: 'flex',
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const SignOut = () => {
-  const classes = useStyles();
+  const classes = makeStylesExecution();
 
   const history = useHistory();
 
