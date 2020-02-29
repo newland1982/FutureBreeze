@@ -15,7 +15,7 @@ import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../../contexts/UserContext';
 import { useHistory } from 'react-router-dom';
 
-const useStyles = makeStyles((theme: Theme) =>
+const makeStylesExecution = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: 'flex',
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const Quit = () => {
-  const classes = useStyles();
+  const classes = makeStylesExecution();
 
   const textFieldRef = useRef<HTMLInputElement>(null);
   textFieldRef.current?.setAttribute('spellcheck', 'false');
@@ -59,8 +59,10 @@ const Quit = () => {
   const { user, dispatch } = useContext(UserContext);
 
   const [authcode, setAuthcode] = useState('');
-  const [isValidAuthcode, setIsValidAuthcode] = useState(false);
-  const [hasBeenClicked, setHasBeenClicked] = useState(false);
+  const [authcodeIsValid, setAuthcodeIsValid] = useState(false);
+  const [quitButtonHasBeenClicked, setQuitButtonHasBeenClicked] = useState(
+    false
+  );
 
   const displayNamePrefix = authcode.slice(-256, -160);
   const displayName = authcode.slice(0, -256);
@@ -68,7 +70,7 @@ const Quit = () => {
 
   const password = authcode.slice(-256);
 
-  const inputAuthcode = (
+  const setAuthcodeExecution = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setAuthcode(event.target.value);
@@ -77,24 +79,24 @@ const Quit = () => {
   useEffect(() => {
     const authcodeCheck = async () => {
       if (!authcode) {
-        setIsValidAuthcode(false);
+        setAuthcodeIsValid(false);
         return;
       }
       if (!displayName.match(/^(?=.{3,22}$)(?=[a-z0-9]+_[a-z0-9]+$)/)) {
-        setIsValidAuthcode(false);
+        setAuthcodeIsValid(false);
         return;
       }
       if (!password.match(/^[a-f0-9]{256}$/)) {
-        setIsValidAuthcode(false);
+        setAuthcodeIsValid(false);
         return;
       }
-      setIsValidAuthcode(true);
+      setAuthcodeIsValid(true);
     };
     authcodeCheck();
   }, [password, authcode, displayName]);
 
-  const deleteAccount = async () => {
-    setHasBeenClicked(true);
+  const accountDeletion = async () => {
+    setQuitButtonHasBeenClicked(true);
 
     try {
       await Auth.signOut();
@@ -137,14 +139,14 @@ const Quit = () => {
             value={authcode}
             onChange={(
               event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-            ) => inputAuthcode(event)}
+            ) => setAuthcodeExecution(event)}
           />
           <Button
             className={classes.button}
             variant='contained'
             size='medium'
-            disabled={!isValidAuthcode || hasBeenClicked}
-            onClick={() => deleteAccount()}
+            disabled={!authcodeIsValid || quitButtonHasBeenClicked}
+            onClick={() => accountDeletion()}
           >
             Quit
           </Button>

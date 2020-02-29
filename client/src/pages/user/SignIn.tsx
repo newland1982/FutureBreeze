@@ -71,7 +71,7 @@ const SignIn = () => {
 
   const password = authcode.slice(-256);
 
-  const authcodeInput = (
+  const setAuthcodeExecution = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setAuthcode(event.target.value);
@@ -155,7 +155,7 @@ const SignIn = () => {
               value={authcode}
               onChange={(
                 event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-              ) => authcodeInput(event)}
+              ) => setAuthcodeExecution(event)}
             />
             <Button
               className={classes.button}
