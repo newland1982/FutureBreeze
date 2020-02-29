@@ -16,7 +16,7 @@ import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../../contexts/UserContext';
 import { useHistory } from 'react-router-dom';
 
-const makeStylesExecution = makeStyles((theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: 'flex',
@@ -50,7 +50,7 @@ const makeStylesExecution = makeStyles((theme: Theme) =>
 );
 
 const SignIn = () => {
-  const classes = makeStylesExecution();
+  const classes = useStyles();
 
   const textFieldRef = useRef<HTMLInputElement>(null);
   textFieldRef.current?.setAttribute('spellcheck', 'false');
@@ -71,14 +71,14 @@ const SignIn = () => {
 
   const password = authcode.slice(-256);
 
-  const setAuthcodeExecution = (
+  const executeSetAuthcode = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setAuthcode(event.target.value);
   };
 
   useEffect(() => {
-    const authcodeCheck = async () => {
+    const checkAuthcode = async () => {
       if (!authcode) {
         setAuthcodeIsValid(false);
         return;
@@ -93,7 +93,7 @@ const SignIn = () => {
       }
       setAuthcodeIsValid(true);
     };
-    authcodeCheck();
+    checkAuthcode();
   }, [password, authcode, displayName]);
 
   const signIn = async () => {
@@ -155,7 +155,7 @@ const SignIn = () => {
               value={authcode}
               onChange={(
                 event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-              ) => setAuthcodeExecution(event)}
+              ) => executeSetAuthcode(event)}
             />
             <Button
               className={classes.button}
