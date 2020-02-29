@@ -17,7 +17,7 @@ import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../../contexts/UserContext';
 import { useHistory } from 'react-router-dom';
 
-const makeStylesExecution = makeStyles((theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: 'flex',
@@ -60,7 +60,7 @@ const amplifyCommonConfig = {
   aws_appsync_region: process.env.REACT_APP_AWS_APPSYNC_aws_appsync_region
 };
 
-const amplifyConfigSetting = (
+const setAmplifyConfig = (
   endpoint: string | undefined,
   authenticationType: string | undefined
 ) => {
@@ -72,7 +72,7 @@ const amplifyConfigSetting = (
 };
 
 const SignUp = () => {
-  const classes = makeStylesExecution();
+  const classes = useStyles();
 
   const textFieldRef = useRef<HTMLInputElement>(null);
   textFieldRef.current?.setAttribute('spellcheck', 'false');
@@ -93,7 +93,7 @@ const SignUp = () => {
   const [userHasSignedUp, setUserHasSignedUp] = useState(false);
   const [userHasSignedIn, setUserHasSignedIn] = useState(false);
   const [
-    registeredUsersMutationSetCognitoIdentityIdExecutionIsCompleted,
+    executeRegisteredUsersMutationSetCognitoIdentityIdIsCompleted,
     setRegisteredUsersMutationSetCognitoIdentityIdExecutionIsCompleted
   ] = useState(false);
 
@@ -125,14 +125,14 @@ const SignUp = () => {
   const password = `${displayNamePrefix}${randomNumber}`;
   const authcode = `${displayName}${displayNamePrefix}${randomNumber}`;
 
-  const displayNameInput = (
+  const executeSetDisplayName = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setDisplayName(event.target.value);
   };
 
   useEffect(() => {
-    const displayNameCheck = async () => {
+    const checkDisplayName = async () => {
       if (!displayName) {
         setDisplayNameIsValid(false);
         return;
@@ -142,7 +142,7 @@ const SignUp = () => {
         return;
       }
 
-      amplifyConfigSetting(
+      setAmplifyConfig(
         process.env
           .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers,
         'AWS_IAM'
@@ -176,14 +176,14 @@ const SignUp = () => {
       }
       setDisplayNameIsValid(true);
     };
-    displayNameCheck();
+    checkDisplayName();
   }, [displayNamePrefix, displayName]);
 
   const signUp = async () => {
     setSignUpButtonHasBeenClicked(true);
     let id: string;
 
-    amplifyConfigSetting(
+    setAmplifyConfig(
       process.env.REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_SignUpUsers,
       'AWS_IAM'
     );
@@ -216,7 +216,7 @@ const SignUp = () => {
     const getStatusInput = {
       id
     };
-    const signUpUsersStatusWatch = async () => {
+    const watchSignUpUsersStatus = async () => {
       try {
         const result = await API.graphql(
           graphqlOperation(signUpUsersQueryGetStatus, {
@@ -228,7 +228,7 @@ const SignUp = () => {
     };
 
     setIntervalTimerId(
-      window.setInterval(signUpUsersStatusWatch, intervalTime)
+      window.setInterval(watchSignUpUsersStatus, intervalTime)
     );
   };
 
@@ -275,7 +275,7 @@ const SignUp = () => {
       return;
     }
 
-    const registeredUsersMutationSetCognitoIdentityIdExecution = async () => {
+    const executeRegisteredUsersMutationSetCognitoIdentityId = async () => {
       const currentAuthenticatedUser = await Auth.currentAuthenticatedUser({
         bypassCache: false
       }).catch(() => {});
@@ -284,7 +284,7 @@ const SignUp = () => {
         history.push('/failure/error');
         return;
       }
-      amplifyConfigSetting(
+      setAmplifyConfig(
         process.env
           .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers,
         'AMAZON_COGNITO_USER_POOLS'
@@ -315,11 +315,11 @@ const SignUp = () => {
       }
     };
 
-    registeredUsersMutationSetCognitoIdentityIdExecution();
+    executeRegisteredUsersMutationSetCognitoIdentityId();
   }, [accountName, userHasSignedIn, history, password]);
 
   useEffect(() => {
-    if (!registeredUsersMutationSetCognitoIdentityIdExecutionIsCompleted) {
+    if (!executeRegisteredUsersMutationSetCognitoIdentityIdIsCompleted) {
       return;
     }
     dispatch({
@@ -333,7 +333,7 @@ const SignUp = () => {
     dispatch,
     accountName,
     history,
-    registeredUsersMutationSetCognitoIdentityIdExecutionIsCompleted,
+    executeRegisteredUsersMutationSetCognitoIdentityIdIsCompleted,
     password,
     user
   ]);
@@ -358,7 +358,7 @@ const SignUp = () => {
               value={displayName}
               onChange={(
                 event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-              ) => displayNameInput(event)}
+              ) => executeSetDisplayName(event)}
             />
             <Button
               className={classes.button}
