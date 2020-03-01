@@ -1,5 +1,5 @@
 import './stylingData/App.css';
-import ShowAuthcode from './pages/user/ShowAuthcode';
+import AuthcodeShow from './pages/user/AuthcodeShow';
 import ChangeAuthcode from './pages/user/ChangeAuthcode';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Error from './pages/failure/Error';
@@ -22,7 +22,7 @@ const App: React.FC = () => {
         <UserContextProvider>
           <CssBaseline />
           <Switch>
-            <Route exact path='/user/showauthcode' component={ShowAuthcode} />
+            <Route exact path='/user/authcodeshow' component={AuthcodeShow} />
             <Route
               exact
               path='/user/changeauthcode'

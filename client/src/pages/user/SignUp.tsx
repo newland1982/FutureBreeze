@@ -327,7 +327,7 @@ const SignUp = () => {
       payload: { ...user, accountName, password, authcode }
     });
 
-    history.push('/user/showauthcode');
+    history.push('/user/authcodeshow');
   }, [
     authcode,
     dispatch,
