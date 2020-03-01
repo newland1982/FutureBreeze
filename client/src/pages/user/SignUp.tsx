@@ -216,7 +216,7 @@ const SignUp = () => {
     const getStatusInput = {
       id
     };
-    const watchSignUpUsersStatus = async () => {
+    const signUpUsersStatusWatcher = async () => {
       try {
         const result = await API.graphql(
           graphqlOperation(signUpUsersQueryGetStatus, {
@@ -228,7 +228,7 @@ const SignUp = () => {
     };
 
     setIntervalTimerId(
-      window.setInterval(watchSignUpUsersStatus, intervalTime)
+      window.setInterval(signUpUsersStatusWatcher, intervalTime)
     );
   };
 
