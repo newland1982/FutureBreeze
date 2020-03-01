@@ -114,7 +114,7 @@ const PostScreen = () => {
   useEffect(() => {
     setAmplifyConfig(undefined);
 
-    const authenticationCheck = async () => {
+    const CheckAuthentication = async () => {
       const currentAuthenticatedUser = await Auth.currentAuthenticatedUser({
         bypassCache: true
       }).catch(() => {});
@@ -130,7 +130,7 @@ const PostScreen = () => {
       }
     };
 
-    authenticationCheck();
+    CheckAuthentication();
   });
 
   useEffect(() => {
