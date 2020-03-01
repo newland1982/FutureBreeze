@@ -5,7 +5,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Error from './pages/failure/Error';
 import PostScreen from './pages/screen/PostScreen';
 import Screens from './pages/screen/Screens';
-import NotFound from './pages/failure/NotFound';
 import Quit from './pages/user/Quit';
 import React from 'react';
 import SignIn from './pages/user/SignIn';
@@ -39,7 +38,7 @@ const App: React.FC = () => {
             <Route exact path='/screen/postscreen' component={PostScreen} />
 
             <Route exact path='/failure/error' component={Error} />
-            <Route component={NotFound} />
+            <Route component={Error} />
           </Switch>
         </UserContextProvider>
       </ThemeProvider>
