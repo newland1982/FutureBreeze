@@ -1,5 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# client
+
 # dependencies
 client/node_modules
 client/.pnp
@@ -25,11 +27,18 @@ yarn-error.log*
 
 # memo
 memo
+memo.ts
 memo.js
 memo2.js
 memo.tsx
 memo.gql
 memo.vm
+
+# cloud
+
+# dependencies
+cloud/node_modules
+
 
 
 

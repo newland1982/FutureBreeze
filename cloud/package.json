@@ -1,0 +1,27 @@
+{
+  "name": "cloud",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.630.0",
+    "request": "^2.88.2"
+  },
+  "devDependencies": {
+    "@types/aws-sdk": "^2.7.0",
+    "@types/node": "^13.7.7",
+    "@types/request": "^2.48.4",
+    "gulp": "^4.0.2",
+    "gulp-cli": "^2.2.0",
+    "gulp-tslint": "^8.1.4",
+    "gulp-typescript": "^6.0.0-alpha.1",
+    "gulp-zip": "^5.0.1",
+    "typescript": "^3.8.3"
+  }
+}
