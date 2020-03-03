@@ -2,6 +2,10 @@ type CognitoIdentityId @aws_cognito_user_pools {
   cognitoIdentityId: String!
 }
 
+input ConfirmDisplayNameInput {
+  displayName: String!
+}
+
 input CreateRegisteredUserInput {
   displayName: String!
   accountName: String!
@@ -9,8 +13,20 @@ input CreateRegisteredUserInput {
   jsonString: String!
 }
 
-type CreatedDate {
+type CreatedDate @aws_cognito_user_pools {
   createdDate: String!
+}
+
+type DisplayName {
+  displayName: String!
+}
+
+input GetCreatedDateInput {
+  displayName: String!
+}
+
+input GetDisplayNameInput {
+  displayName: String!
 }
 
 type Mutation {
@@ -22,6 +38,7 @@ type Mutation {
 type Query {
   getDisplayName(input: GetDisplayNameInput!): DisplayName
   getCreatedDate(input: GetCreatedDateInput!): CreatedDate
+    @aws_cognito_user_pools
   confirmDisplayName(input: ConfirmDisplayNameInput!): CognitoIdentityId
 }
 
@@ -37,22 +54,6 @@ type RegisteredUser {
 
 input SetCognitoIdentityIdInput {
   cognitoIdentityId: String!
-}
-
-input GetDisplayNameInput {
-  displayName: String!
-}
-
-input GetCreatedDateInput {
-  displayName: String!
-}
-
-input ConfirmDisplayNameInput {
-  displayName: String!
-}
-
-type DisplayName {
-  displayName: String!
 }
 
 schema {

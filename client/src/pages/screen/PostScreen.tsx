@@ -72,10 +72,14 @@ const amplifyCommonConfig = {
   }
 };
 
-const setAmplifyConfig = (endpoint: string | undefined) => {
+const setAmplifyConfig = (
+  endpoint: string | undefined,
+  authenticationType: string | undefined
+) => {
   Amplify.configure({
     ...amplifyCommonConfig,
-    aws_appsync_graphqlEndpoint: endpoint
+    aws_appsync_graphqlEndpoint: endpoint,
+    aws_appsync_authenticationType: authenticationType
   });
 };
 
@@ -112,7 +116,7 @@ const PostScreen = () => {
   const deviceType = isXsSize ? 'mobile' : 'pc';
 
   useEffect(() => {
-    setAmplifyConfig(undefined);
+    setAmplifyConfig(undefined, 'AWS_IAM');
 
     const CheckAuthentication = async () => {
       const currentAuthenticatedUser = await Auth.currentAuthenticatedUser({
@@ -227,7 +231,8 @@ const PostScreen = () => {
 
     setAmplifyConfig(
       process.env
-        .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers
+        .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers,
+      'AMAZON_COGNITO_USER_POOLS'
     );
     const queryGetCreatedDate = `query GetCreatedDate($input: GetCreatedDateInput!) {
       getCreatedDate(input: $input) {
