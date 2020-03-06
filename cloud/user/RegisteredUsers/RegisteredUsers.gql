@@ -39,7 +39,7 @@ type Query {
   getDisplayName(input: GetDisplayNameInput!): DisplayName
   getCreatedDate(input: GetCreatedDateInput!): CreatedDate
     @aws_cognito_user_pools
-  confirmDisplayName(input: ConfirmDisplayNameInput!): CognitoIdentityId
+  getCognitoIdentityId(input: getCognitoIdentityIdInput!): CognitoIdentityId
 }
 
 type RegisteredUser {
@@ -54,6 +54,10 @@ type RegisteredUser {
 
 input SetCognitoIdentityIdInput {
   cognitoIdentityId: String!
+}
+
+input getCognitoIdentityIdInput {
+  displayName: String!
 }
 
 schema {

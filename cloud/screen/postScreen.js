@@ -67,6 +67,29 @@ exports.handler = (event, context, callback) => {
     }
     //////////////////////////////////
 
+    const objectKey = `protected/${process.env.REGION}%3A084ed459-fac4-46c8-afd6-a8cd06a25f15/xx_zz_1583252239848/Thumbnail1583336914921`;
+
+    const objectKeyFirstPartPattern = `protected/${process.env.REGION}%3A`;
+    const UUIDPattern = `([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})`;
+    const displayNamePattern = `([0-9a-z]{1,}_[0-9a-z]{1,})`;
+    const displayNameSuffixPattern = `[0-9]{13,}`;
+    const fileNamePattern = `[0-9a-zA-Z]{13,}`;
+
+    const objectKeyPattern = new RegExp(
+      '^' +
+        objectKeyFirstPartPattern +
+        UUIDPattern +
+        '/' +
+        displayNamePattern +
+        '_' +
+        displayNameSuffixPattern +
+        '/' +
+        fileNamePattern +
+        '$'
+    );
+
+    const regexResult = objectKey.match(objectKeyPattern);
+
     console.log('eventttt', event);
     console.log('event.userIdentityyyyy', event.Records[0].userIdentity);
     console.log('recorddddd', event.Records[0]);

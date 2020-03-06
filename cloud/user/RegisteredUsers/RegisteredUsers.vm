@@ -62,3 +62,14 @@ $util.toJson($context.result)
 }
 
 $util.toJson($context.result)
+
+## Resolver for Query.getCognitoIdentityId
+{
+    "version" : "2017-02-28",
+    "operation" : "GetItem",
+    "key" : {
+        "displayName" : { "S" : "${context.arguments.input.displayName}" }
+    }
+}
+
+$util.toJson($context.result)
