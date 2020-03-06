@@ -16,14 +16,14 @@ const poolData = {
 };
 const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
-const mutationSetStatus = gql(`
+const signUpUsersMutationSetStatus = gql(`
   mutation SetStatus($input: SetStatusInput!) {
     setStatus(input: $input) {
       status
     }
   }`);
 
-const queryGetIpAddressList = gql(`
+const signUpUsersQueryGetIpAddressList = gql(`
   query GetIpAddressList($input: GetIpAddressListInput!) {
     getIpAddressList(input: $input) {
       ipAddressList {
@@ -32,14 +32,14 @@ const queryGetIpAddressList = gql(`
     }
   }`);
 
-const queryGetStatus = gql(`
+const signUpUsersQueryGetStatus = gql(`
   query GetStatus($input: GetStatusInput!) {
     getStatus(input: $input) {
       status
     }
   }`);
 
-const client = new AWSAppSyncClient({
+const signUpUsersClient = new AWSAppSyncClient({
   url: process.env.END_POINT_SignUpUsers,
   region: process.env.REGION,
   auth: {
@@ -70,18 +70,18 @@ exports.handler = (event, context, callback) => {
     };
 
     (async () => {
-      await client.hydrated();
+      await signUpUsersClient.hydrated();
 
-      const queryGetStatusResult = await client
+      const signUpUsersQueryGetStatusResult = await signUpUsersClient
         .query({
-          query: queryGetStatus,
+          query: signUpUsersQueryGetStatus,
           variables: { input: getStatusInput },
           fetchPolicy: 'network-only'
         })
         .catch(async () => {
-          await client
+          await signUpUsersClient
             .mutate({
-              mutation: mutationSetStatus,
+              mutation: signUpUsersMutationSetStatus,
               variables: {
                 input: { ...commonSetStatusInput, status: 'signUpError' }
               },
@@ -91,15 +91,16 @@ exports.handler = (event, context, callback) => {
         });
 
       if (
-        queryGetStatusResult.data.getStatus.status === 'processing' ||
-        queryGetStatusResult.data.getStatus.status === 'completed'
+        signUpUsersQueryGetStatusResult.data.getStatus.status ===
+          'processing' ||
+        signUpUsersQueryGetStatusResult.data.getStatus.status === 'completed'
       ) {
         return;
       }
 
-      await client
+      await signUpUsersClient
         .mutate({
-          mutation: mutationSetStatus,
+          mutation: signUpUsersMutationSetStatus,
           variables: {
             input: { ...commonSetStatusInput, status: 'processing' }
           },
@@ -107,16 +108,16 @@ exports.handler = (event, context, callback) => {
         })
         .catch(() => {});
 
-      const result = await client
+      const result = await signUpUsersClient
         .query({
-          query: queryGetIpAddressList,
+          query: signUpUsersQueryGetIpAddressList,
           variables: { input: getIpAddressListInput },
           fetchPolicy: 'network-only'
         })
         .catch(async () => {
-          await client
+          await signUpUsersClient
             .mutate({
-              mutation: mutationSetStatus,
+              mutation: signUpUsersMutationSetStatus,
               variables: {
                 input: { ...commonSetStatusInput, status: 'signUpError' }
               },
@@ -128,9 +129,9 @@ exports.handler = (event, context, callback) => {
       ipAddressCount = result.data.getIpAddressList.ipAddressList.length;
 
       if (ipAddressCount > process.env.ACCESS_LIMIT) {
-        await client
+        await signUpUsersClient
           .mutate({
-            mutation: mutationSetStatus,
+            mutation: signUpUsersMutationSetStatus,
             variables: {
               input: { ...commonSetStatusInput, status: 'accessLimitExceeded' }
             },
@@ -147,9 +148,9 @@ exports.handler = (event, context, callback) => {
         null,
         async (error, result) => {
           if (error) {
-            await client
+            await signUpUsersClient
               .mutate({
-                mutation: mutationSetStatus,
+                mutation: signUpUsersMutationSetStatus,
                 variables: {
                   input: { ...commonSetStatusInput, status: 'signUpError' }
                 },
