@@ -9,21 +9,21 @@ const AWS = require('aws-sdk');
 const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 
-const mutationCreateRegisteredUser = gql(`
+const registeredUsersMutationCreateRegisteredUser = gql(`
   mutation CreateRegisteredUser($input: CreateRegisteredUserInput!) {
     createRegisteredUser(input: $input) {
       displayName
     }
   }`);
 
-const mutationSetStatus = gql(`
+const signUpUsersMutationSetStatus = gql(`
 mutation SetStatus($input: SetStatusInput!) {
   setStatus(input: $input) {
     status
   }
 }`);
 
-const clientRegisteredUsers = new AWSAppSyncClient({
+const registeredUsersClient = new AWSAppSyncClient({
   url: process.env.END_POINT_RegisteredUsers,
   region: process.env.REGION,
   auth: {
@@ -33,7 +33,7 @@ const clientRegisteredUsers = new AWSAppSyncClient({
   disableOffline: true
 });
 
-const clientSignUpUsers = new AWSAppSyncClient({
+const signUpUsersClient = new AWSAppSyncClient({
   url: process.env.END_POINT_SignUpUsers,
   region: process.env.REGION,
   auth: {
@@ -65,10 +65,10 @@ exports.handler = (event, context, callback) => {
     !displayNamePrefix.match(/^[a-f0-9]{96}$/)
   ) {
     (async () => {
-      await clientSignUpUsers.hydrated();
-      await clientSignUpUsers
+      await signUpUsersClient.hydrated();
+      await signUpUsersClient
         .mutate({
-          mutation: mutationSetStatus,
+          mutation: signUpUsersMutationSetStatus,
           variables: { input: setStatusInput },
           fetchPolicy: 'no-cache'
         })
@@ -78,21 +78,21 @@ exports.handler = (event, context, callback) => {
   }
 
   (async () => {
-    await clientRegisteredUsers.hydrated();
+    await registeredUsersClient.hydrated();
 
-    const result = await clientRegisteredUsers
+    const result = await registeredUsersClient
       .mutate({
-        mutation: mutationCreateRegisteredUser,
+        mutation: registeredUsersMutationCreateRegisteredUser,
         variables: { input: createRegisteredUserInput },
         fetchPolicy: 'no-cache'
       })
       .catch(() => {});
 
     if (!result) {
-      await clientSignUpUsers.hydrated();
-      await clientSignUpUsers
+      await signUpUsersClient.hydrated();
+      await signUpUsersClient
         .mutate({
-          mutation: mutationSetStatus,
+          mutation: signUpUsersMutationSetStatus,
           variables: { input: setStatusInput },
           fetchPolicy: 'no-cache'
         })
