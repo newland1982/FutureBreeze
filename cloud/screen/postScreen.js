@@ -10,11 +10,9 @@ const AmazonCognitoIdentity = require('amazon-cognito-identity-js');
 const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 
-const poolData = {
-  UserPoolId: process.env.USER_POOL_ID,
-  ClientId: process.env.CLIENT_ID
-};
-const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+// beign 2
+
+// end 2
 
 const mutationCreateScreen = gql(`mutation CreateScreen($input: CreateScreenInput!) {
     createScreen(input: $input) {
@@ -65,7 +63,7 @@ exports.handler = (event, context, callback) => {
     if (record.eventName !== 'ObjectCreated:Put') {
       return;
     }
-    //////////////////////////////////
+    // begin 1
 
     const objectKey = `protected/${process.env.REGION}%3A084ed459-fac4-46c8-afd6-a8cd06a25f15/xx_zz_1583252239848/Thumbnail1583336914921`;
 
@@ -98,7 +96,7 @@ exports.handler = (event, context, callback) => {
       posterId
     };
 
-    /////////////////////////////////////
+    // end 1
 
     let ipAddressCount;
 
@@ -186,31 +184,6 @@ exports.handler = (event, context, callback) => {
           .catch(() => {});
         return;
       }
-
-      userPool.signUp(
-        record.dynamodb.NewImage.accountName.S,
-        record.dynamodb.NewImage.password.S,
-        [],
-        null,
-        async (error, result) => {
-          if (error) {
-            await client
-              .mutate({
-                mutation: mutationSetStatus,
-                variables: {
-                  input: { ...commonSetStatusInput, status: 'signUpError' }
-                },
-                fetchPolicy: 'no-cache'
-              })
-              .catch(() => {});
-            return;
-          }
-        },
-        {
-          id: record.dynamodb.NewImage.id.S,
-          createdDate: record.dynamodb.NewImage.createdDate.S
-        }
-      );
     })();
   });
 };
