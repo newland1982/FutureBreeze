@@ -12,6 +12,12 @@ const credentials = AWS.config.credentials;
 
 // beign 2
 
+const registeredUsersQueryGetCognitoIdentityId = gql(`mutation CreateScreen($input: CreateScreenInput!) {
+  createScreen(input: $input) {
+      objectKey
+  }
+ }`);
+
 // end 2
 
 const mutationCreateScreen = gql(`mutation CreateScreen($input: CreateScreenInput!) {
