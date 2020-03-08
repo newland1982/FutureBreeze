@@ -21,40 +21,6 @@ const registeredUsersQueryGetCognitoIdentityId = gql(`
 
 // end 2
 
-const mutationCreateScreen = gql(`mutation CreateScreen($input: CreateScreenInput!) {
-    createScreen(input: $input) {
-        objectKey
-    }
-   }`);
-
-const createScreenInput = {
-  //   objectKey,
-  //   posterId
-};
-
-const mutationSetStatus = gql(`
-  mutation SetStatus($input: SetStatusInput!) {
-    setStatus(input: $input) {
-      status
-    }
-  }`);
-
-const queryGetIpAddressList = gql(`
-  query GetIpAddressList($input: GetIpAddressListInput!) {
-    getIpAddressList(input: $input) {
-      ipAddressList {
-        ipAddress
-      }
-    }
-  }`);
-
-const queryGetStatus = gql(`
-  query GetStatus($input: GetStatusInput!) {
-    getStatus(input: $input) {
-      status
-    }
-  }`);
-
 const client = new AWSAppSyncClient({
   url: process.env.END_POINT_Screens,
   region: process.env.REGION,
@@ -105,21 +71,11 @@ exports.handler = (event, context, callback) => {
 
     // end 1
 
-    let ipAddressCount;
-
-    const commonSetStatusInput = {
-      id: record.dynamodb.NewImage.id.S,
-      createdDate: record.dynamodb.NewImage.createdDate.S
+    // begin 3
+    const getCognitoIdentityIdInput = {
+      displayName: regexResult[2]
     };
-
-    const getIpAddressListInput = {
-      ipAddress: record.dynamodb.NewImage.ipAddress.S
-    };
-
-    const getStatusInput = {
-      id: record.dynamodb.NewImage.id.S,
-      createdDate: record.dynamodb.NewImage.createdDate.S
-    };
+    // end 3
 
     (async () => {
       await client.hydrated();
