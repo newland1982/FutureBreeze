@@ -75,67 +75,7 @@ exports.handler = (event, context, callback) => {
           variables: { input: getStatusInput },
           fetchPolicy: 'network-only'
         })
-        .catch(async () => {
-          await client
-            .mutate({
-              mutation: mutationSetStatus,
-              variables: {
-                input: { ...commonSetStatusInput, status: 'signUpError' }
-              },
-              fetchPolicy: 'no-cache'
-            })
-            .catch(() => {});
-        });
-
-      if (
-        queryGetStatusResult.data.getStatus.status === 'processing' ||
-        queryGetStatusResult.data.getStatus.status === 'completed'
-      ) {
-        return;
-      }
-
-      await client
-        .mutate({
-          mutation: mutationSetStatus,
-          variables: {
-            input: { ...commonSetStatusInput, status: 'processing' }
-          },
-          fetchPolicy: 'no-cache'
-        })
-        .catch(() => {});
-
-      const result = await client
-        .query({
-          query: queryGetIpAddressList,
-          variables: { input: getIpAddressListInput },
-          fetchPolicy: 'network-only'
-        })
-        .catch(async () => {
-          await client
-            .mutate({
-              mutation: mutationSetStatus,
-              variables: {
-                input: { ...commonSetStatusInput, status: 'signUpError' }
-              },
-              fetchPolicy: 'no-cache'
-            })
-            .catch(() => {});
-        });
-
-      ipAddressCount = result.data.getIpAddressList.ipAddressList.length;
-
-      if (ipAddressCount > process.env.ACCESS_LIMIT) {
-        await client
-          .mutate({
-            mutation: mutationSetStatus,
-            variables: {
-              input: { ...commonSetStatusInput, status: 'accessLimitExceeded' }
-            },
-            fetchPolicy: 'no-cache'
-          })
-          .catch(() => {});
-        return;
-      }
+        .catch(async () => {});
     })();
   });
 };
