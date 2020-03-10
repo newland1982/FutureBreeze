@@ -1,4 +1,4 @@
-type CognitoIdentityId @aws_cognito_user_pools {
+type CognitoIdentityId @aws_iam @aws_cognito_user_pools {
   cognitoIdentityId: String!
 }
 

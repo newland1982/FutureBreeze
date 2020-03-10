@@ -61,7 +61,7 @@ exports.handler = (event, context, callback) => {
     // end 1
 
     // begin 3
-    const getCognitoIdentityIdInput = {
+    const registeredUsersQueryGetCognitoIdentityIdInput = {
       displayName: regexResult[2]
     };
     // end 3
@@ -69,13 +69,21 @@ exports.handler = (event, context, callback) => {
     (async () => {
       await client.hydrated();
 
-      const queryGetStatusResult = await client
+      const registeredUsersQueryGetCognitoIdentityIdResult = await client
         .query({
-          query: queryGetStatus,
-          variables: { input: getStatusInput },
+          query: registeredUsersQueryGetCognitoIdentityId,
+          variables: { input: registeredUsersQueryGetCognitoIdentityIdInput },
           fetchPolicy: 'network-only'
         })
         .catch(async () => {});
+      console.log(
+        'queryyyresulttt',
+        registeredUsersQueryGetCognitoIdentityIdResult
+      );
+      console.log(
+        'displaynaemmm',
+        registeredUsersQueryGetCognitoIdentityIdInput
+      );
     })();
   });
 };
