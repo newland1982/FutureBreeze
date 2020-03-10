@@ -21,8 +21,8 @@ const registeredUsersQueryGetCognitoIdentityId = gql(`
 
 // end 2
 
-const client = new AWSAppSyncClient({
-  url: process.env.END_POINT_Screens,
+const registeredUsersClient = new AWSAppSyncClient({
+  url: process.env.END_POINT_RegisteredUsers,
   region: process.env.REGION,
   auth: {
     type: AUTH_TYPE.AWS_IAM,
@@ -67,9 +67,9 @@ exports.handler = (event, context, callback) => {
     // end 3
 
     (async () => {
-      await client.hydrated();
+      await registeredUsersClient.hydrated();
 
-      const registeredUsersQueryGetCognitoIdentityIdResult = await client
+      const registeredUsersQueryGetCognitoIdentityIdResult = await registeredUsersClient
         .query({
           query: registeredUsersQueryGetCognitoIdentityId,
           variables: { input: registeredUsersQueryGetCognitoIdentityIdInput },
