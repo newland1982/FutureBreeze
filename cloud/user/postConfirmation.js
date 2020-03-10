@@ -27,7 +27,7 @@ const signUpUsersClient = new AWSAppSyncClient({
 });
 
 exports.handler = (event, context, callback) => {
-  const setStatusInput = {
+  const signUpUsersMutationSetStatusInput = {
     id: event.request.clientMetadata.id,
     status: 'completed'
   };
@@ -37,7 +37,7 @@ exports.handler = (event, context, callback) => {
     await signUpUsersClient
       .mutate({
         mutation: signUpUsersMutationSetStatus,
-        variables: { input: setStatusInput },
+        variables: { input: signUpUsersMutationSetStatusInput },
         fetchPolicy: 'no-cache'
       })
       .catch(() => {});

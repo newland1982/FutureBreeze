@@ -57,15 +57,15 @@ exports.handler = (event, context, callback) => {
 
     let ipAddressCount;
 
-    const commonSetStatusInput = {
+    const commonSignUpUsersMutationSetStatusInput = {
       id: record.dynamodb.NewImage.id.S
     };
 
-    const getIpAddressListInput = {
+    const signUpUsersQueryGetIpAddressListInput = {
       ipAddress: record.dynamodb.NewImage.ipAddress.S
     };
 
-    const getStatusInput = {
+    const signUpUsersQueryGetStatusInput = {
       id: record.dynamodb.NewImage.id.S
     };
 
@@ -75,7 +75,7 @@ exports.handler = (event, context, callback) => {
       const signUpUsersQueryGetStatusResult = await signUpUsersClient
         .query({
           query: signUpUsersQueryGetStatus,
-          variables: { input: getStatusInput },
+          variables: { input: signUpUsersQueryGetStatusInput },
           fetchPolicy: 'network-only'
         })
         .catch(async () => {
@@ -83,7 +83,10 @@ exports.handler = (event, context, callback) => {
             .mutate({
               mutation: signUpUsersMutationSetStatus,
               variables: {
-                input: { ...commonSetStatusInput, status: 'signUpError' }
+                input: {
+                  ...commonSignUpUsersMutationSetStatusInput,
+                  status: 'signUpError'
+                }
               },
               fetchPolicy: 'no-cache'
             })
@@ -102,7 +105,10 @@ exports.handler = (event, context, callback) => {
         .mutate({
           mutation: signUpUsersMutationSetStatus,
           variables: {
-            input: { ...commonSetStatusInput, status: 'processing' }
+            input: {
+              ...commonSignUpUsersMutationSetStatusInput,
+              status: 'processing'
+            }
           },
           fetchPolicy: 'no-cache'
         })
@@ -111,7 +117,7 @@ exports.handler = (event, context, callback) => {
       const result = await signUpUsersClient
         .query({
           query: signUpUsersQueryGetIpAddressList,
-          variables: { input: getIpAddressListInput },
+          variables: { input: signUpUsersQueryGetIpAddressListInput },
           fetchPolicy: 'network-only'
         })
         .catch(async () => {
@@ -119,7 +125,10 @@ exports.handler = (event, context, callback) => {
             .mutate({
               mutation: signUpUsersMutationSetStatus,
               variables: {
-                input: { ...commonSetStatusInput, status: 'signUpError' }
+                input: {
+                  ...commonSignUpUsersMutationSetStatusInput,
+                  status: 'signUpError'
+                }
               },
               fetchPolicy: 'no-cache'
             })
@@ -133,7 +142,10 @@ exports.handler = (event, context, callback) => {
           .mutate({
             mutation: signUpUsersMutationSetStatus,
             variables: {
-              input: { ...commonSetStatusInput, status: 'accessLimitExceeded' }
+              input: {
+                ...commonSignUpUsersMutationSetStatusInput,
+                status: 'accessLimitExceeded'
+              }
             },
             fetchPolicy: 'no-cache'
           })
@@ -152,7 +164,10 @@ exports.handler = (event, context, callback) => {
               .mutate({
                 mutation: signUpUsersMutationSetStatus,
                 variables: {
-                  input: { ...commonSetStatusInput, status: 'signUpError' }
+                  input: {
+                    ...commonSignUpUsersMutationSetStatusInput,
+                    status: 'signUpError'
+                  }
                 },
                 fetchPolicy: 'no-cache'
               })

@@ -9,13 +9,6 @@ const AWS = require('aws-sdk');
 const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 
-const registeredUsersMutationCreateRegisteredUser = gql(`
-  mutation CreateRegisteredUser($input: CreateRegisteredUserInput!) {
-    createRegisteredUser(input: $input) {
-      displayName
-    }
-  }`);
-
 const signUpUsersMutationSetStatus = gql(`
 mutation SetStatus($input: SetStatusInput!) {
   setStatus(input: $input) {
@@ -23,8 +16,15 @@ mutation SetStatus($input: SetStatusInput!) {
   }
 }`);
 
-const registeredUsersClient = new AWSAppSyncClient({
-  url: process.env.END_POINT_RegisteredUsers,
+const registeredUsersMutationCreateRegisteredUser = gql(`
+  mutation CreateRegisteredUser($input: CreateRegisteredUserInput!) {
+    createRegisteredUser(input: $input) {
+      displayName
+    }
+  }`);
+
+const signUpUsersClient = new AWSAppSyncClient({
+  url: process.env.END_POINT_SignUpUsers,
   region: process.env.REGION,
   auth: {
     type: AUTH_TYPE.AWS_IAM,
@@ -33,8 +33,8 @@ const registeredUsersClient = new AWSAppSyncClient({
   disableOffline: true
 });
 
-const signUpUsersClient = new AWSAppSyncClient({
-  url: process.env.END_POINT_SignUpUsers,
+const registeredUsersClient = new AWSAppSyncClient({
+  url: process.env.END_POINT_RegisteredUsers,
   region: process.env.REGION,
   auth: {
     type: AUTH_TYPE.AWS_IAM,
@@ -48,16 +48,16 @@ exports.handler = (event, context, callback) => {
   const displayName = accountName.slice(96);
   const displayNamePrefix = event.userName.slice(0, 96);
 
-  const createRegisteredUserInput = {
+  const signUpUsersMutationSetStatusInput = {
+    id: event.request.clientMetadata.id,
+    status: 'preSignUpError'
+  };
+
+  const registeredUsersMutationCreateRegisteredUserInput = {
     displayName,
     accountName,
     status: 'nomal',
     jsonString: '{}'
-  };
-
-  const setStatusInput = {
-    id: event.request.clientMetadata.id,
-    status: 'preSignUpError'
   };
 
   if (
@@ -69,7 +69,7 @@ exports.handler = (event, context, callback) => {
       await signUpUsersClient
         .mutate({
           mutation: signUpUsersMutationSetStatus,
-          variables: { input: setStatusInput },
+          variables: { input: signUpUsersMutationSetStatusInput },
           fetchPolicy: 'no-cache'
         })
         .catch(() => {});
@@ -83,7 +83,7 @@ exports.handler = (event, context, callback) => {
     const result = await registeredUsersClient
       .mutate({
         mutation: registeredUsersMutationCreateRegisteredUser,
-        variables: { input: createRegisteredUserInput },
+        variables: { input: registeredUsersMutationCreateRegisteredUserInput },
         fetchPolicy: 'no-cache'
       })
       .catch(() => {});
@@ -93,7 +93,7 @@ exports.handler = (event, context, callback) => {
       await signUpUsersClient
         .mutate({
           mutation: signUpUsersMutationSetStatus,
-          variables: { input: setStatusInput },
+          variables: { input: signUpUsersMutationSetStatusInput },
           fetchPolicy: 'no-cache'
         })
         .catch(() => {});

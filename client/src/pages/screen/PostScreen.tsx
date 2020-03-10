@@ -234,18 +234,18 @@ const PostScreen = () => {
         .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers,
       'AMAZON_COGNITO_USER_POOLS'
     );
-    const queryGetCreatedDate = `query GetCreatedDate($input: GetCreatedDateInput!) {
+    const registeredUsersQueryGetCreatedDate = `query GetCreatedDate($input: GetCreatedDateInput!) {
       getCreatedDate(input: $input) {
         createdDate
       }
      }`;
-    const getCreatedDateInput = {
+    const registeredUsersQueryGetCreatedDateInput = {
       displayName
     };
     try {
       const result = await API.graphql(
-        graphqlOperation(queryGetCreatedDate, {
-          input: getCreatedDateInput
+        graphqlOperation(registeredUsersQueryGetCreatedDate, {
+          input: registeredUsersQueryGetCreatedDateInput
         })
       );
       RegisteredUsersCreatedDate = result.data.getCreatedDate.createdDate;

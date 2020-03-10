@@ -152,14 +152,14 @@ const SignUp = () => {
             displayName
         }
        }`;
-      const getDisplayNameInput = {
+      const registeredUsersQueryGetDisplayNameInput = {
         displayName
       };
 
       try {
         const result = await API.graphql(
           graphqlOperation(registeredUsersQueryGetDisplayName, {
-            input: getDisplayNameInput
+            input: registeredUsersQueryGetDisplayNameInput
           })
         );
         const displayNameAlreadyExists = Boolean(
@@ -192,14 +192,14 @@ const SignUp = () => {
         id
       }
      }`;
-    const createSignUpUserInput = {
+    const signUpUsersMutationCreateSignUpUserInput = {
       accountName,
       password
     };
     try {
       const result = await API.graphql(
         graphqlOperation(signUpUsersMutationCreateSignUpUser, {
-          input: createSignUpUserInput
+          input: signUpUsersMutationCreateSignUpUserInput
         })
       );
       id = result?.data?.createSignUpUser?.id;
@@ -213,14 +213,14 @@ const SignUp = () => {
         status
       }
      }`;
-    const getStatusInput = {
+    const signUpUsersQueryGetStatusInput = {
       id
     };
     const signUpUsersStatusWatcher = async () => {
       try {
         const result = await API.graphql(
           graphqlOperation(signUpUsersQueryGetStatus, {
-            input: getStatusInput
+            input: signUpUsersQueryGetStatusInput
           })
         );
         setSignUpUsersStatus(`${result.data.getStatus.status}`);
@@ -294,7 +294,7 @@ const SignUp = () => {
           cognitoIdentityId
         }
        }`;
-      const setCognitoIdentityIdInput = {
+      const registeredUsersMutationSetCognitoIdentityIdInput = {
         cognitoIdentityId:
           currentAuthenticatedUser.storage[
             `aws.cognito.identity-id.${process.env.REACT_APP_AWS_COGNITO_identityPoolId}`
@@ -303,7 +303,7 @@ const SignUp = () => {
       try {
         await API.graphql(
           graphqlOperation(registeredUsersMutationSetCognitoIdentityId, {
-            input: setCognitoIdentityIdInput
+            input: registeredUsersMutationSetCognitoIdentityIdInput
           })
         );
         setRegisteredUsersMutationSetCognitoIdentityIdExecutionIsCompleted(
