@@ -6,7 +6,6 @@ require('isomorphic-fetch');
 const AUTH_TYPE = require('aws-appsync/lib/link/auth-link').AUTH_TYPE;
 const AWSAppSyncClient = require('aws-appsync').default;
 const AWS = require('aws-sdk');
-const AmazonCognitoIdentity = require('amazon-cognito-identity-js');
 const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 
@@ -39,14 +38,19 @@ exports.handler = (event, context, callback) => {
     // begin 1
 
     const objectKey = event.Records[0].s3.object.key;
-    const objectKeyFirstPartPattern = `protected/${process.env.REGION}%3A`;
-    const UUIDPattern = `([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})`;
+    const s3FileAccessLevel = `protected`;
+    // protected/${process.env.REGION}%3A`;
+    const region = `(${process.env.REGION}`;
+    const UUIDPattern = `[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})`;
     const displayNamePattern = `([0-9a-z]{1,}_[0-9a-z]{1,})`;
     const displayNameSuffixPattern = `[0-9]{13,}`;
     const fileNamePattern = `[0-9a-zA-Z]{13,}`;
     const objectKeyPattern = new RegExp(
       '^' +
-        objectKeyFirstPartPattern +
+        s3FileAccessLevel +
+        '/' +
+        region +
+        '%3A' +
         UUIDPattern +
         '/' +
         displayNamePattern +
@@ -56,13 +60,17 @@ exports.handler = (event, context, callback) => {
         fileNamePattern +
         '$'
     );
-    const regexResult = objectKey.match(objectKeyPattern);
+    const objectKeyRegexResult = objectKey.match(objectKeyPattern);
+
+    if (!objectKeyRegexResult | !objectKeyRegexResult[2]) {
+      // foobar
+    }
 
     // end 1
 
     // begin 3
     const registeredUsersQueryGetCognitoIdentityIdInput = {
-      displayName: regexResult[2]
+      displayName: objectKeyRegexResult[2]
     };
     // end 3
 
@@ -76,14 +84,18 @@ exports.handler = (event, context, callback) => {
           fetchPolicy: 'network-only'
         })
         .catch(async () => {});
-      console.log(
-        'queryyyresulttt',
-        registeredUsersQueryGetCognitoIdentityIdResult
-      );
-      console.log(
-        'displaynaemmm',
-        registeredUsersQueryGetCognitoIdentityIdInput
-      );
+      // console.log(
+      //   'queryyyresulttt',
+      //   registeredUsersQueryGetCognitoIdentityIdResult.data.getCognitoIdentityId
+      //     .cognitoIdentityId
+      // );
+      // console.log('displaynaemmm', objectKeyRegexResult[1]);
+      if (
+        registeredUsersQueryGetCognitoIdentityIdResult.data.getCognitoIdentityId
+          .cognitoIdentityId !== objectKeyRegexResult[1].replace('%3A', ':')
+      ) {
+        // foobar
+      }
     })();
   });
 };
