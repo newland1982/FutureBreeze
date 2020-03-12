@@ -1,4 +1,8 @@
-type CognitoIdentityId @aws_iam @aws_cognito_user_pools {
+type AccountName {
+  accountName: String!
+}
+
+type CognitoIdentityId @aws_cognito_user_pools {
   cognitoIdentityId: String!
 }
 
@@ -21,6 +25,10 @@ type DisplayName {
   displayName: String!
 }
 
+input GetAccountNameInput {
+  cognitoIdentityId: String!
+}
+
 input GetCreatedDateInput {
   displayName: String!
 }
@@ -39,7 +47,7 @@ type Query {
   getDisplayName(input: GetDisplayNameInput!): DisplayName
   getCreatedDate(input: GetCreatedDateInput!): CreatedDate
     @aws_cognito_user_pools
-  getCognitoIdentityId(input: getCognitoIdentityIdInput!): CognitoIdentityId
+  getAccountName(input: GetAccountNameInput!): AccountName
 }
 
 type RegisteredUser {
@@ -54,10 +62,6 @@ type RegisteredUser {
 
 input SetCognitoIdentityIdInput {
   cognitoIdentityId: String!
-}
-
-input getCognitoIdentityIdInput {
-  displayName: String!
 }
 
 schema {

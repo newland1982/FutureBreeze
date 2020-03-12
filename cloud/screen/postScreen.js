@@ -11,10 +11,10 @@ const credentials = AWS.config.credentials;
 
 // beign 2
 
-const registeredUsersQueryGetCognitoIdentityId = gql(`
-  query GetCognitoIdentityId($input: getCognitoIdentityIdInput!) {
-    getCognitoIdentityId(input: $input) {
-      cognitoIdentityId
+const registeredUsersQueryGetAccountName = gql(`
+  query GetAccountName($input: GetAccountNameInput!) {
+    getAccountName(input: $input) {
+      accountName
   }
  }`);
 
@@ -62,38 +62,46 @@ exports.handler = (event, context, callback) => {
     );
     const objectKeyRegexResult = objectKey.match(objectKeyPattern);
 
-    if (!objectKeyRegexResult | !objectKeyRegexResult[2]) {
+    if (
+      !objectKeyRegexResult ||
+      !objectKeyRegexResult[0] ||
+      !objectKeyRegexResult[1] ||
+      !objectKeyRegexResult[2]
+    ) {
       // foobar
     }
 
     // end 1
 
     // begin 3
-    const registeredUsersQueryGetCognitoIdentityIdInput = {
-      displayName: objectKeyRegexResult[2]
+    const registeredUsersQueryGetAccountNameInput = {
+      cognitoIdentityId: objectKeyRegexResult[1].replace('%3A', ':')
     };
     // end 3
 
     (async () => {
       await registeredUsersClient.hydrated();
 
-      const registeredUsersQueryGetCognitoIdentityIdResult = await registeredUsersClient
+      const registeredUsersQueryGetAccountNameResult = await registeredUsersClient
         .query({
-          query: registeredUsersQueryGetCognitoIdentityId,
-          variables: { input: registeredUsersQueryGetCognitoIdentityIdInput },
+          query: registeredUsersQueryGetAccountName,
+          variables: { input: registeredUsersQueryGetAccountNameInput },
           fetchPolicy: 'network-only'
         })
         .catch(async () => {});
-      // console.log(
-      //   'queryyyresulttt',
-      //   registeredUsersQueryGetCognitoIdentityIdResult.data.getCognitoIdentityId
-      //     .cognitoIdentityId
-      // );
-      // console.log('displaynaemmm', objectKeyRegexResult[1]);
+      console.log('queryyyresulttt', registeredUsersQueryGetAccountNameResult);
+      console.log('objectKeyRegexResultmmm', objectKeyRegexResult);
+
+      if (!registeredUsersQueryGetAccountNameResult) {
+        // foobar
+      }
+
       if (
-        registeredUsersQueryGetCognitoIdentityIdResult.data.getCognitoIdentityId
-          .cognitoIdentityId !== objectKeyRegexResult[1].replace('%3A', ':')
+        registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
+          96
+        ) !== objectKeyRegexResult[2]
       ) {
+        console.log('uuu', objectKeyRegexResult[2]);
         // foobar
       }
     })();
