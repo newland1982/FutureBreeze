@@ -89,7 +89,10 @@ exports.handler = (event, context, callback) => {
           fetchPolicy: 'network-only'
         })
         .catch(async () => {});
-      console.log('queryyyresulttt', registeredUsersQueryGetAccountNameResult);
+      console.log(
+        'queryyyresulttt',
+        registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName
+      );
       console.log('objectKeyRegexResultmmm', objectKeyRegexResult);
 
       if (!registeredUsersQueryGetAccountNameResult) {
