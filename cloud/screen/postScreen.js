@@ -93,7 +93,11 @@ exports.handler = (event, context, callback) => {
         'queryyyresulttt',
         registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName
       );
-      console.log('objectKeyRegexResultmmm', objectKeyRegexResult);
+      console.log(
+        '!!!!!????',
+        registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName
+          .cognitoIdentityId
+      );
 
       if (!registeredUsersQueryGetAccountNameResult) {
         // foobar
