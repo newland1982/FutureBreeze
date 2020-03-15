@@ -9,16 +9,12 @@ const AWS = require('aws-sdk');
 const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 
-// beign 2
-
 const registeredUsersQueryGetAccountName = gql(`
   query GetAccountName($input: GetAccountNameInput!) {
     getAccountName(input: $input) {
       accountName
   }
  }`);
-
-// end 2
 
 const registeredUsersClient = new AWSAppSyncClient({
   url: process.env.END_POINT_RegisteredUsers,
@@ -30,54 +26,65 @@ const registeredUsersClient = new AWSAppSyncClient({
   disableOffline: true
 });
 
+const getObjectData = eventRecord => {
+  // const objectKey = event.Records[0].s3.object.key;
+  const objectKey = eventRecord.s3.object.key;
+  const s3FileAccessLevel = `protected`;
+  const region = `(${process.env.REGION}`;
+  const UUIDPattern = `[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})`;
+  const displayNamePattern = `([0-9a-z]{1,}_[0-9a-z]{1,})`;
+  const displayNameSuffixPattern = `[0-9]{13,}`;
+  const fileNamePattern = `(pc|mobile|thumbnail)[0-9]{13,}`;
+  const objectKeyPattern = new RegExp(
+    '^' +
+      s3FileAccessLevel +
+      '/' +
+      region +
+      '%3A' +
+      UUIDPattern +
+      '/' +
+      displayNamePattern +
+      '_' +
+      displayNameSuffixPattern +
+      '/' +
+      fileNamePattern +
+      '$'
+  );
+  const objectKeyRegexResult = objectKey.match(objectKeyPattern);
+
+  if (
+    !objectKeyRegexResult ||
+    !objectKeyRegexResult[0] ||
+    !objectKeyRegexResult[1] ||
+    !objectKeyRegexResult[2]
+  ) {
+    console.log('errvvvvvvv');
+    return;
+  }
+
+  return {
+    cognitoIdentityId: objectKeyRegexResult[1].replace('%3A', ':'),
+    displayName: objectKeyRegexResult[2],
+    size: eventRecord.s3.object.size
+  };
+};
+
 exports.handler = (event, context, callback) => {
   event.Records.forEach(record => {
     if (record.eventName !== 'ObjectCreated:Put') {
       return;
     }
-    // begin 1
 
-    const objectKey = event.Records[0].s3.object.key;
-    const s3FileAccessLevel = `protected`;
-    // protected/${process.env.REGION}%3A`;
-    const region = `(${process.env.REGION}`;
-    const UUIDPattern = `[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})`;
-    const displayNamePattern = `([0-9a-z]{1,}_[0-9a-z]{1,})`;
-    const displayNameSuffixPattern = `[0-9]{13,}`;
-    const fileNamePattern = `[0-9a-zA-Z]{13,}`;
-    const objectKeyPattern = new RegExp(
-      '^' +
-        s3FileAccessLevel +
-        '/' +
-        region +
-        '%3A' +
-        UUIDPattern +
-        '/' +
-        displayNamePattern +
-        '_' +
-        displayNameSuffixPattern +
-        '/' +
-        fileNamePattern +
-        '$'
-    );
-    const objectKeyRegexResult = objectKey.match(objectKeyPattern);
+    if (!getObjectData(event.Records[0])) {
+      console.log('errrrobjecttt', event.Records[0]);
 
-    if (
-      !objectKeyRegexResult ||
-      !objectKeyRegexResult[0] ||
-      !objectKeyRegexResult[1] ||
-      !objectKeyRegexResult[2]
-    ) {
       // foobar
+      return;
     }
 
-    // end 1
-
-    // begin 3
     const registeredUsersQueryGetAccountNameInput = {
-      cognitoIdentityId: objectKeyRegexResult[1].replace('%3A', ':')
+      cognitoIdentityId: getObjectData(event.Records[0]).cognitoIdentityId
     };
-    // end 3
 
     (async () => {
       await registeredUsersClient.hydrated();
@@ -93,11 +100,7 @@ exports.handler = (event, context, callback) => {
         'queryyyresulttt',
         registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName
       );
-      console.log(
-        '!!!!!????',
-        registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName
-          .cognitoIdentityId
-      );
+      console.log('event.Records[0]!!!!!????', event.Records[0]);
 
       if (!registeredUsersQueryGetAccountNameResult) {
         // foobar
@@ -106,11 +109,12 @@ exports.handler = (event, context, callback) => {
       if (
         registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
           96
-        ) !== objectKeyRegexResult[2]
+        ) !== getObjectData(event.Records[0]).displayName
       ) {
-        console.log('uuu', objectKeyRegexResult[2]);
+        console.log('erorrrr');
         // foobar
       }
+      getObjectData(event.Records[0]).size;
     })();
   });
 };
