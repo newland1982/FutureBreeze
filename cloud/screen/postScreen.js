@@ -16,8 +16,25 @@ const registeredUsersQueryGetAccountName = gql(`
   }
  }`);
 
+const screensMutationCreateScreen = gql(`
+  query CreateScreen($input: CreateScreenInput!) {
+    createScreen(input: $input) {
+      objectKey
+  }
+ }`);
+
 const registeredUsersClient = new AWSAppSyncClient({
   url: process.env.END_POINT_RegisteredUsers,
+  region: process.env.REGION,
+  auth: {
+    type: AUTH_TYPE.AWS_IAM,
+    credentials
+  },
+  disableOffline: true
+});
+
+const screensClient = new AWSAppSyncClient({
+  url: process.env.END_POINT_Screens,
   region: process.env.REGION,
   auth: {
     type: AUTH_TYPE.AWS_IAM,
@@ -75,7 +92,11 @@ exports.handler = (event, context, callback) => {
       return;
     }
 
-    if (!getObjectData(event.Records[0])) {
+    if (
+      !getObjectData(event.Records[0]) ||
+      getObjectData(event.Records[0]).size >
+        process.env.END_POINT_OBJECT_SIZE_LIMIT
+    ) {
       console.log('errrrobjecttt', event.Records[0]);
 
       // foobar
@@ -84,6 +105,11 @@ exports.handler = (event, context, callback) => {
 
     const registeredUsersQueryGetAccountNameInput = {
       cognitoIdentityId: getObjectData(event.Records[0]).cognitoIdentityId
+    };
+
+    const screensMutationCreateScreenInput = {
+      objectKey: event.Records[0].s3.object.key,
+      posterId: getObjectData(event.Records[0]).displayName
     };
 
     (async () => {
@@ -114,7 +140,7 @@ exports.handler = (event, context, callback) => {
         console.log('erorrrr');
         // foobar
       }
-      getObjectData(event.Records[0]).size;
+      await screensClient.hydrated();
     })();
   });
 };
