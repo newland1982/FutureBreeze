@@ -91,11 +91,14 @@ exports.handler = (event, context, callback) => {
     if (record.eventName !== 'ObjectCreated:Put') {
       return;
     }
-
+    console.log(
+      'typeoffff',
+      typeof Number(process.env.END_POINT_OBJECT_SIZE_LIMIT)
+    );
     if (
       !getObjectData(event.Records[0]) ||
       getObjectData(event.Records[0]).size >
-        process.env.END_POINT_OBJECT_SIZE_LIMIT
+        Number(process.env.END_POINT_OBJECT_SIZE_LIMIT)
     ) {
       console.log('errrrobjecttt', event.Records[0]);
 
@@ -141,6 +144,18 @@ exports.handler = (event, context, callback) => {
         // foobar
       }
       await screensClient.hydrated();
+      const screensMutationCreateScreenResult = await screensClient
+        .query({
+          query: registeredUsersQueryGetAccountName,
+          variables: { input: screensMutationCreateScreenInput },
+          fetchPolicy: 'network-only'
+        })
+        .catch(async () => {});
+
+      console.log(
+        'screensMutationCreateScreenResulttt',
+        screensMutationCreateScreenResult
+      );
     })();
   });
 };
