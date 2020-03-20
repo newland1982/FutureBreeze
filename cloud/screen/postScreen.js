@@ -17,7 +17,7 @@ const registeredUsersQueryGetAccountName = gql(`
  }`);
 
 const screensMutationCreateScreen = gql(`
-  query CreateScreen($input: CreateScreenInput!) {
+  mutation CreateScreen($input: CreateScreenInput!) {
     createScreen(input: $input) {
       objectKey
   }
@@ -73,7 +73,8 @@ const getObjectData = eventRecord => {
     !objectKeyRegexResult ||
     !objectKeyRegexResult[0] ||
     !objectKeyRegexResult[1] ||
-    !objectKeyRegexResult[2]
+    !objectKeyRegexResult[2] ||
+    !objectKeyRegexResult[3]
   ) {
     console.log('errvvvvvvv');
     return;
@@ -82,7 +83,8 @@ const getObjectData = eventRecord => {
   return {
     cognitoIdentityId: objectKeyRegexResult[1].replace('%3A', ':'),
     displayName: objectKeyRegexResult[2],
-    size: eventRecord.s3.object.size
+    size: eventRecord.s3.object.size,
+    type: objectKeyRegexResult[3]
   };
 };
 
@@ -112,7 +114,8 @@ exports.handler = (event, context, callback) => {
 
     const screensMutationCreateScreenInput = {
       objectKey: event.Records[0].s3.object.key,
-      posterId: getObjectData(event.Records[0]).displayName
+      posterId: getObjectData(event.Records[0]).displayName,
+      type: getObjectData(event.Records[0]).type
     };
 
     (async () => {
@@ -144,11 +147,12 @@ exports.handler = (event, context, callback) => {
         // foobar
       }
       await screensClient.hydrated();
+      console.log('okkkkk????');
       const screensMutationCreateScreenResult = await screensClient
-        .query({
-          query: registeredUsersQueryGetAccountName,
+        .mutate({
+          mutation: screensMutationCreateScreen,
           variables: { input: screensMutationCreateScreenInput },
-          fetchPolicy: 'network-only'
+          fetchPolicy: 'no-cache'
         })
         .catch(async () => {});
 

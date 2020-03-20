@@ -1,0 +1,21 @@
+## Resolver for Mutation.createScreen
+{
+  "version": "2017-02-28",
+  "operation": "PutItem",
+  "key": {
+  	 "objectKey" : { "S" : "${context.arguments.input.objectKey}" },
+     "createdDate": { "S" : "${util.time.nowEpochMilliSeconds()}" }
+  },
+
+  "attributeValues" : {
+      "posterId" : { "S" : "${context.arguments.input.posterId}" },
+      "type" : { "S" : "${context.arguments.input.type}" },
+      "userCount": { "N": 0 },
+      "status": { "S" : "init" }
+  },
+  "condition": {
+    "expression": "attribute_not_exists(objectKey)"
+  }
+}
+
+$util.toJson($context.result)
