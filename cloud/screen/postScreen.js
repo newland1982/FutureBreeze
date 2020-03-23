@@ -9,6 +9,10 @@ const AWS = require('aws-sdk');
 const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 
+AWS.config.accessKeyId = process.env.ACCESS_KEY;
+AWS.config.secretAccessKey = process.env.SECRET_ACCESS_KEY;
+AWS.config.region = process.env.REGION;
+
 const registeredUsersQueryGetAccountName = gql(`
   query GetAccountName($input: GetAccountNameInput!) {
     getAccountName(input: $input) {
@@ -44,7 +48,6 @@ const screensClient = new AWSAppSyncClient({
 });
 
 const getObjectData = eventRecord => {
-  // const objectKey = event.Records[0].s3.object.key;
   const objectKey = eventRecord.s3.object.key;
   const s3FileAccessLevel = `protected`;
   const region = `(${process.env.REGION}`;
@@ -93,29 +96,17 @@ exports.handler = (event, context, callback) => {
     if (record.eventName !== 'ObjectCreated:Put') {
       return;
     }
-    console.log(
-      'typeoffff',
-      typeof Number(process.env.END_POINT_OBJECT_SIZE_LIMIT)
-    );
-    if (
-      !getObjectData(event.Records[0]) ||
-      getObjectData(event.Records[0]).size >
-        Number(process.env.END_POINT_OBJECT_SIZE_LIMIT)
-    ) {
-      console.log('errrrobjecttt', event.Records[0]);
 
-      // foobar
-      return;
-    }
+    const objectDataObject = getObjectData(event.Records[0]);
 
     const registeredUsersQueryGetAccountNameInput = {
-      cognitoIdentityId: getObjectData(event.Records[0]).cognitoIdentityId
+      cognitoIdentityId: objectDataObject.cognitoIdentityId
     };
 
     const screensMutationCreateScreenInput = {
       objectKey: event.Records[0].s3.object.key,
-      posterId: getObjectData(event.Records[0]).displayName,
-      type: getObjectData(event.Records[0]).type
+      posterId: objectDataObject.displayName,
+      type: objectDataObject.type
     };
 
     (async () => {
@@ -127,25 +118,46 @@ exports.handler = (event, context, callback) => {
           variables: { input: registeredUsersQueryGetAccountNameInput },
           fetchPolicy: 'network-only'
         })
-        .catch(async () => {});
+        .catch(async () => {
+          // foobar
+        });
+
       console.log(
         'queryyyresulttt',
         registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName
       );
       console.log('event.Records[0]!!!!!????', event.Records[0]);
 
-      if (!registeredUsersQueryGetAccountNameResult) {
-        // foobar
+      if (
+        !objectDataObject ||
+        !(objectDataObject.size < Number(process.env.OBJECT_SIZE_LIMIT)) ||
+        !(
+          registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
+            96
+          ) === objectDataObject.displayName
+        )
+      ) {
+        console.log('errrrobjecttt', event.Records[0]);
+
+        const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
+        cognitoidentityserviceprovider.adminDeleteUser(
+          {
+            UserPoolId: process.env.USER_POOL_ID,
+            Username:
+              registeredUsersQueryGetAccountNameResult.data.getAccountName
+                .accountName
+          },
+          (error, data) => {
+            if (error) {
+              console.log('deleteerrorrrr', error);
+            } else {
+              console.log('successful response', data);
+            }
+          }
+        );
+        return;
       }
 
-      if (
-        registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
-          96
-        ) !== getObjectData(event.Records[0]).displayName
-      ) {
-        console.log('erorrrr');
-        // foobar
-      }
       await screensClient.hydrated();
       console.log('okkkkk????');
       const screensMutationCreateScreenResult = await screensClient
