@@ -47,7 +47,7 @@ const screensClient = new AWSAppSyncClient({
   disableOffline: true
 });
 
-const getObjectData = eventRecord => {
+const getObjectDataObject = eventRecord => {
   const objectKey = eventRecord.s3.object.key;
   const s3FileAccessLevel = `protected`;
   const region = `(${process.env.REGION}`;
@@ -55,7 +55,7 @@ const getObjectData = eventRecord => {
   const displayNamePattern = `([0-9a-z]{1,}_[0-9a-z]{1,})`;
   const displayNameSuffixPattern = `[0-9]{13,}`;
   const fileNamePattern = `(pc|mobile|thumbnail)[0-9]{13,}`;
-  const objectKeyPattern = new RegExp(
+  const preciseObjectKeyPattern = new RegExp(
     '^' +
       s3FileAccessLevel +
       '/' +
@@ -70,43 +70,49 @@ const getObjectData = eventRecord => {
       fileNamePattern +
       '$'
   );
-  const objectKeyRegexResult = objectKey.match(objectKeyPattern);
+  const roughObjectKeyPattern = new RegExp(
+    '^' +
+      s3FileAccessLevel +
+      '/' +
+      region +
+      '%3A' +
+      UUIDPattern +
+      '/' +
+      '.*' +
+      '$'
+  );
+  const preciseObjectKeyRegexResult = objectKey.match(preciseObjectKeyPattern);
+  const roughObjectKeyRegexResult = objectKey.match(roughObjectKeyPattern);
 
-  if (
-    !objectKeyRegexResult ||
-    !objectKeyRegexResult[0] ||
-    !objectKeyRegexResult[1] ||
-    !objectKeyRegexResult[2] ||
-    !objectKeyRegexResult[3]
-  ) {
-    console.log('errvvvvvvv');
-    return;
+  if (!preciseObjectKeyRegexResult) {
+    return {
+      validationResult: 'invalid',
+      cognitoIdentityId: roughObjectKeyRegexResult[1].replace('%3A', ':')
+    };
   }
 
   return {
-    cognitoIdentityId: objectKeyRegexResult[1].replace('%3A', ':'),
-    displayName: objectKeyRegexResult[2],
+    validationResult: 'valid',
+    cognitoIdentityId: preciseObjectKeyRegexResult[1].replace('%3A', ':'),
+    displayName: preciseObjectKeyRegexResult[2],
     size: eventRecord.s3.object.size,
-    type: objectKeyRegexResult[3]
+    type: preciseObjectKeyRegexResult[3]
   };
 };
 
 exports.handler = (event, context, callback) => {
   event.Records.forEach(record => {
-    if (record.eventName !== 'ObjectCreated:Put') {
+    if (
+      record.eventName !== 'ObjectCreated:Put' &&
+      record.eventName !== 'ObjectCreated:CompleteMultipartUpload'
+    ) {
       return;
     }
 
-    const objectDataObject = getObjectData(event.Records[0]);
+    const objectDataObject = getObjectDataObject(event.Records[0]);
 
     const registeredUsersQueryGetAccountNameInput = {
       cognitoIdentityId: objectDataObject.cognitoIdentityId
-    };
-
-    const screensMutationCreateScreenInput = {
-      objectKey: event.Records[0].s3.object.key,
-      posterId: objectDataObject.displayName,
-      type: objectDataObject.type
     };
 
     (async () => {
@@ -159,7 +165,13 @@ exports.handler = (event, context, callback) => {
       }
 
       await screensClient.hydrated();
-      console.log('okkkkk????');
+
+      const screensMutationCreateScreenInput = {
+        objectKey: event.Records[0].s3.object.key,
+        posterId: objectDataObject.displayName,
+        type: objectDataObject.type
+      };
+
       const screensMutationCreateScreenResult = await screensClient
         .mutate({
           mutation: screensMutationCreateScreen,
