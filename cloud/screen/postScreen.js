@@ -9,10 +9,6 @@ const AWS = require('aws-sdk');
 const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 
-AWS.config.accessKeyId = process.env.ACCESS_KEY;
-AWS.config.secretAccessKey = process.env.SECRET_ACCESS_KEY;
-AWS.config.region = process.env.REGION;
-
 const registeredUsersQueryGetAccountName = gql(`
   query GetAccountName($input: GetAccountNameInput!) {
     getAccountName(input: $input) {
@@ -145,22 +141,19 @@ exports.handler = (event, context, callback) => {
       ) {
         console.log('errrrobjecttt', event.Records[0]);
 
-        const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
-        cognitoidentityserviceprovider.adminDeleteUser(
-          {
-            UserPoolId: process.env.USER_POOL_ID,
-            Username:
-              registeredUsersQueryGetAccountNameResult.data.getAccountName
-                .accountName
-          },
-          (error, data) => {
-            if (error) {
-              console.log('deleteerrorrrr', error);
-            } else {
-              console.log('successful response', data);
-            }
-          }
-        );
+        try {
+          const cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
+          await cognitoIdentityServiceProvider
+            .adminDeleteUser({
+              UserPoolId: process.env.USER_POOL_ID,
+              Username:
+                registeredUsersQueryGetAccountNameResult.data.getAccountName
+                  .accountName
+            })
+            .promise();
+        } catch (error) {
+          // foobar
+        }
         return;
       }
 
