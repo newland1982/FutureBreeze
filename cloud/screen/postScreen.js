@@ -142,18 +142,30 @@ exports.handler = (event, context, callback) => {
         console.log('errrrobjecttt', event.Records[0]);
 
         try {
-          const cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
-          await cognitoIdentityServiceProvider
-            .adminDeleteUser({
-              UserPoolId: process.env.USER_POOL_ID,
-              Username:
-                registeredUsersQueryGetAccountNameResult.data.getAccountName
-                  .accountName
+          const s3 = new AWS.S3();
+          const result = await s3
+            .deleteObject({
+              Bucket: process.env.Bucket,
+              Key: event.Records[0].s3.object.key
             })
             .promise();
-        } catch (error) {
-          // foobar
-        }
+          console.log('deleteeee', result);
+          console.log('deleteeee2', event.Records[0].s3.object.key);
+        } catch (error) {}
+
+        // try {
+        //   const cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
+        //   await cognitoIdentityServiceProvider
+        //     .adminDeleteUser({
+        //       UserPoolId: process.env.USER_POOL_ID,
+        //       Username:
+        //         registeredUsersQueryGetAccountNameResult.data.getAccountName
+        //           .accountName
+        //     })
+        //     .promise();
+        // } catch (error) {
+        //   // foobar
+        // }
         return;
       }
 
