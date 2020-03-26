@@ -146,12 +146,17 @@ exports.handler = (event, context, callback) => {
           const result = await s3
             .deleteObject({
               Bucket: process.env.Bucket,
-              Key: event.Records[0].s3.object.key
+              Key: event.Records[0].s3.object.key.replace('%3A', ':')
             })
             .promise();
           console.log('deleteeee', result);
-          console.log('deleteeee2', event.Records[0].s3.object.key);
-        } catch (error) {}
+          console.log(
+            'deleteeee2',
+            event.Records[0].s3.object.key.replace('%3A', ':')
+          );
+        } catch (error) {
+          console.log('deleteobjecteroorrr', error);
+        }
 
         // try {
         //   const cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
@@ -172,7 +177,7 @@ exports.handler = (event, context, callback) => {
       await screensClient.hydrated();
 
       const screensMutationCreateScreenInput = {
-        objectKey: event.Records[0].s3.object.key,
+        objectKey: event.Records[0].s3.object.key.replace('%3A', ':'),
         posterId: objectDataObject.displayName,
         type: objectDataObject.type
       };
