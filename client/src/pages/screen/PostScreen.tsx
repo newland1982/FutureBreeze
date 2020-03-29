@@ -225,6 +225,7 @@ const PostScreen = () => {
     const styleElement = document.getElementById('style');
     if (styleElement && initialStyleElementTextContent) {
       styleElement.textContent = initialStyleElementTextContent;
+      window.URL.revokeObjectURL(sampleImageObjectURL);
       setSampleImageObjectURL('');
     } else {
       window.URL.revokeObjectURL(sampleImageObjectURL);
