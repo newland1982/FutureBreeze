@@ -200,7 +200,7 @@ const ChangeAuthcode = () => {
         </Box>
       </div>
       <LoadingAnimation
-        hasBeenClicked={changeAuthcodeButtonHasBeenClicked}
+        isLoading={changeAuthcodeButtonHasBeenClicked}
         size={124}
         thickness={4}
       />

@@ -1,6 +1,7 @@
 import Amplify from 'aws-amplify';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
+import LoadingAnimation from '../../components/LoadingAnimation';
 import Menu from '../../components/Menu';
 import Paper from '@material-ui/core/Paper';
 import React, {
@@ -94,6 +95,7 @@ const PostScreen = () => {
   const { user, dispatch } = useContext(UserContext);
 
   const [sampleImageObjectURL, setSampleImageObjectURL] = useState('');
+  const [sampleImageIsInProgress, setSampleImageIsInProgress] = useState(false);
   const [blobForPC, setBlobForPC] = useState(new Blob());
   const [blobForMobile, setBlobForMobile] = useState(new Blob());
   const [blobForThumbnail, setBlobForThumbnail] = useState(new Blob());
@@ -174,6 +176,7 @@ const PostScreen = () => {
     const imageElement = new Image();
 
     imageElement.onload = () => {
+      setSampleImageIsInProgress(true);
       const canvasForPC = makeCanvas(imageElement, appropriateImageWidthForPC);
       canvasForPC?.toBlob(blob => {
         if (!blob) {
@@ -181,6 +184,7 @@ const PostScreen = () => {
         }
         if (deviceType === 'pc') {
           setSampleImageObjectURL(window.URL.createObjectURL(blob));
+          setSampleImageIsInProgress(false);
         }
         setBlobForPC(blob);
       });
@@ -195,6 +199,7 @@ const PostScreen = () => {
         }
         if (deviceType === 'mobile') {
           setSampleImageObjectURL(window.URL.createObjectURL(blob));
+          setSampleImageIsInProgress(false);
         }
         setBlobForMobile(blob);
       });
@@ -292,52 +297,63 @@ const PostScreen = () => {
   return (
     <Fragment>
       <Menu />
-      <Box className={classes.root}>
-        <Paper className={classes.paper}>
-          <input
-            ref={inputRef}
-            className={classes.input}
-            type='file'
-            accept='image/jpg, image/jpeg, image/png'
-            onChange={handleInputChange}
-          />
-          <Button
-            className={classes.button}
-            variant='contained'
-            size='medium'
-            onClick={() => inputRef?.current?.click()}
-            style={{
-              display: `${sampleImageObjectURL ? 'none' : 'inline'}`
-            }}
-          >
-            Choose File
-          </Button>
-          <Button
-            className={classes.button}
-            variant='contained'
-            size='medium'
-            onClick={() => cancel()}
-            style={{
-              display: `${sampleImageObjectURL ? 'inline' : 'none'}`
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
-            className={classes.button}
-            variant='contained'
-            size='medium'
-            onClick={() => {
-              ok();
-            }}
-            style={{
-              display: `${sampleImageObjectURL ? 'inline' : 'none'}`
-            }}
-          >
-            OK
-          </Button>
-        </Paper>
-      </Box>
+      <div
+        style={{
+          display: `${sampleImageIsInProgress ? 'none' : 'inline'}`
+        }}
+      >
+        <Box className={classes.root}>
+          <Paper className={classes.paper}>
+            <input
+              ref={inputRef}
+              className={classes.input}
+              type='file'
+              accept='image/jpg, image/jpeg, image/png'
+              onChange={handleInputChange}
+            />
+            <Button
+              className={classes.button}
+              variant='contained'
+              size='medium'
+              onClick={() => inputRef?.current?.click()}
+              style={{
+                display: `${sampleImageObjectURL ? 'none' : 'inline'}`
+              }}
+            >
+              Choose File
+            </Button>
+            <Button
+              className={classes.button}
+              variant='contained'
+              size='medium'
+              onClick={() => cancel()}
+              style={{
+                display: `${sampleImageObjectURL ? 'inline' : 'none'}`
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              className={classes.button}
+              variant='contained'
+              size='medium'
+              onClick={() => {
+                ok();
+              }}
+              style={{
+                display: `${sampleImageObjectURL ? 'inline' : 'none'}`
+              }}
+            >
+              OK
+            </Button>
+          </Paper>
+        </Box>
+      </div>
+      <LoadingAnimation
+        isLoading={sampleImageIsInProgress}
+        size={124}
+        thickness={4}
+      />
     </Fragment>
   );
 };

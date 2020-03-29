@@ -377,7 +377,7 @@ const SignUp = () => {
         </Box>
       </div>
       <LoadingAnimation
-        hasBeenClicked={signUpButtonHasBeenClicked}
+        isLoading={signUpButtonHasBeenClicked}
         size={124}
         thickness={4}
       />

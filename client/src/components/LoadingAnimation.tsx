@@ -11,7 +11,7 @@ const useStyles = makeStyles({
 });
 
 type props = {
-  hasBeenClicked: boolean;
+  isLoading: boolean;
   size: number;
   thickness: number;
 };
@@ -22,7 +22,7 @@ const LoadingAnimation = (props: props) => {
   return (
     <div
       style={{
-        display: `${!props.hasBeenClicked ? 'none' : 'grid'}`,
+        display: `${!props.isLoading ? 'none' : 'grid'}`,
         gridTemplateColumns: '100vw',
         gridTemplateRows: 'calc(100vh - 112px)'
       }}
