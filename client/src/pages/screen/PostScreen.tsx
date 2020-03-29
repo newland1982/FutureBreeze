@@ -211,12 +211,19 @@ const PostScreen = () => {
       });
     };
 
-    const selectedFile = event.target.files[0];
+    const selectedFile = event.target?.files[0];
     imageElement.src = window.URL.createObjectURL(selectedFile);
   };
 
   const cancel = () => {
-    history.goBack();
+    const styleElement = document.getElementById('style');
+    if (styleElement && initialStyleElementTextContent) {
+      styleElement.textContent = initialStyleElementTextContent;
+      setSampleImageObjectURL('');
+    } else {
+      window.URL.revokeObjectURL(sampleImageObjectURL);
+      history.goBack();
+    }
   };
 
   const ok = async () => {
