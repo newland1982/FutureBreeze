@@ -175,8 +175,9 @@ const PostScreen = () => {
 
     const imageElement = new Image();
 
+    setSampleImageIsInProgress(true);
+
     imageElement.onload = () => {
-      setSampleImageIsInProgress(true);
       const canvasForPC = makeCanvas(imageElement, appropriateImageWidthForPC);
       canvasForPC?.toBlob(blob => {
         if (!blob) {
