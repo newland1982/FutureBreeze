@@ -132,7 +132,7 @@ const SignUp = () => {
   };
 
   useEffect(() => {
-    const checkDisplayName = async () => {
+    const validateDisplayName = async () => {
       if (!displayName) {
         setDisplayNameIsValid(false);
         return;
@@ -176,7 +176,7 @@ const SignUp = () => {
       }
       setDisplayNameIsValid(true);
     };
-    checkDisplayName();
+    validateDisplayName();
   }, [displayNamePrefix, displayName]);
 
   const signUp = async () => {

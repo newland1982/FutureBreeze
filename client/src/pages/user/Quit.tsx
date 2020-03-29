@@ -77,7 +77,7 @@ const Quit = () => {
   };
 
   useEffect(() => {
-    const checkAuthcode = async () => {
+    const validateAuthcode = async () => {
       if (!authcode) {
         setAuthcodeIsValid(false);
         return;
@@ -92,7 +92,7 @@ const Quit = () => {
       }
       setAuthcodeIsValid(true);
     };
-    checkAuthcode();
+    validateAuthcode();
   }, [password, authcode, displayName]);
 
   const quit = async () => {

@@ -78,7 +78,7 @@ const SignIn = () => {
   };
 
   useEffect(() => {
-    const checkAuthcode = async () => {
+    const validateAuthcode = async () => {
       if (!authcode) {
         setAuthcodeIsValid(false);
         return;
@@ -93,7 +93,7 @@ const SignIn = () => {
       }
       setAuthcodeIsValid(true);
     };
-    checkAuthcode();
+    validateAuthcode();
   }, [password, authcode, displayName]);
 
   const signIn = async () => {

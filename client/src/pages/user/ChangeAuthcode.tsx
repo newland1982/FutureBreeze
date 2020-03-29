@@ -96,7 +96,7 @@ const ChangeAuthcode = () => {
   };
 
   useEffect(() => {
-    const checkOldAuthcode = async () => {
+    const validateOldAuthcode = async () => {
       if (!oldAuthcode) {
         setAuthcodeIsValid(false);
         return;
@@ -111,7 +111,7 @@ const ChangeAuthcode = () => {
       }
       setAuthcodeIsValid(true);
     };
-    checkOldAuthcode();
+    validateOldAuthcode();
   }, [oldPassword, oldAuthcode, displayName]);
 
   const changeAuthcode = async () => {

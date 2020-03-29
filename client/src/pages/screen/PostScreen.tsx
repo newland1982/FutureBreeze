@@ -118,7 +118,7 @@ const PostScreen = () => {
   useEffect(() => {
     setAmplifyConfig(undefined, 'AWS_IAM');
 
-    const CheckAuthentication = async () => {
+    const checkAuthentication = async () => {
       const currentAuthenticatedUser = await Auth.currentAuthenticatedUser({
         bypassCache: true
       }).catch(() => {});
@@ -134,7 +134,7 @@ const PostScreen = () => {
       }
     };
 
-    CheckAuthentication();
+    checkAuthentication();
   });
 
   useEffect(() => {
