@@ -227,6 +227,10 @@ const PostScreen = () => {
       styleElement.textContent = initialStyleElementTextContent;
       window.URL.revokeObjectURL(sampleImageObjectURL);
       setSampleImageObjectURL('');
+      console.log(inputRef?.current);
+      if (inputRef?.current?.value) {
+        inputRef.current.value = '';
+      }
     } else {
       window.URL.revokeObjectURL(sampleImageObjectURL);
       history.goBack();
@@ -317,6 +321,7 @@ const PostScreen = () => {
               className={classes.button}
               variant='contained'
               size='medium'
+              value=''
               onClick={() => inputRef?.current?.click()}
               style={{
                 display: `${sampleImageObjectURL ? 'none' : 'inline'}`
