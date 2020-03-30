@@ -237,7 +237,7 @@ const PostScreen = () => {
     }
   };
 
-  const ok = async () => {
+  const post = async () => {
     if (blobForPC.size > blobSizeLimit) {
       history.push('/failure/error');
       return;
@@ -321,7 +321,6 @@ const PostScreen = () => {
               className={classes.button}
               variant='contained'
               size='medium'
-              value=''
               onClick={() => inputRef?.current?.click()}
               style={{
                 display: `${sampleImageObjectURL ? 'none' : 'inline'}`
@@ -345,13 +344,13 @@ const PostScreen = () => {
               variant='contained'
               size='medium'
               onClick={() => {
-                ok();
+                post();
               }}
               style={{
                 display: `${sampleImageObjectURL ? 'inline' : 'none'}`
               }}
             >
-              OK
+              Post
             </Button>
           </Paper>
         </Box>

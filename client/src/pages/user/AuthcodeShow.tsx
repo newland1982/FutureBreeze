@@ -12,6 +12,7 @@ import React, {
 import Typography from '@material-ui/core/Typography';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../../contexts/UserContext';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -48,9 +49,12 @@ const AuthcodeShow = () => {
 
   const paperRef = useRef<HTMLDivElement>(null);
 
+  const history = useHistory();
+
   const { user } = useContext(UserContext);
 
   const [fontSize, setFontSize] = useState('body1');
+  const [authcodeHasBeenCopied, setAuthcodeHasBeenCopied] = useState(false);
 
   const typedFontSize = fontSize as 'body1' | 'body2';
 
@@ -91,6 +95,12 @@ const AuthcodeShow = () => {
     textareaElement.select();
     document.execCommand('copy');
     bodyElement.removeChild(textareaElement);
+    setAuthcodeHasBeenCopied(true);
+  };
+
+  const back = () => {
+    history.push(`${user.baseLocation}`);
+    return;
   };
 
   return (
@@ -109,14 +119,35 @@ const AuthcodeShow = () => {
               display: `${user.authcode ? 'inline' : 'none'}`
             }}
           >
-            <Button
-              className={classes.button}
-              variant='contained'
-              size='small'
-              onClick={() => copy()}
+            <Box
+              style={{
+                display: `${!authcodeHasBeenCopied ? 'inline' : 'none'}`
+              }}
             >
-              Copy
-            </Button>
+              <Button
+                className={classes.button}
+                variant='contained'
+                size='small'
+                onClick={() => copy()}
+              >
+                Copy
+              </Button>
+            </Box>
+
+            <Box
+              style={{
+                display: `${authcodeHasBeenCopied ? 'inline' : 'none'}`
+              }}
+            >
+              <Button
+                className={classes.button}
+                variant='contained'
+                size='small'
+                onClick={() => back()}
+              >
+                Back
+              </Button>
+            </Box>
           </Box>
         </Paper>
       </Box>
