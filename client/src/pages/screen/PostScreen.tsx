@@ -224,7 +224,7 @@ const PostScreen = () => {
         });
       };
 
-      const executeCanvasForThumbnail = () => {
+      const executeSetBlobForThumbnail = () => {
         return new Promise((resolve, reject) => {
           canvasForThumbnail?.toBlob(blob => {
             if (!blob) {
@@ -254,7 +254,7 @@ const PostScreen = () => {
         }
 
         try {
-          await executeCanvasForThumbnail();
+          await executeSetBlobForThumbnail();
         } catch (error) {
           window.URL.revokeObjectURL(sampleImageObjectURL);
           history.push('/failure/error');
