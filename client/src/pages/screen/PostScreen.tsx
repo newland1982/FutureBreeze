@@ -161,6 +161,7 @@ const PostScreen = () => {
     }
     return () => {
       if (styleElement && initialStyleElementTextContent) {
+        console.log('xxxxx');
         styleElement.textContent = initialStyleElementTextContent;
         window.URL.revokeObjectURL(sampleImageObjectURL);
       }
@@ -179,42 +180,87 @@ const PostScreen = () => {
 
     imageElement.onload = () => {
       const canvasForPC = makeCanvas(imageElement, appropriateImageWidthForPC);
-      canvasForPC?.toBlob(blob => {
-        if (!blob) {
-          return;
-        }
-        if (deviceType === 'pc') {
-          setSampleImageObjectURL(window.URL.createObjectURL(blob));
-          setSampleImageIsInProgress(false);
-        }
-        setBlobForPC(blob);
-      });
-
       const canvasForMobile = makeCanvas(
         imageElement,
         appropriateImageWidthForMobile
       );
-      canvasForMobile?.toBlob(blob => {
-        if (!blob) {
-          return;
-        }
-        if (deviceType === 'mobile') {
-          setSampleImageObjectURL(window.URL.createObjectURL(blob));
-          setSampleImageIsInProgress(false);
-        }
-        setBlobForMobile(blob);
-      });
-
       const canvasForThumbnail = makeCanvas(
         imageElement,
         appropriateImageWidthForThumbnail
       );
-      canvasForThumbnail?.toBlob(blob => {
-        if (!blob) {
+
+      const executeSetBlobForPC = () => {
+        return new Promise((resolve, reject) => {
+          canvasForPC?.toBlob(blob => {
+            if (!blob || blob.size > blobSizeLimit) {
+              reject('error');
+              return;
+            }
+            if (deviceType === 'pc') {
+              setSampleImageObjectURL(window.URL.createObjectURL(blob));
+              setSampleImageIsInProgress(false);
+            }
+            setBlobForPC(blob);
+            resolve('success');
+          });
+        });
+      };
+
+      const executeSetBlobForMobile = () => {
+        return new Promise((resolve, reject) => {
+          canvasForMobile?.toBlob(blob => {
+            if (!blob) {
+              reject('error');
+              return;
+            }
+
+            if (deviceType === 'mobile') {
+              setSampleImageObjectURL(window.URL.createObjectURL(blob));
+              setSampleImageIsInProgress(false);
+            }
+            setBlobForMobile(blob);
+            resolve('success');
+          });
+        });
+      };
+
+      const executeCanvasForThumbnail = () => {
+        return new Promise((resolve, reject) => {
+          canvasForThumbnail?.toBlob(blob => {
+            if (!blob) {
+              reject('error');
+              return;
+            }
+            setBlobForThumbnail(blob);
+            resolve('success');
+          });
+        });
+      };
+
+      (async () => {
+        try {
+          await executeSetBlobForPC();
+        } catch (error) {
+          history.push('/failure/error');
           return;
         }
-        setBlobForThumbnail(blob);
-      });
+
+        try {
+          await executeSetBlobForMobile();
+        } catch (error) {
+          window.URL.revokeObjectURL(sampleImageObjectURL);
+          history.push('/failure/error');
+          return;
+        }
+
+        try {
+          await executeCanvasForThumbnail();
+        } catch (error) {
+          window.URL.revokeObjectURL(sampleImageObjectURL);
+          history.push('/failure/error');
+          return;
+        }
+      })();
     };
 
     const selectedFile = event.target?.files[0];
@@ -225,14 +271,11 @@ const PostScreen = () => {
     const styleElement = document.getElementById('style');
     if (styleElement && initialStyleElementTextContent) {
       styleElement.textContent = initialStyleElementTextContent;
-      window.URL.revokeObjectURL(sampleImageObjectURL);
       setSampleImageObjectURL('');
-      console.log(inputRef?.current);
       if (inputRef?.current?.value) {
         inputRef.current.value = '';
       }
     } else {
-      window.URL.revokeObjectURL(sampleImageObjectURL);
       history.goBack();
     }
   };
