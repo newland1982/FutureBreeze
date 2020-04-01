@@ -15,7 +15,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     toolBar: {
-      maxWidth: createMuiTheme().breakpoints.values.xl,
+      // maxWidth: createMuiTheme().breakpoints.values.xl,
       paddingTop: 16,
       margin: '0 auto'
     },
