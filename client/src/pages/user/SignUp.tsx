@@ -224,7 +224,9 @@ const SignUp = () => {
           })
         );
         setSignUpUsersStatus(`${result.data.getStatus.status}`);
-      } catch {}
+      } catch {
+        return;
+      }
     };
 
     setIntervalTimerId(

@@ -310,37 +310,51 @@ const PostScreen = () => {
         })
       );
       RegisteredUsersCreatedDate = result.data.getCreatedDate.createdDate;
-    } catch {}
+    } catch {
+      return;
+    }
 
-    const putFileForPCResult = await Storage.put(
-      `${displayName}_${RegisteredUsersCreatedDate}/pc${unixTimestamp}`,
-      blobForPC,
-      {
-        level: 'protected',
-        contentType: 'image/jpeg'
-      }
-    ).catch(() => {});
-    console.log(putFileForPCResult);
+    try {
+      const putFileForThumbnailResult = await Storage.put(
+        `${displayName}_${RegisteredUsersCreatedDate}/thumbnail${unixTimestamp}`,
+        blobForThumbnail,
+        {
+          level: 'protected',
+          contentType: 'image/jpeg'
+        }
+      );
+      console.log(putFileForThumbnailResult);
+    } catch {
+      return;
+    }
 
-    const putFileForMobileResult = await Storage.put(
-      `${displayName}_${RegisteredUsersCreatedDate}/mobile${unixTimestamp}`,
-      blobForMobile,
-      {
-        level: 'protected',
-        contentType: 'image/jpeg'
-      }
-    ).catch(() => {});
-    console.log(putFileForMobileResult);
+    try {
+      const putFileForPCResult = await Storage.put(
+        `${displayName}_${RegisteredUsersCreatedDate}/pc${unixTimestamp}`,
+        blobForPC,
+        {
+          level: 'protected',
+          contentType: 'image/jpeg'
+        }
+      );
+      console.log(putFileForPCResult);
+    } catch {
+      return;
+    }
 
-    const putFileForThumbnailResult = await Storage.put(
-      `${displayName}_${RegisteredUsersCreatedDate}/thumbnail${unixTimestamp}`,
-      blobForThumbnail,
-      {
-        level: 'protected',
-        contentType: 'image/jpeg'
-      }
-    ).catch(() => {});
-    console.log(putFileForThumbnailResult);
+    try {
+      const putFileForMobileResult = await Storage.put(
+        `${displayName}_${RegisteredUsersCreatedDate}/mobile${unixTimestamp}`,
+        blobForMobile,
+        {
+          level: 'protected',
+          contentType: 'image/jpeg'
+        }
+      );
+      console.log(putFileForMobileResult);
+    } catch {
+      return;
+    }
   };
 
   return (
