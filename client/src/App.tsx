@@ -1,4 +1,4 @@
-import './stylingData/App.css';
+import './style/App.css';
 import AuthcodeShow from './pages/user/AuthcodeShow';
 import ChangeAuthcode from './pages/user/ChangeAuthcode';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -11,7 +11,7 @@ import SignIn from './pages/user/SignIn';
 import SignOut from './pages/user/SignOut';
 import SignUp from './pages/user/SignUp';
 import UserContextProvider from './contexts/UserContext';
-import theme from './stylingData/theme';
+import theme from './style/theme';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/core/styles';
 
