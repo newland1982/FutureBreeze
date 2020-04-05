@@ -28,9 +28,9 @@ const registeredUsersClient = new AWSAppSyncClient({
   region: process.env.REGION,
   auth: {
     type: AUTH_TYPE.AWS_IAM,
-    credentials
+    credentials,
   },
-  disableOffline: true
+  disableOffline: true,
 });
 
 const screensClient = new AWSAppSyncClient({
@@ -38,12 +38,12 @@ const screensClient = new AWSAppSyncClient({
   region: process.env.REGION,
   auth: {
     type: AUTH_TYPE.AWS_IAM,
-    credentials
+    credentials,
   },
-  disableOffline: true
+  disableOffline: true,
 });
 
-const getObjectDataObject = eventRecord => {
+const getObjectDataObject = (eventRecord) => {
   const objectKey = eventRecord.s3.object.key;
   const s3FileAccessLevel = `protected`;
   const region = `(${process.env.REGION}`;
@@ -83,7 +83,7 @@ const getObjectDataObject = eventRecord => {
   if (!preciseObjectKeyRegexResult) {
     return {
       validationResult: 'invalid',
-      cognitoIdentityId: roughObjectKeyRegexResult[1].replace('%3A', ':')
+      cognitoIdentityId: roughObjectKeyRegexResult[1].replace('%3A', ':'),
     };
   }
 
@@ -92,12 +92,12 @@ const getObjectDataObject = eventRecord => {
     cognitoIdentityId: preciseObjectKeyRegexResult[1].replace('%3A', ':'),
     displayName: preciseObjectKeyRegexResult[2],
     size: eventRecord.s3.object.size,
-    type: preciseObjectKeyRegexResult[3]
+    type: preciseObjectKeyRegexResult[3],
   };
 };
 
 exports.handler = (event, context, callback) => {
-  event.Records.forEach(record => {
+  event.Records.forEach((record) => {
     if (
       record.eventName !== 'ObjectCreated:Put' &&
       record.eventName !== 'ObjectCreated:CompleteMultipartUpload'
@@ -108,7 +108,7 @@ exports.handler = (event, context, callback) => {
     const objectDataObject = getObjectDataObject(event.Records[0]);
 
     const registeredUsersQueryGetAccountNameInput = {
-      cognitoIdentityId: objectDataObject.cognitoIdentityId
+      cognitoIdentityId: objectDataObject.cognitoIdentityId,
     };
 
     (async () => {
@@ -118,9 +118,9 @@ exports.handler = (event, context, callback) => {
         .query({
           query: registeredUsersQueryGetAccountName,
           variables: { input: registeredUsersQueryGetAccountNameInput },
-          fetchPolicy: 'network-only'
+          fetchPolicy: 'network-only',
         })
-        .catch(async () => {
+        .catch(() => {
           // foobar
         });
 
@@ -140,15 +140,18 @@ exports.handler = (event, context, callback) => {
         )
       ) {
         console.log('errrrobjecttt', event.Records[0]);
+        console.log('111111');
 
         try {
           const s3 = new AWS.S3();
+          console.log('22222');
           const result = await s3
             .deleteObject({
               Bucket: process.env.Bucket,
-              Key: event.Records[0].s3.object.key.replace('%3A', ':')
+              Key: event.Records[0].s3.object.key.replace('%3A', ':'),
             })
             .promise();
+          console.log('333333');
           console.log('deleteeee', result);
           console.log(
             'deleteeee2',
@@ -157,7 +160,7 @@ exports.handler = (event, context, callback) => {
         } catch (error) {
           console.log('deleteobjecteroorrr', error);
         }
-
+        console.log('4444444');
         // try {
         //   const cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
         //   await cognitoIdentityServiceProvider
@@ -179,16 +182,16 @@ exports.handler = (event, context, callback) => {
       const screensMutationCreateScreenInput = {
         objectKey: event.Records[0].s3.object.key.replace('%3A', ':'),
         posterId: objectDataObject.displayName,
-        type: objectDataObject.type
+        type: objectDataObject.type,
       };
 
       const screensMutationCreateScreenResult = await screensClient
         .mutate({
           mutation: screensMutationCreateScreen,
           variables: { input: screensMutationCreateScreenInput },
-          fetchPolicy: 'no-cache'
+          fetchPolicy: 'no-cache',
         })
-        .catch(async () => {});
+        .catch(() => {});
 
       console.log(
         'screensMutationCreateScreenResulttt',

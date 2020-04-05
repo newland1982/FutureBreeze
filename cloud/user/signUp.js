@@ -12,7 +12,7 @@ const credentials = AWS.config.credentials;
 
 const poolData = {
   UserPoolId: process.env.USER_POOL_ID,
-  ClientId: process.env.CLIENT_ID
+  ClientId: process.env.CLIENT_ID,
 };
 const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
@@ -44,13 +44,13 @@ const signUpUsersClient = new AWSAppSyncClient({
   region: process.env.REGION,
   auth: {
     type: AUTH_TYPE.AWS_IAM,
-    credentials
+    credentials,
   },
-  disableOffline: true
+  disableOffline: true,
 });
 
 exports.handler = (event, context, callback) => {
-  event.Records.forEach(record => {
+  event.Records.forEach((record) => {
     if (record.eventName !== 'INSERT') {
       return;
     }
@@ -58,15 +58,15 @@ exports.handler = (event, context, callback) => {
     let ipAddressCount;
 
     const commonSignUpUsersMutationSetStatusInput = {
-      id: record.dynamodb.NewImage.id.S
+      id: record.dynamodb.NewImage.id.S,
     };
 
     const signUpUsersQueryGetIpAddressListInput = {
-      ipAddress: record.dynamodb.NewImage.ipAddress.S
+      ipAddress: record.dynamodb.NewImage.ipAddress.S,
     };
 
     const signUpUsersQueryGetStatusInput = {
-      id: record.dynamodb.NewImage.id.S
+      id: record.dynamodb.NewImage.id.S,
     };
 
     (async () => {
@@ -76,7 +76,7 @@ exports.handler = (event, context, callback) => {
         .query({
           query: signUpUsersQueryGetStatus,
           variables: { input: signUpUsersQueryGetStatusInput },
-          fetchPolicy: 'network-only'
+          fetchPolicy: 'network-only',
         })
         .catch(async () => {
           await signUpUsersClient
@@ -85,10 +85,10 @@ exports.handler = (event, context, callback) => {
               variables: {
                 input: {
                   ...commonSignUpUsersMutationSetStatusInput,
-                  status: 'signUpError'
-                }
+                  status: 'signUpError',
+                },
               },
-              fetchPolicy: 'no-cache'
+              fetchPolicy: 'no-cache',
             })
             .catch(() => {});
         });
@@ -107,10 +107,10 @@ exports.handler = (event, context, callback) => {
           variables: {
             input: {
               ...commonSignUpUsersMutationSetStatusInput,
-              status: 'processing'
-            }
+              status: 'processing',
+            },
           },
-          fetchPolicy: 'no-cache'
+          fetchPolicy: 'no-cache',
         })
         .catch(() => {});
 
@@ -118,7 +118,7 @@ exports.handler = (event, context, callback) => {
         .query({
           query: signUpUsersQueryGetIpAddressList,
           variables: { input: signUpUsersQueryGetIpAddressListInput },
-          fetchPolicy: 'network-only'
+          fetchPolicy: 'network-only',
         })
         .catch(async () => {
           await signUpUsersClient
@@ -127,10 +127,10 @@ exports.handler = (event, context, callback) => {
               variables: {
                 input: {
                   ...commonSignUpUsersMutationSetStatusInput,
-                  status: 'signUpError'
-                }
+                  status: 'signUpError',
+                },
               },
-              fetchPolicy: 'no-cache'
+              fetchPolicy: 'no-cache',
             })
             .catch(() => {});
         });
@@ -144,10 +144,10 @@ exports.handler = (event, context, callback) => {
             variables: {
               input: {
                 ...commonSignUpUsersMutationSetStatusInput,
-                status: 'accessLimitExceeded'
-              }
+                status: 'accessLimitExceeded',
+              },
             },
-            fetchPolicy: 'no-cache'
+            fetchPolicy: 'no-cache',
           })
           .catch(() => {});
         return;
@@ -166,17 +166,17 @@ exports.handler = (event, context, callback) => {
                 variables: {
                   input: {
                     ...commonSignUpUsersMutationSetStatusInput,
-                    status: 'signUpError'
-                  }
+                    status: 'signUpError',
+                  },
                 },
-                fetchPolicy: 'no-cache'
+                fetchPolicy: 'no-cache',
               })
               .catch(() => {});
             return;
           }
         },
         {
-          id: record.dynamodb.NewImage.id.S
+          id: record.dynamodb.NewImage.id.S,
         }
       );
     })();

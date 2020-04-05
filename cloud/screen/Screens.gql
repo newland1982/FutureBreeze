@@ -1,3 +1,7 @@
+input ChangePosterIdInput {
+  posterId: String!
+}
+
 input CreateScreenInput {
   objectKey: String!
   posterId: String!
@@ -10,11 +14,16 @@ input GetStatusInput {
 
 type Mutation {
   createScreen(input: CreateScreenInput!): ObjectKey
+  changePosterId(input: ChangePosterIdInput!): PosterId
   setStatus(input: SetStatusInput!): Status
 }
 
 type ObjectKey {
   objectKey: String!
+}
+
+type PosterId {
+  posterId: String!
 }
 
 type Query {
