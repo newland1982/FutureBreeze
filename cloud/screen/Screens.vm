@@ -1,4 +1,20 @@
 ## Resolver for Mutation.createScreen
+#set($objectKey=${context.arguments.input.objectKey})
+{
+    "version": "2018-05-29",
+    "statements": [
+        "insert into contents.screens values ('$objectKey', '$util.time.nowEpochMilliSeconds()', '$context.arguments.input.posterId', '$context.arguments.input.type', '0', 'init')",
+        "select * from contents.screens WHERE objectKey = '$objectKey'"
+    ]
+}
+
+$utils.toJson($utils.rds.toJsonObject($context.result)[1][0])
+
+
+########################################################################
+
+
+## Resolver for Mutation.createScreen
 {
   "version": "2017-02-28",
   "operation": "PutItem",
