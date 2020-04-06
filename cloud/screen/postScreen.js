@@ -142,24 +142,34 @@ exports.handler = (event, context, callback) => {
         console.log('errrrobjecttt', event.Records[0]);
         console.log('111111');
 
-        try {
-          const s3 = new AWS.S3();
-          console.log('22222');
-          const result = await s3
-            .deleteObject({
-              Bucket: process.env.Bucket,
-              Key: event.Records[0].s3.object.key.replace('%3A', ':'),
-            })
-            .promise();
-          console.log('333333');
-          console.log('deleteeee', result);
-          console.log(
-            'deleteeee2',
-            event.Records[0].s3.object.key.replace('%3A', ':')
-          );
-        } catch (error) {
-          console.log('deleteobjecteroorrr', error);
-        }
+        // try {
+        //   const s3 = new AWS.S3();
+        //   console.log('22222');
+        //   const result = await s3
+        //     .deleteObject({
+        //       Bucket: process.env.Bucket,
+        //       Key: event.Records[0].s3.object.key.replace('%3A', ':'),
+        //     })
+        //     .promise();
+        // } catch (error) {
+        //   console.log('deleteobjecteroorrr', error);
+        // }
+        const s3 = new AWS.S3();
+        await s3
+          .deleteObject({
+            Bucket: process.env.Bucket,
+            Key: event.Records[0].s3.object.key.replace('%3A', ':'),
+          })
+          .promise()
+          .catch(() => {});
+
+        // try {
+        //   await screensClient.hydrated();
+
+        //   const screensMutationChangePosterIdInput = {
+        //     posterId: objectDataObject.displayName,
+        //   };
+        // } catch {}
         console.log('4444444');
         // try {
         //   const cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
