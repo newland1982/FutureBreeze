@@ -4,34 +4,19 @@
     "version": "2018-05-29",
     "statements": [
         "insert into contents.screens values ('$objectKey', '$util.time.nowEpochMilliSeconds()', '$context.arguments.input.posterId', '$context.arguments.input.type', '0', 'init')",
-        "select * from contents.screens WHERE objectKey = '$objectKey'"
+        "select * from contents.screens where objectKey = '$objectKey'"
     ]
 }
 
 $utils.toJson($utils.rds.toJsonObject($context.result)[1][0])
 
-
-########################################################################
-
-
-## Resolver for Mutation.createScreen
+## Resolver for Mutation.changePosterId
 {
-  "version": "2017-02-28",
-  "operation": "PutItem",
-  "key": {
-  	 "objectKey" : { "S" : "${context.arguments.input.objectKey}" },
-     "createdDate": { "S" : "${util.time.nowEpochMilliSeconds()}" }
-  },
-
-  "attributeValues" : {
-      "posterId" : { "S" : "${context.arguments.input.posterId}" },
-      "type" : { "S" : "${context.arguments.input.type}" },
-      "userCount": { "N": 0 },
-      "status": { "S" : "init" }
-  },
-  "condition": {
-    "expression": "attribute_not_exists(objectKey)"
-  }
+    "version": "2018-05-29",
+    "statements": [
+        $util.toJson("update contents.screens set type='Anonymous' where posterId='$context.arguments.input.posterId'"),
+        $util.toJson("select * from contents.screens where posterId = '$context.arguments.input.posterId' limit 1")
+    ]
 }
 
-$util.toJson($context.result)
+$utils.toJson($utils.rds.toJsonObject($context.result)[1][0])
