@@ -14,7 +14,7 @@ $utils.toJson($utils.rds.toJsonObject($context.result)[1][0])
 {
     "version": "2018-05-29",
     "statements": [
-        $util.toJson("update contents.screens set type='Anonymous' where posterId='$context.arguments.input.posterId'"),
+        $util.toJson("update contents.screens set posterId='Anonymous' where posterId='$context.arguments.input.posterId'"),
         $util.toJson("select * from contents.screens where posterId = '$context.arguments.input.posterId' limit 1")
     ]
 }

@@ -16,6 +16,13 @@ const registeredUsersQueryGetAccountName = gql(`
   }
  }`);
 
+const screensMutationChangePosterId = gql(`
+  mutation ChangePosterId($input: ChangePosterIdInput!) {
+    changePosterId(input: $input) {
+      posterId
+  }
+ }`);
+
 const screensMutationCreateScreen = gql(`
   mutation CreateScreen($input: CreateScreenInput!) {
     createScreen(input: $input) {
@@ -163,14 +170,20 @@ exports.handler = (event, context, callback) => {
           .promise()
           .catch(() => {});
 
-        // try {
-        //   await screensClient.hydrated();
+        await screensClient.hydrated();
 
-        //   const screensMutationChangePosterIdInput = {
-        //     posterId: objectDataObject.displayName,
-        //   };
-        // } catch {}
-        console.log('4444444');
+        const screensMutationChangePosterIdInput = {
+          posterId: objectDataObject.displayName,
+        };
+
+        const screensMutationChangePosterIdResult = await screensClient
+          .mutate({
+            mutation: screensMutationChangePosterId,
+            variables: { input: screensMutationChangePosterIdInput },
+            fetchPolicy: 'no-cache',
+          })
+          .catch(() => {});
+
         // try {
         //   const cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
         //   await cognitoIdentityServiceProvider
