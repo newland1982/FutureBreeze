@@ -184,6 +184,12 @@ exports.handler = (event, context, callback) => {
           })
           .catch(() => {});
 
+        const registeredUsersMutationDeleteRegisteredUserInput = {
+          displayName: registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
+            96
+          ),
+        };
+
         // try {
         //   const cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
         //   await cognitoIdentityServiceProvider
