@@ -37,10 +37,15 @@ input GetDisplayNameInput {
   displayName: String!
 }
 
+input DeleteRegisteredUserInput {
+  displayName: String!
+}
+
 type Mutation {
   createRegisteredUser(input: CreateRegisteredUserInput!): DisplayName
   setCognitoIdentityId(input: SetCognitoIdentityIdInput!): CognitoIdentityId
     @aws_cognito_user_pools
+  deleteRegisteredUser(input: DeleteRegisteredUserInput!): DisplayName
 }
 
 type Query {
