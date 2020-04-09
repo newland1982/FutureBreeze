@@ -41,6 +41,17 @@ $util.toJson($context.result)
 
 $util.toJson($context.result)
 
+## Resolver for Mutation.deleteRegisteredUser
+{
+    "version" : "2017-02-28",
+    "operation" : "DeleteItem",
+    "key" : {
+        "displayName" : $util.dynamodb.toDynamoDBJson($context.arguments.displayName)
+    }
+}
+
+$util.toJson($context.result)
+
 ## Resolver for Query.getDisplayName
 {
     "version" : "2017-02-28",
