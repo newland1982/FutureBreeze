@@ -23,6 +23,13 @@ const screensMutationChangePosterId = gql(`
   }
  }`);
 
+const registeredUsersMutationDeleteRegisteredUser = gql(`
+  mutation DeleteRegisteredUser($input: DeleteRegisteredUserInput!) {
+    deleteRegisteredUser(input: $input) {
+      displayName
+  }
+ }`);
+
 const screensMutationCreateScreen = gql(`
   mutation CreateScreen($input: CreateScreenInput!) {
     createScreen(input: $input) {
@@ -184,11 +191,23 @@ exports.handler = (event, context, callback) => {
           })
           .catch(() => {});
 
+        await registeredUsersClient.hydrated();
+
         const registeredUsersMutationDeleteRegisteredUserInput = {
           displayName: registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
             96
           ),
         };
+
+        await registeredUsersClient
+          .query({
+            query: registeredUsersMutationDeleteRegisteredUser,
+            variables: {
+              input: registeredUsersMutationDeleteRegisteredUserInput,
+            },
+            fetchPolicy: 'network-only',
+          })
+          .catch(() => {});
 
         // try {
         //   const cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
