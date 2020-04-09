@@ -197,6 +197,16 @@ exports.handler = (event, context, callback) => {
         // } catch (error) {
         //   // foobar
         // }
+        /*         const cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
+        await cognitoIdentityServiceProvider
+          .adminDeleteUser({
+            UserPoolId: process.env.USER_POOL_ID,
+            Username:
+              registeredUsersQueryGetAccountNameResult.data.getAccountName
+                .accountName,
+          })
+          .promise()
+          .catch(() => {}); */
         return;
       }
 
