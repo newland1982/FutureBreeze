@@ -182,6 +182,7 @@ exports.handler = (event, context, callback) => {
         const screensMutationChangePosterIdInput = {
           posterId: objectDataObject.displayName,
         };
+        console.log('oneeeee');
 
         const screensMutationChangePosterIdResult = await screensClient
           .mutate({
@@ -190,24 +191,34 @@ exports.handler = (event, context, callback) => {
             fetchPolicy: 'no-cache',
           })
           .catch(() => {});
-
         await registeredUsersClient.hydrated();
 
+        console.log('twooooo');
         const registeredUsersMutationDeleteRegisteredUserInput = {
           displayName: registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
             96
           ),
         };
 
-        await registeredUsersClient
-          .query({
-            query: registeredUsersMutationDeleteRegisteredUser,
+        const reuslttt = await registeredUsersClient
+          .mutate({
+            mutation: registeredUsersMutationDeleteRegisteredUser,
             variables: {
               input: registeredUsersMutationDeleteRegisteredUserInput,
             },
-            fetchPolicy: 'network-only',
+            fetchPolicy: 'no-cache',
           })
-          .catch(() => {});
+          .catch((error) => {
+            console.log('delteeroorrr', error);
+          });
+
+        console.log('resulttt', reuslttt);
+        console.log(
+          'displaynameeee',
+          registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
+            96
+          )
+        );
 
         // try {
         //   const cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
