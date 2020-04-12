@@ -8,7 +8,7 @@ const theme = createMuiTheme({
   },
   palette: {
     primary: {
-      main: 'rgba(0, 0, 0, 0.36)',
+      main: 'rgba(255, 255, 255, 0.72)',
     },
     secondary: {
       main: 'rgba(0, 0, 0, 0.6)',

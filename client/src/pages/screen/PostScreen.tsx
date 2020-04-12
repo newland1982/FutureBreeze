@@ -10,7 +10,7 @@ import React, {
   useEffect,
   useMemo,
   useRef,
-  useState
+  useState,
 } from 'react';
 import makeCanvas from '../../utilities/makeCanvas';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -21,7 +21,7 @@ import {
   Theme,
   createStyles,
   makeStyles,
-  useTheme
+  useTheme,
 } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      height: `calc(100vh - 112px)`
+      height: `calc(100vh - 112px)`,
     },
     paper: {
       display: 'flex',
@@ -43,16 +43,16 @@ const useStyles = makeStyles((theme: Theme) =>
       height: '48%',
       minHeight: 204,
       maxHeight: 360,
-      padding: theme.spacing(3, 2)
+      padding: theme.spacing(3, 2),
     },
     input: {
-      display: 'none'
+      display: 'none',
     },
     button: {
       width: '88%',
       minWidth: 240,
-      margin: theme.spacing(1)
-    }
+      margin: theme.spacing(1),
+    },
   })
 );
 
@@ -61,16 +61,16 @@ const amplifyCommonConfig = {
     identityPoolId: process.env.REACT_APP_AWS_COGNITO_identityPoolId,
     region: process.env.REACT_APP_AWS_COGNITO_region,
     userPoolId: process.env.REACT_APP_AWS_COGNITO_userPoolId,
-    userPoolWebClientId: process.env.REACT_APP_AWS_COGNITO_userPoolWebClientId
+    userPoolWebClientId: process.env.REACT_APP_AWS_COGNITO_userPoolWebClientId,
   },
   aws_appsync_region: process.env.REACT_APP_AWS_APPSYNC_aws_appsync_region,
   aws_appsync_authenticationType: 'AWS_IAM',
   Storage: {
     AWSS3: {
       bucket: process.env.REACT_APP_AWS_S3_bucket_screens,
-      region: process.env.REACT_APP_AWS_APPSYNC_aws_appsync_region
-    }
-  }
+      region: process.env.REACT_APP_AWS_APPSYNC_aws_appsync_region,
+    },
+  },
 };
 
 const setAmplifyConfig = (
@@ -80,7 +80,7 @@ const setAmplifyConfig = (
   Amplify.configure({
     ...amplifyCommonConfig,
     aws_appsync_graphqlEndpoint: endpoint,
-    aws_appsync_authenticationType: authenticationType
+    aws_appsync_authenticationType: authenticationType,
   });
 };
 
@@ -122,13 +122,13 @@ const PostScreen = () => {
 
     const checkAuthentication = async () => {
       const currentAuthenticatedUser = await Auth.currentAuthenticatedUser({
-        bypassCache: true
+        bypassCache: true,
       }).catch(() => {});
 
       if (!currentAuthenticatedUser) {
         dispatch({
           type: 'SET_USER',
-          payload: { ...user, baseLocation: location.pathname }
+          payload: { ...user, baseLocation: location.pathname },
         });
         history.push('/user/signin');
       } else {
@@ -191,7 +191,7 @@ const PostScreen = () => {
 
       const executeSetBlobForPC = () => {
         return new Promise((resolve, reject) => {
-          canvasForPC?.toBlob(blob => {
+          canvasForPC?.toBlob((blob) => {
             if (!blob || blob.size > blobSizeLimit) {
               reject('error');
               return;
@@ -208,7 +208,7 @@ const PostScreen = () => {
 
       const executeSetBlobForMobile = () => {
         return new Promise((resolve, reject) => {
-          canvasForMobile?.toBlob(blob => {
+          canvasForMobile?.toBlob((blob) => {
             if (!blob) {
               reject('error');
               return;
@@ -226,7 +226,7 @@ const PostScreen = () => {
 
       const executeSetBlobForThumbnail = () => {
         return new Promise((resolve, reject) => {
-          canvasForThumbnail?.toBlob(blob => {
+          canvasForThumbnail?.toBlob((blob) => {
             if (!blob) {
               reject('error');
               return;
@@ -301,12 +301,12 @@ const PostScreen = () => {
       }
      }`;
     const registeredUsersQueryGetCreatedDateInput = {
-      displayName
+      displayName,
     };
     try {
       const result = await API.graphql(
         graphqlOperation(registeredUsersQueryGetCreatedDate, {
-          input: registeredUsersQueryGetCreatedDateInput
+          input: registeredUsersQueryGetCreatedDateInput,
         })
       );
       RegisteredUsersCreatedDate = result.data.getCreatedDate.createdDate;
@@ -320,7 +320,7 @@ const PostScreen = () => {
         blobForThumbnail,
         {
           level: 'protected',
-          contentType: 'image/jpeg'
+          contentType: 'image/jpeg',
         }
       );
       console.log(putFileForThumbnailResult);
@@ -334,7 +334,7 @@ const PostScreen = () => {
         blobForPC,
         {
           level: 'protected',
-          contentType: 'image/jpeg'
+          contentType: 'image/jpeg',
         }
       );
       console.log(putFileForPCResult);
@@ -348,7 +348,7 @@ const PostScreen = () => {
         blobForMobile,
         {
           level: 'protected',
-          contentType: 'image/jpeg'
+          contentType: 'image/jpeg',
         }
       );
       console.log(putFileForMobileResult);
@@ -362,7 +362,7 @@ const PostScreen = () => {
       <Menu />
       <div
         style={{
-          display: `${sampleImageIsInProgress ? 'none' : 'inline'}`
+          display: `${sampleImageIsInProgress ? 'none' : 'inline'}`,
         }}
       >
         <Box className={classes.root}>
@@ -378,9 +378,10 @@ const PostScreen = () => {
               className={classes.button}
               variant='contained'
               size='medium'
+              color='primary'
               onClick={() => inputRef?.current?.click()}
               style={{
-                display: `${sampleImageObjectURL ? 'none' : 'inline'}`
+                display: `${sampleImageObjectURL ? 'none' : 'inline'}`,
               }}
             >
               Choose File
@@ -389,9 +390,10 @@ const PostScreen = () => {
               className={classes.button}
               variant='contained'
               size='medium'
+              color='primary'
               onClick={() => cancel()}
               style={{
-                display: `${sampleImageObjectURL ? 'inline' : 'none'}`
+                display: `${sampleImageObjectURL ? 'inline' : 'none'}`,
               }}
             >
               Cancel
@@ -400,11 +402,12 @@ const PostScreen = () => {
               className={classes.button}
               variant='contained'
               size='medium'
+              color='primary'
               onClick={() => {
                 post();
               }}
               style={{
-                display: `${sampleImageObjectURL ? 'inline' : 'none'}`
+                display: `${sampleImageObjectURL ? 'inline' : 'none'}`,
               }}
             >
               Post
