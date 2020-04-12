@@ -77,6 +77,7 @@ const SignOut = () => {
             className={classes.button}
             variant='contained'
             size='medium'
+            color='primary'
             onClick={() => signOut()}
           >
             Sign Out
