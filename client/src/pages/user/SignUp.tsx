@@ -10,7 +10,7 @@ import React, {
   useEffect,
   useMemo,
   useRef,
-  useState
+  useState,
 } from 'react';
 import TextField from '@material-ui/core/TextField';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      height: `calc(100vh - 112px)`
+      height: `calc(100vh - 112px)`,
     },
     paper: {
       display: 'flex',
@@ -36,17 +36,17 @@ const useStyles = makeStyles((theme: Theme) =>
       height: '48%',
       minHeight: 204,
       maxHeight: 360,
-      padding: theme.spacing(3, 2)
+      padding: theme.spacing(3, 2),
     },
     textField: {
       width: '88%',
-      minWidth: 240
+      minWidth: 240,
     },
     button: {
       width: '88%',
       minWidth: 240,
-      margin: theme.spacing(1)
-    }
+      margin: theme.spacing(1),
+    },
   })
 );
 
@@ -55,9 +55,9 @@ const amplifyCommonConfig = {
     identityPoolId: process.env.REACT_APP_AWS_COGNITO_identityPoolId,
     region: process.env.REACT_APP_AWS_COGNITO_region,
     userPoolId: process.env.REACT_APP_AWS_COGNITO_userPoolId,
-    userPoolWebClientId: process.env.REACT_APP_AWS_COGNITO_userPoolWebClientId
+    userPoolWebClientId: process.env.REACT_APP_AWS_COGNITO_userPoolWebClientId,
   },
-  aws_appsync_region: process.env.REACT_APP_AWS_APPSYNC_aws_appsync_region
+  aws_appsync_region: process.env.REACT_APP_AWS_APPSYNC_aws_appsync_region,
 };
 
 const setAmplifyConfig = (
@@ -67,7 +67,7 @@ const setAmplifyConfig = (
   Amplify.configure({
     ...amplifyCommonConfig,
     aws_appsync_graphqlEndpoint: endpoint,
-    aws_appsync_authenticationType: authenticationType
+    aws_appsync_authenticationType: authenticationType,
   });
 };
 
@@ -94,7 +94,7 @@ const SignUp = () => {
   const [userHasSignedIn, setUserHasSignedIn] = useState(false);
   const [
     executeRegisteredUsersMutationSetCognitoIdentityIdIsCompleted,
-    setRegisteredUsersMutationSetCognitoIdentityIdExecutionIsCompleted
+    setRegisteredUsersMutationSetCognitoIdentityIdExecutionIsCompleted,
   ] = useState(false);
 
   const displayNamePrefix = useMemo(() => {
@@ -153,13 +153,13 @@ const SignUp = () => {
         }
        }`;
       const registeredUsersQueryGetDisplayNameInput = {
-        displayName
+        displayName,
       };
 
       try {
         const result = await API.graphql(
           graphqlOperation(registeredUsersQueryGetDisplayName, {
-            input: registeredUsersQueryGetDisplayNameInput
+            input: registeredUsersQueryGetDisplayNameInput,
           })
         );
         const displayNameAlreadyExists = Boolean(
@@ -194,12 +194,12 @@ const SignUp = () => {
      }`;
     const signUpUsersMutationCreateSignUpUserInput = {
       accountName,
-      password
+      password,
     };
     try {
       const result = await API.graphql(
         graphqlOperation(signUpUsersMutationCreateSignUpUser, {
-          input: signUpUsersMutationCreateSignUpUserInput
+          input: signUpUsersMutationCreateSignUpUserInput,
         })
       );
       id = result?.data?.createSignUpUser?.id;
@@ -214,13 +214,13 @@ const SignUp = () => {
       }
      }`;
     const signUpUsersQueryGetStatusInput = {
-      id
+      id,
     };
     const signUpUsersStatusWatcher = async () => {
       try {
         const result = await API.graphql(
           graphqlOperation(signUpUsersQueryGetStatus, {
-            input: signUpUsersQueryGetStatusInput
+            input: signUpUsersQueryGetStatusInput,
           })
         );
         setSignUpUsersStatus(`${result.data.getStatus.status}`);
@@ -279,7 +279,7 @@ const SignUp = () => {
 
     const executeRegisteredUsersMutationSetCognitoIdentityId = async () => {
       const currentAuthenticatedUser = await Auth.currentAuthenticatedUser({
-        bypassCache: false
+        bypassCache: false,
       }).catch(() => {});
 
       if (!currentAuthenticatedUser) {
@@ -300,12 +300,12 @@ const SignUp = () => {
         cognitoIdentityId:
           currentAuthenticatedUser.storage[
             `aws.cognito.identity-id.${process.env.REACT_APP_AWS_COGNITO_identityPoolId}`
-          ]
+          ],
       };
       try {
         await API.graphql(
           graphqlOperation(registeredUsersMutationSetCognitoIdentityId, {
-            input: registeredUsersMutationSetCognitoIdentityIdInput
+            input: registeredUsersMutationSetCognitoIdentityIdInput,
           })
         );
         setRegisteredUsersMutationSetCognitoIdentityIdExecutionIsCompleted(
@@ -326,7 +326,7 @@ const SignUp = () => {
     }
     dispatch({
       type: 'SET_USER',
-      payload: { ...user, accountName, password, authcode }
+      payload: { ...user, accountName, password, authcode },
     });
 
     history.push('/user/authcodeshow');
@@ -337,7 +337,7 @@ const SignUp = () => {
     history,
     executeRegisteredUsersMutationSetCognitoIdentityIdIsCompleted,
     password,
-    user
+    user,
   ]);
 
   return (
@@ -345,7 +345,7 @@ const SignUp = () => {
       <Menu />
       <div
         style={{
-          display: `${signUpButtonHasBeenClicked ? 'none' : 'inline'}`
+          display: `${signUpButtonHasBeenClicked ? 'none' : 'inline'}`,
         }}
       >
         <Box className={classes.root}>
