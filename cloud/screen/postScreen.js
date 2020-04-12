@@ -180,7 +180,9 @@ exports.handler = (event, context, callback) => {
         await screensClient.hydrated();
 
         const screensMutationChangePosterIdInput = {
-          posterId: objectDataObject.displayName,
+          posterId: registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
+            96
+          ),
         };
         console.log('oneeeee');
 
