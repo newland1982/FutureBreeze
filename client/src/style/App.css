@@ -6,12 +6,6 @@ body {
   background-color: #262626 !important;
 }
 
-@keyframes copyToClipboard {
-  100% {
-    background-color: rgba(0, 0, 0, 0.84);
-  }
-}
-
 .MuiDrawer-paper {
   background-color: rgba(0, 0, 0, 0) !important;
 }
