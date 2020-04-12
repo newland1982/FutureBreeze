@@ -366,6 +366,7 @@ const SignUp = () => {
               className={classes.button}
               variant='contained'
               size='medium'
+              color='primary'
               disabled={
                 !displayNameIsUnique ||
                 !displayNameIsValid ||
