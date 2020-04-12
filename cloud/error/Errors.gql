@@ -31,11 +31,9 @@ type Query {
 }
 
 type Error {
-  objectKey: String!
-  createdDate: String
-  posterId: String!
+  id: ID!
+  createdDate: String!
   type: String!
-  userCount: Int!
   status: String!
 }
 

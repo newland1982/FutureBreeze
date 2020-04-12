@@ -32,7 +32,7 @@ type Query {
 
 type Screen {
   objectKey: String!
-  createdDate: String
+  createdDate: String!
   posterId: String!
   type: String!
   userCount: Int!
