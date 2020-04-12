@@ -1,4 +1,4 @@
-## Resolver for Mutation.createSignUpUser
+## Resolver for Mutation.createError
 {
   "version": "2017-02-28",
   "operation": "PutItem",
@@ -6,15 +6,10 @@
   	 "id" : { "S" : "${util.autoId()}" }
   },
 
-  #set( $expirationDate = $util.time.nowEpochSeconds() + 86400)
-
   "attributeValues" : {
       "createdDate": { "S" : "${util.time.nowEpochMilliSeconds()}" },
-      "ipAddress" : { "S" : "${context.identity.sourceIp[0]}"},
-      "accountName": { "S" : "${context.arguments.input.accountName}" },
-      "password": { "S" : "${context.arguments.input.password}" },
+      "type": { "S" : "${context.arguments.input.type}" },
       "status": { "S" : "init" },
-      "expirationDate": { "N" : "${expirationDate}" }
   }
 }
 
