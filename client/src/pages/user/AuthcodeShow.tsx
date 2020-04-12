@@ -128,6 +128,7 @@ const AuthcodeShow = () => {
                 className={classes.button}
                 variant='contained'
                 size='small'
+                color='primary'
                 onClick={() => copy()}
               >
                 Copy
@@ -143,6 +144,7 @@ const AuthcodeShow = () => {
                 className={classes.button}
                 variant='contained'
                 size='small'
+                color='primary'
                 onClick={() => back()}
               >
                 Back

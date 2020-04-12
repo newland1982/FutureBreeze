@@ -191,6 +191,7 @@ const ChangeAuthcode = () => {
               className={classes.button}
               variant='contained'
               size='medium'
+              color='primary'
               disabled={!authcodeIsValid || changeAuthcodeButtonHasBeenClicked}
               onClick={() => changeAuthcode()}
             >

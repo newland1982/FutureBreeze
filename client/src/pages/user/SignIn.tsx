@@ -161,6 +161,7 @@ const SignIn = () => {
               className={classes.button}
               variant='contained'
               size='medium'
+              color='primary'
               disabled={!authcodeIsValid || signInButtonHasBeenClicked}
               onClick={() => signIn()}
             >

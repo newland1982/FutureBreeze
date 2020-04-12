@@ -145,6 +145,7 @@ const Quit = () => {
             className={classes.button}
             variant='contained'
             size='medium'
+            color='primary'
             disabled={!authcodeIsValid || quitButtonHasBeenClicked}
             onClick={() => quit()}
           >
