@@ -9,7 +9,7 @@ import React, {
   useEffect,
   useMemo,
   useRef,
-  useState
+  useState,
 } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Amplify, { Auth } from 'aws-amplify';
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      height: `calc(100vh - 112px)`
+      height: `calc(100vh - 112px)`,
     },
     paper: {
       display: 'flex',
@@ -36,17 +36,17 @@ const useStyles = makeStyles((theme: Theme) =>
       height: '48%',
       minHeight: 204,
       maxHeight: 360,
-      padding: theme.spacing(3, 2)
+      padding: theme.spacing(3, 2),
     },
     textField: {
       width: '88%',
-      minWidth: 240
+      minWidth: 240,
     },
     button: {
       width: '88%',
       minWidth: 240,
-      margin: theme.spacing(1)
-    }
+      margin: theme.spacing(1),
+    },
   })
 );
 
@@ -64,7 +64,7 @@ const ChangeAuthcode = () => {
   const [authcodeIsValid, setAuthcodeIsValid] = useState(false);
   const [
     changeAuthcodeButtonHasBeenClicked,
-    setChangeAuthcodeButtonHasBeenClicked
+    setChangeAuthcodeButtonHasBeenClicked,
   ] = useState(false);
 
   const newRandomNumber = useMemo(() => {
@@ -123,8 +123,8 @@ const ChangeAuthcode = () => {
         region: process.env.REACT_APP_AWS_COGNITO_region,
         userPoolId: process.env.REACT_APP_AWS_COGNITO_userPoolId,
         userPoolWebClientId:
-          process.env.REACT_APP_AWS_COGNITO_userPoolWebClientId
-      }
+          process.env.REACT_APP_AWS_COGNITO_userPoolWebClientId,
+      },
     });
 
     try {
@@ -155,8 +155,8 @@ const ChangeAuthcode = () => {
           ...user,
           accountName,
           password: newPassword,
-          authcode: newAuthcode
-        }
+          authcode: newAuthcode,
+        },
       });
 
       history.push('/user/authcodeshow');
@@ -171,7 +171,7 @@ const ChangeAuthcode = () => {
       <Menu />
       <div
         style={{
-          display: `${changeAuthcodeButtonHasBeenClicked ? 'none' : 'inline'}`
+          display: `${changeAuthcodeButtonHasBeenClicked ? 'none' : 'inline'}`,
         }}
       >
         <Box className={classes.root}>

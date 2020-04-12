@@ -7,7 +7,7 @@ import React, {
   useContext,
   useEffect,
   useRef,
-  useState
+  useState,
 } from 'react';
 import TextField from '@material-ui/core/TextField';
 import { Auth } from 'aws-amplify';
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      height: `calc(100vh - 112px)`
+      height: `calc(100vh - 112px)`,
     },
     paper: {
       display: 'flex',
@@ -34,17 +34,17 @@ const useStyles = makeStyles((theme: Theme) =>
       height: '48%',
       minHeight: 204,
       maxHeight: 360,
-      padding: theme.spacing(3, 2)
+      padding: theme.spacing(3, 2),
     },
     textField: {
       width: '88%',
-      minWidth: 240
+      minWidth: 240,
     },
     button: {
       width: '88%',
       minWidth: 240,
-      margin: theme.spacing(1)
-    }
+      margin: theme.spacing(1),
+    },
   })
 );
 
@@ -114,8 +114,8 @@ const Quit = () => {
           ...user,
           accountName,
           password,
-          authcode
-        }
+          authcode,
+        },
       });
 
       history.goBack();

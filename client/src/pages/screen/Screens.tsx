@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     searchBox: {
       width: 244,
-      margin: '0 auto'
+      margin: '0 auto',
     },
     gridContainer: {
       display: 'grid',
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingLeft: 0,
       paddingTop: 0,
       paddingBottom: 48,
-      marginTop: 48
+      marginTop: 48,
     },
     gridListTile: {
       cursor: 'pointer',
@@ -41,9 +41,9 @@ const useStyles = makeStyles((theme: Theme) =>
         height: '100%',
         position: 'absolute',
         top: 0,
-        objectFit: 'cover'
-      }
-    }
+        objectFit: 'cover',
+      },
+    },
   })
 );
 const Screens = () => {
@@ -66,7 +66,7 @@ const Screens = () => {
     { imageId: 'ArtTower_0.jpg', img: 'ArtTower_0.jpg', by: 'ArtTower' },
     { imageId: 'Pixabay_0.jpg', img: 'Pixabay_0.jpg', by: 'Pixabay' },
     { imageId: 'Pixabay_1.jpg', img: 'Pixabay_1.jpg', by: 'Pixabay' },
-    { imageId: 'garageband_0.jpg', img: 'garageband_0.jpg', by: 'garageband' }
+    { imageId: 'garageband_0.jpg', img: 'garageband_0.jpg', by: 'garageband' },
   ];
 
   type tile = {
@@ -78,7 +78,7 @@ const Screens = () => {
   const setScreen = (tile: tile) => {
     dispatch({
       type: 'SET_USER',
-      payload: { ...user, selectedImage: tile.imageId }
+      payload: { ...user, selectedImage: tile.imageId },
     });
   };
 
@@ -103,13 +103,13 @@ const Screens = () => {
                   >
                     <Box
                       style={{
-                        display: `${searchWord === '' ? 'none' : 'inline'}`
+                        display: `${searchWord === '' ? 'none' : 'inline'}`,
                       }}
                     >
                       <IconButton
                         size='small'
                         style={{
-                          marginLeft: '0 !important'
+                          marginLeft: '0 !important',
                         }}
                       >
                         <Icon
@@ -118,22 +118,22 @@ const Screens = () => {
                           color='#FFF'
                           style={{
                             marginLeft: '0 !important',
-                            cursor: 'pointer'
+                            cursor: 'pointer',
                           }}
                         />
                       </IconButton>
                     </Box>
                   </InputAdornment>
-                )
+                ),
               }}
-              onChange={e => setSearchWord(e.target.value)}
+              onChange={(e) => setSearchWord(e.target.value)}
             />
           </Box>
         </Toolbar>
       </Box>
       <Container maxWidth='xl'>
         <div className={classes.gridContainer}>
-          {tileData.map(tile => (
+          {tileData.map((tile) => (
             <GridListTile
               className={classes.gridListTile}
               key={tile.imageId}
@@ -141,7 +141,7 @@ const Screens = () => {
               style={{
                 display: `${
                   tile.imageId === user.selectedImage ? 'none' : 'inline'
-                }`
+                }`,
               }}
             >
               <img src={`../thumbnails/${tile.imageId}`} alt={tile.imageId} />

@@ -7,7 +7,7 @@ import React, {
   useContext,
   useEffect,
   useRef,
-  useState
+  useState,
 } from 'react';
 import Typography from '@material-ui/core/Typography';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      height: `calc(100vh - 112px)`
+      height: `calc(100vh - 112px)`,
     },
     paper: {
       display: 'flex',
@@ -31,16 +31,16 @@ const useStyles = makeStyles((theme: Theme) =>
       minWidth: 276,
       maxWidth: 360,
       height: 'auto',
-      minHeight: 260
+      minHeight: 260,
     },
     display: {
       wordWrap: 'break-word',
       width: '100%',
-      padding: '20px'
+      padding: '20px',
     },
     button: {
-      width: '24%'
-    }
+      width: '24%',
+    },
   })
 );
 
@@ -116,12 +116,12 @@ const AuthcodeShow = () => {
           <Box
             mb={2}
             style={{
-              display: `${user.authcode ? 'inline' : 'none'}`
+              display: `${user.authcode ? 'inline' : 'none'}`,
             }}
           >
             <Box
               style={{
-                display: `${!authcodeHasBeenCopied ? 'inline' : 'none'}`
+                display: `${!authcodeHasBeenCopied ? 'inline' : 'none'}`,
               }}
             >
               <Button
@@ -136,7 +136,7 @@ const AuthcodeShow = () => {
 
             <Box
               style={{
-                display: `${authcodeHasBeenCopied ? 'inline' : 'none'}`
+                display: `${authcodeHasBeenCopied ? 'inline' : 'none'}`,
               }}
             >
               <Button

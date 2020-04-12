@@ -13,8 +13,8 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
-      height: `calc(100vh - 124px)`
-    }
+      height: `calc(100vh - 124px)`,
+    },
   })
 );
 
