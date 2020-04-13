@@ -37,6 +37,13 @@ const screensMutationCreateScreen = gql(`
   }
  }`);
 
+const errorsMutationCreateError = gql(`
+  mutation CreateError($input: CreateErrorInput!) {
+    createError(input: $input) {
+      id
+  }
+ }`);
+
 const registeredUsersClient = new AWSAppSyncClient({
   url: process.env.END_POINT_RegisteredUsers,
   region: process.env.REGION,
@@ -49,6 +56,16 @@ const registeredUsersClient = new AWSAppSyncClient({
 
 const screensClient = new AWSAppSyncClient({
   url: process.env.END_POINT_Screens,
+  region: process.env.REGION,
+  auth: {
+    type: AUTH_TYPE.AWS_IAM,
+    credentials,
+  },
+  disableOffline: true,
+});
+
+const errorsClient = new AWSAppSyncClient({
+  url: process.env.END_POINT_Errors,
   region: process.env.REGION,
   auth: {
     type: AUTH_TYPE.AWS_IAM,
@@ -134,18 +151,14 @@ exports.handler = (event, context, callback) => {
           variables: { input: registeredUsersQueryGetAccountNameInput },
           fetchPolicy: 'network-only',
         })
-        .catch(() => {
-          // foobar
-        });
+        .catch(() => {});
 
-      console.log(
-        'queryyyresulttt',
-        registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName
-      );
-      console.log('event.Records[0]!!!!!????', event.Records[0]);
+      if (!registeredUsersQueryGetAccountNameResult) {
+        return;
+      }
 
       if (
-        !objectDataObject ||
+        !(objectDataObject.validationResult === 'valid') ||
         !(objectDataObject.size < Number(process.env.OBJECT_SIZE_LIMIT)) ||
         !(
           registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
@@ -153,21 +166,6 @@ exports.handler = (event, context, callback) => {
           ) === objectDataObject.displayName
         )
       ) {
-        console.log('errrrobjecttt', event.Records[0]);
-        console.log('111111');
-
-        // try {
-        //   const s3 = new AWS.S3();
-        //   console.log('22222');
-        //   const result = await s3
-        //     .deleteObject({
-        //       Bucket: process.env.Bucket,
-        //       Key: event.Records[0].s3.object.key.replace('%3A', ':'),
-        //     })
-        //     .promise();
-        // } catch (error) {
-        //   console.log('deleteobjecteroorrr', error);
-        // }
         const s3 = new AWS.S3();
         await s3
           .deleteObject({
