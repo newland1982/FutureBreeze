@@ -9,7 +9,8 @@
   "attributeValues" : {
       "createdDate": { "S" : "${util.time.nowEpochMilliSeconds()}" },
       "type": { "S" : "${context.arguments.input.type}" },
-      "status": { "S" : "init" },
+      "jsonString": { "S" : "${context.arguments.input.jsonString}" },
+      "status": { "S" : "init" }
   }
 }
 

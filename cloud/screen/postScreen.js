@@ -154,6 +154,16 @@ exports.handler = (event, context, callback) => {
         .catch(() => {});
 
       if (!registeredUsersQueryGetAccountNameResult) {
+        const s3 = new AWS.S3();
+        await s3
+          .deleteObject({
+            Bucket: process.env.Bucket,
+            Key: event.Records[0].s3.object.key.replace('%3A', ':'),
+          })
+          .promise()
+          .catch(() => {
+            // foobar;
+          });
         return;
       }
 
@@ -173,7 +183,9 @@ exports.handler = (event, context, callback) => {
             Key: event.Records[0].s3.object.key.replace('%3A', ':'),
           })
           .promise()
-          .catch(() => {});
+          .catch(() => {
+            // foobar;
+          });
 
         await screensClient.hydrated();
 

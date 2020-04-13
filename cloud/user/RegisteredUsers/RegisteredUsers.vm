@@ -10,8 +10,8 @@
       "createdDate": { "S" : "${util.time.nowEpochMilliSeconds()}" },
       "accountName" : { "S" : "${context.arguments.input.accountName}" },
       "lastActivityDate": { "S" : "${util.time.nowEpochMilliSeconds()}" },
-      "status": { "S": "${context.arguments.input.status}" },
-      "jsonString": { "S" : "${context.arguments.input.jsonString}" }
+      "jsonString": { "S" : "${context.arguments.input.jsonString}" },
+      "status": { "S": "${context.arguments.input.status}" }
   },
   "condition": {
     "expression": "attribute_not_exists(displayName)"

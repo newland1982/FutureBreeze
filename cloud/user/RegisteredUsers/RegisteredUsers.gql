@@ -21,6 +21,10 @@ type CreatedDate @aws_cognito_user_pools {
   createdDate: String!
 }
 
+input DeleteRegisteredUserInput {
+  displayName: String!
+}
+
 type DisplayName {
   displayName: String!
 }
@@ -34,10 +38,6 @@ input GetCreatedDateInput {
 }
 
 input GetDisplayNameInput {
-  displayName: String!
-}
-
-input DeleteRegisteredUserInput {
   displayName: String!
 }
 
@@ -61,8 +61,8 @@ type RegisteredUser {
   cognitoIdentityId: String
   accountName: String!
   lastActivityDate: String!
-  status: String!
   jsonString: String!
+  status: String!
 }
 
 input SetCognitoIdentityIdInput {
