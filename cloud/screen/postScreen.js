@@ -161,11 +161,15 @@ exports.handler = (event, context, callback) => {
             Key: event.Records[0].s3.object.key.replace('%3A', ':'),
           })
           .promise()
-          .catch(() => {
+          .catch(async () => {
             await errorsClient.hydrated();
             const errorsMutationCreateErrorInput = {
               type: 'postScreen',
-              data: JSON.stringify({action:'s3DeleteObject', Bucket: process.env.Bucket, Key: event.Records[0].s3.object.key.replace('%3A', ':')})
+              data: JSON.stringify({
+                action: 's3DeleteObject',
+                Bucket: process.env.Bucket,
+                Key: event.Records[0].s3.object.key.replace('%3A', ':'),
+              }),
             };
             await errorsClient
               .mutate({
