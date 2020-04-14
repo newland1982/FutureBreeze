@@ -28,9 +28,9 @@ const signUpUsersClient = new AWSAppSyncClient({
   region: process.env.REGION,
   auth: {
     type: AUTH_TYPE.AWS_IAM,
-    credentials
+    credentials,
   },
-  disableOffline: true
+  disableOffline: true,
 });
 
 const registeredUsersClient = new AWSAppSyncClient({
@@ -38,9 +38,9 @@ const registeredUsersClient = new AWSAppSyncClient({
   region: process.env.REGION,
   auth: {
     type: AUTH_TYPE.AWS_IAM,
-    credentials
+    credentials,
   },
-  disableOffline: true
+  disableOffline: true,
 });
 
 exports.handler = (event, context, callback) => {
@@ -50,14 +50,14 @@ exports.handler = (event, context, callback) => {
 
   const signUpUsersMutationSetStatusInput = {
     id: event.request.clientMetadata.id,
-    status: 'preSignUpError'
+    status: 'preSignUpError',
   };
 
   const registeredUsersMutationCreateRegisteredUserInput = {
     displayName,
     accountName,
     status: 'nomal',
-    jsonString: '{}'
+    data: '{}',
   };
 
   if (
@@ -70,7 +70,7 @@ exports.handler = (event, context, callback) => {
         .mutate({
           mutation: signUpUsersMutationSetStatus,
           variables: { input: signUpUsersMutationSetStatusInput },
-          fetchPolicy: 'no-cache'
+          fetchPolicy: 'no-cache',
         })
         .catch(() => {});
     })();
@@ -84,7 +84,7 @@ exports.handler = (event, context, callback) => {
       .mutate({
         mutation: registeredUsersMutationCreateRegisteredUser,
         variables: { input: registeredUsersMutationCreateRegisteredUserInput },
-        fetchPolicy: 'no-cache'
+        fetchPolicy: 'no-cache',
       })
       .catch(() => {});
 
@@ -94,7 +94,7 @@ exports.handler = (event, context, callback) => {
         .mutate({
           mutation: signUpUsersMutationSetStatus,
           variables: { input: signUpUsersMutationSetStatusInput },
-          fetchPolicy: 'no-cache'
+          fetchPolicy: 'no-cache',
         })
         .catch(() => {});
       return;
