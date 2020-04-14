@@ -169,7 +169,7 @@ exports.handler = (event, context, callback) => {
             };
             await errorsClient
               .mutate({
-                mutation: screensMutationCreateScreen,
+                mutation: errorsMutationCreateError,
                 variables: { input: errorsMutationCreateErrorInput },
                 fetchPolicy: 'no-cache',
               })
