@@ -10,7 +10,7 @@
       "createdDate": { "S" : "${util.time.nowEpochMilliSeconds()}" },
       "accountName" : { "S" : "${context.arguments.input.accountName}" },
       "lastActivityDate": { "S" : "${util.time.nowEpochMilliSeconds()}" },
-      "jsonString": { "S" : "${context.arguments.input.jsonString}" },
+      "data": { "S" : "${context.arguments.input.data}" },
       "status": { "S": "${context.arguments.input.status}" }
   },
   "condition": {

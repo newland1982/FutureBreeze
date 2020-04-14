@@ -14,7 +14,7 @@ input CreateRegisteredUserInput {
   displayName: String!
   accountName: String!
   status: String!
-  jsonString: String!
+  data: String!
 }
 
 type CreatedDate @aws_cognito_user_pools {
@@ -61,7 +61,7 @@ type RegisteredUser {
   cognitoIdentityId: String
   accountName: String!
   lastActivityDate: String!
-  jsonString: String!
+  data: String!
   status: String!
 }
 

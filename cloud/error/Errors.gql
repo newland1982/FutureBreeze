@@ -1,13 +1,13 @@
 input CreateErrorInput {
   type: String!
-  jsonString: String!
+  data: String!
 }
 
 type Error {
   id: ID!
   createdDate: String!
   type: String!
-  jsonString: String!
+  data: String!
   status: String!
 }
 
