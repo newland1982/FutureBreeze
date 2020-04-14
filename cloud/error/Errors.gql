@@ -1,5 +1,6 @@
 input CreateErrorInput {
   type: String!
+  jsonString: String!
 }
 
 type Error {
