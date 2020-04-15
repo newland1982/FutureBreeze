@@ -100,7 +100,7 @@ const Quit = () => {
 
     try {
       await Auth.signOut();
-    } catch {
+    } catch (error) {
       history.push('/failure/error');
       return;
     }
@@ -119,7 +119,7 @@ const Quit = () => {
       });
 
       history.goBack();
-    } catch {
+    } catch (error) {
       history.push('/failure/error');
       return;
     }

@@ -231,7 +231,7 @@ exports.handler = (event, context, callback) => {
             variables: { input: screensMutationChangePosterIdInput },
             fetchPolicy: 'no-cache',
           });
-        } catch {
+        } catch (error) {
           await errorsClient.hydrated();
           const errorsMutationCreateErrorInput = {
             type: 'postScreen',
@@ -262,7 +262,7 @@ exports.handler = (event, context, callback) => {
         //           .accountName,
         //     })
         //     .promise();
-        // } catch {
+        // } catch (error) {
         //   await errorsClient.hydrated();
         //   const errorsMutationCreateErrorInput = {
         //     type: 'postScreen',
@@ -300,7 +300,7 @@ exports.handler = (event, context, callback) => {
             },
             fetchPolicy: 'no-cache',
           });
-        } catch {
+        } catch (error) {
           await errorsClient.hydrated();
           const errorsMutationCreateErrorInput = {
             type: 'postScreen',

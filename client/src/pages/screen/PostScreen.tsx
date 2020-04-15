@@ -310,7 +310,7 @@ const PostScreen = () => {
         })
       );
       RegisteredUsersCreatedDate = result.data.getCreatedDate.createdDate;
-    } catch {
+    } catch (error) {
       return;
     }
 
@@ -324,7 +324,7 @@ const PostScreen = () => {
         }
       );
       console.log(putFileForThumbnailResult);
-    } catch {
+    } catch (error) {
       return;
     }
 
@@ -338,7 +338,7 @@ const PostScreen = () => {
         }
       );
       console.log(putFileForPCResult);
-    } catch {
+    } catch (error) {
       return;
     }
 
@@ -352,7 +352,7 @@ const PostScreen = () => {
         }
       );
       console.log(putFileForMobileResult);
-    } catch {
+    } catch (error) {
       return;
     }
   };

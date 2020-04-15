@@ -129,14 +129,14 @@ const ChangeAuthcode = () => {
 
     try {
       await Auth.signOut();
-    } catch {
+    } catch (error) {
       history.push('/failure/error');
       return;
     }
 
     try {
       await Auth.signIn(accountName, oldPassword);
-    } catch {
+    } catch (error) {
       history.push('/failure/error');
       return;
     }
@@ -160,7 +160,7 @@ const ChangeAuthcode = () => {
       });
 
       history.push('/user/authcodeshow');
-    } catch {
+    } catch (error) {
       history.push('/failure/error');
       return;
     }

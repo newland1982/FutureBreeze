@@ -62,7 +62,7 @@ const SignOut = () => {
         payload: { ...user, accountName: '', password: '', authcode: '' },
       });
       history.goBack();
-    } catch {
+    } catch (error) {
       history.push('/failure/error');
       return;
     }

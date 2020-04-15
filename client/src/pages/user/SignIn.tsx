@@ -111,7 +111,7 @@ const SignIn = () => {
 
     try {
       await Auth.signOut();
-    } catch {
+    } catch (error) {
       history.push('/failure/error');
       return;
     }
@@ -130,7 +130,7 @@ const SignIn = () => {
       });
 
       history.push(user.baseLocation);
-    } catch {
+    } catch (error) {
       history.push('/failure/error');
       return;
     }

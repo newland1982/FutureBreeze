@@ -169,7 +169,7 @@ const SignUp = () => {
         !displayNameAlreadyExists
           ? setDisplayNameIsUnique(true)
           : setDisplayNameIsUnique(false);
-      } catch {
+      } catch (error) {
         setDisplayNameIsValid(false);
         return;
       } finally {
@@ -203,7 +203,7 @@ const SignUp = () => {
         })
       );
       id = result?.data?.createSignUpUser?.id;
-    } catch {
+    } catch (error) {
       history.push('/failure/error');
       return;
     }
@@ -224,7 +224,7 @@ const SignUp = () => {
           })
         );
         setSignUpUsersStatus(`${result.data.getStatus.status}`);
-      } catch {
+      } catch (error) {
         return;
       }
     };
@@ -311,7 +311,7 @@ const SignUp = () => {
         setRegisteredUsersMutationSetCognitoIdentityIdExecutionIsCompleted(
           true
         );
-      } catch {
+      } catch (error) {
         history.push('/failure/error');
         return;
       }
