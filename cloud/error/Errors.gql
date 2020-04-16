@@ -1,13 +1,13 @@
 input CreateErrorInput {
   type: String!
-  data: String!
+  data: AWSJSON!
 }
 
 type Error {
   id: ID!
   createdDate: String!
   type: String!
-  data: String!
+  data: AWSJSON!
   status: String!
 }
 
