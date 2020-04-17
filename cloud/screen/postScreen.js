@@ -167,8 +167,10 @@ exports.handler = (event, context, callback) => {
               type: 'postScreen',
               data: JSON.stringify({
                 action: 's3DeleteObject',
-                Bucket: process.env.Bucket,
-                Key: event.Records[0].s3.object.key.replace('%3A', ':'),
+                s3DeleteObjectInput: {
+                  Bucket: process.env.Bucket,
+                  Key: event.Records[0].s3.object.key.replace('%3A', ':'),
+                },
               }),
             };
             await errorsClient
@@ -204,8 +206,10 @@ exports.handler = (event, context, callback) => {
               type: 'postScreen',
               data: JSON.stringify({
                 action: 's3DeleteObject',
-                Bucket: process.env.Bucket,
-                Key: event.Records[0].s3.object.key.replace('%3A', ':'),
+                s3DeleteObjectInput: {
+                  Bucket: process.env.Bucket,
+                  Key: event.Records[0].s3.object.key.replace('%3A', ':'),
+                },
               }),
             };
             await errorsClient
@@ -237,9 +241,22 @@ exports.handler = (event, context, callback) => {
             type: 'postScreen',
             data: JSON.stringify({
               action: 'screensMutationChangePosterId',
-              posterId: registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
-                96
-              ),
+              screensMutationChangePosterIdInput: {
+                posterId: registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
+                  96
+                ),
+              },
+              cognitoIdentityServiceProviderAdminDeleteUserInput: {
+                UserPoolId: process.env.USER_POOL_ID,
+                Username:
+                  registeredUsersQueryGetAccountNameResult.data.getAccountName
+                    .accountName,
+              },
+              registeredUsersMutationDeleteRegisteredUserInput: {
+                displayName: registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
+                  96
+                ),
+              },
             }),
           };
           await errorsClient
@@ -268,10 +285,17 @@ exports.handler = (event, context, callback) => {
         //     type: 'postScreen',
         //     data: JSON.stringify({
         //       action: 'adminDeleteUser',
-        //       UserPoolId: process.env.USER_POOL_ID,
-        //       Username:
-        //         registeredUsersQueryGetAccountNameResult.data.getAccountName
-        //           .accountName,
+        //       cognitoIdentityServiceProviderAdminDeleteUserInput: {
+        //         UserPoolId: process.env.USER_POOL_ID,
+        //         Username:
+        //           registeredUsersQueryGetAccountNameResult.data.getAccountName
+        //             .accountName,
+        //       },
+        //       registeredUsersMutationDeleteRegisteredUserInput: {
+        //         displayName: registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
+        //           96
+        //         ),
+        //       },
         //     }),
         //   };
         //   await errorsClient
@@ -306,9 +330,11 @@ exports.handler = (event, context, callback) => {
             type: 'postScreen',
             data: JSON.stringify({
               action: 'registeredUsersMutationDeleteRegisteredUser',
-              displayName: registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
-                96
-              ),
+              registeredUsersMutationDeleteRegisteredUserInput: {
+                displayName: registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
+                  96
+                ),
+              },
             }),
           };
           await errorsClient
