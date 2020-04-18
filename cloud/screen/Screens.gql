@@ -23,7 +23,7 @@ type ObjectKey {
 }
 
 type PosterId {
-  posterId: String!
+  posterId: String
 }
 
 type Query {
