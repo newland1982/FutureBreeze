@@ -25,3 +25,13 @@ $utils.toJson($utils.rds.toJsonObject($context.result)[1][0])
 }
 
 $utils.toJson($utils.rds.toJsonObject($context.result)[1])
+
+## Resolver for Mutation.getObjectKey
+{
+    "version": "2018-05-29",
+    "statements": [
+        "select * from contents.screens where objectKey = '$objectKey'"
+    ]
+}
+
+$utils.toJson($utils.rds.toJsonObject($context.result)[0][0])
