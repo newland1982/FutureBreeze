@@ -269,44 +269,44 @@ exports.handler = (event, context, callback) => {
           return;
         }
 
-        // try {
-        //   const cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
-        //   await cognitoIdentityServiceProvider
-        //     .adminDeleteUser({
-        //       UserPoolId: process.env.USER_POOL_ID,
-        //       Username:
-        //         registeredUsersQueryGetAccountNameResult.data.getAccountName
-        //           .accountName,
-        //     })
-        //     .promise();
-        // } catch (error) {
-        //   await errorsClient.hydrated();
-        //   const errorsMutationCreateErrorInput = {
-        //     type: 'postScreen',
-        //     data: JSON.stringify({
-        //       action: 'adminDeleteUser',
-        //       cognitoIdentityServiceProviderAdminDeleteUserInput: {
-        //         UserPoolId: process.env.USER_POOL_ID,
-        //         Username:
-        //           registeredUsersQueryGetAccountNameResult.data.getAccountName
-        //             .accountName,
-        //       },
-        //       registeredUsersMutationDeleteRegisteredUserInput: {
-        //         displayName: registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
-        //           96
-        //         ),
-        //       },
-        //     }),
-        //   };
-        //   await errorsClient
-        //     .mutate({
-        //       mutation: errorsMutationCreateError,
-        //       variables: { input: errorsMutationCreateErrorInput },
-        //       fetchPolicy: 'no-cache',
-        //     })
-        //     .catch(() => {});
-        //   return;
-        // }
+        try {
+          const cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
+          await cognitoIdentityServiceProvider
+            .adminDeleteUser({
+              UserPoolId: process.env.USER_POOL_ID,
+              Username:
+                registeredUsersQueryGetAccountNameResult.data.getAccountName
+                  .accountName,
+            })
+            .promise();
+        } catch (error) {
+          await errorsClient.hydrated();
+          const errorsMutationCreateErrorInput = {
+            type: 'postScreen',
+            data: JSON.stringify({
+              action: 'adminDeleteUser',
+              cognitoIdentityServiceProviderAdminDeleteUserInput: {
+                UserPoolId: process.env.USER_POOL_ID,
+                Username:
+                  registeredUsersQueryGetAccountNameResult.data.getAccountName
+                    .accountName,
+              },
+              registeredUsersMutationDeleteRegisteredUserInput: {
+                displayName: registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
+                  96
+                ),
+              },
+            }),
+          };
+          await errorsClient
+            .mutate({
+              mutation: errorsMutationCreateError,
+              variables: { input: errorsMutationCreateErrorInput },
+              fetchPolicy: 'no-cache',
+            })
+            .catch(() => {});
+          return;
+        }
 
         try {
           await registeredUsersClient.hydrated();
@@ -358,32 +358,32 @@ exports.handler = (event, context, callback) => {
         type: objectDataObject.type,
       };
 
-      await screensClient
-        .mutate({
+      try {
+        await screensClient.mutate({
           mutation: screensMutationCreateScreen,
           variables: { input: screensMutationCreateScreenInput },
           fetchPolicy: 'no-cache',
-        })
-        .catch(async () => {
-          await errorsClient.hydrated();
-          const errorsMutationCreateErrorInput = {
-            type: 'postScreen',
-            data: JSON.stringify({
-              action: 'screensMutationCreateScreen',
-              objectKey: event.Records[0].s3.object.key.replace('%3A', ':'),
-              posterId: objectDataObject.displayName,
-              type: objectDataObject.type,
-            }),
-          };
-          await errorsClient
-            .mutate({
-              mutation: errorsMutationCreateError,
-              variables: { input: errorsMutationCreateErrorInput },
-              fetchPolicy: 'no-cache',
-            })
-            .catch(() => {});
-          return;
         });
+      } catch (error) {
+        await errorsClient.hydrated();
+        const errorsMutationCreateErrorInput = {
+          type: 'postScreen',
+          data: JSON.stringify({
+            action: 'screensMutationCreateScreen',
+            objectKey: event.Records[0].s3.object.key.replace('%3A', ':'),
+            posterId: objectDataObject.displayName,
+            type: objectDataObject.type,
+          }),
+        };
+        await errorsClient
+          .mutate({
+            mutation: errorsMutationCreateError,
+            variables: { input: errorsMutationCreateErrorInput },
+            fetchPolicy: 'no-cache',
+          })
+          .catch(() => {});
+        return;
+      }
     })();
   });
 };
