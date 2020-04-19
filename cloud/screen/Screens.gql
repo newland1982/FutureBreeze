@@ -8,6 +8,10 @@ input CreateScreenInput {
   type: String!
 }
 
+input GetObjectKeyInput {
+  objectKey: String!
+}
+
 input GetStatusInput {
   objectKey: String!
 }
@@ -15,6 +19,7 @@ input GetStatusInput {
 type Mutation {
   createScreen(input: CreateScreenInput!): ObjectKey
   changePosterId(input: ChangePosterIdInput!): [PosterId]
+  getObjectKey(input: GetObjectKeyInput!): ObjectKey
   setStatus(input: SetStatusInput!): Status
 }
 
