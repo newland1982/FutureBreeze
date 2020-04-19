@@ -139,12 +139,12 @@ exports.handler = (event, context, callback) => {
 
     const objectDataObject = getObjectDataObject(event.Records[0]);
 
-    const registeredUsersQueryGetAccountNameInput = {
-      cognitoIdentityId: objectDataObject.cognitoIdentityId,
-    };
-
     (async () => {
       await registeredUsersClient.hydrated();
+
+      const registeredUsersQueryGetAccountNameInput = {
+        cognitoIdentityId: objectDataObject.cognitoIdentityId,
+      };
 
       const registeredUsersQueryGetAccountNameResult = await registeredUsersClient
         .query({
