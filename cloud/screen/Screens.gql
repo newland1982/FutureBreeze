@@ -19,7 +19,6 @@ input GetStatusInput {
 type Mutation {
   createScreen(input: CreateScreenInput!): ObjectKey
   changePosterId(input: ChangePosterIdInput!): [PosterId]
-  getObjectKey(input: GetObjectKeyInput!): ObjectKey
   setStatus(input: SetStatusInput!): Status
 }
 
@@ -32,6 +31,7 @@ type PosterId {
 }
 
 type Query {
+  getObjectKey(input: GetObjectKeyInput!): ObjectKey
   getStatus(input: GetStatusInput!): Status
 }
 

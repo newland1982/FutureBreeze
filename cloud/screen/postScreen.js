@@ -9,6 +9,13 @@ const AWS = require('aws-sdk');
 const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 
+const screensQueryGetObjectKey = gql(`
+  query GetObjectKey($input: GetObjectKeyInput!) {
+    getObjectKey(input: $input) {
+      objectKey
+  }
+ }`);
+
 const registeredUsersQueryGetAccountName = gql(`
   query GetAccountName($input: GetAccountNameInput!) {
     getAccountName(input: $input) {

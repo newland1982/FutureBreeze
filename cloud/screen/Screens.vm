@@ -26,7 +26,7 @@ $utils.toJson($utils.rds.toJsonObject($context.result)[1][0])
 
 $utils.toJson($utils.rds.toJsonObject($context.result)[1])
 
-## Resolver for Mutation.getObjectKey
+## Resolver for Query.getObjectKey
 {
     "version": "2018-05-29",
     "statements": [
