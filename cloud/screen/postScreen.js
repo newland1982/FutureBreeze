@@ -119,6 +119,7 @@ const getObjectDataObject = (eventRecord) => {
   }
 
   return {
+    objectKey,
     validationResult: 'valid',
     cognitoIdentityId: preciseObjectKeyRegexResult[1].replace('%3A', ':'),
     displayName: preciseObjectKeyRegexResult[2],
