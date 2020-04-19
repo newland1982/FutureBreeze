@@ -14,7 +14,7 @@ input GetStatusInput {
 
 type Mutation {
   createScreen(input: CreateScreenInput!): ObjectKey
-  changePosterId(input: ChangePosterIdInput!): PosterId
+  changePosterId(input: ChangePosterIdInput!): [PosterId]
   setStatus(input: SetStatusInput!): Status
 }
 

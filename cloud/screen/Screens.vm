@@ -8,7 +8,7 @@
 {
     "version": "2018-05-29",
     "statements": [
-        "insert into contents.screens values ('$objectKey', '$createdDate', '$posterId', '$type', '$userCount', '$status')",
+        "insert into screens values ('$objectKey', '$createdDate', '$posterId', '$type', '$userCount', '$status')",
         "select * from contents.screens where objectKey = '$objectKey'"
     ]
 }
