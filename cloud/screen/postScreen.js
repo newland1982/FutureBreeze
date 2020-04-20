@@ -126,7 +126,6 @@ const getObjectDataObject = (eventRecord) => {
   }
 
   return {
-    objectKey,
     validationResult: 'valid',
     cognitoIdentityId: preciseObjectKeyRegexResult[1].replace('%3A', ':'),
     displayName: preciseObjectKeyRegexResult[2],
@@ -147,6 +146,27 @@ exports.handler = (event, context, callback) => {
     const objectDataObject = getObjectDataObject(event.Records[0]);
 
     (async () => {
+      await screensClient.hydrated();
+
+      const screensQueryGetObjectKeyInput = {
+        objectKey: event.Records[0].s3.object.key.replace('%3A', ':'),
+      };
+
+      const screensQueryGetObjectKeyResult = await screensClient
+        .query({
+          query: screensQueryGetObjectKey,
+          variables: { input: screensQueryGetObjectKeyInput },
+          fetchPolicy: 'network-only',
+        })
+        .catch((e) => {
+          console.log('screensQueryGetObjectAERRORRR', e);
+        });
+
+      console.log(
+        'screensQueryGetObjectKeyResulttttt',
+        screensQueryGetObjectKeyResult
+      );
+
       await registeredUsersClient.hydrated();
 
       const registeredUsersQueryGetAccountNameInput = {
