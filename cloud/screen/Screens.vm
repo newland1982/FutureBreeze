@@ -34,4 +34,4 @@ $utils.toJson($utils.rds.toJsonObject($context.result)[1])
     ]
 }
 
-$utils.toJson($utils.rds.toJsonObject($context.result)[0][0])
+$utils.toJson($utils.rds.toJsonObject($context.result)[0])

@@ -31,7 +31,7 @@ type PosterId {
 }
 
 type Query {
-  getObjectKey(input: GetObjectKeyInput!): ObjectKey
+  getObjectKey(input: GetObjectKeyInput!): [ObjectKey]
   getStatus(input: GetStatusInput!): Status
 }
 
