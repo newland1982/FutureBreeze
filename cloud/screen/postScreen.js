@@ -164,7 +164,7 @@ exports.handler = (event, context, callback) => {
 
       console.log(
         'screensQueryGetObjectKeyResulttttt',
-        screensQueryGetObjectKeyResult
+        screensQueryGetObjectKeyResult.data.getObjectKey.length
       );
 
       await registeredUsersClient.hydrated();
