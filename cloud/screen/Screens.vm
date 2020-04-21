@@ -30,7 +30,7 @@ $utils.toJson($utils.rds.toJsonObject($context.result)[1])
 {
     "version": "2018-05-29",
     "statements": [
-        "select * from contents.screens where objectKey = '$objectKey'"
+        "select * from contents.screens where objectKey = '$context.arguments.input.objectKey' limit 1"
     ]
 }
 
