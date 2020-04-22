@@ -314,10 +314,10 @@ const PostScreen = () => {
       return;
     }
 
+    setAmplifyConfig(undefined, 'AWS_IAM');
     const currentAuthenticatedUser = await Auth.currentAuthenticatedUser({
       bypassCache: false,
     }).catch(() => {});
-
     if (!currentAuthenticatedUser) {
       history.push('/failure/error');
       return;
@@ -344,15 +344,15 @@ const PostScreen = () => {
       };
     };
 
-    try {
-      await API.graphql(
-        graphqlOperation(screensMutationCreateScreen, {
-          input: makeScreensMutationCreateScreenInput('thumbnail'),
-        })
-      );
-    } catch (error) {
-      return;
-    }
+    // try {
+    //   await API.graphql(
+    //     graphqlOperation(screensMutationCreateScreen, {
+    //       input: makeScreensMutationCreateScreenInput('thumbnail'),
+    //     })
+    //   );
+    // } catch (error) {
+    //   return;
+    // }
     try {
       const putFileForThumbnailResult = await Storage.put(
         `${displayName}_${RegisteredUsersCreatedDate}/thumbnail${unixTimestamp}`,
@@ -367,15 +367,15 @@ const PostScreen = () => {
       return;
     }
 
-    try {
-      await API.graphql(
-        graphqlOperation(screensMutationCreateScreen, {
-          input: makeScreensMutationCreateScreenInput('pc'),
-        })
-      );
-    } catch (error) {
-      return;
-    }
+    // try {
+    //   await API.graphql(
+    //     graphqlOperation(screensMutationCreateScreen, {
+    //       input: makeScreensMutationCreateScreenInput('pc'),
+    //     })
+    //   );
+    // } catch (error) {
+    //   return;
+    // }
     try {
       const putFileForPCResult = await Storage.put(
         `${displayName}_${RegisteredUsersCreatedDate}/pc${unixTimestamp}`,
@@ -390,15 +390,15 @@ const PostScreen = () => {
       return;
     }
 
-    try {
-      await API.graphql(
-        graphqlOperation(screensMutationCreateScreen, {
-          input: makeScreensMutationCreateScreenInput('mobile'),
-        })
-      );
-    } catch (error) {
-      return;
-    }
+    // try {
+    //   await API.graphql(
+    //     graphqlOperation(screensMutationCreateScreen, {
+    //       input: makeScreensMutationCreateScreenInput('mobile'),
+    //     })
+    //   );
+    // } catch (error) {
+    //   return;
+    // }
     try {
       const putFileForMobileResult = await Storage.put(
         `${displayName}_${RegisteredUsersCreatedDate}/mobile${unixTimestamp}`,
