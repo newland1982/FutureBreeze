@@ -4,6 +4,10 @@ input ChangePosterIdInput {
 
 input CreateScreenInput {
   objectKey: String!
+}
+
+input SetScreenInput {
+  objectKey: String!
   posterId: String!
   type: String!
 }
@@ -16,9 +20,15 @@ input GetStatusInput {
   objectKey: String!
 }
 
+input DeleteScreenInput {
+  objectKey: String!
+}
+
 type Mutation {
   createScreen(input: CreateScreenInput!): ObjectKey
+  setScreen(input: SetScreenInput!): ObjectKey
   changePosterId(input: ChangePosterIdInput!): [PosterId]
+  deleteScreen(input: DeleteScreenInput!): ObjectKey
   setStatus(input: SetStatusInput!): Status
 }
 

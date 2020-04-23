@@ -94,8 +94,6 @@ const PostScreen = () => {
 
   const { user, dispatch } = useContext(UserContext);
 
-  let currentAuthenticatedUser;
-
   const [sampleImageObjectURL, setSampleImageObjectURL] = useState('');
   const [sampleImageIsInProgress, setSampleImageIsInProgress] = useState(false);
   const [blobForPC, setBlobForPC] = useState(new Blob());
