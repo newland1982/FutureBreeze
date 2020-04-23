@@ -278,9 +278,9 @@ const SignUp = () => {
     }
 
     const executeRegisteredUsersMutationSetCognitoIdentityId = async () => {
-      const currentAuthenticatedUser = await Auth.currentAuthenticatedUser({
-        bypassCache: false,
-      }).catch(() => {});
+      const currentAuthenticatedUser = await Auth.currentAuthenticatedUser().catch(
+        () => {}
+      );
 
       if (!currentAuthenticatedUser) {
         history.push('/failure/error');

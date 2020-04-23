@@ -94,6 +94,8 @@ const PostScreen = () => {
 
   const { user, dispatch } = useContext(UserContext);
 
+  let currentAuthenticatedUser;
+
   const [sampleImageObjectURL, setSampleImageObjectURL] = useState('');
   const [sampleImageIsInProgress, setSampleImageIsInProgress] = useState(false);
   const [blobForPC, setBlobForPC] = useState(new Blob());
@@ -118,24 +120,21 @@ const PostScreen = () => {
   const deviceType = isXsSize ? 'mobile' : 'pc';
 
   useEffect(() => {
-    setAmplifyConfig(undefined, 'AWS_IAM');
-
     const checkAuthentication = async () => {
-      const currentAuthenticatedUser = await Auth.currentAuthenticatedUser({
-        bypassCache: true,
-      }).catch(() => {});
-
-      if (!currentAuthenticatedUser) {
+      try {
+        setAmplifyConfig(undefined, 'AWS_IAM');
+        const currentAuthenticatedUser = await Auth.currentAuthenticatedUser({
+          bypassCache: true,
+        });
+        setAccountName(currentAuthenticatedUser.username);
+      } catch (error) {
         dispatch({
           type: 'SET_USER',
           payload: { ...user, baseLocation: location.pathname },
         });
         history.push('/user/signin');
-      } else {
-        setAccountName(currentAuthenticatedUser.username);
       }
     };
-
     checkAuthentication();
   });
 
@@ -161,7 +160,6 @@ const PostScreen = () => {
     }
     return () => {
       if (styleElement && initialStyleElementTextContent) {
-        console.log('xxxxx');
         styleElement.textContent = initialStyleElementTextContent;
         window.URL.revokeObjectURL(sampleImageObjectURL);
       }
