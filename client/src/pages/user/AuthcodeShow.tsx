@@ -38,9 +38,6 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
       padding: '20px',
     },
-    button: {
-      width: '24%',
-    },
   })
 );
 
@@ -119,7 +116,6 @@ const AuthcodeShow = () => {
           >
             <Box component='span' pr={2.4}>
               <Button
-                className={classes.button}
                 variant='contained'
                 size='medium'
                 color='primary'
@@ -130,7 +126,6 @@ const AuthcodeShow = () => {
             </Box>
             <Box component='span' pl={2.4}>
               <Button
-                className={classes.button}
                 variant='contained'
                 size='medium'
                 color='primary'
