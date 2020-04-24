@@ -54,7 +54,6 @@ const AuthcodeShow = () => {
   const { user } = useContext(UserContext);
 
   const [fontSize, setFontSize] = useState('body1');
-  const [authcodeHasBeenCopied, setAuthcodeHasBeenCopied] = useState(false);
 
   const typedFontSize = fontSize as 'body1' | 'body2';
 
@@ -95,7 +94,6 @@ const AuthcodeShow = () => {
     textareaElement.select();
     document.execCommand('copy');
     bodyElement.removeChild(textareaElement);
-    setAuthcodeHasBeenCopied(true);
   };
 
   const back = () => {
@@ -119,31 +117,22 @@ const AuthcodeShow = () => {
               display: `${user.authcode ? 'inline' : 'none'}`,
             }}
           >
-            <Box
-              style={{
-                display: `${!authcodeHasBeenCopied ? 'inline' : 'none'}`,
-              }}
-            >
+            <Box component='span' pr={2.4}>
               <Button
                 className={classes.button}
                 variant='contained'
-                size='small'
+                size='medium'
                 color='primary'
                 onClick={() => copy()}
               >
                 Copy
               </Button>
             </Box>
-
-            <Box
-              style={{
-                display: `${authcodeHasBeenCopied ? 'inline' : 'none'}`,
-              }}
-            >
+            <Box component='span' pl={2.4}>
               <Button
                 className={classes.button}
                 variant='contained'
-                size='small'
+                size='medium'
                 color='primary'
                 onClick={() => back()}
               >
