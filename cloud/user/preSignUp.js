@@ -1,11 +1,17 @@
 'use strict';
 
+// @ts-ignore
 global.WebSocket = require('ws');
+// @ts-ignore
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
+// @ts-ignore
 const AUTH_TYPE = require('aws-appsync/lib/link/auth-link').AUTH_TYPE;
+// @ts-ignore
 const AWSAppSyncClient = require('aws-appsync').default;
+// @ts-ignore
 const AWS = require('aws-sdk');
+// @ts-ignore
 const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 
@@ -78,17 +84,17 @@ exports.handler = (event, context, callback) => {
   }
 
   (async () => {
-    await registeredUsersClient.hydrated();
+    try {
+      await registeredUsersClient.hydrated();
 
-    const result = await registeredUsersClient
-      .mutate({
+      await registeredUsersClient.mutate({
         mutation: registeredUsersMutationCreateRegisteredUser,
-        variables: { input: registeredUsersMutationCreateRegisteredUserInput },
+        variables: {
+          input: registeredUsersMutationCreateRegisteredUserInput,
+        },
         fetchPolicy: 'no-cache',
-      })
-      .catch(() => {});
-
-    if (!result) {
+      });
+    } catch (error) {
       await signUpUsersClient.hydrated();
       await signUpUsersClient
         .mutate({
