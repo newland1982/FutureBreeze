@@ -16,20 +16,15 @@ input GetObjectKeyInput {
   objectKey: String!
 }
 
-input GetStatusInput {
-  objectKey: String!
-}
-
 input DeleteScreenInput {
   objectKey: String!
 }
 
 type Mutation {
-  createScreen(input: CreateScreenInput!): ObjectKey
-  setScreen(input: SetScreenInput!): ObjectKey
+  createScreen(input: CreateScreenInput!): [ObjectKey]
+  setScreen(input: SetScreenInput!): [ObjectKey]
   changePosterId(input: ChangePosterIdInput!): [PosterId]
-  deleteScreen(input: DeleteScreenInput!): ObjectKey
-  setStatus(input: SetStatusInput!): Status
+  deleteScreen(input: DeleteScreenInput!): [ObjectKey]
 }
 
 type ObjectKey {
@@ -42,7 +37,6 @@ type PosterId {
 
 type Query {
   getObjectKey(input: GetObjectKeyInput!): [ObjectKey]
-  getStatus(input: GetStatusInput!): Status
 }
 
 type Screen {
@@ -52,19 +46,6 @@ type Screen {
   type: String!
   userCount: Int!
   status: String!
-}
-
-input SetStatusInput {
-  objectKey: String!
-  status: String!
-}
-
-type Status {
-  status: String!
-}
-
-type Subscription {
-  onSetStatus: Status @aws_subscribe(mutations: ["setStatus"])
 }
 
 schema {

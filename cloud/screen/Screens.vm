@@ -8,7 +8,7 @@
     ]
 }
 
-$utils.toJson($utils.rds.toJsonObject($context.result)[1][0])
+$utils.toJson($utils.rds.toJsonObject($context.result)[1])
 
 ## Resolver for Mutation.setScreen
 #set($objectKey=${context.arguments.input.objectKey})
@@ -21,11 +21,11 @@ $utils.toJson($utils.rds.toJsonObject($context.result)[1][0])
     "version": "2018-05-29",
     "statements": [
         "UPDATE contents.screens SET createdDate = '$createdDate', posterId = '$posterId', type = '$type', userCount = '$userCount', status = '$status' WHERE objectKey = '$objectKey' AND status = 'init'",
-        "SELECT objectKey FROM contents.screens WHERE objectKey = '$objectKey' AND status = '$status'"
+        "SELECT objectKey FROM contents.screens WHERE objectKey = '$objectKey'"
     ]
 }
 
-$utils.toJson($utils.rds.toJsonObject($context.result)[1][0])
+$utils.toJson($utils.rds.toJsonObject($context.result)[1])
 
 ## Resolver for Mutation.changePosterId
 {
@@ -38,11 +38,23 @@ $utils.toJson($utils.rds.toJsonObject($context.result)[1][0])
 
 $utils.toJson($utils.rds.toJsonObject($context.result)[1])
 
+## Resolver for Mutation.deleteScreen
+#set($objectKey=${context.arguments.input.objectKey})
+{
+    "version": "2018-05-29",
+    "statements": [
+        "DELETE FROM contents.screens WHERE objectKey = '$objectKey'",
+        "SELECT objectKey FROM contents.screens WHERE objectKey = '$objectKey'"
+    ]
+}
+
+$utils.toJson($utils.rds.toJsonObject($context.result)[1])
+
 ## Resolver for Query.getObjectKey
 {
     "version": "2018-05-29",
     "statements": [
-        "SELECT objectKey FROM contents.screens WHERE objectKey = '$context.arguments.input.objectKey' LIMIT 1"
+        "SELECT objectKey FROM contents.screens WHERE objectKey = '$context.arguments.input.objectKey' AND status = 'init'"
     ]
 }
 
