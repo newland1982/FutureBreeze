@@ -1,15 +1,10 @@
 ## Resolver for Mutation.createScreen
 #set($objectKey=${context.arguments.input.objectKey})
-#set($createdDate=${util.time.nowEpochMilliSeconds()})
-#set($posterId=${context.arguments.input.posterId})
-#set($type=${context.arguments.input.type})
-#set($userCount='0')
-#set($status='init')
 {
     "version": "2018-05-29",
     "statements": [
-        "insert into contents.screens values ('$objectKey', '$createdDate', '$posterId', '$type', '$userCount', '$status')",
-        "select * from contents.screens where objectKey = '$objectKey'"
+        "INSERT INTO contents.screens VALUES ('$objectKey', NULL, NULL, NULL, NULL, 'init')",
+        "SELECT objectKey FROM contents.screens WHERE objectKey = '$objectKey'"
     ]
 }
 
@@ -21,12 +16,12 @@ $utils.toJson($utils.rds.toJsonObject($context.result)[1][0])
 #set($posterId=${context.arguments.input.posterId})
 #set($type=${context.arguments.input.type})
 #set($userCount='0')
-#set($status='init')
+#set($status='confirmed')
 {
     "version": "2018-05-29",
     "statements": [
-        "insert into contents.screens values ('$objectKey', '$createdDate', '$posterId', '$type', '$userCount', '$status')",
-        "select * from contents.screens where objectKey = '$objectKey'"
+        "UPDATE contents.screens SET createdDate = '$createdDate', posterId = '$posterId', type = '$type', userCount = '$userCount', status = '$status' WHERE objectKey = '$objectKey' AND status = 'init'",
+        "SELECT objectKey FROM contents.screens WHERE objectKey = '$objectKey' AND status = '$status'"
     ]
 }
 
@@ -36,8 +31,8 @@ $utils.toJson($utils.rds.toJsonObject($context.result)[1][0])
 {
     "version": "2018-05-29",
     "statements": [
-        "update contents.screens set posterId='Anonymous' where posterId='$context.arguments.input.posterId'",
-        "select * from contents.screens where posterId = '$context.arguments.input.posterId' limit 1"
+        "UPDATE contents.screens SET posterId='Anonymous' WHERE posterId='$context.arguments.input.posterId'",
+        "SELECT posterId FROM contents.screens WHERE posterId = '$context.arguments.input.posterId' LIMIT 1"
     ]
 }
 
@@ -47,7 +42,7 @@ $utils.toJson($utils.rds.toJsonObject($context.result)[1])
 {
     "version": "2018-05-29",
     "statements": [
-        "select * from contents.screens where objectKey = '$context.arguments.input.objectKey' limit 1"
+        "SELECT objectKey FROM contents.screens WHERE objectKey = '$context.arguments.input.objectKey' LIMIT 1"
     ]
 }
 
