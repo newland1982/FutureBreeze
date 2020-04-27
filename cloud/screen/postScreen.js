@@ -140,6 +140,40 @@ const getObjectDataObject = (eventRecord) => {
   };
 };
 
+const s3DeleteObject = async (
+  s3,
+  objectKey,
+  errorsClient,
+  errorsMutationCreateError
+) => {
+  await s3
+    .deleteObject({
+      Bucket: process.env.Bucket,
+      Key: objectKey,
+    })
+    .promise()
+    .catch(async () => {
+      await errorsClient.hydrated();
+      const errorsMutationCreateErrorInput = {
+        type: 'postScreen',
+        data: JSON.stringify({
+          action: 's3DeleteObject',
+          s3DeleteObjectInput: {
+            Bucket: process.env.Bucket,
+            Key: objectKey,
+          },
+        }),
+      };
+      await errorsClient
+        .mutate({
+          mutation: errorsMutationCreateError,
+          variables: { input: errorsMutationCreateErrorInput },
+          fetchPolicy: 'no-cache',
+        })
+        .catch(() => {});
+    });
+};
+
 exports.handler = (event, context, callback) => {
   event.Records.forEach((record) => {
     if (
@@ -188,33 +222,12 @@ exports.handler = (event, context, callback) => {
         .catch(() => {});
 
       if (!registeredUsersQueryGetAccountNameResult) {
-        const s3 = new AWS.S3();
-        await s3
-          .deleteObject({
-            Bucket: process.env.Bucket,
-            Key: event.Records[0].s3.object.key.replace('%3A', ':'),
-          })
-          .promise()
-          .catch(async () => {
-            await errorsClient.hydrated();
-            const errorsMutationCreateErrorInput = {
-              type: 'postScreen',
-              data: JSON.stringify({
-                action: 's3DeleteObject',
-                s3DeleteObjectInput: {
-                  Bucket: process.env.Bucket,
-                  Key: event.Records[0].s3.object.key.replace('%3A', ':'),
-                },
-              }),
-            };
-            await errorsClient
-              .mutate({
-                mutation: errorsMutationCreateError,
-                variables: { input: errorsMutationCreateErrorInput },
-                fetchPolicy: 'no-cache',
-              })
-              .catch(() => {});
-          });
+        s3DeleteObject(
+          new AWS.S3(),
+          event.Records[0].s3.object.key.replace('%3A', ':'),
+          errorsClient,
+          errorsMutationCreateError
+        );
         return;
       }
 
@@ -227,33 +240,12 @@ exports.handler = (event, context, callback) => {
           ) === objectDataObject.displayName
         )
       ) {
-        const s3 = new AWS.S3();
-        await s3
-          .deleteObject({
-            Bucket: process.env.Bucket,
-            Key: event.Records[0].s3.object.key.replace('%3A', ':'),
-          })
-          .promise()
-          .catch(async () => {
-            await errorsClient.hydrated();
-            const errorsMutationCreateErrorInput = {
-              type: 'postScreen',
-              data: JSON.stringify({
-                action: 's3DeleteObject',
-                s3DeleteObjectInput: {
-                  Bucket: process.env.Bucket,
-                  Key: event.Records[0].s3.object.key.replace('%3A', ':'),
-                },
-              }),
-            };
-            await errorsClient
-              .mutate({
-                mutation: errorsMutationCreateError,
-                variables: { input: errorsMutationCreateErrorInput },
-                fetchPolicy: 'no-cache',
-              })
-              .catch(() => {});
-          });
+        s3DeleteObject(
+          new AWS.S3(),
+          event.Records[0].s3.object.key.replace('%3A', ':'),
+          errorsClient,
+          errorsMutationCreateError
+        );
 
         try {
           await screensClient.hydrated();

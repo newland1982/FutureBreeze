@@ -282,9 +282,20 @@ const PostScreen = () => {
       return;
     }
 
+    let currentAuthenticatedUser: any;
     let RegisteredUsersCreatedDate: number;
     const displayName = accountName.slice(96);
     const unixTimestamp = String(Date.now());
+
+    try {
+      setAmplifyConfig(undefined, 'AWS_IAM');
+      currentAuthenticatedUser = await Auth.currentAuthenticatedUser({
+        bypassCache: true,
+      });
+    } catch (error) {
+      history.push('/failure/error');
+      return;
+    }
 
     setAmplifyConfig(
       process.env
@@ -307,13 +318,6 @@ const PostScreen = () => {
       );
       RegisteredUsersCreatedDate = result.data.getCreatedDate.createdDate;
     } catch (error) {
-      return;
-    }
-
-    const currentAuthenticatedUser = await Auth.currentAuthenticatedUser().catch(
-      () => {}
-    );
-    if (!currentAuthenticatedUser) {
       history.push('/failure/error');
       return;
     }
