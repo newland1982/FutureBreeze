@@ -14,6 +14,7 @@ const AWS = require('aws-sdk');
 // @ts-ignore
 const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
+let cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
 
 const screensQueryGetObjectKey = gql(`
   query GetObjectKey($input: GetObjectKeyInput!) {
@@ -296,7 +297,21 @@ exports.handler = (event, context, callback) => {
         }
 
         try {
-          const cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
+          const result = cognitoIdentityServiceProvider
+            .adminGetUser({
+              UserPoolId: process.env.USER_POOL_ID,
+              Username:
+                registeredUsersQueryGetAccountNameResult.data.getAccountName
+                  .accountName,
+            })
+            .promise();
+          console.log('adminGetUserrrr11111', result);
+        } catch (error) {
+          console.log('adminGetUserrrr2222');
+        }
+
+        try {
+          cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
           await cognitoIdentityServiceProvider
             .adminDeleteUser({
               UserPoolId: process.env.USER_POOL_ID,
