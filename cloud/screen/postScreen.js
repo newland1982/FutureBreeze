@@ -297,7 +297,7 @@ exports.handler = (event, context, callback) => {
         }
 
         try {
-          const result = cognitoIdentityServiceProvider
+          const result = await cognitoIdentityServiceProvider
             .adminGetUser({
               UserPoolId: process.env.USER_POOL_ID,
               Username:
@@ -307,11 +307,11 @@ exports.handler = (event, context, callback) => {
             .promise();
           console.log('adminGetUserrrr11111', result);
         } catch (error) {
-          console.log('adminGetUserrrr2222');
+          console.log('adminGetUserrrr2222', error);
+          return;
         }
 
         try {
-          cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
           await cognitoIdentityServiceProvider
             .adminDeleteUser({
               UserPoolId: process.env.USER_POOL_ID,
