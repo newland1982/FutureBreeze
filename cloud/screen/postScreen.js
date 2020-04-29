@@ -297,21 +297,6 @@ exports.handler = (event, context, callback) => {
         }
 
         try {
-          const result = await cognitoIdentityServiceProvider
-            .adminGetUser({
-              UserPoolId: process.env.USER_POOL_ID,
-              Username:
-                registeredUsersQueryGetAccountNameResult.data.getAccountName
-                  .accountName,
-            })
-            .promise();
-          console.log('adminGetUserrrr11111', result);
-        } catch (error) {
-          console.log('adminGetUserrrr2222', error);
-          return;
-        }
-
-        try {
           await cognitoIdentityServiceProvider
             .adminDeleteUser({
               UserPoolId: process.env.USER_POOL_ID,
@@ -321,6 +306,9 @@ exports.handler = (event, context, callback) => {
             })
             .promise();
         } catch (error) {
+          if (error.code === 'UserNotFoundException') {
+            return;
+          }
           await errorsClient.hydrated();
           const errorsMutationCreateErrorInput = {
             type: 'postScreen',
