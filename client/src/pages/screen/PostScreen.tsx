@@ -134,7 +134,7 @@ const PostScreen = () => {
       }
     };
     checkAuthentication();
-  });
+  }, []);
 
   useEffect(() => {
     if (!sampleImageObjectURL) {
