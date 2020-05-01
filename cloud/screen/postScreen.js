@@ -187,33 +187,47 @@ exports.handler = (event, context, callback) => {
     const objectDataObject = getObjectDataObject(event.Records[0]);
 
     (async () => {
-      await screensClient.hydrated();
+      try {
+        await screensClient.hydrated();
 
-      const screensQueryGetObjectKeyInput = {
-        objectKey: event.Records[0].s3.object.key.replace('%3A', ':'),
-      };
+        const screensQueryGetObjectKeyInput = {
+          objectKey: event.Records[0].s3.object.key.replace('%3A', ':'),
+        };
 
-      const screensQueryGetObjectKeyResult = await screensClient
-        .query({
+        const screensQueryGetObjectKeyResult = await screensClient.query({
           query: screensQueryGetObjectKey,
           variables: { input: screensQueryGetObjectKeyInput },
           fetchPolicy: 'network-only',
-        })
-        .catch((e) => {
-          console.log('screensQueryGetObjectAERRORRR', e);
         });
 
-      console.log(
-        'screensQueryGetObjectKeyResulttttt',
-        screensQueryGetObjectKeyResult.data.getObjectKey.length
-      );
+        console.log(
+          'screensQueryGetObjectKeyResulttttt',
+          screensQueryGetObjectKeyResult.data.getObjectKey.length
+        );
+        if (screensQueryGetObjectKeyResult.data.getObjectKey.length === 0) {
+          s3DeleteObject(
+            new AWS.S3(),
+            event.Records[0].s3.object.key.replace('%3A', ':'),
+            errorsClient,
+            errorsMutationCreateError
+          );
+          return;
+        }
+      } catch (error) {
+        console.log('screensQueryGetObjectAERRORRR', error);
+        s3DeleteObject(
+          new AWS.S3(),
+          event.Records[0].s3.object.key.replace('%3A', ':'),
+          errorsClient,
+          errorsMutationCreateError
+        );
+        return;
+      }
 
       await registeredUsersClient.hydrated();
-
       const registeredUsersQueryGetAccountNameInput = {
         cognitoIdentityId: objectDataObject.cognitoIdentityId,
       };
-
       const registeredUsersQueryGetAccountNameResult = await registeredUsersClient
         .query({
           query: registeredUsersQueryGetAccountName,
