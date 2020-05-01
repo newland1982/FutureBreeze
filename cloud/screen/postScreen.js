@@ -204,15 +204,15 @@ exports.handler = (event, context, callback) => {
           'screensQueryGetObjectKeyResulttttt',
           screensQueryGetObjectKeyResult.data.getObjectKey.length
         );
-        if (screensQueryGetObjectKeyResult.data.getObjectKey.length === 0) {
-          s3DeleteObject(
-            new AWS.S3(),
-            event.Records[0].s3.object.key.replace('%3A', ':'),
-            errorsClient,
-            errorsMutationCreateError
-          );
-          return;
-        }
+        // if (screensQueryGetObjectKeyResult.data.getObjectKey.length === 0) {
+        //   s3DeleteObject(
+        //     new AWS.S3(),
+        //     event.Records[0].s3.object.key.replace('%3A', ':'),
+        //     errorsClient,
+        //     errorsMutationCreateError
+        //   );
+        //   return;
+        // }
       } catch (error) {
         console.log('screensQueryGetObjectAERRORRR', error);
         s3DeleteObject(
@@ -393,15 +393,15 @@ exports.handler = (event, context, callback) => {
         return;
       }
 
-      await screensClient.hydrated();
-
-      const screensMutationCreateScreenInput = {
-        objectKey: event.Records[0].s3.object.key.replace('%3A', ':'),
-        posterId: objectDataObject.displayName,
-        type: objectDataObject.type,
-      };
-
       try {
+        await screensClient.hydrated();
+
+        const screensMutationCreateScreenInput = {
+          objectKey: event.Records[0].s3.object.key.replace('%3A', ':'),
+          posterId: objectDataObject.displayName,
+          type: objectDataObject.type,
+        };
+
         await screensClient.mutate({
           mutation: screensMutationCreateScreen,
           variables: { input: screensMutationCreateScreenInput },
@@ -413,9 +413,11 @@ exports.handler = (event, context, callback) => {
           type: 'postScreen',
           data: JSON.stringify({
             action: 'screensMutationCreateScreen',
-            objectKey: event.Records[0].s3.object.key.replace('%3A', ':'),
-            posterId: objectDataObject.displayName,
-            type: objectDataObject.type,
+            screensMutationCreateScreenInput: {
+              objectKey: event.Records[0].s3.object.key.replace('%3A', ':'),
+              posterId: objectDataObject.displayName,
+              type: objectDataObject.type,
+            },
           }),
         };
         await errorsClient
