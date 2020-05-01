@@ -16,17 +16,10 @@ const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 let cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
 
-const screensQueryGetObjectKey = gql(`
-  query GetObjectKey($input: GetObjectKeyInput!) {
-    getObjectKey(input: $input) {
+const screensMutationCreateScreen = gql(`
+  mutation CreateScreen($input: CreateScreenInput!) {
+    createScreen(input: $input) {
       objectKey
-  }
- }`);
-
-const registeredUsersQueryGetAccountName = gql(`
-  query GetAccountName($input: GetAccountNameInput!) {
-    getAccountName(input: $input) {
-      accountName
   }
  }`);
 
@@ -37,6 +30,20 @@ const screensMutationChangePosterId = gql(`
   }
  }`);
 
+const screensMutationDeleteScreen = gql(`
+  mutation DeleteScreen($input: DeleteScreenInput!) {
+    deleteScreen(input: $input) {
+      objectKey
+  }
+ }`);
+
+const screensQueryGetObjectKey = gql(`
+  query GetObjectKey($input: GetObjectKeyInput!) {
+    getObjectKey(input: $input) {
+      objectKey
+  }
+ }`);
+
 const registeredUsersMutationDeleteRegisteredUser = gql(`
   mutation DeleteRegisteredUser($input: DeleteRegisteredUserInput!) {
     deleteRegisteredUser(input: $input) {
@@ -44,10 +51,10 @@ const registeredUsersMutationDeleteRegisteredUser = gql(`
   }
  }`);
 
-const screensMutationCreateScreen = gql(`
-  mutation CreateScreen($input: CreateScreenInput!) {
-    createScreen(input: $input) {
-      objectKey
+const registeredUsersQueryGetAccountName = gql(`
+  query GetAccountName($input: GetAccountNameInput!) {
+    getAccountName(input: $input) {
+      accountName
   }
  }`);
 
@@ -175,6 +182,41 @@ const s3DeleteObject = async (
     });
 };
 
+const executeScreensMutationDeleteScreen = async (
+  screensClient,
+  screensMutationDeleteScreenInput,
+  errorsClient,
+  errorsMutationCreateError
+) => {
+  try {
+    await screensClient.hydrated();
+
+    await screensClient.mutate({
+      mutation: screensMutationDeleteScreen,
+      variables: { input: screensMutationDeleteScreenInput },
+      fetchPolicy: 'no-cache',
+    });
+  } catch (error) {
+    await errorsClient.hydrated();
+    const errorsMutationCreateErrorInput = {
+      type: 'postScreen',
+      data: JSON.stringify({
+        action: 'screensMutationDeleteScreen',
+        screensMutationDeleteScreenInput,
+        // objectKey: event.Records[0].s3.object.key.replace('%3A', ':'),
+      }),
+    };
+    await errorsClient
+      .mutate({
+        mutation: errorsMutationCreateError,
+        variables: { input: errorsMutationCreateErrorInput },
+        fetchPolicy: 'no-cache',
+      })
+      .catch(() => {});
+    return;
+  }
+};
+
 exports.handler = (event, context, callback) => {
   event.Records.forEach((record) => {
     if (
@@ -186,12 +228,18 @@ exports.handler = (event, context, callback) => {
 
     const objectDataObject = getObjectDataObject(event.Records[0]);
 
+    const objectKey = event.Records[0].s3.object.key.replace('%3A', ':');
+
+    const screensMutationDeleteScreenInput = {
+      objectKey,
+    };
+
     (async () => {
       try {
         await screensClient.hydrated();
 
         const screensQueryGetObjectKeyInput = {
-          objectKey: event.Records[0].s3.object.key.replace('%3A', ':'),
+          objectKey,
         };
 
         const screensQueryGetObjectKeyResult = await screensClient.query({
@@ -207,7 +255,7 @@ exports.handler = (event, context, callback) => {
         // if (screensQueryGetObjectKeyResult.data.getObjectKey.length === 0) {
         //   s3DeleteObject(
         //     new AWS.S3(),
-        //     event.Records[0].s3.object.key.replace('%3A', ':'),
+        //     objectKey,
         //     errorsClient,
         //     errorsMutationCreateError
         //   );
@@ -217,7 +265,7 @@ exports.handler = (event, context, callback) => {
         console.log('screensQueryGetObjectAERRORRR', error);
         s3DeleteObject(
           new AWS.S3(),
-          event.Records[0].s3.object.key.replace('%3A', ':'),
+          objectKey,
           errorsClient,
           errorsMutationCreateError
         );
@@ -239,7 +287,7 @@ exports.handler = (event, context, callback) => {
       if (!registeredUsersQueryGetAccountNameResult) {
         s3DeleteObject(
           new AWS.S3(),
-          event.Records[0].s3.object.key.replace('%3A', ':'),
+          objectKey,
           errorsClient,
           errorsMutationCreateError
         );
@@ -257,7 +305,7 @@ exports.handler = (event, context, callback) => {
       ) {
         s3DeleteObject(
           new AWS.S3(),
-          event.Records[0].s3.object.key.replace('%3A', ':'),
+          objectKey,
           errorsClient,
           errorsMutationCreateError
         );
@@ -397,7 +445,7 @@ exports.handler = (event, context, callback) => {
         await screensClient.hydrated();
 
         const screensMutationCreateScreenInput = {
-          objectKey: event.Records[0].s3.object.key.replace('%3A', ':'),
+          objectKey,
           posterId: objectDataObject.displayName,
           type: objectDataObject.type,
         };
@@ -414,7 +462,7 @@ exports.handler = (event, context, callback) => {
           data: JSON.stringify({
             action: 'screensMutationCreateScreen',
             screensMutationCreateScreenInput: {
-              objectKey: event.Records[0].s3.object.key.replace('%3A', ':'),
+              objectKey,
               posterId: objectDataObject.displayName,
               type: objectDataObject.type,
             },
@@ -427,7 +475,6 @@ exports.handler = (event, context, callback) => {
             fetchPolicy: 'no-cache',
           })
           .catch(() => {});
-        return;
       }
     })();
   });
