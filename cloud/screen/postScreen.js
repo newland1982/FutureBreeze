@@ -150,15 +150,12 @@ const getObjectDataObject = (eventRecord) => {
 
 const s3DeleteObject = async (
   s3,
-  objectKey,
+  s3DeleteObjectInput,
   errorsClient,
   errorsMutationCreateError
 ) => {
   await s3
-    .deleteObject({
-      Bucket: process.env.Bucket,
-      Key: objectKey,
-    })
+    .deleteObject(s3DeleteObjectInput)
     .promise()
     .catch(async () => {
       await errorsClient.hydrated();
@@ -166,10 +163,7 @@ const s3DeleteObject = async (
         type: 'postScreen',
         data: JSON.stringify({
           action: 's3DeleteObject',
-          s3DeleteObjectInput: {
-            Bucket: process.env.Bucket,
-            Key: objectKey,
-          },
+          s3DeleteObjectInput,
         }),
       };
       await errorsClient
@@ -230,6 +224,11 @@ exports.handler = (event, context, callback) => {
 
     const objectKey = event.Records[0].s3.object.key.replace('%3A', ':');
 
+    const s3DeleteObjectInput = {
+      Bucket: process.env.Bucket,
+      Key: objectKey,
+    };
+
     const screensMutationDeleteScreenInput = {
       objectKey,
     };
@@ -255,7 +254,7 @@ exports.handler = (event, context, callback) => {
         // if (screensQueryGetObjectKeyResult.data.getObjectKey.length === 0) {
         //   s3DeleteObject(
         //     new AWS.S3(),
-        //     objectKey,
+        //     s3DeleteObjectInput,
         //     errorsClient,
         //     errorsMutationCreateError
         //   );
@@ -265,7 +264,7 @@ exports.handler = (event, context, callback) => {
         console.log('screensQueryGetObjectAERRORRR', error);
         s3DeleteObject(
           new AWS.S3(),
-          objectKey,
+          s3DeleteObjectInput,
           errorsClient,
           errorsMutationCreateError
         );
@@ -287,7 +286,7 @@ exports.handler = (event, context, callback) => {
       if (!registeredUsersQueryGetAccountNameResult) {
         s3DeleteObject(
           new AWS.S3(),
-          objectKey,
+          s3DeleteObjectInput,
           errorsClient,
           errorsMutationCreateError
         );
@@ -305,7 +304,7 @@ exports.handler = (event, context, callback) => {
       ) {
         s3DeleteObject(
           new AWS.S3(),
-          objectKey,
+          s3DeleteObjectInput,
           errorsClient,
           errorsMutationCreateError
         );
