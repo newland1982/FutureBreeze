@@ -416,15 +416,13 @@ exports.handler = (event, context, callback) => {
         return;
       }
 
+      await screensClient.hydrated();
+      const screensMutationCreateScreenInput = {
+        objectKey,
+        posterId: objectDataObject.displayName,
+        type: objectDataObject.type,
+      };
       try {
-        await screensClient.hydrated();
-
-        const screensMutationCreateScreenInput = {
-          objectKey,
-          posterId: objectDataObject.displayName,
-          type: objectDataObject.type,
-        };
-
         await screensClient.mutate({
           mutation: screensMutationCreateScreen,
           variables: { input: screensMutationCreateScreenInput },
