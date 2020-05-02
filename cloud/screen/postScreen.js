@@ -322,15 +322,15 @@ exports.handler = (event, context, callback) => {
           errorsMutationCreateError
         );
 
+        await screensClient.hydrated();
+
+        const screensMutationChangePosterIdInput = {
+          posterId: registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
+            96
+          ),
+        };
+
         try {
-          await screensClient.hydrated();
-
-          const screensMutationChangePosterIdInput = {
-            posterId: registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
-              96
-            ),
-          };
-
           await screensClient.mutate({
             mutation: screensMutationChangePosterId,
             variables: { input: screensMutationChangePosterIdInput },
