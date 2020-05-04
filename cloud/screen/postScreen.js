@@ -229,9 +229,9 @@ exports.handler = (event, context, callback) => {
       Key: objectKey,
     };
 
-    // const screensMutationDeleteScreenInput = {
-    //   objectKey,
-    // };
+    const screensMutationDeleteScreenInput = {
+      objectKey,
+    };
 
     (async () => {
       try {
@@ -258,6 +258,12 @@ exports.handler = (event, context, callback) => {
         //     errorsClient,
         //     errorsMutationCreateError
         //   );
+        //   executeScreensMutationDeleteScreen(
+        //     screensClient,
+        //     screensMutationDeleteScreenInput,
+        //     errorsClient,
+        //     errorsMutationCreateError
+        //   );
         //   return;
         // }
       } catch (error) {
@@ -265,6 +271,12 @@ exports.handler = (event, context, callback) => {
         s3DeleteObject(
           new AWS.S3(),
           s3DeleteObjectInput,
+          errorsClient,
+          errorsMutationCreateError
+        );
+        executeScreensMutationDeleteScreen(
+          screensClient,
+          screensMutationDeleteScreenInput,
           errorsClient,
           errorsMutationCreateError
         );
@@ -287,6 +299,12 @@ exports.handler = (event, context, callback) => {
         s3DeleteObject(
           new AWS.S3(),
           s3DeleteObjectInput,
+          errorsClient,
+          errorsMutationCreateError
+        );
+        executeScreensMutationDeleteScreen(
+          screensClient,
+          screensMutationDeleteScreenInput,
           errorsClient,
           errorsMutationCreateError
         );
@@ -318,6 +336,12 @@ exports.handler = (event, context, callback) => {
         s3DeleteObject(
           new AWS.S3(),
           s3DeleteObjectInput,
+          errorsClient,
+          errorsMutationCreateError
+        );
+        executeScreensMutationDeleteScreen(
+          screensClient,
+          screensMutationDeleteScreenInput,
           errorsClient,
           errorsMutationCreateError
         );
