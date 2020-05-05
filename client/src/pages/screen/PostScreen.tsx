@@ -134,7 +134,7 @@ const PostScreen = () => {
       }
     };
     checkAuthentication();
-  }, []);
+  }, [dispatch, history, location.pathname, user]);
 
   useEffect(() => {
     if (!sampleImageObjectURL) {
@@ -400,7 +400,7 @@ const PostScreen = () => {
     // }
     try {
       const putFileForMobileResult = await Storage.put(
-        `${displayName}_${RegisteredUsersCreatedDate}/mobile${unixTimestamp}`,
+        `sss_sw_1588345754422/mobile1588678293186`,
         blobForMobile,
         {
           level: 'protected',

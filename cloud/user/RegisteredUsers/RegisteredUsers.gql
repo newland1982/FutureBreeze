@@ -62,6 +62,8 @@ type RegisteredUser {
   accountName: String!
   lastActivityDate: String!
   data: String!
+  # lastPostDate: String
+  # postCount: Int!
   status: String!
 }
 
