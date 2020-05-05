@@ -400,7 +400,7 @@ const PostScreen = () => {
     // }
     try {
       const putFileForMobileResult = await Storage.put(
-        `sss_sw_1588345754422/mobile1588678293186`,
+        `${displayName}_${RegisteredUsersCreatedDate}/mobile${unixTimestamp}`,
         blobForMobile,
         {
           level: 'protected',

@@ -197,7 +197,6 @@ const executeScreensMutationDeleteScreen = async (
       data: JSON.stringify({
         action: 'screensMutationDeleteScreen',
         screensMutationDeleteScreenInput,
-        // objectKey: event.Records[0].s3.object.key.replace('%3A', ':'),
       }),
     };
     await errorsClient
