@@ -29,6 +29,10 @@ type DisplayName {
   displayName: String!
 }
 
+# type PostCount {
+#   postCount: Int!
+# }
+
 input GetAccountNameInput {
   cognitoIdentityId: String!
 }
@@ -41,11 +45,16 @@ input GetDisplayNameInput {
   displayName: String!
 }
 
+# input SetLastPostDateInput {
+#   cognitoIdentityId: String!
+# }
+
 type Mutation {
   createRegisteredUser(input: CreateRegisteredUserInput!): DisplayName
   setCognitoIdentityId(input: SetCognitoIdentityIdInput!): CognitoIdentityId
     @aws_cognito_user_pools
   deleteRegisteredUser(input: DeleteRegisteredUserInput!): DisplayName
+  # setLastPostDate(input: SetLastPostDateInput!): PostCount
 }
 
 type Query {

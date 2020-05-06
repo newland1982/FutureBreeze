@@ -210,6 +210,7 @@ const executeScreensMutationDeleteScreen = async (
   }
 };
 
+// @ts-ignore
 exports.handler = (event, context, callback) => {
   event.Records.forEach((record) => {
     if (

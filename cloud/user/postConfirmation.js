@@ -1,11 +1,17 @@
 'use strict';
 
+// @ts-ignore
 global.WebSocket = require('ws');
+// @ts-ignore
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
+// @ts-ignore
 const AUTH_TYPE = require('aws-appsync/lib/link/auth-link').AUTH_TYPE;
+// @ts-ignore
 const AWSAppSyncClient = require('aws-appsync').default;
+// @ts-ignore
 const AWS = require('aws-sdk');
+// @ts-ignore
 const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 
@@ -21,15 +27,16 @@ const signUpUsersClient = new AWSAppSyncClient({
   region: process.env.REGION,
   auth: {
     type: AUTH_TYPE.AWS_IAM,
-    credentials
+    credentials,
   },
-  disableOffline: true
+  disableOffline: true,
 });
 
+// @ts-ignore
 exports.handler = (event, context, callback) => {
   const signUpUsersMutationSetStatusInput = {
     id: event.request.clientMetadata.id,
-    status: 'completed'
+    status: 'completed',
   };
 
   (async () => {
@@ -38,7 +45,7 @@ exports.handler = (event, context, callback) => {
       .mutate({
         mutation: signUpUsersMutationSetStatus,
         variables: { input: signUpUsersMutationSetStatusInput },
-        fetchPolicy: 'no-cache'
+        fetchPolicy: 'no-cache',
       })
       .catch(() => {});
 
