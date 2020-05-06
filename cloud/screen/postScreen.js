@@ -95,7 +95,7 @@ const errorsClient = new AWSAppSyncClient({
   disableOffline: true,
 });
 
-const getObjectDataObject = (eventRecord) => {
+const getS3ObjectDataObject = (eventRecord) => {
   const objectKey = eventRecord.s3.object.key;
   const s3FileAccessLevel = `protected`;
   const region = `(${process.env.REGION}`;
@@ -220,13 +220,14 @@ exports.handler = (event, context, callback) => {
       return;
     }
 
-    const objectDataObject = getObjectDataObject(event.Records[0]);
+    const s3ObjectDataObject = getS3ObjectDataObject(event.Records[0]);
 
     const objectKey = event.Records[0].s3.object.key.replace('%3A', ':');
 
     const s3DeleteObjectInput = {
       Bucket: process.env.Bucket,
       Key: objectKey,
+      VersionId: event.Records[0].s3.object.versionId,
     };
 
     const screensMutationDeleteScreenInput = {
@@ -251,21 +252,15 @@ exports.handler = (event, context, callback) => {
           'screensQueryGetObjectKeyResulttttt',
           screensQueryGetObjectKeyResult.data.getObjectKey.length
         );
-        // if (screensQueryGetObjectKeyResult.data.getObjectKey.length === 0) {
-        //   s3DeleteObject(
-        //     new AWS.S3(),
-        //     s3DeleteObjectInput,
-        //     errorsClient,
-        //     errorsMutationCreateError
-        //   );
-        //   executeScreensMutationDeleteScreen(
-        //     screensClient,
-        //     screensMutationDeleteScreenInput,
-        //     errorsClient,
-        //     errorsMutationCreateError
-        //   );
-        //   return;
-        // }
+        if (screensQueryGetObjectKeyResult.data.getObjectKey.length === 0) {
+          s3DeleteObject(
+            new AWS.S3(),
+            s3DeleteObjectInput,
+            errorsClient,
+            errorsMutationCreateError
+          );
+          return;
+        }
       } catch (error) {
         console.log('screensQueryGetObjectAERRORRR', error);
         s3DeleteObject(
@@ -274,18 +269,13 @@ exports.handler = (event, context, callback) => {
           errorsClient,
           errorsMutationCreateError
         );
-        executeScreensMutationDeleteScreen(
-          screensClient,
-          screensMutationDeleteScreenInput,
-          errorsClient,
-          errorsMutationCreateError
-        );
+        //handle screens error
         return;
       }
 
       await registeredUsersClient.hydrated();
       const registeredUsersQueryGetAccountNameInput = {
-        cognitoIdentityId: objectDataObject.cognitoIdentityId,
+        cognitoIdentityId: s3ObjectDataObject.cognitoIdentityId,
       };
       const registeredUsersQueryGetAccountNameResult = await registeredUsersClient
         .query({
@@ -312,12 +302,12 @@ exports.handler = (event, context, callback) => {
       }
 
       if (
-        !(objectDataObject.validationResult === 'valid') ||
-        !(objectDataObject.size < Number(process.env.OBJECT_SIZE_LIMIT)) ||
+        !(s3ObjectDataObject.validationResult === 'valid') ||
+        !(s3ObjectDataObject.size < Number(process.env.OBJECT_SIZE_LIMIT)) ||
         !(
           registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
             96
-          ) === objectDataObject.displayName
+          ) === s3ObjectDataObject.displayName
         )
       ) {
         const cognitoIdentityServiceProviderAdminDeleteUserInput = {
@@ -443,8 +433,8 @@ exports.handler = (event, context, callback) => {
       await screensClient.hydrated();
       const screensMutationCreateScreenInput = {
         objectKey,
-        posterId: objectDataObject.displayName,
-        type: objectDataObject.type,
+        posterId: s3ObjectDataObject.displayName,
+        type: s3ObjectDataObject.type,
       };
       try {
         await screensClient.mutate({
