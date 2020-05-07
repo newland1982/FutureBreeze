@@ -6,18 +6,12 @@ input CreateScreenInput {
   objectKey: String!
 }
 
-input SetScreenInput {
-  objectKey: String!
-  posterId: String!
-  type: String!
-}
-
-input GetObjectKeyInput {
-  objectKey: String!
-}
-
 input DeleteScreenInput {
   objectKey: String!
+}
+
+input GetStatusInput {
+  objectKey: String
 }
 
 type Mutation {
@@ -36,7 +30,7 @@ type PosterId {
 }
 
 type Query {
-  getObjectKey(input: GetObjectKeyInput!): [ObjectKey]
+  getStatus(input: GetStatusInput!): [Status]
 }
 
 type Screen {
@@ -46,6 +40,16 @@ type Screen {
   type: String!
   userCount: Int!
   status: String!
+}
+
+input SetScreenInput {
+  objectKey: String!
+  posterId: String!
+  type: String!
+}
+
+type Status {
+  status: String
 }
 
 schema {

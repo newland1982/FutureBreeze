@@ -16,7 +16,7 @@ $utils.toJson($utils.rds.toJsonObject($context.result)[1])
 #set($posterId=${context.arguments.input.posterId})
 #set($type=${context.arguments.input.type})
 #set($userCount='0')
-#set($status='confirmed')
+#set($status='complete')
 {
     "version": "2018-05-29",
     "statements": [
@@ -50,11 +50,11 @@ $utils.toJson($utils.rds.toJsonObject($context.result)[1])
 
 $utils.toJson($utils.rds.toJsonObject($context.result)[1])
 
-## Resolver for Query.getObjectKey
+## Resolver for Query.getStatus
 {
     "version": "2018-05-29",
     "statements": [
-        "SELECT objectKey FROM contents.screens WHERE objectKey = '$context.arguments.input.objectKey' AND status = 'init'"
+        "SELECT status FROM contents.screens WHERE objectKey = '$context.arguments.input.objectKey'"
     ]
 }
 

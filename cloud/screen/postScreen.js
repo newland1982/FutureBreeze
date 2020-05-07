@@ -37,10 +37,10 @@ const screensMutationDeleteScreen = gql(`
   }
  }`);
 
-const screensQueryGetObjectKey = gql(`
-  query GetObjectKey($input: GetObjectKeyInput!) {
-    getObjectKey(input: $input) {
-      objectKey
+const screensQueryGetStatus = gql(`
+  query GetStatus($input: GetStatusInput!) {
+    getStatus(input: $input) {
+      status
   }
  }`);
 
@@ -238,21 +238,40 @@ exports.handler = (event, context, callback) => {
       try {
         await screensClient.hydrated();
 
-        const screensQueryGetObjectKeyInput = {
+        const screensQueryGetStatusInput = {
           objectKey,
         };
 
-        const screensQueryGetObjectKeyResult = await screensClient.query({
-          query: screensQueryGetObjectKey,
-          variables: { input: screensQueryGetObjectKeyInput },
+        const screensQueryGetStatusResult = await screensClient.query({
+          query: screensQueryGetStatus,
+          variables: { input: screensQueryGetStatusInput },
           fetchPolicy: 'network-only',
         });
 
         console.log(
-          'screensQueryGetObjectKeyResulttttt',
-          screensQueryGetObjectKeyResult.data.getObjectKey.length
+          'screensQueryGetStatusResulttttt1111',
+          screensQueryGetStatusResult.data.getStatus.length
         );
-        if (screensQueryGetObjectKeyResult.data.getObjectKey.length === 0) {
+        console.log(
+          'screensQueryGetStatusResulttttt2222',
+          screensQueryGetStatusResult.data.getStatus[0]
+        );
+        if (screensQueryGetStatusResult.data.getStatus.length === 0) {
+          s3DeleteObject(
+            new AWS.S3(),
+            s3DeleteObjectInput,
+            errorsClient,
+            errorsMutationCreateError
+          );
+          executeScreensMutationDeleteScreen(
+            screensClient,
+            screensMutationDeleteScreenInput,
+            errorsClient,
+            errorsMutationCreateError
+          );
+          return;
+        }
+        if (screensQueryGetStatusResult.data.getStatus[0] === 'complete') {
           s3DeleteObject(
             new AWS.S3(),
             s3DeleteObjectInput,
@@ -262,7 +281,7 @@ exports.handler = (event, context, callback) => {
           return;
         }
       } catch (error) {
-        console.log('screensQueryGetObjectAERRORRR', error);
+        console.log('screensQueryGetStatusAERRORRR', error);
         s3DeleteObject(
           new AWS.S3(),
           s3DeleteObjectInput,
