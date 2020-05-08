@@ -16,9 +16,9 @@ const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 let cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
 
-const screensMutationCreateScreen = gql(`
-  mutation CreateScreen($input: CreateScreenInput!) {
-    createScreen(input: $input) {
+const screensMutationSetScreen = gql(`
+  mutation SetScreen($input: SetScreenInput!) {
+    setScreen(input: $input) {
       objectKey
   }
  }`);
@@ -248,14 +248,6 @@ exports.handler = (event, context, callback) => {
           fetchPolicy: 'network-only',
         });
 
-        console.log(
-          'screensQueryGetStatusResulttttt1111',
-          screensQueryGetStatusResult.data.getStatus.length
-        );
-        console.log(
-          'screensQueryGetStatusResulttttt2222',
-          screensQueryGetStatusResult.data.getStatus[0]
-        );
         if (screensQueryGetStatusResult.data.getStatus.length === 0) {
           s3DeleteObject(
             new AWS.S3(),
@@ -281,7 +273,6 @@ exports.handler = (event, context, callback) => {
           return;
         }
       } catch (error) {
-        console.log('screensQueryGetStatusAERRORRR', error);
         s3DeleteObject(
           new AWS.S3(),
           s3DeleteObjectInput,
@@ -450,15 +441,15 @@ exports.handler = (event, context, callback) => {
       }
 
       await screensClient.hydrated();
-      const screensMutationCreateScreenInput = {
+      const screensMutationSetScreenInput = {
         objectKey,
         posterId: s3ObjectDataObject.displayName,
         type: s3ObjectDataObject.type,
       };
       try {
         await screensClient.mutate({
-          mutation: screensMutationCreateScreen,
-          variables: { input: screensMutationCreateScreenInput },
+          mutation: screensMutationSetScreen,
+          variables: { input: screensMutationSetScreenInput },
           fetchPolicy: 'no-cache',
         });
       } catch (error) {
@@ -466,8 +457,8 @@ exports.handler = (event, context, callback) => {
         const errorsMutationCreateErrorInput = {
           type: 'postScreen',
           data: JSON.stringify({
-            action: 'screensMutationCreateScreen',
-            screensMutationCreateScreenInput,
+            action: 'screensMutationSetScreen',
+            screensMutationSetScreenInput,
           }),
         };
         await errorsClient

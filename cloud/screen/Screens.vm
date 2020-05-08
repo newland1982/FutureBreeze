@@ -20,7 +20,7 @@ $utils.toJson($utils.rds.toJsonObject($context.result)[1])
 {
     "version": "2018-05-29",
     "statements": [
-        "UPDATE contents.screens SET createdDate = '$createdDate', posterId = '$posterId', type = '$type', userCount = '$userCount', status = '$status' WHERE objectKey = '$objectKey' AND status = 'init'",
+        "UPDATE contents.screens SET createdDate = '$createdDate', posterId = '$posterId', type = '$type', userCount = '$userCount', status = '$status' WHERE objectKey = '$objectKey'",
         "SELECT objectKey FROM contents.screens WHERE objectKey = '$objectKey'"
     ]
 }
