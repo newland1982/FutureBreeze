@@ -17,7 +17,7 @@ const credentials = AWS.config.credentials;
 let cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
 
 const screensMutationSetScreen = gql(`
-  mutation SetScreen($input: SetScreenInput!) {
+  mutation SetScreen($input: SetScreenInput!) {
     setScreen(input: $input) {
       objectKey
   }
