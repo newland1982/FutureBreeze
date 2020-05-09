@@ -52,6 +52,24 @@ $util.toJson($context.result)
 
 $util.toJson($context.result)
 
+## Resolver for Mutation.setPostData
+{
+  "version" : "2017-02-28",
+  "operation" : "UpdateItem",
+  "key" : {
+      "cognitoIdentityId" : { "S" : "${context.arguments.input.cognitoIdentityId}" }
+  },
+  "update" : {
+      "expression" : "SET lastPostDate = :lastPostDate, postCount = postCount + :increment",
+      "expressionValues": {
+          ":lastPostDate" : { "S": "${util.time.nowEpochMilliSeconds()}" },
+          ":increment" : { "N": "1" }
+      }
+  }
+}
+
+$util.toJson($context.result)
+
 ## Resolver for Query.getDisplayName
 {
     "version" : "2017-02-28",
