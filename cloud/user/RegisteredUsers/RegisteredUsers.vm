@@ -11,6 +11,8 @@
       "accountName" : { "S" : "${context.arguments.input.accountName}" },
       "lastActivityDate": { "S" : "${util.time.nowEpochMilliSeconds()}" },
       "data": { "S" : "${context.arguments.input.data}" },
+      "lastPostDate": { "S" : "0" },
+      "postCount": { "N": "0" },
       "status": { "S": "${context.arguments.input.status}" }
   },
   "condition": {
