@@ -29,10 +29,10 @@ type DisplayName {
   displayName: String!
 }
 
-# type PostData {
-#   lastPostDate: String
-#   postCount: Int!
-# }
+type PostData {
+  lastPostDate: String
+  postCount: Int!
+}
 
 input GetAccountNameInput {
   cognitoIdentityId: String!
@@ -46,20 +46,20 @@ input GetDisplayNameInput {
   displayName: String!
 }
 
-# input SetPostDataInput {
-#   displayName: String!
-# }
+input SetPostDataInput {
+  displayName: String!
+}
 
-# input GetPostDataInput {
-#   displayName: String!
-# }
+input GetPostDataInput {
+  displayName: String!
+}
 
 type Mutation {
   createRegisteredUser(input: CreateRegisteredUserInput!): DisplayName
   setCognitoIdentityId(input: SetCognitoIdentityIdInput!): CognitoIdentityId
     @aws_cognito_user_pools
   deleteRegisteredUser(input: DeleteRegisteredUserInput!): DisplayName
-  # setPostData(input: SetPostDataInput!): PostData
+  setPostData(input: SetPostDataInput!): PostData
 }
 
 type Query {
@@ -67,7 +67,7 @@ type Query {
   getCreatedDate(input: GetCreatedDateInput!): CreatedDate
     @aws_cognito_user_pools
   getAccountName(input: GetAccountNameInput!): AccountName
-  # getPostData(input: GetPostDataInput!): PostData
+  getPostData(input: GetPostDataInput!): PostData
 }
 
 type RegisteredUser {
@@ -77,8 +77,8 @@ type RegisteredUser {
   accountName: String!
   lastActivityDate: String!
   data: String!
-  # lastPostDate: String
-  # postCount: Int!
+  lastPostDate: String
+  postCount: Int!
   status: String!
 }
 

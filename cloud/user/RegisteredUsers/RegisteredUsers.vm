@@ -110,3 +110,14 @@ $util.toJson($context.result)
 {
   "accountName": $utils.toJson($context.result.items[0]["accountName"])
 }
+
+## Resolver for Query.getPostData
+{
+    "version" : "2017-02-28",
+    "operation" : "GetItem",
+    "key" : {
+        "displayName" : { "S" : "${context.arguments.input.displayName}" }
+    }
+}
+
+$util.toJson($context.result)
