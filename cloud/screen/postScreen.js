@@ -51,10 +51,26 @@ const registeredUsersMutationDeleteRegisteredUser = gql(`
   }
  }`);
 
+const registeredUsersMutationSetPostData = gql(`
+  mutation SetPostData($input: SetPostDataInput!) {
+    setPostData(input: $input) {
+      lastPostDate
+      postCount
+  }
+ }`);
+
 const registeredUsersQueryGetAccountName = gql(`
   query GetAccountName($input: GetAccountNameInput!) {
     getAccountName(input: $input) {
       accountName
+  }
+ }`);
+
+const registeredUsersQueryGetPostData = gql(`
+  query GetPostData($input: GetPostDataInput!) {
+    getPostData(input: $input) {
+      lastPostDate
+      postCount
   }
  }`);
 
