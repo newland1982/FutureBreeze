@@ -59,13 +59,13 @@ $util.toJson($context.result)
   "version" : "2017-02-28",
   "operation" : "UpdateItem",
   "key" : {
-      "displayName" : { "S" : "${displayName}" }
+      "displayName" : { "S" : "${context.arguments.input.displayName}" }
   },
   "update" : {
       "expression" : "SET lastPostDate = :lastPostDate, postCount = postCount + :increment",
       "expressionValues": {
           ":lastPostDate" : { "S": "${util.time.nowEpochMilliSeconds()}" },
-          ":increment" : { "N": "1" }
+          ":increment" : { "N": 1 }
       }
   }
 }
