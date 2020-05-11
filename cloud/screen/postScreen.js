@@ -336,6 +336,12 @@ exports.handler = (event, context, callback) => {
           ) === s3ObjectDataObject.displayName
         )
       ) {
+        const screensMutationChangePosterIdInput = {
+          posterId: registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
+            96
+          ),
+        };
+
         const cognitoIdentityServiceProviderAdminDeleteUserInput = {
           UserPoolId: process.env.USER_POOL_ID,
           Username:
@@ -363,12 +369,6 @@ exports.handler = (event, context, callback) => {
         );
 
         await screensClient.hydrated();
-
-        const screensMutationChangePosterIdInput = {
-          posterId: registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
-            96
-          ),
-        };
 
         try {
           await screensClient.mutate({
@@ -456,6 +456,19 @@ exports.handler = (event, context, callback) => {
         return;
       }
 
+      const registeredUsersMutationSetPostDataInput = {
+        displayName: s3ObjectDataObject.displayName,
+      };
+
+      await registeredUsersClient.hydrated();
+      await registeredUsersClient
+        .mutate({
+          mutation: registeredUsersMutationSetPostData,
+          variables: { input: registeredUsersMutationSetPostDataInput },
+          fetchPolicy: 'no-cache',
+        })
+        .catch(() => {});
+
       await screensClient.hydrated();
       const screensMutationSetScreenInput = {
         objectKey,
@@ -473,7 +486,7 @@ exports.handler = (event, context, callback) => {
         const errorsMutationCreateErrorInput = {
           type: 'postScreen',
           data: JSON.stringify({
-            action: 'screensMutationSetScreen',
+            action: 'screensMutationSetScreen',
             screensMutationSetScreenInput,
           }),
         };
