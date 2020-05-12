@@ -54,6 +54,32 @@ $util.toJson($context.result)
 
 $util.toJson($context.result)
 
+## Resolver for Mutation.prepareSetPostData
+#set($currentDate=${util.time.nowEpochMilliSeconds()})
+#set($effectivePeriod=86400000)
+{
+  "version" : "2017-02-28",
+  "operation" : "UpdateItem",
+  "key" : {
+      "displayName" : { "S" : "${context.arguments.input.displayName}" }
+  },
+  "update" : {
+      "expression" : "SET postCount = :zero",
+      "expressionValues": {
+          ":zero" : { "N": 0 }
+      }
+  },
+  "condition" : {
+        "expression"       : ":currentDate - lastPostDate > :effectivePeriod",
+        "expressionValues" : {
+            ":currentDate" : $currentDate,
+            ":effectivePeriod" : $effectivePeriod
+        }
+    }
+}
+
+$util.toJson($context.result)
+
 ## Resolver for Mutation.setPostData
 {
   "version" : "2017-02-28",
@@ -110,14 +136,3 @@ $util.toJson($context.result)
 {
   "accountName": $utils.toJson($context.result.items[0]["accountName"])
 }
-
-## Resolver for Query.getPostData
-{
-    "version" : "2017-02-28",
-    "operation" : "GetItem",
-    "key" : {
-        "displayName" : { "S" : "${context.arguments.input.displayName}" }
-    }
-}
-
-$util.toJson($context.result)
