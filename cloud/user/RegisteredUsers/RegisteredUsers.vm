@@ -7,12 +7,11 @@
   },
 
   "attributeValues" : {
-      "createdDate": { "S" : "${util.time.nowEpochMilliSeconds()}" },
+      "createdDate": { "N" : ${util.time.nowEpochMilliSeconds()} },
       "accountName" : { "S" : "${context.arguments.input.accountName}" },
-      "lastActivityDate": { "S" : "${util.time.nowEpochMilliSeconds()}" },
       "data": { "S" : "${context.arguments.input.data}" },
-      "lastPostDate": { "S" : "0" },
-      "postCount": { "N": "0" },
+      "postCountStartDate": { "N" : 0 },
+      "postCount": { "N": 0 },
       "status": { "S": "${context.arguments.input.status}" }
   },
   "condition": {
@@ -90,7 +89,7 @@ $util.toJson($context.result)
   "update" : {
       "expression" : "SET lastPostDate = :lastPostDate, postCount = postCount + :increment",
       "expressionValues": {
-          ":lastPostDate" : { "S": "${util.time.nowEpochMilliSeconds()}" },
+          ":lastPostDate" : { "N": ${util.time.nowEpochMilliSeconds()} },
           ":increment" : { "N": 1 }
       }
   }

@@ -18,7 +18,7 @@ input CreateRegisteredUserInput {
 }
 
 type CreatedDate @aws_cognito_user_pools {
-  createdDate: String!
+  createdDate: Int!
 }
 
 input DeleteRegisteredUserInput {
@@ -51,7 +51,7 @@ type Mutation {
 }
 
 type PostData {
-  lastPostDate: String!
+  lastPostDate: Int!
   postCount: Int!
 }
 
@@ -68,12 +68,11 @@ type Query {
 
 type RegisteredUser {
   displayName: String!
-  createdDate: String!
+  createdDate: Int!
   cognitoIdentityId: String
   accountName: String!
-  lastActivityDate: String!
   data: String!
-  lastPostDate: String!
+  lastPostDate: Int!
   postCount: Int!
   status: String!
 }
