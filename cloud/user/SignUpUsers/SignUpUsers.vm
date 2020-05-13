@@ -9,12 +9,12 @@
   #set( $expirationDate = $util.time.nowEpochSeconds() + 86400)
 
   "attributeValues" : {
-      "createdDate": { "S" : "${util.time.nowEpochMilliSeconds()}" },
+      "createdDate": { "N" : ${util.time.nowEpochMilliSeconds()} },
       "ipAddress" : { "S" : "${context.identity.sourceIp[0]}"},
       "accountName": { "S" : "${context.arguments.input.accountName}" },
       "password": { "S" : "${context.arguments.input.password}" },
       "status": { "S" : "init" },
-      "expirationDate": { "N" : "${expirationDate}" }
+      "expirationDate": { "N" : ${expirationDate} }
   }
 }
 

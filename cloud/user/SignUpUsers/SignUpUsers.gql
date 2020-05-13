@@ -40,7 +40,7 @@ input SetStatusInput {
 
 type SignUpUser {
   id: ID!
-  createdDate: String!
+  createdDate: Int!
   ipAddress: String!
   accountName: String!
   password: String!
