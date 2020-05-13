@@ -51,7 +51,7 @@ type Mutation {
 }
 
 type PostData {
-  lastPostDate: Int!
+  postCountStartDate: Int!
   postCount: Int!
 }
 
@@ -72,7 +72,7 @@ type RegisteredUser {
   cognitoIdentityId: String
   accountName: String!
   data: String!
-  lastPostDate: Int!
+  postCountStartDate: Int!
   postCount: Int!
   status: String!
 }
@@ -83,6 +83,7 @@ input SetCognitoIdentityIdInput {
 
 input SetPostDataInput {
   displayName: String!
+  postCount: Int!
 }
 
 schema {

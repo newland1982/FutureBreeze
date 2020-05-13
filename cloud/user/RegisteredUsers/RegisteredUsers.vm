@@ -26,8 +26,8 @@ $util.toJson($context.result)
   "version" : "2017-02-28",
   "operation" : "UpdateItem",
   
-  #set ($accountName = $context.identity.username)
-  #set ($displayName = $accountName.substring(96))
+  #set($accountName=$context.identity.username)
+  #set($displayName=$accountName.substring(96))
   
   "key" : {
       "displayName" : { "S" : "${displayName}" }
@@ -55,7 +55,7 @@ $util.toJson($context.result)
 
 ## Resolver for Mutation.prepareSetPostData
 #set($currentDate=${util.time.nowEpochMilliSeconds()})
-#set($effectivePeriod=86400000)
+#set($postCountEffectivePeriod=86400000)
 {
   "version" : "2017-02-28",
   "operation" : "UpdateItem",
@@ -69,10 +69,10 @@ $util.toJson($context.result)
       }
   },
   "condition" : {
-        "expression"       : ":currentDate - lastPostDate > :effectivePeriod",
+        "expression"       : ":currentDate - postCountStartDate > :postCountEffectivePeriod",
         "expressionValues" : {
             ":currentDate" : $currentDate,
-            ":effectivePeriod" : $effectivePeriod
+            ":postCountEffectivePeriod" : $postCountEffectivePeriod
         }
     }
 }
@@ -80,6 +80,13 @@ $util.toJson($context.result)
 $util.toJson($context.result)
 
 ## Resolver for Mutation.setPostData
+#set($expression="")
+#set($postCountStartDate=${util.time.nowEpochMilliSeconds()})
+#set($increment={ "N": 1 })
+#if(${context.arguments.input.postCount}==0)
+#set($expression="SET postCountStartDate = ${postCountStartDate}, postCount = postCount + ${increment}")
+#else
+#set($expression="SET postCount = postCount + ${increment}")
 {
   "version" : "2017-02-28",
   "operation" : "UpdateItem",
@@ -87,9 +94,9 @@ $util.toJson($context.result)
       "displayName" : { "S" : "${context.arguments.input.displayName}" }
   },
   "update" : {
-      "expression" : "SET lastPostDate = :lastPostDate, postCount = postCount + :increment",
+      "expression" : "${expression}",
       "expressionValues": {
-          ":lastPostDate" : { "N": ${util.time.nowEpochMilliSeconds()} },
+          ":postCountStartDate" : { "N": ${util.time.nowEpochMilliSeconds()} },
           ":increment" : { "N": 1 }
       }
   }
