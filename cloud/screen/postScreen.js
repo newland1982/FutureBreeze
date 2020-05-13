@@ -456,11 +456,10 @@ exports.handler = (event, context, callback) => {
         return;
       }
 
+      await registeredUsersClient.hydrated();
       const registeredUsersMutationSetPostDataInput = {
         displayName: s3ObjectDataObject.displayName,
       };
-
-      await registeredUsersClient.hydrated();
       await registeredUsersClient
         .mutate({
           mutation: registeredUsersMutationSetPostData,
