@@ -7,7 +7,7 @@
   },
 
   "attributeValues" : {
-      "createdDate": { "S" : "${util.time.nowEpochMilliSeconds()}" },
+      "createdDate": { "N" : ${util.time.nowEpochMilliSeconds()} },
       "type": { "S" : "${context.arguments.input.type}" },
       "data": { "S" : "${context.arguments.input.data}" },
       "status": { "S" : "init" }
