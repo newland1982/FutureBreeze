@@ -88,12 +88,12 @@ $util.toJson($context.result)
   },
   "update" : {
     #if(${context.arguments.input.postCount}==0)
-      "expression" : "SET postCountStartDate = :postCountStartDate, postCount = postCount + :increment"
+      "expression" : "SET postCountStartDate = :currentDate, postCount = postCount + :increment"
     #else
       "expression" : "SET postCount = postCount + :increment"
     #end
      ,"expressionValues": {
-          ":postCountStartDate" : { "N": ${util.time.nowEpochMilliSeconds()} },
+          ":currentDate" : { "N": ${util.time.nowEpochMilliSeconds()} },
           ":increment" : { "N": 1 }
       }
   }
