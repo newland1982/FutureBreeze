@@ -21,19 +21,19 @@
 $util.toJson($context.result)
 
 ## Resolver for Mutation.setCognitoIdentityId
- #set($accountName = $context.identity.username)
- #set($displayName = $accountName.substring(96))
+#set($accountName = $context.identity.username)
+#set($displayName = $accountName.substring(96))
 {
   "version" : "2017-02-28",
   "operation" : "UpdateItem",
   "key" : {
-      "displayName" : { "S" : "${displayName}" }
+    "displayName" : { "S" : "${displayName}" }
   },
   "update" : {
-      "expression" : "SET cognitoIdentityId = :cognitoIdentityId",
-      "expressionValues": {
-          ":cognitoIdentityId" : { "S": "${context.arguments.input.cognitoIdentityId}" }
-      }
+    "expression" : "SET cognitoIdentityId = :cognitoIdentityId",
+    "expressionValues" : {
+      ":cognitoIdentityId" : { "S" : "${context.arguments.input.cognitoIdentityId}" }
+    }
   }
 }
 
@@ -44,34 +44,33 @@ $util.toJson($context.result)
   "version" : "2017-02-28",
   "operation" : "DeleteItem",
   "key" : {
-      "displayName" : { "S" : "${context.arguments.input.displayName}" }
+    "displayName" : { "S" : "${context.arguments.input.displayName}" }
   }
 }
 
 $util.toJson($context.result)
 
 ## Resolver for Mutation.prepareSetPostData
-#set($currentDate = { "N" : ${util.time.nowEpochMilliSeconds()} })
 #set($postCountPeriod = { "N" : 86400000 })
 {
   "version" : "2017-02-28",
   "operation" : "UpdateItem",
   "key" : {
-      "displayName" : { "S" : "${context.arguments.input.displayName}" }
+    "displayName" : { "S" : "${context.arguments.input.displayName}" }
   },
   "update" : {
-      "expression" : "SET postCount = :zero",
-      "expressionValues": {
-          ":zero" : { "N": 0 }
-      }
+    "expression" : "SET postCount = :zero",
+    "expressionValues" : {
+      ":zero" : { "N" : 0 }
+    }
   },
   "condition" : {
-        "expression"       : ":currentDate - postCountStartDate > :postCountPeriod",
-        "expressionValues" : {
-            ":currentDate" : $currentDate,
-            ":postCountPeriod" : $postCountPeriod
-        }
+    "expression" : ":currentDate - postCountStartDate > :postCountPeriod",
+    "expressionValues" : {
+      ":currentDate" : { "N" : ${util.time.nowEpochMilliSeconds()} },
+      ":postCountPeriod" : $postCountPeriod
     }
+  }
 }
 
 $util.toJson($context.result)
@@ -81,7 +80,7 @@ $util.toJson($context.result)
   "version" : "2017-02-28",
   "operation" : "UpdateItem",
   "key" : {
-      "displayName" : { "S" : "${context.arguments.input.displayName}" }
+    "displayName" : { "S" : "${context.arguments.input.displayName}" }
   },
   "update" : {
     #if(${context.arguments.input.postCount} == 0)
@@ -89,10 +88,10 @@ $util.toJson($context.result)
     #else
       "expression" : "SET postCount = postCount + :one"
     #end
-     ,"expressionValues": {
-          ":currentDate" : { "N": ${util.time.nowEpochMilliSeconds()} },
-          ":one" : { "N": 1 }
-      }
+    ,"expressionValues" : {
+      ":currentDate" : { "N" : ${util.time.nowEpochMilliSeconds()} },
+      ":one" : { "N" : 1 }
+    }
   }
 }
 
@@ -103,7 +102,7 @@ $util.toJson($context.result)
   "version" : "2017-02-28",
   "operation" : "GetItem",
   "key" : {
-      "displayName" : { "S" : "${context.arguments.input.displayName}" }
+    "displayName" : { "S" : "${context.arguments.input.displayName}" }
   }
 }
 
@@ -114,7 +113,7 @@ $util.toJson($context.result)
   "version" : "2017-02-28",
   "operation" : "GetItem",
   "key" : {
-      "displayName" : { "S" : "${context.arguments.input.displayName}" }
+    "displayName" : { "S" : "${context.arguments.input.displayName}" }
   }
 }
 
@@ -126,13 +125,13 @@ $util.toJson($context.result)
   "operation" : "Query",
   "index" : "cognitoIdentityId-index",
   "query" : {
-    "expression": "cognitoIdentityId = :cognitoIdentityId",
-      "expressionValues" : {
-        ":cognitoIdentityId" : { "S" : "${context.arguments.input.cognitoIdentityId}" }
-      }
+    "expression" : "cognitoIdentityId = :cognitoIdentityId",
+    "expressionValues" : {
+      ":cognitoIdentityId" : { "S" : "${context.arguments.input.cognitoIdentityId}" }
+    }
   }
 }
 
 {
-  "accountName": $utils.toJson($context.result.items[0]["accountName"])
+  "accountName" : $utils.toJson($context.result.items[0]["accountName"])
 }
