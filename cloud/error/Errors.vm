@@ -5,7 +5,6 @@
   "key": {
   	 "id" : { "S" : "${util.autoId()}" }
   },
-
   "attributeValues" : {
       "createdDate": { "N" : ${util.time.nowEpochMilliSeconds()} },
       "type": { "S" : "${context.arguments.input.type}" },
