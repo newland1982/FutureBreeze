@@ -1,15 +1,15 @@
 ## Resolver for Mutation.createError
 {
-  "version": "2017-02-28",
-  "operation": "PutItem",
-  "key": {
-  	 "id" : { "S" : "${util.autoId()}" }
+  "version" : "2017-02-28",
+  "operation" : "PutItem",
+  "key" : {
+    "id" : { "S" : "${util.autoId()}" }
   },
   "attributeValues" : {
-      "createdDate": { "N" : ${util.time.nowEpochMilliSeconds()} },
-      "type": { "S" : "${context.arguments.input.type}" },
-      "data": { "S" : "${context.arguments.input.data}" },
-      "status": { "S" : "init" }
+    "createdDate" : { "N" : ${util.time.nowEpochMilliSeconds()} },
+    "type" : { "S" : "${context.arguments.input.type}" },
+    "data" : { "S" : "${context.arguments.input.data}" },
+    "status" : { "S" : "init" }
   }
 }
 
@@ -20,16 +20,16 @@ $util.toJson($context.result)
   "version" : "2017-02-28",
   "operation" : "UpdateItem",
   "key" : {
-      "id" : { "S" : "${context.arguments.input.id}" }
+    "id" : { "S" : "${context.arguments.input.id}" }
   },
   "update" : {
-      "expression" : "SET #status = :status",
-      "expressionNames": {
-          "#status" : "status"
-      },
-      "expressionValues": {
-          ":status" : { "S": "${context.arguments.input.status}" }
-      }
+    "expression" : "SET #status = :status",
+    "expressionNames" : {
+      "#status" : "status"
+    },
+    "expressionValues" : {
+      ":status" : { "S" : "${context.arguments.input.status}" }
+    }
   }
 }
 
