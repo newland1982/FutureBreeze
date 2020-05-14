@@ -1,20 +1,20 @@
 ## Resolver for Mutation.createRegisteredUser
 {
-  "version": "2017-02-28",
-  "operation": "PutItem",
-  "key": {
-  	 "displayName" : { "S" : "${context.arguments.input.displayName}" }
+  "version" : "2017-02-28",
+  "operation" : "PutItem",
+  "key" : {
+    "displayName" : { "S" : "${context.arguments.input.displayName}" }
   },
   "attributeValues" : {
-      "createdDate": { "N" : ${util.time.nowEpochMilliSeconds()} },
-      "accountName" : { "S" : "${context.arguments.input.accountName}" },
-      "data": { "S" : "${context.arguments.input.data}" },
-      "postCountStartDate": { "N" : 0 },
-      "postCount": { "N": 0 },
-      "status": { "S": "${context.arguments.input.status}" }
+    "createdDate" : { "N" : ${util.time.nowEpochMilliSeconds()} },
+    "accountName" : { "S" : "${context.arguments.input.accountName}" },
+    "data" : { "S" : "${context.arguments.input.data}" },
+    "postCountStartDate" : { "N" : 0 },
+    "postCount" : { "N" : 0 },
+    "status" : { "S" : "${context.arguments.input.status}" }
   },
-  "condition": {
-    "expression": "attribute_not_exists(displayName)"
+  "condition" : {
+    "expression" : "attribute_not_exists(displayName)"
   }
 }
 

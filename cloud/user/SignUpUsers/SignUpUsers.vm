@@ -1,20 +1,18 @@
 ## Resolver for Mutation.createSignUpUser
+#set($expirationDate = $util.time.nowEpochSeconds() + 86400)
 {
-  "version": "2017-02-28",
-  "operation": "PutItem",
-  "key": {
-  	 "id" : { "S" : "${util.autoId()}" }
+  "version" : "2017-02-28",
+  "operation" : "PutItem",
+  "key" : {
+    "id" : { "S" : "${util.autoId()}" }
   },
-
-  #set( $expirationDate = $util.time.nowEpochSeconds() + 86400)
-
   "attributeValues" : {
-      "createdDate": { "N" : ${util.time.nowEpochMilliSeconds()} },
-      "ipAddress" : { "S" : "${context.identity.sourceIp[0]}"},
-      "accountName": { "S" : "${context.arguments.input.accountName}" },
-      "password": { "S" : "${context.arguments.input.password}" },
-      "status": { "S" : "init" },
-      "expirationDate": { "N" : ${expirationDate} }
+    "createdDate" : { "N" : ${util.time.nowEpochMilliSeconds()} },
+    "ipAddress" : { "S" : "${context.identity.sourceIp[0]}" },
+    "accountName" : { "S" : "${context.arguments.input.accountName}" },
+    "password" : { "S" : "${context.arguments.input.password}" },
+    "status" : { "S" : "init" },
+    "expirationDate" : { "N" : ${expirationDate} }
   }
 }
 
@@ -25,16 +23,16 @@ $util.toJson($context.result)
   "version" : "2017-02-28",
   "operation" : "UpdateItem",
   "key" : {
-      "id" : { "S" : "${context.arguments.input.id}" }
+    "id" : { "S" : "${context.arguments.input.id}" }
   },
   "update" : {
-      "expression" : "SET #status = :status",
-      "expressionNames": {
-          "#status" : "status"
-      },
-      "expressionValues": {
-          ":status" : { "S": "${context.arguments.input.status}" }
-      }
+    "expression" : "SET #status = :status",
+    "expressionNames" : {
+      "#status" : "status"
+    },
+    "expressionValues" : {
+      ":status" : { "S" : "${context.arguments.input.status}" }
+    }
   }
 }
 
@@ -46,7 +44,7 @@ $util.toJson($context.result)
   "operation" : "Query",
   "index" : "ipAddress-index",
   "query" : {
-    "expression": "ipAddress = :ipAddress",
+    "expression" : "ipAddress = :ipAddress",
       "expressionValues" : {
         ":ipAddress" : { "S" : "${context.arguments.input.ipAddress}" }
       }
@@ -54,16 +52,16 @@ $util.toJson($context.result)
 }
 
 {
-  "ipAddressList": $utils.toJson($context.result.items)
+  "ipAddressList" : $utils.toJson($context.result.items)
 }
 
 ## Resolver for Query.getStatus
 {
-    "version": "2017-02-28",
-    "operation": "GetItem",
-    "key": {
-      "id" : { "S" : "${context.arguments.input.id}" }
-    }
+  "version" : "2017-02-28",
+  "operation" : "GetItem",
+  "key" : {
+    "id" : { "S" : "${context.arguments.input.id}" }
+  }
 }
 
 $util.toJson($context.result)
