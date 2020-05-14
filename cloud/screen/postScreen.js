@@ -111,7 +111,7 @@ const errorsClient = new AWSAppSyncClient({
   disableOffline: true,
 });
 
-const getS3ObjectDataObject = (eventRecord) => {
+const getS3ObjectData = (eventRecord) => {
   const objectKey = eventRecord.s3.object.key;
   const s3FileAccessLevel = `protected`;
   const region = `(${process.env.REGION}`;
@@ -236,7 +236,7 @@ exports.handler = (event, context, callback) => {
       return;
     }
 
-    const s3ObjectDataObject = getS3ObjectDataObject(event.Records[0]);
+    const s3ObjectData = getS3ObjectData(event.Records[0]);
 
     const objectKey = event.Records[0].s3.object.key.replace('%3A', ':');
 
@@ -301,7 +301,7 @@ exports.handler = (event, context, callback) => {
 
       await registeredUsersClient.hydrated();
       const registeredUsersQueryGetAccountNameInput = {
-        cognitoIdentityId: s3ObjectDataObject.cognitoIdentityId,
+        cognitoIdentityId: s3ObjectData.cognitoIdentityId,
       };
       const registeredUsersQueryGetAccountNameResult = await registeredUsersClient
         .query({
@@ -328,12 +328,12 @@ exports.handler = (event, context, callback) => {
       }
 
       if (
-        !(s3ObjectDataObject.validationResult === 'valid') ||
-        !(s3ObjectDataObject.size < Number(process.env.OBJECT_SIZE_LIMIT)) ||
+        !(s3ObjectData.validationResult === 'valid') ||
+        !(s3ObjectData.size < Number(process.env.OBJECT_SIZE_LIMIT)) ||
         !(
           registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
             96
-          ) === s3ObjectDataObject.displayName
+          ) === s3ObjectData.displayName
         )
       ) {
         const screensMutationChangePosterIdInput = {
@@ -457,13 +457,13 @@ exports.handler = (event, context, callback) => {
       }
 
       const registeredUsersMutationSetPostDataInput = {
-        displayName: s3ObjectDataObject.displayName,
+        displayName: s3ObjectData.displayName,
       };
 
       const screensMutationSetScreenInput = {
         objectKey,
-        posterId: s3ObjectDataObject.displayName,
-        type: s3ObjectDataObject.type,
+        posterId: s3ObjectData.displayName,
+        type: s3ObjectData.type,
       };
 
       await registeredUsersClient.hydrated();
