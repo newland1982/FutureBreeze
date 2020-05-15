@@ -8,9 +8,9 @@
   "attributeValues" : {
     "createdDate" : { "N" : ${util.time.nowEpochMilliSeconds()} },
     "accountName" : { "S" : "${context.arguments.input.accountName}" },
-    "data" : { "S" : "${context.arguments.input.data}" },
-    "postCountStartDate" : { "N" : 0 },
-    "postCount" : { "N" : 0 },
+    "profile" : { "S" : "${context.arguments.input.profile}" },
+    "postScreenCountStartDate" : { "N" : 0 },
+    "postScreenCount" : { "N" : 0 },
     "status" : { "S" : "${context.arguments.input.status}" }
   },
   "condition" : {
@@ -50,8 +50,8 @@ $util.toJson($context.result)
 
 $util.toJson($context.result)
 
-## Resolver for Mutation.prepareSetPostData
-#set($postCountPeriod = { "N" : 86400000 })
+## Resolver for Mutation.prepareSetPostScreenData
+#set($postScreenCountPeriod = { "N" : 86400000 })
 {
   "version" : "2017-02-28",
   "operation" : "UpdateItem",
@@ -59,23 +59,23 @@ $util.toJson($context.result)
     "displayName" : { "S" : "${context.arguments.input.displayName}" }
   },
   "update" : {
-    "expression" : "SET postCount = :zero",
+    "expression" : "SET postScreenCount = :zero",
     "expressionValues" : {
       ":zero" : { "N" : 0 }
     }
   },
   "condition" : {
-    "expression" : ":currentDate - postCountStartDate > :postCountPeriod",
+    "expression" : ":currentDate - postScreenCountStartDate > :postScreenCountPeriod",
     "expressionValues" : {
       ":currentDate" : { "N" : ${util.time.nowEpochMilliSeconds()} },
-      ":postCountPeriod" : $postCountPeriod
+      ":postScreenCountPeriod" : $postScreenCountPeriod
     }
   }
 }
 
 $util.toJson($context.result)
 
-## Resolver for Mutation.setPostData
+## Resolver for Mutation.setPostScreenData
 {
   "version" : "2017-02-28",
   "operation" : "UpdateItem",
@@ -83,10 +83,10 @@ $util.toJson($context.result)
     "displayName" : { "S" : "${context.arguments.input.displayName}" }
   },
   "update" : {
-    #if(${context.arguments.input.postCount} == 0)
-      "expression" : "SET postCountStartDate = :currentDate, postCount = postCount + :one"
+    #if(${context.arguments.input.postScreenCount} == 0)
+      "expression" : "SET postScreenCountStartDate = :currentDate, postScreenCount = postScreenCount + :one"
     #else
-      "expression" : "SET postCount = postCount + :one"
+      "expression" : "SET postScreenCount = postScreenCount + :one"
     #end
     ,"expressionValues" : {
       ":currentDate" : { "N" : ${util.time.nowEpochMilliSeconds()} },
