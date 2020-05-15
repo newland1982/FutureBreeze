@@ -14,7 +14,7 @@ input CreateRegisteredUserInput {
   displayName: String!
   accountName: String!
   status: String!
-  data: String!
+  profile: String!
 }
 
 type CreatedDate @aws_cognito_user_pools {
@@ -46,16 +46,18 @@ type Mutation {
   setCognitoIdentityId(input: SetCognitoIdentityIdInput!): CognitoIdentityId
     @aws_cognito_user_pools
   deleteRegisteredUser(input: DeleteRegisteredUserInput!): DisplayName
-  prepareSetPostData(input: PrepareSetPostDataInput!): PostData
-  setPostData(input: SetPostDataInput!): PostData
+  prepareSetPostScreenData(
+    input: PrepareSetPostScreenDataInput!
+  ): PostScreenData
+  setPostScreenData(input: SetPostScreenDataInput!): PostScreenData
 }
 
-type PostData {
-  postCountStartDate: Int!
-  postCount: Int!
+type PostScreenData {
+  postScreenCountStartDate: Int!
+  postScreenCount: Int!
 }
 
-input PrepareSetPostDataInput {
+input PrepareSetPostScreenDataInput {
   displayName: String!
 }
 
@@ -71,9 +73,9 @@ type RegisteredUser {
   createdDate: Int!
   cognitoIdentityId: String
   accountName: String!
-  data: String!
-  postCountStartDate: Int!
-  postCount: Int!
+  profile: String!
+  postScreenCountStartDate: Int!
+  postScreenCount: Int!
   status: String!
 }
 
@@ -81,9 +83,9 @@ input SetCognitoIdentityIdInput {
   cognitoIdentityId: String!
 }
 
-input SetPostDataInput {
+input SetPostScreenDataInput {
   displayName: String!
-  postCount: Int!
+  postScreenCount: Int!
 }
 
 schema {
