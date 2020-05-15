@@ -63,7 +63,7 @@ exports.handler = (event, context, callback) => {
     displayName,
     accountName,
     status: 'nomal',
-    data: '{}',
+    profile: '{}',
   };
 
   if (
