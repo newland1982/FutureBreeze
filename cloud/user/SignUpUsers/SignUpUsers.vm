@@ -45,9 +45,9 @@ $util.toJson($context.result)
   "index" : "ipAddress-index",
   "query" : {
     "expression" : "ipAddress = :ipAddress",
-      "expressionValues" : {
-        ":ipAddress" : { "S" : "${context.arguments.input.ipAddress}" }
-      }
+    "expressionValues" : {
+      ":ipAddress" : { "S" : "${context.arguments.input.ipAddress}" }
+    }
   }
 }
 
