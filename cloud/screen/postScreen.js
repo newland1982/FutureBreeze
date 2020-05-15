@@ -250,6 +250,8 @@ exports.handler = (event, context, callback) => {
       objectKey,
     };
 
+    let postScreenData;
+
     (async () => {
       try {
         await screensClient.hydrated();
@@ -328,12 +330,39 @@ exports.handler = (event, context, callback) => {
       }
 
       if (
+        s3ObjectData.validationResult === 'valid' &&
+        s3ObjectData.size < Number(process.env.OBJECT_SIZE_LIMIT) &&
+        registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
+          96
+        ) === s3ObjectData.displayName
+      ) {
+        await registeredUsersClient.hydrated();
+        const registeredUsersMutationPrepareSetPostScreenDataInput = {
+          displayName: s3ObjectData.displayName,
+        };
+        postScreenData = await registeredUsersClient
+          .mutate({
+            mutation: registeredUsersMutationPrepareSetPostScreenData,
+            variables: {
+              input: registeredUsersMutationPrepareSetPostScreenDataInput,
+            },
+            fetchPolicy: 'no-cache',
+          })
+          .catch(() => {});
+      }
+
+      if (
         !(s3ObjectData.validationResult === 'valid') ||
         !(s3ObjectData.size < Number(process.env.OBJECT_SIZE_LIMIT)) ||
         !(
           registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
             96
           ) === s3ObjectData.displayName
+        ) ||
+        !(
+          postScreenData &&
+          postScreenData.postScreenCount &&
+          postScreenData.postScreenCount <= process.env.POST_SCREEN_COUNT_LIMIT
         )
       ) {
         const screensMutationChangePosterIdInput = {
@@ -458,7 +487,7 @@ exports.handler = (event, context, callback) => {
 
       const registeredUsersMutationSetPostScreenDataInput = {
         displayName: s3ObjectData.displayName,
-        // postScreenCount:
+        postScreenCount: postScreenData.postScreenCount,
       };
 
       const screensMutationSetScreenInput = {
