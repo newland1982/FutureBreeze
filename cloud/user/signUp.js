@@ -1,12 +1,19 @@
 'use strict';
 
+// @ts-ignore
 global.WebSocket = require('ws');
+// @ts-ignore
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
+// @ts-ignore
 const AUTH_TYPE = require('aws-appsync/lib/link/auth-link').AUTH_TYPE;
+// @ts-ignore
 const AWSAppSyncClient = require('aws-appsync').default;
+// @ts-ignore
 const AWS = require('aws-sdk');
+// @ts-ignore
 const AmazonCognitoIdentity = require('amazon-cognito-identity-js');
+// @ts-ignore
 const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 
@@ -49,6 +56,7 @@ const signUpUsersClient = new AWSAppSyncClient({
   disableOffline: true,
 });
 
+// @ts-ignore
 exports.handler = (event, context, callback) => {
   event.Records.forEach((record) => {
     if (record.eventName !== 'INSERT') {
@@ -158,6 +166,7 @@ exports.handler = (event, context, callback) => {
         record.dynamodb.NewImage.password.S,
         [],
         null,
+        // @ts-ignore
         async (error, result) => {
           if (error) {
             await signUpUsersClient
