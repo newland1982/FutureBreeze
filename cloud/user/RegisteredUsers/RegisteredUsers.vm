@@ -51,7 +51,7 @@ $util.toJson($context.result)
 $util.toJson($context.result)
 
 ## Resolver for Mutation.prepareSetPostScreenData
-#set($postScreenCountPeriod = { "N" : 86400000 })
+#set($postScreenCountPeriod = { "N" : 86400 })
 {
   "version" : "2017-02-28",
   "operation" : "UpdateItem",
@@ -67,7 +67,7 @@ $util.toJson($context.result)
   "condition" : {
     "expression" : ":currentDate - postScreenCountStartDate > :postScreenCountPeriod",
     "expressionValues" : {
-      ":currentDate" : { "N" : ${util.time.nowEpochMilliSeconds()} },
+      ":currentDate" : { "N" : ${util.time.nowEpochSeconds()} },
       ":postScreenCountPeriod" : $postScreenCountPeriod
     }
   }
@@ -89,7 +89,7 @@ $util.toJson($context.result)
       "expression" : "SET postScreenCount = postScreenCount + :one"
     #end
     ,"expressionValues" : {
-      ":currentDate" : { "N" : ${util.time.nowEpochMilliSeconds()} },
+      ":currentDate" : { "N" : ${util.time.nowEpochSeconds()} },
       ":one" : { "N" : 1 }
     }
   }
