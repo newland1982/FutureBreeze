@@ -7,7 +7,7 @@
     "id" : { "S" : "${util.autoId()}" }
   },
   "attributeValues" : {
-    "createdDate" : { "N" : ${util.time.nowEpochMilliSeconds()} },
+    "createdDate" : { "S" : "${util.time.nowEpochMilliSeconds()}" },
     "ipAddress" : { "S" : "${context.identity.sourceIp[0]}" },
     "accountName" : { "S" : "${context.arguments.input.accountName}" },
     "password" : { "S" : "${context.arguments.input.password}" },

@@ -3,15 +3,15 @@ input CreateSignUpUserInput {
   password: String!
 }
 
-type Id {
-  id: ID!
-}
-
 input GetIpAddressListInput {
   ipAddress: String!
 }
 
 input GetStatusInput {
+  id: ID!
+}
+
+type Id {
   id: ID!
 }
 
@@ -40,7 +40,7 @@ input SetStatusInput {
 
 type SignUpUser {
   id: ID!
-  createdDate: Int!
+  createdDate: String!
   ipAddress: String!
   accountName: String!
   password: String!
