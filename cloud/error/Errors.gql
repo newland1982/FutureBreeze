@@ -5,7 +5,7 @@ input CreateErrorInput {
 
 type Error {
   id: ID!
-  createdDate: Int!
+  createdDate: String!
   type: String!
   data: AWSJSON!
   status: String!
