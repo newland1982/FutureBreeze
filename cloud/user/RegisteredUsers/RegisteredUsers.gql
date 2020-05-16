@@ -18,7 +18,7 @@ input CreateRegisteredUserInput {
 }
 
 type CreatedDate @aws_cognito_user_pools {
-  createdDate: Int!
+  createdDate: String!
 }
 
 input DeleteRegisteredUserInput {
@@ -70,7 +70,7 @@ type Query {
 
 type RegisteredUser {
   displayName: String!
-  createdDate: Int!
+  createdDate: String!
   cognitoIdentityId: String
   accountName: String!
   profile: String!

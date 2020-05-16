@@ -6,7 +6,7 @@
     "displayName" : { "S" : "${context.arguments.input.displayName}" }
   },
   "attributeValues" : {
-    "createdDate" : { "N" : ${util.time.nowEpochMilliSeconds()} },
+    "createdDate" : { "S" : "${util.time.nowEpochMilliSeconds()}" },
     "accountName" : { "S" : "${context.arguments.input.accountName}" },
     "profile" : { "S" : "${context.arguments.input.profile}" },
     "postScreenCountStartDate" : { "N" : 0 },
