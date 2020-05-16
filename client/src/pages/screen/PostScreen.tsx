@@ -283,7 +283,7 @@ const PostScreen = () => {
     }
 
     let currentAuthenticatedUser: any;
-    let RegisteredUsersCreatedDate: number;
+    let RegisteredUsersCreatedDate: string;
     const displayName = accountName.slice(96);
     const unixTimestamp = String(Date.now());
 
