@@ -6,7 +6,7 @@
     "id" : { "S" : "${util.autoId()}" }
   },
   "attributeValues" : {
-    "createdDate" : { "N" : ${util.time.nowEpochMilliSeconds()} },
+    "createdDate" : { "S" : "${util.time.nowEpochMilliSeconds()}" },
     "type" : { "S" : "${context.arguments.input.type}" },
     "data" : { "S" : "${context.arguments.input.data}" },
     "status" : { "S" : "init" }
