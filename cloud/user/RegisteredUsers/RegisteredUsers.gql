@@ -46,18 +46,17 @@ type Mutation {
   setCognitoIdentityId(input: SetCognitoIdentityIdInput!): CognitoIdentityId
     @aws_cognito_user_pools
   deleteRegisteredUser(input: DeleteRegisteredUserInput!): DisplayName
-  prepareSetPostScreenData(
-    input: PrepareSetPostScreenDataInput!
-  ): PostScreenData
-  setPostScreenData(input: SetPostScreenDataInput!): PostScreenData
+  prepareSetPostScreenCount(
+    input: PrepareSetPostScreenCountInput!
+  ): PostScreenCount
+  setPostScreenCount(input: SetPostScreenCountInput!): PostScreenCount
 }
 
-type PostScreenData {
-  postScreenCountStartDate: Int!
+type PostScreenCount {
   postScreenCount: Int!
 }
 
-input PrepareSetPostScreenDataInput {
+input PrepareSetPostScreenCountInput {
   displayName: String!
 }
 
@@ -83,7 +82,7 @@ input SetCognitoIdentityIdInput {
   cognitoIdentityId: String!
 }
 
-input SetPostScreenDataInput {
+input SetPostScreenCountInput {
   displayName: String!
   postScreenCount: Int!
 }

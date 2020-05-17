@@ -51,18 +51,16 @@ const registeredUsersMutationDeleteRegisteredUser = gql(`
   }
  }`);
 
-const registeredUsersMutationPrepareSetPostScreenData = gql(`
-  mutation PrepareSetPostScreenData($input: PrepareSetPostScreenDataInput!) {
-    prepareSetPostScreenData(input: $input) {
-      postScreenCountStartDate
+const registeredUsersMutationPrepareSetPostScreenCount = gql(`
+  mutation PrepareSetPostScreenCount($input: PrepareSetPostScreenCountInput!) {
+    prepareSetPostScreenCount(input: $input) {
       postScreenCount
   }
  }`);
 
-const registeredUsersMutationSetPostScreenData = gql(`
-  mutation SetPostScreenData($input: SetPostScreenDataInput!) {
-    setPostScreenData(input: $input) {
-      postScreenCountStartDate
+const registeredUsersMutationSetPostScreenCount = gql(`
+  mutation SetPostScreenCount($input: SetPostScreenCountInput!) {
+    setPostScreenCount(input: $input) {
       postScreenCount
   }
  }`);
@@ -250,7 +248,7 @@ exports.handler = (event, context, callback) => {
       objectKey,
     };
 
-    let postScreenData;
+    let postScreenCount = 0;
 
     (async () => {
       try {
@@ -337,18 +335,22 @@ exports.handler = (event, context, callback) => {
         ) === s3ObjectData.displayName
       ) {
         await registeredUsersClient.hydrated();
-        const registeredUsersMutationPrepareSetPostScreenDataInput = {
+        const registeredUsersMutationPrepareSetPostScreenCountInput = {
           displayName: s3ObjectData.displayName,
         };
-        postScreenData = await registeredUsersClient
+        result = await registeredUsersClient
           .mutate({
-            mutation: registeredUsersMutationPrepareSetPostScreenData,
+            mutation: registeredUsersMutationPrepareSetPostScreenCount,
             variables: {
-              input: registeredUsersMutationPrepareSetPostScreenDataInput,
+              input: registeredUsersMutationPrepareSetPostScreenCountInput,
             },
             fetchPolicy: 'no-cache',
           })
           .catch(() => {});
+        if (result) {
+          postScreenCount =
+            postScreenCount.data.prepareSetPostScreenCount.postScreenCount;
+        }
       }
 
       if (
@@ -359,11 +361,7 @@ exports.handler = (event, context, callback) => {
             96
           ) === s3ObjectData.displayName
         ) ||
-        !(
-          postScreenData &&
-          postScreenData.postScreenCount &&
-          postScreenData.postScreenCount <= process.env.POST_SCREEN_COUNT_LIMIT
-        )
+        !(postScreenCount <= process.env.POST_SCREEN_COUNT_LIMIT)
       ) {
         const screensMutationChangePosterIdInput = {
           posterId: registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
@@ -485,9 +483,9 @@ exports.handler = (event, context, callback) => {
         return;
       }
 
-      const registeredUsersMutationSetPostScreenDataInput = {
+      const registeredUsersMutationSetPostScreenCountInput = {
         displayName: s3ObjectData.displayName,
-        postScreenCount: postScreenData.postScreenCount,
+        postScreenCount,
       };
 
       const screensMutationSetScreenInput = {
@@ -499,8 +497,8 @@ exports.handler = (event, context, callback) => {
       await registeredUsersClient.hydrated();
       await registeredUsersClient
         .mutate({
-          mutation: registeredUsersMutationSetPostScreenData,
-          variables: { input: registeredUsersMutationSetPostScreenDataInput },
+          mutation: registeredUsersMutationSetPostScreenCount,
+          variables: { input: registeredUsersMutationSetPostScreenCountInput },
           fetchPolicy: 'no-cache',
         })
         .catch(() => {});
