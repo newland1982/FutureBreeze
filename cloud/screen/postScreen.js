@@ -338,7 +338,7 @@ exports.handler = (event, context, callback) => {
         const registeredUsersMutationPrepareSetPostScreenCountInput = {
           displayName: s3ObjectData.displayName,
         };
-        result = await registeredUsersClient
+        const result = await registeredUsersClient
           .mutate({
             mutation: registeredUsersMutationPrepareSetPostScreenCount,
             variables: {
