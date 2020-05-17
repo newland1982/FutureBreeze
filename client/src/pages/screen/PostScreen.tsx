@@ -300,7 +300,7 @@ const PostScreen = () => {
     setAmplifyConfig(
       process.env
         .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers,
-      'AMAZON_COGNITO_USER_POOLS'
+      'AWS_IAM'
     );
     const registeredUsersQueryGetCreatedDate = `query GetCreatedDate($input: GetCreatedDateInput!) {
       getCreatedDate(input: $input) {
