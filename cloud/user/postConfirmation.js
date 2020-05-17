@@ -32,7 +32,6 @@ const signUpUsersClient = new AWSAppSyncClient({
   disableOffline: true,
 });
 
-// @ts-ignore
 exports.handler = (event, context, callback) => {
   const signUpUsersMutationSetStatusInput = {
     id: event.request.clientMetadata.id,

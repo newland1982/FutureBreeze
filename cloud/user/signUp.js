@@ -56,7 +56,6 @@ const signUpUsersClient = new AWSAppSyncClient({
   disableOffline: true,
 });
 
-// @ts-ignore
 exports.handler = (event, context, callback) => {
   event.Records.forEach((record) => {
     if (record.eventName !== 'INSERT') {
@@ -166,7 +165,6 @@ exports.handler = (event, context, callback) => {
         record.dynamodb.NewImage.password.S,
         [],
         null,
-        // @ts-ignore
         async (error, result) => {
           if (error) {
             await signUpUsersClient
