@@ -348,7 +348,7 @@ exports.handler = (event, context, callback) => {
           .catch(() => {});
         if (result) {
           postScreenCount =
-            postScreenCount.data.prepareSetPostScreenCount.postScreenCount;
+            result.data.prepareSetPostScreenCount.postScreenCount;
         }
       }
 

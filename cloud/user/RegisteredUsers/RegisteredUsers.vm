@@ -50,7 +50,7 @@ $util.toJson($context.result)
 
 $util.toJson($context.result)
 
-## Resolver for Mutation.prepareSetPostScreenData
+## Resolver for Mutation.prepareSetPostScreenCount
 #set($postScreenCountPeriod = 86400)
 #set($currentDate = $util.time.nowEpochSeconds())
 #set($postScreenCountStartDateLimit = $currentDate - $postScreenCountPeriod)
@@ -76,7 +76,7 @@ $util.toJson($context.result)
 
 $util.toJson($context.result)
 
-## Resolver for Mutation.setPostScreenData
+## Resolver for Mutation.setPostScreenCount
 {
   "version" : "2017-02-28",
   "operation" : "UpdateItem",
