@@ -309,7 +309,10 @@ const PostScreen = () => {
         })
       );
       if (
-        result.data.getPostScreenCount.postScreenCount >= postScreenCountLimit
+        !(
+          result.data.getPostScreenCount.postScreenCount + 3 <=
+          postScreenCountLimit
+        )
       ) {
         history.push('/failure/error');
         return;

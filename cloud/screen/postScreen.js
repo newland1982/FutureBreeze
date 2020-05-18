@@ -360,7 +360,7 @@ exports.handler = (event, context, callback) => {
             96
           ) === s3ObjectData.displayName
         ) ||
-        !(postScreenCount <= process.env.POST_SCREEN_COUNT_LIMIT)
+        !(postScreenCount + 1 <= process.env.POST_SCREEN_COUNT_LIMIT)
       ) {
         const screensMutationChangePosterIdInput = {
           posterId: registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
