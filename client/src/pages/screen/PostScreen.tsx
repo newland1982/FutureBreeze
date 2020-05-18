@@ -117,6 +117,8 @@ const PostScreen = () => {
   const isXsSize = useMediaQuery(useTheme().breakpoints.down('xs'));
   const deviceType = isXsSize ? 'mobile' : 'pc';
 
+  const postScreenCount = 36;
+
   useEffect(() => {
     const checkAuthentication = async () => {
       try {
@@ -281,6 +283,35 @@ const PostScreen = () => {
       history.push('/failure/error');
       return;
     }
+
+    // begin
+
+    // setAmplifyConfig(
+    //   process.env
+    //     .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers,
+    //   'AWS_IAM'
+    // );
+    // const registeredUsersQueryGetCreatedDate = `query GetCreatedDate($input: GetCreatedDateInput!) {
+    //   getCreatedDate(input: $input) {
+    //     createdDate
+    //   }
+    //  }`;
+    // const registeredUsersQueryGetCreatedDateInput = {
+    //   displayName,
+    // };
+    // try {
+    //   const result = await API.graphql(
+    //     graphqlOperation(registeredUsersQueryGetCreatedDate, {
+    //       input: registeredUsersQueryGetCreatedDateInput,
+    //     })
+    //   );
+    //   RegisteredUsersCreatedDate = result.data.getCreatedDate.createdDate;
+    // } catch (error) {
+    //   history.push('/failure/error');
+    //   return;
+    // }
+
+    // end
 
     let currentAuthenticatedUser: any;
     let RegisteredUsersCreatedDate: string;

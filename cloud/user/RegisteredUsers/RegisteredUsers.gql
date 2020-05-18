@@ -41,6 +41,10 @@ input GetDisplayNameInput {
   displayName: String!
 }
 
+input GetPostScreenCountInput {
+  displayName: String!
+}
+
 type Mutation {
   createRegisteredUser(input: CreateRegisteredUserInput!): DisplayName
   setCognitoIdentityId(input: SetCognitoIdentityIdInput!): CognitoIdentityId
@@ -64,6 +68,7 @@ type Query {
   getDisplayName(input: GetDisplayNameInput!): DisplayName
   getCreatedDate(input: GetCreatedDateInput!): CreatedDate
   getAccountName(input: GetAccountNameInput!): AccountName
+  getPostScreenCount(input: GetPostScreenCountInput!): PostScreenCount
 }
 
 type RegisteredUser {
