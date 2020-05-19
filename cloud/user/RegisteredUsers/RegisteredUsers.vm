@@ -77,6 +77,7 @@ $util.toJson($context.result)
 $util.toJson($context.result)
 
 ## Resolver for Mutation.setPostScreenCount
+#set($currentDate = { "N" : ${util.time.nowEpochSeconds()} })
 {
   "version" : "2017-02-28",
   "operation" : "UpdateItem",
@@ -85,12 +86,11 @@ $util.toJson($context.result)
   },
   "update" : {
     #if(${context.arguments.input.postScreenCount} == 0)
-      "expression" : "SET postScreenCountStartDate = :currentDate, postScreenCount = postScreenCount + :one"
+      "expression" : "SET postScreenCountStartDate = $currentDate, postScreenCount = postScreenCount + :one"
     #else
       "expression" : "SET postScreenCount = postScreenCount + :one"
     #end
     ,"expressionValues" : {
-      ":currentDate" : { "N" : ${util.time.nowEpochSeconds()} },
       ":one" : { "N" : 1 }
     }
   }
