@@ -1,11 +1,17 @@
 'use strict';
 
+// @ts-ignore
 global.WebSocket = require('ws');
+// @ts-ignore
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
+// @ts-ignore
 const AUTH_TYPE = require('aws-appsync/lib/link/auth-link').AUTH_TYPE;
+// @ts-ignore
 const AWSAppSyncClient = require('aws-appsync').default;
+// @ts-ignore
 const AWS = require('aws-sdk');
+// @ts-ignore
 const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 let cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
@@ -63,6 +69,13 @@ const registeredUsersQueryGetAccountName = gql(`
   query GetAccountName($input: GetAccountNameInput!) {
     getAccountName(input: $input) {
       accountName
+  }
+ }`);
+
+const registeredUsersQueryGetPostScreenCount = gql(`
+  query GetPostScreenCount($input: GetPostScreenCountInput!) {
+    getPostScreenCount(input: $input) {
+      postScreenCount
   }
  }`);
 
@@ -331,7 +344,7 @@ exports.handler = (event, context, callback) => {
         const registeredUsersMutationPrepareSetPostScreenCountInput = {
           displayName: s3ObjectData.displayName,
         };
-        const result = await registeredUsersClient
+        await registeredUsersClient
           .mutate({
             mutation: registeredUsersMutationPrepareSetPostScreenCount,
             variables: {
@@ -340,9 +353,18 @@ exports.handler = (event, context, callback) => {
             fetchPolicy: 'no-cache',
           })
           .catch(() => {});
+        const registeredUsersQueryGetPostScreenCountInput = {
+          displayName: s3ObjectData.displayName,
+        };
+        const result = await registeredUsersClient
+          .query({
+            query: registeredUsersQueryGetPostScreenCount,
+            variables: { input: registeredUsersQueryGetPostScreenCountInput },
+            fetchPolicy: 'network-only',
+          })
+          .catch(() => {});
         if (result) {
-          postScreenCount =
-            result.data.prepareSetPostScreenCount.postScreenCount;
+          postScreenCount = result.data.getPostScreenCount.postScreenCount;
         }
       }
 
@@ -354,7 +376,7 @@ exports.handler = (event, context, callback) => {
             96
           ) === s3ObjectData.displayName
         ) ||
-        !(postScreenCount + 1 <= process.env.POST_SCREEN_COUNT_LIMIT)
+        !(postScreenCount + 1 <= Number(process.env.POST_SCREEN_COUNT_LIMIT))
       ) {
         const screensMutationChangePosterIdInput = {
           posterId: registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
