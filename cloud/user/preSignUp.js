@@ -1,17 +1,11 @@
 'use strict';
 
-// @ts-ignore
 global.WebSocket = require('ws');
-// @ts-ignore
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
-// @ts-ignore
 const AUTH_TYPE = require('aws-appsync/lib/link/auth-link').AUTH_TYPE;
-// @ts-ignore
 const AWSAppSyncClient = require('aws-appsync').default;
-// @ts-ignore
 const AWS = require('aws-sdk');
-// @ts-ignore
 const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 
