@@ -169,22 +169,22 @@ const getS3ObjectData = (eventRecord) => {
   };
 };
 
-const s3DeleteObject = async (
+const deleteS3Object = async (
   s3,
-  s3DeleteObjectInput,
+  deleteS3ObjectInput,
   errorsClient,
   errorsMutationCreateError
 ) => {
   await s3
-    .deleteObject(s3DeleteObjectInput)
+    .deleteObject(deleteS3ObjectInput)
     .promise()
     .catch(async () => {
       await errorsClient.hydrated();
       const errorsMutationCreateErrorInput = {
         type: 'postScreen',
         data: JSON.stringify({
-          action: 's3DeleteObject',
-          s3DeleteObjectInput,
+          action: 'deleteS3Object',
+          deleteS3ObjectInput,
         }),
       };
       await errorsClient
@@ -244,7 +244,7 @@ exports.handler = (event, context, callback) => {
 
     const objectKey = event.Records[0].s3.object.key.replace('%3A', ':');
 
-    const s3DeleteObjectInput = {
+    const deleteS3ObjectInput = {
       Bucket: process.env.Bucket,
       Key: objectKey,
       VersionId: event.Records[0].s3.object.versionId,
@@ -271,9 +271,9 @@ exports.handler = (event, context, callback) => {
         });
 
         if (screensQueryGetStatusResult.data.getStatus.length === 0) {
-          s3DeleteObject(
+          deleteS3Object(
             new AWS.S3(),
-            s3DeleteObjectInput,
+            deleteS3ObjectInput,
             errorsClient,
             errorsMutationCreateError
           );
@@ -286,18 +286,18 @@ exports.handler = (event, context, callback) => {
           return;
         }
         if (screensQueryGetStatusResult.data.getStatus[0] === 'complete') {
-          s3DeleteObject(
+          deleteS3Object(
             new AWS.S3(),
-            s3DeleteObjectInput,
+            deleteS3ObjectInput,
             errorsClient,
             errorsMutationCreateError
           );
           return;
         }
       } catch (error) {
-        s3DeleteObject(
+        deleteS3Object(
           new AWS.S3(),
-          s3DeleteObjectInput,
+          deleteS3ObjectInput,
           errorsClient,
           errorsMutationCreateError
         );
@@ -318,9 +318,9 @@ exports.handler = (event, context, callback) => {
         .catch(() => {});
 
       if (!registeredUsersQueryGetAccountNameResult) {
-        s3DeleteObject(
+        deleteS3Object(
           new AWS.S3(),
-          s3DeleteObjectInput,
+          deleteS3ObjectInput,
           errorsClient,
           errorsMutationCreateError
         );
@@ -397,9 +397,9 @@ exports.handler = (event, context, callback) => {
           ),
         };
 
-        s3DeleteObject(
+        deleteS3Object(
           new AWS.S3(),
-          s3DeleteObjectInput,
+          deleteS3ObjectInput,
           errorsClient,
           errorsMutationCreateError
         );
