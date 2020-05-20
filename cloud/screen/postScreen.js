@@ -498,6 +498,28 @@ exports.handler = (event, context, callback) => {
         return;
       }
 
+      // begin
+      const rekognition = new AWS.Rekognition();
+
+      const params = {
+        Image: {
+          S3Object: {
+            Bucket: 'mybucket',
+            Name: 'myphoto',
+          },
+        },
+        MaxLabels: 123,
+        MinConfidence: 70,
+      };
+
+      rekognition.detectLabels(params, function (err, data) {
+        if (err) console.log(err, err.stack);
+        // an error occurred
+        else console.log(data); // successful response
+      });
+
+      // end
+
       const registeredUsersMutationSetPostScreenCountInput = {
         displayName: s3ObjectData.displayName,
         postScreenCount,
