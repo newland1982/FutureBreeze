@@ -499,7 +499,7 @@ exports.handler = (event, context, callback) => {
       }
 
       // begin
-      const rekognition = new AWS.Rekognition();
+      const rekognition = new AWS.Rekognition({ apiVersion: '2016-06-27' });
 
       const params = {
         Image: {
