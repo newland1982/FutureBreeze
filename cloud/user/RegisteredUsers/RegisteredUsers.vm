@@ -90,7 +90,7 @@ $util.toJson($context.result)
     #else
       "expression" : "SET postScreenCount = postScreenCount + :one"
     #end
-    ,"expressionValues" : {
+      ,"expressionValues" : {
       ":one" : { "N" : 1 }
     }
   }
