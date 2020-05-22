@@ -51,13 +51,6 @@ const registeredUsersMutationDeleteRegisteredUser = gql(`
   }
  }`);
 
-// const registeredUsersMutationPrepareSetPostScreenCount = gql(`
-//   mutation PrepareSetPostScreenCount($input: PrepareSetPostScreenCountInput!) {
-//     prepareSetPostScreenCount(input: $input) {
-//       postScreenCount
-//   }
-//  }`);
-
 const registeredUsersMutationSetPostScreenCount = gql(`
   mutation SetPostScreenCount($input: SetPostScreenCountInput!) {
     setPostScreenCount(input: $input) {
@@ -341,18 +334,6 @@ exports.handler = (event, context, callback) => {
         ) === s3ObjectData.displayName
       ) {
         await registeredUsersClient.hydrated();
-        // const registeredUsersMutationPrepareSetPostScreenCountInput = {
-        //   displayName: s3ObjectData.displayName,
-        // };
-        // await registeredUsersClient
-        //   .mutate({
-        //     mutation: registeredUsersMutationPrepareSetPostScreenCount,
-        //     variables: {
-        //       input: registeredUsersMutationPrepareSetPostScreenCountInput,
-        //     },
-        //     fetchPolicy: 'no-cache',
-        //   })
-        //   .catch(() => {});
         const registeredUsersQueryGetPostScreenCountInput = {
           displayName: s3ObjectData.displayName,
         };
@@ -499,24 +480,29 @@ exports.handler = (event, context, callback) => {
       }
 
       // begin
-      // const rekognition = new AWS.Rekognition({ apiVersion: '2016-06-27' });
 
-      // const params = {
-      //   Image: {
-      //     S3Object: {
-      //       Bucket: 'mybucket',
-      //       Name: 'myphoto',
-      //     },
-      //   },
-      //   MaxLabels: 123,
-      //   MinConfidence: 70,
-      // };
+      try {
+        const rekognition = new AWS.Rekognition({
+          apiVersion: process.env.Rekognition_ApiVersion,
+        });
 
-      // rekognition.detectLabels(params, function (err, data) {
-      //   if (err) console.log(err, err.stack);
-      //   // an error occurred
-      //   else console.log(data); // successful response
-      // });
+        const rekognitionDetectLabelsInput = {
+          Image: {
+            S3Object: {
+              Bucket: process.env.Bucket,
+              Name: objectKey,
+            },
+          },
+          MaxLabels: process.env.Rekognition_DetectLabels_MaxLabels,
+          MinConfidence: process.env.Rekognition_DetectLabels_MinConfidence,
+        };
+        const rekognitionDetectLabelsResult = await rekognition
+          .detectLabels(rekognitionDetectLabelsInput)
+          .promise();
+        console.log('deteee111', rekognitionDetectLabelsResult);
+      } catch (error) {
+        console.log('deteee222', error);
+      }
 
       // end
 

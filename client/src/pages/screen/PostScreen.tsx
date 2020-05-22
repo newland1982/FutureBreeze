@@ -304,14 +304,10 @@ const PostScreen = () => {
       displayName,
     };
     try {
-      const result = await API.graphql(
+      await API.graphql(
         graphqlOperation(registeredUsersMutationPrepareSetPostScreenCount, {
           input: registeredUsersMutationPrepareSetPostScreenCountInput,
         })
-      );
-      console.log(
-        'rrrr',
-        result.data.prepareSetPostScreenCount.postScreenCount
       );
     } catch (error) {
       if (
