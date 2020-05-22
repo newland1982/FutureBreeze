@@ -294,33 +294,34 @@ const PostScreen = () => {
         .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers,
       'AWS_IAM'
     );
-    // begin
 
-    // const registeredUsersMutationPrepareSetPostScreenCount = `mutation PrepareSetPostScreenCount($input: PrepareSetPostScreenCountInput!) {
-    //   prepareSetPostScreenCount(input: $input) {
-    //     postScreenCount
-    //   }
-    //  }`;
-    // const registeredUsersMutationPrepareSetPostScreenCountInput = {
-    //   displayName,
-    // };
-    // try {
-    //   const result = await API.graphql(
-    //     graphqlOperation(registeredUsersMutationPrepareSetPostScreenCount, {
-    //       input: registeredUsersMutationPrepareSetPostScreenCountInput,
-    //     })
-    //   );
-    //   console.log(
-    //     'rrrr',
-    //     result.data.prepareSetPostScreenCount.postScreenCount
-    //   );
-    // } catch (error) {
-    //   console.log('eee', error);
-    //   history.push('/failure/error');
-    //   return;
-    // }
+    const registeredUsersMutationPrepareSetPostScreenCount = `mutation PrepareSetPostScreenCount($input: PrepareSetPostScreenCountInput!) {
+      prepareSetPostScreenCount(input: $input) {
+        postScreenCount
+      }
+     }`;
+    const registeredUsersMutationPrepareSetPostScreenCountInput = {
+      displayName,
+    };
+    try {
+      const result = await API.graphql(
+        graphqlOperation(registeredUsersMutationPrepareSetPostScreenCount, {
+          input: registeredUsersMutationPrepareSetPostScreenCountInput,
+        })
+      );
+      console.log(
+        'rrrr',
+        result.data.prepareSetPostScreenCount.postScreenCount
+      );
+    } catch (error) {
+      if (
+        error.errors[0].errorType !== 'DynamoDB:ConditionalCheckFailedException'
+      ) {
+        history.push('/failure/error');
+        return;
+      }
+    }
 
-    // end
     const registeredUsersQueryGetPostScreenCount = `query GetPostScreenCount($input: GetPostScreenCountInput!) {
           getPostScreenCount(input: $input) {
             postScreenCount

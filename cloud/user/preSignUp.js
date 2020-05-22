@@ -62,7 +62,6 @@ exports.handler = (event, context, callback) => {
   const registeredUsersMutationCreateRegisteredUserInput = {
     displayName,
     accountName,
-    status: 'nomal',
     profile: '{}',
   };
 

@@ -11,7 +11,7 @@
     "profile" : { "S" : "${context.arguments.input.profile}" },
     "postScreenCountStartDate" : { "N" : 0 },
     "postScreenCount" : { "N" : 0 },
-    "status" : { "S" : "${context.arguments.input.status}" }
+    "status" : { "S" : "init" }
   },
   "condition" : {
     "expression" : "attribute_not_exists(displayName)"

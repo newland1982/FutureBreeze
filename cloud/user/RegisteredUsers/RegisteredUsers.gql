@@ -13,7 +13,6 @@ input ConfirmDisplayNameInput {
 input CreateRegisteredUserInput {
   displayName: String!
   accountName: String!
-  status: String!
   profile: String!
 }
 
