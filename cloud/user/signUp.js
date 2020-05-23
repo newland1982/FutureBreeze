@@ -18,8 +18,8 @@ const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 
 const poolData = {
-  UserPoolId: process.env.USER_POOL_ID,
-  ClientId: process.env.CLIENT_ID,
+  UserPoolId: process.env.User_Pool_Id,
+  ClientId: process.env.Client_Id,
 };
 const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
@@ -47,8 +47,8 @@ const signUpUsersQueryGetStatus = gql(`
   }`);
 
 const signUpUsersClient = new AWSAppSyncClient({
-  url: process.env.END_POINT_SignUpUsers,
-  region: process.env.REGION,
+  url: process.env.AppSync_SignUpUsers,
+  region: process.env.AppSync_Region,
   auth: {
     type: AUTH_TYPE.AWS_IAM,
     credentials,
@@ -144,7 +144,7 @@ exports.handler = (event, context, callback) => {
 
       ipAddressCount = result.data.getIpAddressList.ipAddressList.length;
 
-      if (ipAddressCount > process.env.ACCESS_LIMIT) {
+      if (ipAddressCount > process.env.Access_Limit) {
         await signUpUsersClient
           .mutate({
             mutation: signUpUsersMutationSetStatus,
