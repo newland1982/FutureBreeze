@@ -81,7 +81,7 @@ const errorsMutationCreateError = gql(`
 
 const registeredUsersClient = new AWSAppSyncClient({
   url: process.env.AppSync_RegisteredUsers,
-  region: process.env.Region,
+  region: process.env.AppSync_Region,
   auth: {
     type: AUTH_TYPE.AWS_IAM,
     credentials,
@@ -91,7 +91,7 @@ const registeredUsersClient = new AWSAppSyncClient({
 
 const screensClient = new AWSAppSyncClient({
   url: process.env.AppSync_Screens,
-  region: process.env.Region,
+  region: process.env.AppSync_Region,
   auth: {
     type: AUTH_TYPE.AWS_IAM,
     credentials,
@@ -101,7 +101,7 @@ const screensClient = new AWSAppSyncClient({
 
 const errorsClient = new AWSAppSyncClient({
   url: process.env.AppSync_Errors,
-  region: process.env.Region,
+  region: process.env.AppSync_Region,
   auth: {
     type: AUTH_TYPE.AWS_IAM,
     credentials,
@@ -112,7 +112,7 @@ const errorsClient = new AWSAppSyncClient({
 const getS3ObjectData = (eventRecord) => {
   const objectKey = eventRecord.s3.object.key;
   const s3FileAccessLevel = `protected`;
-  const region = `(${process.env.Region}`;
+  const region = `(${process.env.S3_Region}`;
   const UUIDPattern = `[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})`;
   const displayNamePattern = `([0-9a-z]{1,}_[0-9a-z]{1,})`;
   const displayNameSuffixPattern = `[0-9]{13,}`;
