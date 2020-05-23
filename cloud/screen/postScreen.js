@@ -80,8 +80,8 @@ const errorsMutationCreateError = gql(`
  }`);
 
 const registeredUsersClient = new AWSAppSyncClient({
-  url: process.env.END_POINT_RegisteredUsers,
-  region: process.env.REGION,
+  url: process.env.AppSync_RegisteredUsers,
+  region: process.env.Region,
   auth: {
     type: AUTH_TYPE.AWS_IAM,
     credentials,
@@ -90,8 +90,8 @@ const registeredUsersClient = new AWSAppSyncClient({
 });
 
 const screensClient = new AWSAppSyncClient({
-  url: process.env.END_POINT_Screens,
-  region: process.env.REGION,
+  url: process.env.AppSync_Screens,
+  region: process.env.Region,
   auth: {
     type: AUTH_TYPE.AWS_IAM,
     credentials,
@@ -100,8 +100,8 @@ const screensClient = new AWSAppSyncClient({
 });
 
 const errorsClient = new AWSAppSyncClient({
-  url: process.env.END_POINT_Errors,
-  region: process.env.REGION,
+  url: process.env.AppSync_Errors,
+  region: process.env.Region,
   auth: {
     type: AUTH_TYPE.AWS_IAM,
     credentials,
@@ -112,7 +112,7 @@ const errorsClient = new AWSAppSyncClient({
 const getS3ObjectData = (eventRecord) => {
   const objectKey = eventRecord.s3.object.key;
   const s3FileAccessLevel = `protected`;
-  const region = `(${process.env.REGION}`;
+  const region = `(${process.env.Region}`;
   const UUIDPattern = `[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})`;
   const displayNamePattern = `([0-9a-z]{1,}_[0-9a-z]{1,})`;
   const displayNameSuffixPattern = `[0-9]{13,}`;
@@ -328,7 +328,7 @@ exports.handler = (event, context, callback) => {
 
       if (
         s3ObjectData.validationResult === 'valid' &&
-        s3ObjectData.size < Number(process.env.OBJECT_SIZE_LIMIT) &&
+        s3ObjectData.size < Number(process.env.Object_Size_Limit) &&
         registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
           96
         ) === s3ObjectData.displayName
@@ -351,13 +351,13 @@ exports.handler = (event, context, callback) => {
 
       if (
         !(s3ObjectData.validationResult === 'valid') ||
-        !(s3ObjectData.size < Number(process.env.OBJECT_SIZE_LIMIT)) ||
+        !(s3ObjectData.size < Number(process.env.Object_Size_Limit)) ||
         !(
           registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
             96
           ) === s3ObjectData.displayName
         ) ||
-        !(postScreenCount + 1 <= Number(process.env.POST_SCREEN_COUNT_LIMIT))
+        !(postScreenCount + 1 <= Number(process.env.Post_Screen_Count_Limit))
       ) {
         const screensMutationChangePosterIdInput = {
           posterId: registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
@@ -366,7 +366,7 @@ exports.handler = (event, context, callback) => {
         };
 
         const cognitoIdentityServiceProviderAdminDeleteUserInput = {
-          UserPoolId: process.env.USER_POOL_ID,
+          UserPoolId: process.env.User_Pool_Id,
           Username:
             registeredUsersQueryGetAccountNameResult.data.getAccountName
               .accountName,
