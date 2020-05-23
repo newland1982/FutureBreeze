@@ -30,8 +30,8 @@ const registeredUsersMutationCreateRegisteredUser = gql(`
   }`);
 
 const signUpUsersClient = new AWSAppSyncClient({
-  url: process.env.END_POINT_SignUpUsers,
-  region: process.env.REGION,
+  url: process.env.AppSync_SignUpUsers,
+  region: process.env.AppSync_Region,
   auth: {
     type: AUTH_TYPE.AWS_IAM,
     credentials,
@@ -40,8 +40,8 @@ const signUpUsersClient = new AWSAppSyncClient({
 });
 
 const registeredUsersClient = new AWSAppSyncClient({
-  url: process.env.END_POINT_RegisteredUsers,
-  region: process.env.REGION,
+  url: process.env.AppSync_RegisteredUsers,
+  region: process.env.AppSync_Region,
   auth: {
     type: AUTH_TYPE.AWS_IAM,
     credentials,
