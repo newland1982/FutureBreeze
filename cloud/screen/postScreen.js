@@ -506,18 +506,11 @@ exports.handler = (event, context, callback) => {
 
       // end
 
+      await registeredUsersClient.hydrated();
       const registeredUsersMutationSetPostScreenCountInput = {
         displayName: s3ObjectData.displayName,
         postScreenCount,
       };
-
-      const screensMutationSetScreenInput = {
-        objectKey,
-        posterId: s3ObjectData.displayName,
-        type: s3ObjectData.type,
-      };
-
-      await registeredUsersClient.hydrated();
       await registeredUsersClient
         .mutate({
           mutation: registeredUsersMutationSetPostScreenCount,
@@ -527,6 +520,11 @@ exports.handler = (event, context, callback) => {
         .catch(() => {});
 
       await screensClient.hydrated();
+      const screensMutationSetScreenInput = {
+        objectKey,
+        posterId: s3ObjectData.displayName,
+        type: s3ObjectData.type,
+      };
       try {
         await screensClient.mutate({
           mutation: screensMutationSetScreen,
