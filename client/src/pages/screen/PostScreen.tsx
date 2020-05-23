@@ -422,29 +422,7 @@ const PostScreen = () => {
       );
       console.log(putFileForThumbnailResult);
     } catch (error) {
-      return;
-    }
-
-    try {
-      await API.graphql(
-        graphqlOperation(screensMutationCreateScreen, {
-          input: makeScreensMutationCreateScreenInput('pc'),
-        })
-      );
-    } catch (error) {
-      return;
-    }
-    try {
-      const putFileForPCResult = await Storage.put(
-        `${displayName}_${RegisteredUsersCreatedDate}/pc${unixTimestamp}`,
-        blobForPC,
-        {
-          level: 'protected',
-          contentType: 'image/jpeg',
-        }
-      );
-      console.log(putFileForPCResult);
-    } catch (error) {
+      history.push('/failure/error');
       return;
     }
 
@@ -467,6 +445,29 @@ const PostScreen = () => {
         }
       );
       console.log(putFileForMobileResult);
+    } catch (error) {
+      return;
+    }
+
+    try {
+      await API.graphql(
+        graphqlOperation(screensMutationCreateScreen, {
+          input: makeScreensMutationCreateScreenInput('pc'),
+        })
+      );
+    } catch (error) {
+      return;
+    }
+    try {
+      const putFileForPCResult = await Storage.put(
+        `${displayName}_${RegisteredUsersCreatedDate}/pc${unixTimestamp}`,
+        blobForPC,
+        {
+          level: 'protected',
+          contentType: 'image/jpeg',
+        }
+      );
+      console.log(putFileForPCResult);
     } catch (error) {
       return;
     }
