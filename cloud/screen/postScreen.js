@@ -480,30 +480,30 @@ exports.handler = (event, context, callback) => {
       }
 
       // begin
+      if (s3ObjectData.type === 'thumbnail') {
+        try {
+          const rekognition = new AWS.Rekognition({
+            apiVersion: process.env.Rekognition_ApiVersion,
+          });
 
-      try {
-        const rekognition = new AWS.Rekognition({
-          apiVersion: process.env.Rekognition_ApiVersion,
-        });
-
-        const rekognitionDetectLabelsInput = {
-          Image: {
-            S3Object: {
-              Bucket: process.env.Bucket,
-              Name: objectKey,
+          const rekognitionDetectLabelsInput = {
+            Image: {
+              S3Object: {
+                Bucket: process.env.Bucket,
+                Name: objectKey,
+              },
             },
-          },
-          MaxLabels: process.env.Rekognition_DetectLabels_MaxLabels,
-          MinConfidence: process.env.Rekognition_DetectLabels_MinConfidence,
-        };
-        const rekognitionDetectLabelsResult = await rekognition
-          .detectLabels(rekognitionDetectLabelsInput)
-          .promise();
-        console.log('deteee111', rekognitionDetectLabelsResult);
-      } catch (error) {
-        console.log('deteee222', error);
+            MaxLabels: process.env.Rekognition_DetectLabels_MaxLabels,
+            MinConfidence: process.env.Rekognition_DetectLabels_MinConfidence,
+          };
+          const rekognitionDetectLabelsResult = await rekognition
+            .detectLabels(rekognitionDetectLabelsInput)
+            .promise();
+          console.log('deteee111', rekognitionDetectLabelsResult);
+        } catch (error) {
+          console.log('deteee222', error);
+        }
       }
-
       // end
 
       await registeredUsersClient.hydrated();
