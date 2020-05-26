@@ -68,7 +68,7 @@ const amplifyCommonConfig = {
   Storage: {
     AWSS3: {
       bucket: process.env.REACT_APP_AWS_S3_bucket_screens,
-      region: process.env.REACT_APP_AWS_APPSYNC_aws_appsync_region,
+      region: process.env.REACT_APP_AWS_S3_bucket_region,
     },
   },
 };
