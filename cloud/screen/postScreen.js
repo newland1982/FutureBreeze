@@ -263,22 +263,10 @@ exports.handler = (event, context, callback) => {
           fetchPolicy: 'network-only',
         });
 
-        if (screensQueryGetStatusResult.data.getStatus.length === 0) {
-          deleteS3Object(
-            new AWS.S3(),
-            deleteS3ObjectInput,
-            errorsClient,
-            errorsMutationCreateError
-          );
-          executeScreensMutationDeleteScreen(
-            screensClient,
-            screensMutationDeleteScreenInput,
-            errorsClient,
-            errorsMutationCreateError
-          );
-          return;
-        }
-        if (screensQueryGetStatusResult.data.getStatus[0] === 'complete') {
+        if (
+          screensQueryGetStatusResult.data.getStatus.length === 0 ||
+          screensQueryGetStatusResult.data.getStatus[0] === 'complete'
+        ) {
           deleteS3Object(
             new AWS.S3(),
             deleteS3ObjectInput,
