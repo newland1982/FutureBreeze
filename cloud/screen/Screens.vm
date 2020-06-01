@@ -16,12 +16,12 @@
     "headers":{},
     "queryString":{},
     "body":{
-      "author": $util.toJson($context.arguments.author),
-      "ups": $util.toJson($context.arguments.ups),
-      "downs": $util.toJson($context.arguments.downs),
-      "url": $util.toJson($context.arguments.url),
-      "content": $util.toJson($context.arguments.content),
-      "title": $util.toJson($context.arguments.title)
+      "objectKey": $util.toJson($context.arguments.author),
+      "createdDate": $util.toJson($context.arguments.ups),
+      "posterId": $util.toJson($context.arguments.downs),
+      "type": $util.toJson($context.arguments.url),
+      "userCount": $util.toJson($context.arguments.content),
+      "status": $util.toJson($context.arguments.title)
     }
   }
 }
