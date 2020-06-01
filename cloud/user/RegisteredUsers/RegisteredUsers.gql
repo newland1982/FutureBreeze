@@ -73,10 +73,10 @@ type Query {
 type RegisteredUser {
   displayName: String!
   createdDate: String!
-  cognitoIdentityId: String
+  cognitoIdentityId: String!
   accountName: String!
   profile: String!
-  postScreenCountStartDate: Int!
+  postScreenCountStartDate: AWSTimestamp!
   postScreenCount: Int!
   status: String!
 }
