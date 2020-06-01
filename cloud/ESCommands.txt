@@ -1,0 +1,13 @@
+PUT /screens
+{
+  "mappings": {
+    "properties": {
+      "objectKey":    { "type": "keyword" },  
+      "createdDate":  { "type": "date"  },
+      "posterId":  { "type": "keyword"  }, 
+      "type":  { "type": "keyword"  }, 
+      "userCount":  { "type": "long"  }, 
+      "status":   { "type": "keyword"  }     
+    }
+  }
+}
