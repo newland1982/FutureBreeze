@@ -8,6 +8,24 @@
   ]
 }
 
+{
+  "version":"2017-02-28",
+  "operation":"PUT",
+  "path": $util.toJson("/screen/_doc/"),
+  "params":{
+    "headers":{},
+    "queryString":{},
+    "body":{
+      "author": $util.toJson($context.arguments.author),
+      "ups": $util.toJson($context.arguments.ups),
+      "downs": $util.toJson($context.arguments.downs),
+      "url": $util.toJson($context.arguments.url),
+      "content": $util.toJson($context.arguments.content),
+      "title": $util.toJson($context.arguments.title)
+    }
+  }
+}
+
 $utils.toJson($utils.rds.toJsonObject($context.result)[1])
 
 ## Resolver for Mutation.setScreen
