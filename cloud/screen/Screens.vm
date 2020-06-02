@@ -11,7 +11,7 @@
 {
   "version":"2017-02-28",
   "operation":"PUT",
-  "path": $util.toJson("/screen/_doc/"),
+  "path": $util.toJson("/screens/_doc/"),
   "params":{
     "headers":{},
     "queryString":{},
@@ -20,8 +20,7 @@
       "createdDate": $util.toJson($context.arguments.ups),
       "posterId": $util.toJson($context.arguments.downs),
       "type": $util.toJson($context.arguments.url),
-      "userCount": $util.toJson($context.arguments.content),
-      "status": $util.toJson($context.arguments.title)
+      "userCount": $util.toJson($context.arguments.content)
     }
   }
 }

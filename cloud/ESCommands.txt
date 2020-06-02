@@ -6,8 +6,7 @@ PUT /screens
       "createdDate":  { "type": "date"  },
       "posterId":  { "type": "keyword"  }, 
       "type":  { "type": "keyword"  }, 
-      "userCount":  { "type": "long"  }, 
-      "status":   { "type": "keyword"  }     
+      "userCount":  { "type": "long"  }   
     }
   }
 }
