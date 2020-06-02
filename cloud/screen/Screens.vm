@@ -8,39 +8,31 @@
   ]
 }
 
-{
-  "version":"2017-02-28",
-  "operation":"PUT",
-  "path": $util.toJson("/screens/_doc/"),
-  "params":{
-    "headers":{},
-    "queryString":{},
-    "body":{
-      "objectKey": $util.toJson($context.arguments.author),
-      "createdDate": $util.toJson($context.arguments.ups),
-      "posterId": $util.toJson($context.arguments.downs),
-      "type": $util.toJson($context.arguments.url),
-      "userCount": $util.toJson($context.arguments.content)
-    }
-  }
-}
-
-$utils.toJson($utils.rds.toJsonObject($context.result)[1])
-
-## Resolver for Mutation.setScreen
+## begin
 #set($objectKey = ${context.arguments.input.objectKey})
 #set($createdDate = ${util.time.nowEpochMilliSeconds()})
 #set($posterId = ${context.arguments.input.posterId})
 #set($type = ${context.arguments.input.type})
 #set($userCount = 0)
-#set($status = 'complete')
 {
-  "version" : "2018-05-29",
-  "statements" : [
-    "UPDATE contents.screens SET createdDate = '$createdDate', posterId = '$posterId', type = '$type', userCount = '$userCount', status = '$status' WHERE objectKey = '$objectKey'",
-    "SELECT objectKey FROM contents.screens WHERE objectKey = '$objectKey'"
-  ]
+  "version" : "2017-02-28",
+  "operation" : "POST",
+  "path" : $util.toJson("/screens/_doc/"),
+  "params" : {
+    "headers" : {},
+    "queryString" : {},
+    "body" : {
+      "objectKey" : $objectKey,
+      "createdDate" : $createdDate,
+      "posterId" : $posterId,
+      "type" : $type,
+      "userCount" : $userCount
+    }
+  }
 }
+
+$utils.toJson($context.result.get("_source"))
+## end
 
 $utils.toJson($utils.rds.toJsonObject($context.result)[1])
 
@@ -53,17 +45,30 @@ $utils.toJson($utils.rds.toJsonObject($context.result)[1])
   ]
 }
 
-$utils.toJson($utils.rds.toJsonObject($context.result)[1])
-
-## Resolver for Mutation.deleteScreen
-#set($objectKey = ${context.arguments.input.objectKey})
+## begin
+#set($posterId = ${context.arguments.input.posterId})
 {
-  "version" : "2018-05-29",
-  "statements" : [
-    "DELETE FROM contents.screens WHERE objectKey = '$objectKey'",
-    "SELECT objectKey FROM contents.screens WHERE objectKey = '$objectKey'"
-  ]
+  "version" : "2017-02-28",
+  "operation" : "POST",
+  "path" : $util.toJson("/screens/_update_by_query?conflicts=proceed"),
+  "params" : {
+    "headers" : {},
+    "queryString" : {},
+    "body" : {
+      "query" : { 
+        "term" : {
+          "posterId" : $posterId
+        }
+      },
+      "script" : {
+        "inline": "ctx._source.posterId = \"Anonymous\""
+      }
+    }
+  }
 }
+
+$utils.toJson($context.result.get("_source"))
+## end
 
 $utils.toJson($utils.rds.toJsonObject($context.result)[1])
 
