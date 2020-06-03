@@ -4,6 +4,8 @@ input ChangePosterIdInput {
 
 input CreateScreenInput {
   objectKey: String!
+  posterId: String!
+  type: String!
 }
 
 input GetObjectKeyInput {
