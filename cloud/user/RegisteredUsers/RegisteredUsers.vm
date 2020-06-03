@@ -21,13 +21,13 @@
 $util.toJson($context.result)
 
 ## Resolver for Mutation.setCognitoIdentityId
-#set($accountName = $context.identity.username)
-#set($displayName = $accountName.substring(96))
+#set($accountName = ${context.identity.username})
+#set($displayName = ${accountName.substring(96)})
 {
   "version" : "2017-02-28",
   "operation" : "UpdateItem",
   "key" : {
-    "displayName" : { "S" : "${displayName}" }
+    "displayName" : { "S" : "$displayName" }
   },
   "update" : {
     "expression" : "SET cognitoIdentityId = :cognitoIdentityId",
