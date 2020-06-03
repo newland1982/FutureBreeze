@@ -80,4 +80,34 @@ $utils.toJson($utils.rds.toJsonObject($context.result)[1])
   ]
 }
 
+## begin
+#set($objectKey = ${context.arguments.input.objectKey})
+{
+  "version" : "2017-02-28",
+  "operation" : "GET",
+  "path" : $util.toJson("/screens/_search"),
+  "params" : {
+    "headers" : {},
+    "queryString" : {},
+    "body" : {
+      "from" : 0,
+      "size" : 1,
+      "query" : {
+        "term" : {
+          "objectKey" : $objectKey
+        }
+      },
+      "_source" : ["objectKey"]
+    }
+  }
+}
+
+[
+  #foreach($entry in $context.result.hits.hits)
+  #if($velocityCount > 1), #end
+  $utils.toJson($entry.get("_source"))
+  #end
+]
+## end
+
 $utils.toJson($utils.rds.toJsonObject($context.result)[0])
