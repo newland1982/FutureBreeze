@@ -6,19 +6,15 @@ input CreateScreenInput {
   objectKey: String!
 }
 
-input DeleteScreenInput {
-  objectKey: String!
-}
-
-input GetStatusInput {
+input GetObjectKeyInput {
   objectKey: String
 }
 
 type Mutation {
-  createScreen(input: CreateScreenInput!): [ObjectKey]
-  setScreen(input: SetScreenInput!): [ObjectKey]
-  changePosterId(input: ChangePosterIdInput!): [PosterId]
-  deleteScreen(input: DeleteScreenInput!): [ObjectKey]
+  createScreen(input: CreateScreenInput!): ObjectKey
+  # setScreen(input: SetScreenInput!): [ObjectKey]
+  changePosterId(input: ChangePosterIdInput!): PosterId
+  # deleteScreen(input: DeleteScreenInput!): [ObjectKey]
 }
 
 type ObjectKey {
@@ -30,26 +26,16 @@ type PosterId {
 }
 
 type Query {
-  getStatus(input: GetStatusInput!): [Status]
+  # getStatus(input: GetStatusInput!): [Status]
+  getObjectKey(input: GetObjectKeyInput!): [ObjectKey]
 }
 
 type Screen {
   objectKey: String!
-  createdDate: String!
+  createdDate: AWSTimestamp!
   posterId: String!
   type: String!
   userCount: Int!
-  status: String!
-}
-
-input SetScreenInput {
-  objectKey: String!
-  posterId: String!
-  type: String!
-}
-
-type Status {
-  status: String
 }
 
 schema {

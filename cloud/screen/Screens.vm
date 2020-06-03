@@ -22,11 +22,11 @@
     "headers" : {},
     "queryString" : {},
     "body" : {
-      "objectKey" : $objectKey,
-      "createdDate" : $createdDate,
-      "posterId" : $posterId,
-      "type" : $type,
-      "userCount" : $userCount
+      "objectKey" : "$objectKey",
+      "createdDate" : "$createdDate",
+      "posterId" : "$posterId",
+      "type" : "$type",
+      "userCount" : "$userCount"
     }
   }
 }
@@ -57,7 +57,7 @@ $utils.toJson($utils.rds.toJsonObject($context.result)[1])
     "body" : {
       "query" : { 
         "term" : {
-          "posterId" : $posterId
+          "posterId" : "$posterId"
         }
       },
       "script" : {
@@ -94,7 +94,7 @@ $utils.toJson($utils.rds.toJsonObject($context.result)[1])
       "size" : 1,
       "query" : {
         "term" : {
-          "objectKey" : $objectKey
+          "objectKey" : "$objectKey"
         }
       },
       "_source" : ["objectKey"]
