@@ -13,7 +13,7 @@
   }
 }
 
-$util.toJson($context.result)
+${util.toJson(${context.result})}
 
 ## Resolver for Mutation.setStatus
 {
