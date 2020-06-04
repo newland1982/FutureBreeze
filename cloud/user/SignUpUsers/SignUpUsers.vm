@@ -1,5 +1,5 @@
 ## Resolver for Mutation.createSignUpUser
-#set($expirationDate = $util.time.nowEpochSeconds() + 86400)
+#set($expirationDate = ${util.time.nowEpochSeconds()} + 86400)
 {
   "version" : "2017-02-28",
   "operation" : "PutItem",
@@ -12,11 +12,11 @@
     "accountName" : { "S" : "${context.arguments.input.accountName}" },
     "password" : { "S" : "${context.arguments.input.password}" },
     "status" : { "S" : "init" },
-    "expirationDate" : { "N" : ${expirationDate} }
+    "expirationDate" : { "N" : $expirationDate }
   }
 }
 
-$util.toJson($context.result)
+${util.toJson(${context.result})}
 
 ## Resolver for Mutation.setStatus
 {
@@ -36,7 +36,7 @@ $util.toJson($context.result)
   }
 }
 
-$util.toJson($context.result)
+${util.toJson(${context.result})}
 
 ## Resolver for Query.getIpAddressList
 {
@@ -52,7 +52,7 @@ $util.toJson($context.result)
 }
 
 {
-  "ipAddressList" : $utils.toJson($context.result.items)
+  "ipAddressList" : ${utils.toJson(${context.result.items})}
 }
 
 ## Resolver for Query.getStatus
@@ -64,4 +64,4 @@ $util.toJson($context.result)
   }
 }
 
-$util.toJson($context.result)
+${util.toJson(${context.result})}
