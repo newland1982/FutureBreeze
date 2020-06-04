@@ -18,7 +18,7 @@
   }
 }
 
-$util.toJson($context.result)
+${util.toJson(${context.result})}
 
 ## Resolver for Mutation.setCognitoIdentityId
 #set($accountName = ${context.identity.username})
@@ -37,7 +37,7 @@ $util.toJson($context.result)
   }
 }
 
-$util.toJson($context.result)
+${util.toJson(${context.result})}
 
 ## Resolver for Mutation.deleteRegisteredUser
 {
@@ -48,11 +48,11 @@ $util.toJson($context.result)
   }
 }
 
-$util.toJson($context.result)
+${util.toJson(${context.result})}
 
 ## Resolver for Mutation.prepareSetPostScreenCount
 #set($postScreenCountPeriod = 86400)
-#set($currentDate = $util.time.nowEpochSeconds())
+#set($currentDate = ${util.time.nowEpochSeconds()})
 #set($postScreenCountStartDateLimit = $currentDate - $postScreenCountPeriod)
 {
   "version" : "2017-02-28",
@@ -69,12 +69,12 @@ $util.toJson($context.result)
   "condition" : {
     "expression" : "postScreenCountStartDate < :postScreenCountStartDateLimit",
     "expressionValues" : {
-      ":postScreenCountStartDateLimit" : { "N" : ${postScreenCountStartDateLimit} }
+      ":postScreenCountStartDateLimit" : { "N" : $postScreenCountStartDateLimit }
     }
   }
 }
 
-$util.toJson($context.result)
+${util.toJson(${context.result})}
 
 ## Resolver for Mutation.setPostScreenCount
 {
@@ -99,7 +99,7 @@ $util.toJson($context.result)
   }
 }
 
-$util.toJson($context.result)
+${util.toJson(${context.result})}
 
 ## Resolver for Query.getDisplayName
 {
@@ -110,7 +110,7 @@ $util.toJson($context.result)
   }
 }
 
-$util.toJson($context.result)
+${util.toJson(${context.result})}
 
 ## Resolver for Query.getCreatedDate
 {
@@ -121,7 +121,7 @@ $util.toJson($context.result)
   }
 }
 
-$util.toJson($context.result)
+${util.toJson(${context.result})}
 
 ## Resolver for Query.getAccountName
 {
@@ -137,7 +137,7 @@ $util.toJson($context.result)
 }
 
 {
-  "accountName" : $utils.toJson($context.result.items[0]["accountName"])
+  "accountName" : ${utils.toJson(${context.result.items[0]["accountName"]})}
 }
 
 ## Resolver for Query.getPostScreenCount
@@ -149,4 +149,4 @@ $util.toJson($context.result)
   }
 }
 
-$util.toJson($context.result)
+${util.toJson(${context.result})}
