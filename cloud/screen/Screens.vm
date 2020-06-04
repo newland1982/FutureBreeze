@@ -17,7 +17,7 @@
 {
   "version" : "2017-02-28",
   "operation" : "POST",
-  "path" : $util.toJson("/screens/_doc/"),
+  "path" : ${util.toJson("/screens/_doc/")},
   "params" : {
     "headers" : {},
     "queryString" : {},
@@ -31,7 +31,7 @@
   }
 }
 
-$utils.toJson($context.result.get("_source"))
+${utils.toJson(${context.result.get("_source")})}
 ## end
 
 $utils.toJson($utils.rds.toJsonObject($context.result)[1])
@@ -50,7 +50,7 @@ $utils.toJson($utils.rds.toJsonObject($context.result)[1])
 {
   "version" : "2017-02-28",
   "operation" : "POST",
-  "path" : $util.toJson("/screens/_update_by_query?conflicts=proceed"),
+  "path" : ${util.toJson("/screens/_update_by_query?conflicts=proceed")},
   "params" : {
     "headers" : {},
     "queryString" : {},
@@ -67,7 +67,7 @@ $utils.toJson($utils.rds.toJsonObject($context.result)[1])
   }
 }
 
-$utils.toJson($context.result.get("_source"))
+${utils.toJson(${context.result.get("_source")})}
 ## end
 
 $utils.toJson($utils.rds.toJsonObject($context.result)[1])
@@ -85,7 +85,7 @@ $utils.toJson($utils.rds.toJsonObject($context.result)[1])
 {
   "version" : "2017-02-28",
   "operation" : "GET",
-  "path" : $util.toJson("/screens/_search"),
+  "path" : ${util.toJson("/screens/_search")},
   "params" : {
     "headers" : {},
     "queryString" : {},
@@ -103,9 +103,9 @@ $utils.toJson($utils.rds.toJsonObject($context.result)[1])
 }
 
 [
-  #foreach($entry in $context.result.hits.hits)
+  #foreach($entry in ${context.result.hits.hits})
   #if($velocityCount > 1), #end
-  $utils.toJson($entry.get("_source"))
+  ${utils.toJson(${entry.get("_source")})}
   #end
 ]
 ## end
