@@ -47,6 +47,7 @@ $utils.toJson($utils.rds.toJsonObject($context.result)[1])
 
 ## begin
 #set($posterId = ${context.arguments.input.posterId})
+#set($changedPosterId = "Anonymous")
 {
   "version" : "2017-02-28",
   "operation" : "POST",
@@ -61,7 +62,7 @@ $utils.toJson($utils.rds.toJsonObject($context.result)[1])
         }
       },
       "script" : {
-        "inline": "ctx._source.posterId = \"Anonymous\""
+        "inline": "ctx._source.posterId = \"$changedPosterId\""
       }
     }
   }
