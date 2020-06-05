@@ -2,6 +2,10 @@ input ChangePosterIdInput {
   posterId: String!
 }
 
+type ConnectionTimedOut {
+  timed_out: Boolean
+}
+
 input CreateScreenInput {
   objectKey: String!
   posterId: String!
@@ -14,9 +18,7 @@ input GetObjectKeyInput {
 
 type Mutation {
   createScreen(input: CreateScreenInput!): ObjectKey
-  # setScreen(input: SetScreenInput!): [ObjectKey]
-  changePosterId(input: ChangePosterIdInput!): PosterId
-  # deleteScreen(input: DeleteScreenInput!): [ObjectKey]
+  changePosterId(input: ChangePosterIdInput!): ConnectionTimedOut
 }
 
 type ObjectKey {
@@ -28,7 +30,6 @@ type PosterId {
 }
 
 type Query {
-  # getStatus(input: GetStatusInput!): [Status]
   getObjectKey(input: GetObjectKeyInput!): [ObjectKey]
 }
 

@@ -68,7 +68,7 @@ $utils.toJson($utils.rds.toJsonObject($context.result)[1])
   }
 }
 
-${utils.toJson(${context.result.get("_source")})}
+${utils.toJson(${context.result})}
 ## end
 
 $utils.toJson($utils.rds.toJsonObject($context.result)[1])
