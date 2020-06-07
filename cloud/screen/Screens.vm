@@ -1,15 +1,5 @@
 ## Resolver for Mutation.createScreen
 #set($objectKey = ${context.arguments.input.objectKey})
-{
-  "version" : "2018-05-29",
-  "statements" : [
-    "INSERT INTO contents.screens VALUES ('$objectKey', NULL, NULL, NULL, NULL, 'init')",
-    "SELECT objectKey FROM contents.screens WHERE objectKey = '$objectKey'"
-  ]
-}
-
-## begin
-#set($objectKey = ${context.arguments.input.objectKey})
 #set($createdDate = ${util.time.nowEpochMilliSeconds()})
 #set($posterId = ${context.arguments.input.posterId})
 #set($type = ${context.arguments.input.type})
@@ -32,20 +22,8 @@
 }
 
 ${utils.toJson(${context.result.get("_source")})}
-## end
-
-$utils.toJson($utils.rds.toJsonObject($context.result)[1])
 
 ## Resolver for Mutation.changePosterId
-{
-  "version" : "2018-05-29",
-  "statements" : [
-    "UPDATE contents.screens SET posterId='Anonymous' WHERE posterId = '$context.arguments.input.posterId'",
-    "SELECT posterId FROM contents.screens WHERE posterId = '$context.arguments.input.posterId' LIMIT 1"
-  ]
-}
-
-## begin
 #set($posterId = ${context.arguments.input.posterId})
 #set($changedPosterId = "Anonymous")
 {
@@ -69,19 +47,8 @@ $utils.toJson($utils.rds.toJsonObject($context.result)[1])
 }
 
 ${utils.toJson(${context.result})}
-## end
 
-$utils.toJson($utils.rds.toJsonObject($context.result)[1])
-
-## Resolver for Query.getStatus
-{
-  "version" : "2018-05-29",
-  "statements" : [
-    "SELECT status FROM contents.screens WHERE objectKey = '$context.arguments.input.objectKey'"
-  ]
-}
-
-## begin
+## Resolver for Query.getObjectKey
 #set($objectKey = ${context.arguments.input.objectKey})
 {
   "version" : "2017-02-28",
@@ -109,6 +76,3 @@ $utils.toJson($utils.rds.toJsonObject($context.result)[1])
   ${utils.toJson(${entry.get("_source")})}
   #end
 ]
-## end
-
-$utils.toJson($utils.rds.toJsonObject($context.result)[0])
