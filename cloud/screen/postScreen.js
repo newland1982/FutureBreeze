@@ -30,13 +30,6 @@ const screensMutationChangePosterId = gql(`
   }
  }`);
 
-const screensMutationDeleteScreen = gql(`
-  mutation DeleteScreen($input: DeleteScreenInput!) {
-    deleteScreen(input: $input) {
-      objectKey
-  }
- }`);
-
 const screensQueryGetStatus = gql(`
   query GetStatus($input: GetStatusInput!) {
     getStatus(input: $input) {
@@ -190,40 +183,6 @@ const deleteS3Object = async (
     });
 };
 
-const executeScreensMutationDeleteScreen = async (
-  screensClient,
-  screensMutationDeleteScreenInput,
-  errorsClient,
-  errorsMutationCreateError
-) => {
-  try {
-    await screensClient.hydrated();
-
-    await screensClient.mutate({
-      mutation: screensMutationDeleteScreen,
-      variables: { input: screensMutationDeleteScreenInput },
-      fetchPolicy: 'no-cache',
-    });
-  } catch (error) {
-    await errorsClient.hydrated();
-    const errorsMutationCreateErrorInput = {
-      type: 'postScreen',
-      data: JSON.stringify({
-        action: 'screensMutationDeleteScreen',
-        screensMutationDeleteScreenInput,
-      }),
-    };
-    await errorsClient
-      .mutate({
-        mutation: errorsMutationCreateError,
-        variables: { input: errorsMutationCreateErrorInput },
-        fetchPolicy: 'no-cache',
-      })
-      .catch(() => {});
-    return;
-  }
-};
-
 exports.handler = (event, context, callback) => {
   event.Records.forEach((record) => {
     if (
@@ -241,10 +200,6 @@ exports.handler = (event, context, callback) => {
       Bucket: process.env.Bucket,
       Key: objectKey,
       VersionId: event.Records[0].s3.object.versionId,
-    };
-
-    const screensMutationDeleteScreenInput = {
-      objectKey,
     };
 
     let postScreenCount = 0;
@@ -302,12 +257,6 @@ exports.handler = (event, context, callback) => {
         deleteS3Object(
           new AWS.S3(),
           deleteS3ObjectInput,
-          errorsClient,
-          errorsMutationCreateError
-        );
-        executeScreensMutationDeleteScreen(
-          screensClient,
-          screensMutationDeleteScreenInput,
           errorsClient,
           errorsMutationCreateError
         );
@@ -369,12 +318,6 @@ exports.handler = (event, context, callback) => {
         deleteS3Object(
           new AWS.S3(),
           deleteS3ObjectInput,
-          errorsClient,
-          errorsMutationCreateError
-        );
-        executeScreensMutationDeleteScreen(
-          screensClient,
-          screensMutationDeleteScreenInput,
           errorsClient,
           errorsMutationCreateError
         );
