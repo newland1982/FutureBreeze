@@ -37,6 +37,13 @@ const screensQueryGetStatus = gql(`
   }
  }`);
 
+const screensQueryGetObjectKey = gql(`
+  query GetObjectKey($input: GetObjectKeyInput!) {
+    getObjectKey(input: $input) {
+      objectKey
+  }
+ }`);
+
 const registeredUsersMutationDeleteRegisteredUser = gql(`
   mutation DeleteRegisteredUser($input: DeleteRegisteredUserInput!) {
     deleteRegisteredUser(input: $input) {
