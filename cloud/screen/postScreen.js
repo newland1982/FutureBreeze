@@ -16,24 +16,17 @@ const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 let cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
 
-const screensMutationSetScreen = gql(`
-  mutation SetScreen($input: SetScreenInput!) {
-    setScreen(input: $input) {
-      objectKey
-  }
- }`);
+const screensMutationCreateScreen = gql(`
+ mutation CreateScreen($input: CreateScreenInput!) {
+  createScreen(input: $input) {
+     objectKey
+ }
+}`);
 
 const screensMutationChangePosterId = gql(`
   mutation ChangePosterId($input: ChangePosterIdInput!) {
     changePosterId(input: $input) {
-      posterId
-  }
- }`);
-
-const screensQueryGetStatus = gql(`
-  query GetStatus($input: GetStatusInput!) {
-    getStatus(input: $input) {
-      status
+      timed_out
   }
  }`);
 
@@ -215,20 +208,17 @@ exports.handler = (event, context, callback) => {
       try {
         await screensClient.hydrated();
 
-        const screensQueryGetStatusInput = {
+        const screensQueryGetObjectKeyInput = {
           objectKey,
         };
 
-        const screensQueryGetStatusResult = await screensClient.query({
-          query: screensQueryGetStatus,
-          variables: { input: screensQueryGetStatusInput },
+        const screensQueryGetObjectKeyResult = await screensClient.query({
+          query: screensQueryGetObjectKey,
+          variables: { input: screensQueryGetObjectKeyInput },
           fetchPolicy: 'network-only',
         });
 
-        if (
-          screensQueryGetStatusResult.data.getStatus.length === 0 ||
-          screensQueryGetStatusResult.data.getStatus[0] === 'complete'
-        ) {
+        if (screensQueryGetObjectKeyResult.data.getObjectKey.length !== 1) {
           deleteS3Object(
             new AWS.S3(),
             deleteS3ObjectInput,
@@ -244,7 +234,6 @@ exports.handler = (event, context, callback) => {
           errorsClient,
           errorsMutationCreateError
         );
-        //handle screens error
         return;
       }
 
@@ -458,15 +447,15 @@ exports.handler = (event, context, callback) => {
         .catch(() => {});
 
       await screensClient.hydrated();
-      const screensMutationSetScreenInput = {
+      const screensMutationCreateScreenInput = {
         objectKey,
         posterId: s3ObjectData.displayName,
         type: s3ObjectData.type,
       };
       try {
         await screensClient.mutate({
-          mutation: screensMutationSetScreen,
-          variables: { input: screensMutationSetScreenInput },
+          mutation: screensMutationCreateScreen,
+          variables: { input: screensMutationCreateScreenInput },
           fetchPolicy: 'no-cache',
         });
       } catch (error) {
@@ -474,8 +463,8 @@ exports.handler = (event, context, callback) => {
         const errorsMutationCreateErrorInput = {
           type: 'postScreen',
           data: JSON.stringify({
-            action: 'screensMutationSetScreen',
-            screensMutationSetScreenInput,
+            action: 'screensMutationCreateScreen',
+            screensMutationCreateScreenInput,
           }),
         };
         await errorsClient
