@@ -218,7 +218,7 @@ exports.handler = (event, context, callback) => {
           fetchPolicy: 'network-only',
         });
 
-        if (screensQueryGetObjectKeyResult.data.getObjectKey.length !== 1) {
+        if (screensQueryGetObjectKeyResult.data.getObjectKey.length !== 0) {
           deleteS3Object(
             new AWS.S3(),
             deleteS3ObjectInput,
