@@ -137,7 +137,7 @@ ${util.toJson(${context.result})}
 }
 
 {
-  "accountName" : ${utils.toJson(${context.result.items[0]["accountName"]})}
+  "accountNameList" : ${utils.toJson(${context.result.items})}
 }
 
 ## Resolver for Query.getPostScreenCount

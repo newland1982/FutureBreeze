@@ -2,6 +2,10 @@ type AccountName {
   accountName: String!
 }
 
+type AccountNameList {
+  accountNameList: [AccountName!]!
+}
+
 type CognitoIdentityId @aws_cognito_user_pools {
   cognitoIdentityId: String!
 }
@@ -28,7 +32,7 @@ type DisplayName {
   displayName: String!
 }
 
-input GetAccountNameInput {
+input GetAccountNameListInput {
   cognitoIdentityId: String!
 }
 
@@ -66,7 +70,7 @@ input PrepareSetPostScreenCountInput {
 type Query {
   getDisplayName(input: GetDisplayNameInput!): DisplayName
   getCreatedDate(input: GetCreatedDateInput!): CreatedDate
-  getAccountName(input: GetAccountNameInput!): AccountName
+  getAccountNameList(input: GetAccountNameListInput!): AccountNameList
   getPostScreenCount(input: GetPostScreenCountInput!): PostScreenCount
 }
 
