@@ -51,10 +51,12 @@ const registeredUsersMutationSetPostScreenCount = gql(`
   }
  }`);
 
-const registeredUsersQueryGetAccountName = gql(`
-  query GetAccountName($input: GetAccountNameInput!) {
-    getAccountName(input: $input) {
-      accountName
+const registeredUsersQueryGetAccountNameList = gql(`
+  query GetAccountNameList($input: GetAccountNameListInput!) {
+    getAccountNameList(input: $input) {
+      accountNameList {
+        accountName
+      }
   }
  }`);
 
@@ -238,18 +240,18 @@ exports.handler = (event, context, callback) => {
       }
 
       await registeredUsersClient.hydrated();
-      const registeredUsersQueryGetAccountNameInput = {
+      const registeredUsersQueryGetAccountNameListInput = {
         cognitoIdentityId: s3ObjectData.cognitoIdentityId,
       };
-      const registeredUsersQueryGetAccountNameResult = await registeredUsersClient
+      const registeredUsersQueryGetAccountNameListResult = await registeredUsersClient
         .query({
-          query: registeredUsersQueryGetAccountName,
-          variables: { input: registeredUsersQueryGetAccountNameInput },
+          query: registeredUsersQueryGetAccountNameList,
+          variables: { input: registeredUsersQueryGetAccountNameListInput },
           fetchPolicy: 'network-only',
         })
         .catch(() => {});
 
-      if (!registeredUsersQueryGetAccountNameResult) {
+      if (!registeredUsersQueryGetAccountNameListResult) {
         deleteS3Object(
           new AWS.S3(),
           deleteS3ObjectInput,
@@ -262,7 +264,7 @@ exports.handler = (event, context, callback) => {
       if (
         s3ObjectData.validationResult === 'valid' &&
         s3ObjectData.size < Number(process.env.Object_Size_Limit) &&
-        registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
+        registeredUsersQueryGetAccountNameListResult.data.getAccountNameList.accountNameList[0].accountName.slice(
           96
         ) === s3ObjectData.displayName
       ) {
@@ -286,14 +288,14 @@ exports.handler = (event, context, callback) => {
         !(s3ObjectData.validationResult === 'valid') ||
         !(s3ObjectData.size < Number(process.env.Object_Size_Limit)) ||
         !(
-          registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
+          registeredUsersQueryGetAccountNameListResult.data.getAccountNameList.accountNameList[0].accountName.slice(
             96
           ) === s3ObjectData.displayName
         ) ||
         !(postScreenCount + 1 <= Number(process.env.Post_Screen_Count_Limit))
       ) {
         const screensMutationChangePosterIdInput = {
-          posterId: registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
+          posterId: registeredUsersQueryGetAccountNameListResult.data.getAccountNameList.accountNameList[0].accountName.slice(
             96
           ),
         };
@@ -301,12 +303,12 @@ exports.handler = (event, context, callback) => {
         const cognitoIdentityServiceProviderAdminDeleteUserInput = {
           UserPoolId: process.env.User_Pool_Id,
           Username:
-            registeredUsersQueryGetAccountNameResult.data.getAccountName
-              .accountName,
+            registeredUsersQueryGetAccountNameListResult.data.getAccountNameList
+              .accountNameList[0].accountName,
         };
 
         const registeredUsersMutationDeleteRegisteredUserInput = {
-          displayName: registeredUsersQueryGetAccountNameResult.data.getAccountName.accountName.slice(
+          displayName: registeredUsersQueryGetAccountNameListResult.data.getAccountNameList.accountNameList[0].accountName.slice(
             96
           ),
         };
