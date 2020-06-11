@@ -30,9 +30,9 @@ const screensMutationChangePosterId = gql(`
   }
  }`);
 
-const screensQueryGetObjectKey = gql(`
-  query GetObjectKey($input: GetObjectKeyInput!) {
-    getObjectKey(input: $input) {
+const screensQueryGetObjectKeyList = gql(`
+  query GetObjectKeyList($input: GetObjectKeyListInput!) {
+    getObjectKeyList(input: $input) {
       objectKey
   }
  }`);
@@ -210,17 +210,19 @@ exports.handler = (event, context, callback) => {
       try {
         await screensClient.hydrated();
 
-        const screensQueryGetObjectKeyInput = {
+        const screensQueryGetObjectKeyListInput = {
           objectKey,
         };
 
-        const screensQueryGetObjectKeyResult = await screensClient.query({
-          query: screensQueryGetObjectKey,
-          variables: { input: screensQueryGetObjectKeyInput },
+        const screensQueryGetObjectKeyListResult = await screensClient.query({
+          query: screensQueryGetObjectKeyList,
+          variables: { input: screensQueryGetObjectKeyListInput },
           fetchPolicy: 'network-only',
         });
 
-        if (screensQueryGetObjectKeyResult.data.getObjectKey.length !== 0) {
+        if (
+          screensQueryGetObjectKeyListResult.data.getObjectKeyList.length !== 0
+        ) {
           deleteS3Object(
             new AWS.S3(),
             deleteS3ObjectInput,

@@ -12,7 +12,7 @@ input CreateScreenInput {
   type: String!
 }
 
-input GetObjectKeyInput {
+input GetObjectKeyListInput {
   objectKey: String
 }
 
@@ -30,7 +30,7 @@ type PosterId {
 }
 
 type Query {
-  getObjectKey(input: GetObjectKeyInput!): [ObjectKey]
+  getObjectKeyList(input: GetObjectKeyListInput!): [ObjectKey]
 }
 
 type Screen {

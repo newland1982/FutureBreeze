@@ -48,7 +48,7 @@ ${utils.toJson(${context.result.get("_source")})}
 
 ${utils.toJson(${context.result})}
 
-## Resolver for Query.getObjectKey
+## Resolver for Query.getObjectKeyList
 #set($objectKey = ${context.arguments.input.objectKey})
 {
   "version" : "2017-02-28",
