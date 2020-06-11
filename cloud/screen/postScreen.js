@@ -206,6 +206,10 @@ exports.handler = (event, context, callback) => {
 
     let postScreenCount = 0;
 
+    let screensQueryGetObjectKeyListResult;
+
+    let registeredUsersQueryGetAccountNameListResult;
+
     (async () => {
       try {
         await screensClient.hydrated();
@@ -214,14 +218,15 @@ exports.handler = (event, context, callback) => {
           objectKey,
         };
 
-        const screensQueryGetObjectKeyListResult = await screensClient.query({
+        screensQueryGetObjectKeyListResult = await screensClient.query({
           query: screensQueryGetObjectKeyList,
           variables: { input: screensQueryGetObjectKeyListInput },
           fetchPolicy: 'network-only',
         });
-
+      } catch (error) {
         if (
-          screensQueryGetObjectKeyListResult.data.getObjectKeyList.length !== 0
+          s3ObjectData.validationResult === 'valid' &&
+          s3ObjectData.size < Number(process.env.Object_Size_Limit)
         ) {
           deleteS3Object(
             new AWS.S3(),
@@ -229,37 +234,34 @@ exports.handler = (event, context, callback) => {
             errorsClient,
             errorsMutationCreateError
           );
-          return;
         }
-      } catch (error) {
-        deleteS3Object(
-          new AWS.S3(),
-          deleteS3ObjectInput,
-          errorsClient,
-          errorsMutationCreateError
-        );
         return;
       }
 
-      await registeredUsersClient.hydrated();
-      const registeredUsersQueryGetAccountNameListInput = {
-        cognitoIdentityId: s3ObjectData.cognitoIdentityId,
-      };
-      const registeredUsersQueryGetAccountNameListResult = await registeredUsersClient
-        .query({
-          query: registeredUsersQueryGetAccountNameList,
-          variables: { input: registeredUsersQueryGetAccountNameListInput },
-          fetchPolicy: 'network-only',
-        })
-        .catch(() => {});
-
-      if (!registeredUsersQueryGetAccountNameListResult) {
-        deleteS3Object(
-          new AWS.S3(),
-          deleteS3ObjectInput,
-          errorsClient,
-          errorsMutationCreateError
+      try {
+        await registeredUsersClient.hydrated();
+        const registeredUsersQueryGetAccountNameListInput = {
+          cognitoIdentityId: s3ObjectData.cognitoIdentityId,
+        };
+        registeredUsersQueryGetAccountNameListResult = await registeredUsersClient.query(
+          {
+            query: registeredUsersQueryGetAccountNameList,
+            variables: { input: registeredUsersQueryGetAccountNameListInput },
+            fetchPolicy: 'network-only',
+          }
         );
+      } catch (error) {
+        if (
+          s3ObjectData.validationResult === 'valid' &&
+          s3ObjectData.size < Number(process.env.Object_Size_Limit)
+        ) {
+          deleteS3Object(
+            new AWS.S3(),
+            deleteS3ObjectInput,
+            errorsClient,
+            errorsMutationCreateError
+          );
+        }
         return;
       }
 
@@ -289,6 +291,9 @@ exports.handler = (event, context, callback) => {
       if (
         !(s3ObjectData.validationResult === 'valid') ||
         !(s3ObjectData.size < Number(process.env.Object_Size_Limit)) ||
+        !(
+          screensQueryGetObjectKeyListResult.data.getObjectKeyList.length === 0
+        ) ||
         !(
           registeredUsersQueryGetAccountNameListResult.data.getAccountNameList.accountNameList[0].accountName.slice(
             96
@@ -404,9 +409,7 @@ exports.handler = (event, context, callback) => {
               fetchPolicy: 'no-cache',
             })
             .catch(() => {});
-          return;
         }
-
         return;
       }
 
