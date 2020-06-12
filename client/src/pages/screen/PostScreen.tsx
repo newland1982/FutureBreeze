@@ -372,7 +372,7 @@ const PostScreen = () => {
 
     try {
       const putFileForThumbnailResult = await Storage.put(
-        `${displayName}_${RegisteredUsersCreatedDate}/thumbnail${unixTimestamp}`,
+        `${displayName}_${RegisteredUsersCreatedDate}/${unixTimestamp}thumbnail`,
         blobForThumbnail,
         {
           level: 'protected',
@@ -387,7 +387,7 @@ const PostScreen = () => {
 
     try {
       const putFileForMobileResult = await Storage.put(
-        `${displayName}_${RegisteredUsersCreatedDate}/mobile${unixTimestamp}`,
+        `${displayName}_${RegisteredUsersCreatedDate}/${unixTimestamp}mobile`,
         blobForMobile,
         {
           level: 'protected',
@@ -401,7 +401,7 @@ const PostScreen = () => {
 
     try {
       const putFileForPCResult = await Storage.put(
-        `${displayName}_${RegisteredUsersCreatedDate}/pc${unixTimestamp}`,
+        `${displayName}_${RegisteredUsersCreatedDate}/${unixTimestamp}pc`,
         blobForPC,
         {
           level: 'protected',
