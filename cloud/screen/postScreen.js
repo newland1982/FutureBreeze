@@ -111,7 +111,7 @@ const getS3ObjectData = (eventRecord) => {
   const UUIDPattern = `[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})`;
   const displayNamePattern = `([0-9a-z]{1,}_[0-9a-z]{1,})`;
   const displayNameSuffixPattern = `[0-9]{13,}`;
-  const fileNamePattern = `(pc|mobile|thumbnail)[0-9]{13,}`;
+  const fileNamePattern = `[0-9]{13,}(pc|mobile|thumbnail)`;
   const preciseObjectKeyPattern = new RegExp(
     '^' +
       s3FileAccessLevel +
