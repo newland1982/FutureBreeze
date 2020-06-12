@@ -105,14 +105,14 @@ const errorsClient = new AWSAppSyncClient({
 });
 
 const getS3ObjectData = (eventRecord) => {
-  const objectKey = eventRecord.s3.object.key;
+  const encodedObjectKey = eventRecord.s3.object.key;
   const s3FileAccessLevel = `protected`;
   const region = `(${process.env.S3_Region}`;
   const UUIDPattern = `[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})`;
   const displayNamePattern = `([0-9a-z]{1,}_[0-9a-z]{1,})`;
   const displayNameSuffixPattern = `[0-9]{13,}`;
   const fileNamePattern = `[0-9]{13,}(pc|mobile|thumbnail)`;
-  const preciseObjectKeyPattern = new RegExp(
+  const preciseEncodedObjectKeyPattern = new RegExp(
     '^' +
       s3FileAccessLevel +
       '/' +
@@ -127,7 +127,7 @@ const getS3ObjectData = (eventRecord) => {
       fileNamePattern +
       '$'
   );
-  const roughObjectKeyPattern = new RegExp(
+  const roughEncodedObjectKeyPattern = new RegExp(
     '^' +
       s3FileAccessLevel +
       '/' +
@@ -138,22 +138,32 @@ const getS3ObjectData = (eventRecord) => {
       '.*' +
       '$'
   );
-  const preciseObjectKeyRegexResult = objectKey.match(preciseObjectKeyPattern);
-  const roughObjectKeyRegexResult = objectKey.match(roughObjectKeyPattern);
+  const preciseEncodedObjectKeyRegexResult = encodedObjectKey.match(
+    preciseEncodedObjectKeyPattern
+  );
+  const roughEncodedObjectKeyRegexResult = encodedObjectKey.match(
+    roughEncodedObjectKeyPattern
+  );
 
-  if (!preciseObjectKeyRegexResult) {
+  if (!preciseEncodedObjectKeyRegexResult) {
     return {
       validationResult: 'invalid',
-      cognitoIdentityId: roughObjectKeyRegexResult[1].replace('%3A', ':'),
+      cognitoIdentityId: roughEncodedObjectKeyRegexResult[1].replace(
+        '%3A',
+        ':'
+      ),
     };
   }
 
   return {
     validationResult: 'valid',
-    cognitoIdentityId: preciseObjectKeyRegexResult[1].replace('%3A', ':'),
-    displayName: preciseObjectKeyRegexResult[2],
+    cognitoIdentityId: preciseEncodedObjectKeyRegexResult[1].replace(
+      '%3A',
+      ':'
+    ),
+    displayName: preciseEncodedObjectKeyRegexResult[2],
     size: eventRecord.s3.object.size,
-    type: preciseObjectKeyRegexResult[3],
+    type: preciseEncodedObjectKeyRegexResult[3],
   };
 };
 
@@ -413,7 +423,7 @@ exports.handler = (event, context, callback) => {
         return;
       }
 
-      // begin
+      // begin 2
       if (s3ObjectData.type === 'thumbnail') {
         try {
           const rekognition = new AWS.Rekognition({
@@ -438,7 +448,7 @@ exports.handler = (event, context, callback) => {
           console.log('deteee222', error);
         }
       }
-      // end
+      // end 2
 
       await registeredUsersClient.hydrated();
       const registeredUsersMutationSetPostScreenCountInput = {
@@ -452,6 +462,32 @@ exports.handler = (event, context, callback) => {
           fetchPolicy: 'no-cache',
         })
         .catch(() => {});
+
+      // begin 3
+      const s3FileAccessLevel = `(protected`;
+      const region = `${process.env.S3_Region}`;
+      const UUIDPattern = `[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}`;
+      const displayNamePattern = `[0-9a-z]{1,}_[0-9a-z]{1,}`;
+      const displayNameSuffixPattern = `[0-9]{13,}`;
+      const fileNamePattern = `[0-9]{13,})(pc|mobile|thumbnail)`;
+      const objectKeyPattern = new RegExp(
+        '^' +
+          s3FileAccessLevel +
+          '/' +
+          region +
+          ':' +
+          UUIDPattern +
+          '/' +
+          displayNamePattern +
+          '_' +
+          displayNameSuffixPattern +
+          '/' +
+          fileNamePattern +
+          '$'
+      );
+      const objectKeyRegexResult = objectKey.match(objectKeyPattern);
+      const screenName = objectKeyRegexResult[1];
+      // end 3
 
       await screensClient.hydrated();
       const screensMutationCreateScreenInput = {
