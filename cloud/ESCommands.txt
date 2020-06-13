@@ -2,10 +2,12 @@ PUT /screens
 {
   "mappings": {
     "properties": {
+      "screenName":    { "type": "keyword" }, 
       "objectKey":    { "type": "keyword" },  
       "createdDate":  { "type": "date"  },
       "posterId":  { "type": "keyword"  }, 
-      "type":  { "type": "keyword"  }, 
+      "type":  { "type": "keyword"  },
+      "labels":  { "type": "completion"  },
       "userCount":  { "type": "long"  }   
     }
   }
