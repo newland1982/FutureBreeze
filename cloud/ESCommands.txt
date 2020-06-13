@@ -8,7 +8,8 @@ PUT /screens
       "posterId":  { "type": "keyword"  }, 
       "type":  { "type": "keyword"  },
       "labels":  { "type": "completion"  },
-      "userCount":  { "type": "long"  }   
+      "userCount":  { "type": "long"  },
+      "status":    { "type": "keyword" } 
     }
   }
 }
