@@ -424,6 +424,7 @@ exports.handler = (event, context, callback) => {
       }
 
       // begin 2
+      let labels;
       if (s3ObjectData.type === 'thumbnail') {
         try {
           const rekognition = new AWS.Rekognition({
@@ -489,12 +490,23 @@ exports.handler = (event, context, callback) => {
       const screenName = objectKeyRegexResult[1];
       // end 3
 
+      let screensMutationCreateScreenInput;
       await screensClient.hydrated();
-      const screensMutationCreateScreenInput = {
-        objectKey,
-        posterId: s3ObjectData.displayName,
-        type: s3ObjectData.type,
-      };
+      if (s3ObjectData.type === 'thumbnail') {
+        screensMutationCreateScreenInput = {
+          screenName,
+          objectKey,
+          posterId: s3ObjectData.displayName,
+          type: s3ObjectData.type,
+        };
+      } else {
+        screensMutationCreateScreenInput = {
+          screenName,
+          objectKey,
+          type: s3ObjectData.type,
+        };
+      }
+
       try {
         await screensClient.mutate({
           mutation: screensMutationCreateScreen,
