@@ -424,7 +424,7 @@ exports.handler = (event, context, callback) => {
       }
 
       // begin 2
-      let labels;
+      let labelsForSuggester;
       if (s3ObjectData.type === 'thumbnail') {
         try {
           const rekognition = new AWS.Rekognition({
@@ -444,10 +444,12 @@ exports.handler = (event, context, callback) => {
           const rekognitionDetectLabelsResult = await rekognition
             .detectLabels(rekognitionDetectLabelsInput)
             .promise();
-          labels = rekognitionDetectLabelsResult.Labels.map((value) => {
-            return { input: [value.Name] };
-          });
-          console.log('deteee111', labels);
+          labelsForSuggester = rekognitionDetectLabelsResult.Labels.map(
+            (value) => {
+              return { input: [value.Name] };
+            }
+          );
+          console.log('deteee111', labelsForSuggester);
         } catch (error) {
           console.log('deteee222', error);
         }
