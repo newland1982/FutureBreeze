@@ -30,9 +30,9 @@ const screensMutationChangePosterId = gql(`
   }
  }`);
 
-const screensQueryGetObjectKeyList = gql(`
-  query GetObjectKeyList($input: GetObjectKeyListInput!) {
-    getObjectKeyList(input: $input) {
+const screensQueryGetObjectKeys = gql(`
+  query GetObjectKeys($input: GetObjectKeysInput!) {
+    getObjectKeys(input: $input) {
       objectKey
   }
  }`);
@@ -51,10 +51,10 @@ const registeredUsersMutationSetPostScreenCount = gql(`
   }
  }`);
 
-const registeredUsersQueryGetAccountNameList = gql(`
-  query GetAccountNameList($input: GetAccountNameListInput!) {
-    getAccountNameList(input: $input) {
-      accountNameList {
+const registeredUsersQueryGetAccountNames = gql(`
+  query GetAccountNames($input: GetAccountNamesInput!) {
+    getAccountNames(input: $input) {
+      accountNames {
         accountName
       }
   }
@@ -216,21 +216,21 @@ exports.handler = (event, context, callback) => {
 
     let postScreenCount = 0;
 
-    let screensQueryGetObjectKeyListResult;
+    let screensQueryGetObjectKeysResult;
 
-    let registeredUsersQueryGetAccountNameListResult;
+    let registeredUsersQueryGetAccountNamesResult;
 
     (async () => {
       try {
         await screensClient.hydrated();
 
-        const screensQueryGetObjectKeyListInput = {
+        const screensQueryGetObjectKeysInput = {
           objectKey,
         };
 
-        screensQueryGetObjectKeyListResult = await screensClient.query({
-          query: screensQueryGetObjectKeyList,
-          variables: { input: screensQueryGetObjectKeyListInput },
+        screensQueryGetObjectKeysResult = await screensClient.query({
+          query: screensQueryGetObjectKeys,
+          variables: { input: screensQueryGetObjectKeysInput },
           fetchPolicy: 'network-only',
         });
       } catch (error) {
@@ -250,13 +250,13 @@ exports.handler = (event, context, callback) => {
 
       try {
         await registeredUsersClient.hydrated();
-        const registeredUsersQueryGetAccountNameListInput = {
+        const registeredUsersQueryGetAccountNamesInput = {
           cognitoIdentityId: s3ObjectData.cognitoIdentityId,
         };
-        registeredUsersQueryGetAccountNameListResult = await registeredUsersClient.query(
+        registeredUsersQueryGetAccountNamesResult = await registeredUsersClient.query(
           {
-            query: registeredUsersQueryGetAccountNameList,
-            variables: { input: registeredUsersQueryGetAccountNameListInput },
+            query: registeredUsersQueryGetAccountNames,
+            variables: { input: registeredUsersQueryGetAccountNamesInput },
             fetchPolicy: 'network-only',
           }
         );
@@ -278,7 +278,7 @@ exports.handler = (event, context, callback) => {
       if (
         s3ObjectData.validationResult === 'valid' &&
         s3ObjectData.size < Number(process.env.Object_Size_Limit) &&
-        registeredUsersQueryGetAccountNameListResult.data.getAccountNameList.accountNameList[0].accountName.slice(
+        registeredUsersQueryGetAccountNamesResult.data.getAccountNames.accountNames[0].accountName.slice(
           96
         ) === s3ObjectData.displayName
       ) {
@@ -301,18 +301,16 @@ exports.handler = (event, context, callback) => {
       if (
         !(s3ObjectData.validationResult === 'valid') ||
         !(s3ObjectData.size < Number(process.env.Object_Size_Limit)) ||
+        !(screensQueryGetObjectKeysResult.data.getObjectKeys.length === 0) ||
         !(
-          screensQueryGetObjectKeyListResult.data.getObjectKeyList.length === 0
-        ) ||
-        !(
-          registeredUsersQueryGetAccountNameListResult.data.getAccountNameList.accountNameList[0].accountName.slice(
+          registeredUsersQueryGetAccountNamesResult.data.getAccountNames.accountNames[0].accountName.slice(
             96
           ) === s3ObjectData.displayName
         ) ||
         !(postScreenCount + 1 <= Number(process.env.Post_Screen_Count_Limit))
       ) {
         const screensMutationChangePosterIdInput = {
-          posterId: registeredUsersQueryGetAccountNameListResult.data.getAccountNameList.accountNameList[0].accountName.slice(
+          posterId: registeredUsersQueryGetAccountNamesResult.data.getAccountNames.accountNames[0].accountName.slice(
             96
           ),
         };
@@ -320,12 +318,12 @@ exports.handler = (event, context, callback) => {
         const cognitoIdentityServiceProviderAdminDeleteUserInput = {
           UserPoolId: process.env.User_Pool_Id,
           Username:
-            registeredUsersQueryGetAccountNameListResult.data.getAccountNameList
-              .accountNameList[0].accountName,
+            registeredUsersQueryGetAccountNamesResult.data.getAccountNames
+              .accountNames[0].accountName,
         };
 
         const registeredUsersMutationDeleteRegisteredUserInput = {
-          displayName: registeredUsersQueryGetAccountNameListResult.data.getAccountNameList.accountNameList[0].accountName.slice(
+          displayName: registeredUsersQueryGetAccountNamesResult.data.getAccountNames.accountNames[0].accountName.slice(
             96
           ),
         };
