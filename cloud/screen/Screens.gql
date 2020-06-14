@@ -7,8 +7,9 @@ type ConnectionTimedOut {
 }
 
 input CreateScreenInput {
+  screenName: String!
   objectKey: String!
-  posterId: String!
+  posterId: String
   type: String!
 }
 
@@ -34,11 +35,13 @@ type Query {
 }
 
 type Screen {
+  screenName: String!
   objectKey: String!
   createdDate: AWSTimestamp!
   posterId: String!
   type: String!
   userCount: Int!
+  status: String!
 }
 
 schema {
