@@ -38,7 +38,7 @@ ${utils.toJson(${context.result.get("_source")})}
     "headers" : {},
     "queryString" : {},
     "body" : {
-      #if($type == "theme")
+      #if($type == "thumbnail")
         "screenName" : "$screenName",
         "objectKey" : "$objectKey",
         "createdDate" : "$createdDate",
