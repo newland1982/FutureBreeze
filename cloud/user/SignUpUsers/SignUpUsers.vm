@@ -38,7 +38,7 @@ ${util.toJson(${context.result})}
 
 ${util.toJson(${context.result})}
 
-## Resolver for Query.getIpAddressList
+## Resolver for Query.getIpAddresses
 {
   "version" : "2017-02-28",
   "operation" : "Query",
@@ -52,7 +52,7 @@ ${util.toJson(${context.result})}
 }
 
 {
-  "ipAddressList" : ${utils.toJson(${context.result.items})}
+  "ipAddresses" : ${utils.toJson(${context.result.items})}
 }
 
 ## Resolver for Query.getStatus

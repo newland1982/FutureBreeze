@@ -3,7 +3,7 @@ input CreateSignUpUserInput {
   password: String!
 }
 
-input GetIpAddressListInput {
+input GetIpAddressesInput {
   ipAddress: String!
 }
 
@@ -19,8 +19,8 @@ type IpAddress {
   ipAddress: String!
 }
 
-type IpAddressList {
-  ipAddressList: [IpAddress!]!
+type IpAddresses {
+  ipAddresses: [IpAddress!]!
 }
 
 type Mutation {
@@ -29,7 +29,7 @@ type Mutation {
 }
 
 type Query {
-  getIpAddressList(input: GetIpAddressListInput!): IpAddressList
+  getIpAddresses(input: GetIpAddressesInput!): IpAddresses
   getStatus(input: GetStatusInput!): Status
 }
 

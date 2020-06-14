@@ -30,10 +30,10 @@ const signUpUsersMutationSetStatus = gql(`
     }
   }`);
 
-const signUpUsersQueryGetIpAddressList = gql(`
-  query GetIpAddressList($input: GetIpAddressListInput!) {
-    getIpAddressList(input: $input) {
-      ipAddressList {
+const signUpUsersQueryGetIpAddresses = gql(`
+  query GetIpAddresses($input: GetIpAddressesInput!) {
+    getIpAddresses(input: $input) {
+      ipAddresses {
         ipAddress
       }
     }
@@ -68,7 +68,7 @@ exports.handler = (event, context, callback) => {
       id: record.dynamodb.NewImage.id.S,
     };
 
-    const signUpUsersQueryGetIpAddressListInput = {
+    const signUpUsersQueryGetIpAddressesInput = {
       ipAddress: record.dynamodb.NewImage.ipAddress.S,
     };
 
@@ -123,8 +123,8 @@ exports.handler = (event, context, callback) => {
 
       const result = await signUpUsersClient
         .query({
-          query: signUpUsersQueryGetIpAddressList,
-          variables: { input: signUpUsersQueryGetIpAddressListInput },
+          query: signUpUsersQueryGetIpAddresses,
+          variables: { input: signUpUsersQueryGetIpAddressesInput },
           fetchPolicy: 'network-only',
         })
         .catch(async () => {
@@ -142,7 +142,7 @@ exports.handler = (event, context, callback) => {
             .catch(() => {});
         });
 
-      ipAddressCount = result.data.getIpAddressList.ipAddressList.length;
+      ipAddressCount = result.data.getIpAddresses.ipAddresses.length;
 
       if (ipAddressCount > process.env.Access_Limit) {
         await signUpUsersClient
