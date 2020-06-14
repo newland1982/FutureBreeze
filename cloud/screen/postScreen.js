@@ -444,7 +444,10 @@ exports.handler = (event, context, callback) => {
           const rekognitionDetectLabelsResult = await rekognition
             .detectLabels(rekognitionDetectLabelsInput)
             .promise();
-          console.log('deteee111', rekognitionDetectLabelsResult);
+          labels = rekognitionDetectLabelsResult.Labels.map((value) => {
+            return { input: [value.Name] };
+          });
+          console.log('deteee111', labels);
         } catch (error) {
           console.log('deteee222', error);
         }
