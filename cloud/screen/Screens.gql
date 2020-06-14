@@ -40,6 +40,8 @@ type Screen {
   createdDate: AWSTimestamp!
   posterId: String!
   type: String!
+  labelsForSuggester: [Object]!
+  labelsForSearch: [Object]!
   userCount: Int!
   status: String!
 }
