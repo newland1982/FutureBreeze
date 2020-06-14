@@ -425,6 +425,7 @@ exports.handler = (event, context, callback) => {
 
       // begin 2
       let labelsForSuggester;
+      let labelsForSearch;
       if (s3ObjectData.type === 'thumbnail') {
         try {
           const rekognition = new AWS.Rekognition({
@@ -449,7 +450,13 @@ exports.handler = (event, context, callback) => {
               return { input: [value.Name] };
             }
           );
+          labelsForSearch = rekognitionDetectLabelsResult.Labels.map(
+            (value) => {
+              return { label: [value.Name] };
+            }
+          );
           console.log('deteee111', labelsForSuggester);
+          console.log('deteee1.5555511', labelsForSearch);
         } catch (error) {
           console.log('deteee222', error);
         }
@@ -503,6 +510,8 @@ exports.handler = (event, context, callback) => {
           objectKey,
           posterId: s3ObjectData.displayName,
           type: s3ObjectData.type,
+          labelsForSuggester,
+          labelsForSearch,
         };
       } else {
         screensMutationCreateScreenInput = {
