@@ -13,8 +13,12 @@ input CreateScreenInput {
   type: String!
 }
 
-input GetObjectKeyListInput {
+input GetObjectKeysInput {
   objectKey: String
+}
+
+type LabelsForSuggester {
+  input: [String]
 }
 
 type Mutation {
@@ -31,7 +35,7 @@ type PosterId {
 }
 
 type Query {
-  getObjectKeyList(input: GetObjectKeyListInput!): [ObjectKey]
+  getObjectKeys(input: GetObjectKeysInput!): [ObjectKey]
 }
 
 type Screen {
@@ -40,10 +44,14 @@ type Screen {
   createdDate: AWSTimestamp!
   posterId: String!
   type: String!
-  labelsForSuggester: [Object]!
-  labelsForSearch: [Object]!
+  labelsForSuggester: [LabelsForSuggester]!
+  labelsForSearch: [labelsForSearch]!
   userCount: Int!
   status: String!
+}
+
+type labelsForSearch {
+  label: [String]
 }
 
 schema {
