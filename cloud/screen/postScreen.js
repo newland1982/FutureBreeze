@@ -453,6 +453,7 @@ exports.handler = (event, context, callback) => {
               return { label: [value.Name] };
             }
           );
+          console.log('deteeetypeee', s3ObjectData.type);
           console.log('deteee111', labelsForSuggester);
           console.log('deteee1.5555511', labelsForSearch);
         } catch (error) {
