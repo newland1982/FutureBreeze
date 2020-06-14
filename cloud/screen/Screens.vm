@@ -50,6 +50,7 @@ ${utils.toJson(${context.result.get("_source")})}
         "screenName" : "$screenName",
         "objectKey" : "$objectKey",
         "createdDate" : "$createdDate",
+        "type" : "$type",
         "status" : "init"
       #end
     }
