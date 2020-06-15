@@ -527,21 +527,13 @@ exports.handler = (event, context, callback) => {
           fetchPolicy: 'no-cache',
         });
       } catch (error) {
-        await errorsClient.hydrated();
-        const errorsMutationCreateErrorInput = {
-          type: 'postScreen',
-          data: JSON.stringify({
-            action: 'screensMutationCreateScreen',
-            screensMutationCreateScreenInput,
-          }),
-        };
-        await errorsClient
-          .mutate({
-            mutation: errorsMutationCreateError,
-            variables: { input: errorsMutationCreateErrorInput },
-            fetchPolicy: 'no-cache',
-          })
-          .catch(() => {});
+        console.log('errrfianlall', error);
+        deleteS3Object(
+          new AWS.S3(),
+          deleteS3ObjectInput,
+          errorsClient,
+          errorsMutationCreateError
+        );
       }
     })();
   });

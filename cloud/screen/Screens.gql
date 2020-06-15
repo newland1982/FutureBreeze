@@ -11,6 +11,8 @@ input CreateScreenInput {
   objectKey: String!
   posterId: String
   type: String!
+  labelsForSuggester: [LabelsForSuggesterInput]
+  labelsForSearch: [LabelsForSearchInput]
 }
 
 input GetObjectKeysInput {
@@ -18,7 +20,15 @@ input GetObjectKeysInput {
 }
 
 type LabelsForSuggester {
-  input: [String]
+  input: String
+}
+
+input LabelsForSuggesterInput {
+  input: String
+}
+
+input LabelsForSearchInput {
+  label: String
 }
 
 type Mutation {
@@ -45,13 +55,13 @@ type Screen {
   posterId: String!
   type: String!
   labelsForSuggester: [LabelsForSuggester]!
-  labelsForSearch: [labelsForSearch]!
+  labelsForSearch: [LabelsForSearch]!
   userCount: Int!
   status: String!
 }
 
-type labelsForSearch {
-  label: [String]
+type LabelsForSearch {
+  label: String
 }
 
 schema {
