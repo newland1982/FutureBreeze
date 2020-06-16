@@ -19,16 +19,20 @@ input GetObjectKeysInput {
   objectKey: String
 }
 
+type LabelsForSearch {
+  label: String
+}
+
+input LabelsForSearchInput {
+  label: String
+}
+
 type LabelsForSuggester {
   input: String
 }
 
 input LabelsForSuggesterInput {
   input: String
-}
-
-input LabelsForSearchInput {
-  label: String
 }
 
 type Mutation {
@@ -58,10 +62,6 @@ type Screen {
   labelsForSearch: [LabelsForSearch]!
   userCount: Int!
   status: String!
-}
-
-type LabelsForSearch {
-  label: String
 }
 
 schema {

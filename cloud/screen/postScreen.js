@@ -445,12 +445,12 @@ exports.handler = (event, context, callback) => {
             .promise();
           labelsForSuggester = rekognitionDetectLabelsResult.Labels.map(
             (value) => {
-              return { input: [value.Name] };
+              return { input: value.Name };
             }
           );
           labelsForSearch = rekognitionDetectLabelsResult.Labels.map(
             (value) => {
-              return { label: [value.Name] };
+              return { label: value.Name };
             }
           );
           console.log('deteeetypeee', s3ObjectData.type);
