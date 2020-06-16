@@ -445,7 +445,7 @@ exports.handler = (event, context, callback) => {
             .promise();
           labelsForSuggester = rekognitionDetectLabelsResult.Labels.map(
             (value) => {
-              return { input: value.Name };
+              return value.Name;
             }
           );
           labelsForSearch = rekognitionDetectLabelsResult.Labels.map(

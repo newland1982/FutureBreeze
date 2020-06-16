@@ -11,7 +11,7 @@ input CreateScreenInput {
   objectKey: String!
   posterId: String
   type: String!
-  labelsForSuggester: [LabelsForSuggesterInput]
+  labelsForSuggester: [String]
   labelsForSearch: [LabelsForSearchInput]
 }
 
@@ -28,10 +28,6 @@ input LabelsForSearchInput {
 }
 
 type LabelsForSuggester {
-  input: String
-}
-
-input LabelsForSuggesterInput {
   input: String
 }
 
