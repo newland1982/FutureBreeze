@@ -11,24 +11,11 @@ input CreateScreenInput {
   objectKey: String!
   posterId: String
   type: String!
-  labelsForSuggester: [String]
-  labelsForSearch: [LabelsForSearchInput]
+  labels: [String]
 }
 
 input GetObjectKeysInput {
   objectKey: String
-}
-
-type LabelsForSearch {
-  label: String
-}
-
-input LabelsForSearchInput {
-  label: String
-}
-
-type LabelsForSuggester {
-  input: String
 }
 
 type Mutation {
@@ -54,8 +41,7 @@ type Screen {
   createdDate: AWSTimestamp!
   posterId: String!
   type: String!
-  labelsForSuggester: [LabelsForSuggester]!
-  labelsForSearch: [LabelsForSearch]!
+  labels: [String]!
   userCount: Int!
   status: String!
 }

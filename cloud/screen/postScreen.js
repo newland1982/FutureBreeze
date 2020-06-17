@@ -220,6 +220,30 @@ exports.handler = (event, context, callback) => {
 
     let registeredUsersQueryGetAccountNamesResult;
 
+    const s3FileAccessLevel = `(protected`;
+    const region = `${process.env.S3_Region}`;
+    const UUIDPattern = `[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}`;
+    const displayNamePattern = `[0-9a-z]{1,}_[0-9a-z]{1,}`;
+    const displayNameSuffixPattern = `[0-9]{13,}`;
+    const fileNamePattern = `[0-9]{13,})(pc|mobile|thumbnail)`;
+    const objectKeyPattern = new RegExp(
+      '^' +
+        s3FileAccessLevel +
+        '/' +
+        region +
+        ':' +
+        UUIDPattern +
+        '/' +
+        displayNamePattern +
+        '_' +
+        displayNameSuffixPattern +
+        '/' +
+        fileNamePattern +
+        '$'
+    );
+    const objectKeyRegexResult = objectKey.match(objectKeyPattern);
+    const screenName = objectKeyRegexResult[1];
+
     (async () => {
       try {
         await screensClient.hydrated();
@@ -421,9 +445,7 @@ exports.handler = (event, context, callback) => {
         return;
       }
 
-      // begin 2
-      let labelsForSuggester;
-      let labelsForSearch;
+      let labels;
       if (s3ObjectData.type === 'thumbnail') {
         try {
           const rekognition = new AWS.Rekognition({
@@ -443,24 +465,11 @@ exports.handler = (event, context, callback) => {
           const rekognitionDetectLabelsResult = await rekognition
             .detectLabels(rekognitionDetectLabelsInput)
             .promise();
-          labelsForSuggester = rekognitionDetectLabelsResult.Labels.map(
-            (value) => {
-              return value.Name;
-            }
-          );
-          labelsForSearch = rekognitionDetectLabelsResult.Labels.map(
-            (value) => {
-              return { label: value.Name };
-            }
-          );
-          console.log('deteeetypeee', s3ObjectData.type);
-          console.log('deteee111', labelsForSuggester);
-          console.log('deteee1.5555511', labelsForSearch);
-        } catch (error) {
-          console.log('deteee222', error);
-        }
+          labels = rekognitionDetectLabelsResult.Labels.map((value) => {
+            return value.Name;
+          });
+        } catch (error) {}
       }
-      // end 2
 
       await registeredUsersClient.hydrated();
       const registeredUsersMutationSetPostScreenCountInput = {
@@ -475,32 +484,6 @@ exports.handler = (event, context, callback) => {
         })
         .catch(() => {});
 
-      // begin 3
-      const s3FileAccessLevel = `(protected`;
-      const region = `${process.env.S3_Region}`;
-      const UUIDPattern = `[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}`;
-      const displayNamePattern = `[0-9a-z]{1,}_[0-9a-z]{1,}`;
-      const displayNameSuffixPattern = `[0-9]{13,}`;
-      const fileNamePattern = `[0-9]{13,})(pc|mobile|thumbnail)`;
-      const objectKeyPattern = new RegExp(
-        '^' +
-          s3FileAccessLevel +
-          '/' +
-          region +
-          ':' +
-          UUIDPattern +
-          '/' +
-          displayNamePattern +
-          '_' +
-          displayNameSuffixPattern +
-          '/' +
-          fileNamePattern +
-          '$'
-      );
-      const objectKeyRegexResult = objectKey.match(objectKeyPattern);
-      const screenName = objectKeyRegexResult[1];
-      // end 3
-
       let screensMutationCreateScreenInput;
       await screensClient.hydrated();
       if (s3ObjectData.type === 'thumbnail') {
@@ -509,8 +492,7 @@ exports.handler = (event, context, callback) => {
           objectKey,
           posterId: s3ObjectData.displayName,
           type: s3ObjectData.type,
-          labelsForSuggester,
-          labelsForSearch,
+          labels,
         };
       } else {
         screensMutationCreateScreenInput = {
@@ -527,7 +509,6 @@ exports.handler = (event, context, callback) => {
           fetchPolicy: 'no-cache',
         });
       } catch (error) {
-        console.log('errrfianlall', error);
         deleteS3Object(
           new AWS.S3(),
           deleteS3ObjectInput,

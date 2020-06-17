@@ -4,8 +4,7 @@
 #set($createdDate = ${util.time.nowEpochMilliSeconds()})
 #set($posterId = ${context.arguments.input.posterId})
 #set($type = ${context.arguments.input.type})
-#set($labelsForSuggester = ${context.arguments.input.labelsForSuggester})
-#set($labelsForSearch = ${context.arguments.input.labelsForSearch})
+#set($labels = ${context.arguments.input.labels})
 #set($userCount = 0)
 {
   "version" : "2017-02-28",
@@ -21,8 +20,7 @@
         "createdDate" : "$createdDate",
         "posterId" : "$posterId",
         "type" : "$type",
-        "labelsForSuggester" : ${utils.toJson($labelsForSuggester)},
-        "labelsForSearch" : ${utils.toJson($labelsForSearch)},
+        "labels" : ${utils.toJson($labels)},
         "userCount" : "$userCount",
         "status" : "init"
       #else
@@ -30,7 +28,6 @@
         "objectKey" : "$objectKey",
         "createdDate" : "$createdDate",
         "type" : "$type",
-        "status" : "init"
       #end
     }
   }

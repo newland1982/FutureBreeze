@@ -7,8 +7,7 @@ PUT /screens
       "createdDate":  { "type": "date"  },
       "posterId":  { "type": "keyword"  }, 
       "type":  { "type": "keyword"  },
-      "labelsForSuggester":  { "type": "completion"  },
-      "labelsForSearch":  { "type": "nested"  },
+      "labels":  { "type": "completion"  },
       "userCount":  { "type": "long"  },
       "status":    { "type": "keyword" } 
     }
