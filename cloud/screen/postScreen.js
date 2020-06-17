@@ -445,13 +445,37 @@ exports.handler = (event, context, callback) => {
         return;
       }
 
-      let labels;
+      let labels = [];
       if (s3ObjectData.type === 'thumbnail') {
+        const rekognition = new AWS.Rekognition({
+          apiVersion: process.env.Rekognition_ApiVersion,
+        });
         try {
-          const rekognition = new AWS.Rekognition({
-            apiVersion: process.env.Rekognition_ApiVersion,
-          });
+          const rekognitionDetectModerationLabelsInput = {
+            Image: {
+              S3Object: {
+                Bucket: process.env.Bucket,
+                Name: objectKey,
+              },
+            },
+            MinConfidence:
+              process.env.Rekognition_DetectModerationLabels_MinConfidence,
+          };
+          const rekognitionDetectModerationLabelsResult = await rekognition
+            .detectModerationLabels(rekognitionDetectModerationLabelsInput)
+            .promise();
+          console.log(rekognitionDetectModerationLabelsResult);
+        } catch (error) {
+          deleteS3Object(
+            new AWS.S3(),
+            deleteS3ObjectInput,
+            errorsClient,
+            errorsMutationCreateError
+          );
+          return;
+        }
 
+        try {
           const rekognitionDetectLabelsInput = {
             Image: {
               S3Object: {
@@ -468,7 +492,15 @@ exports.handler = (event, context, callback) => {
           labels = rekognitionDetectLabelsResult.Labels.map((value) => {
             return value.Name;
           });
-        } catch (error) {}
+        } catch (error) {
+          deleteS3Object(
+            new AWS.S3(),
+            deleteS3ObjectInput,
+            errorsClient,
+            errorsMutationCreateError
+          );
+          return;
+        }
       }
 
       await registeredUsersClient.hydrated();
