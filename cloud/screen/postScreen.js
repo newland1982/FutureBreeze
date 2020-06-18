@@ -464,18 +464,11 @@ exports.handler = (event, context, callback) => {
           const rekognitionDetectModerationLabelsResult = await rekognition
             .detectModerationLabels(rekognitionDetectModerationLabelsInput)
             .promise();
-          console.log(rekognitionDetectModerationLabelsResult);
-        } catch (error) {
-          deleteS3Object(
-            new AWS.S3(),
-            deleteS3ObjectInput,
-            errorsClient,
-            errorsMutationCreateError
+          console.log(
+            'rrrrr',
+            rekognitionDetectModerationLabelsResult.ModerationLabels.length
           );
-          return;
-        }
 
-        try {
           const rekognitionDetectLabelsInput = {
             Image: {
               S3Object: {
