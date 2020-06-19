@@ -17,11 +17,11 @@ const credentials = AWS.config.credentials;
 let cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
 
 const screensMutationCreateScreen = gql(`
- mutation CreateScreen($input: CreateScreenInput!) {
-  createScreen(input: $input) {
-     objectKey
- }
-}`);
+  mutation CreateScreen($input: CreateScreenInput!) {
+    createScreen(input: $input) {
+      objectKey
+  }
+ }`);
 
 const screensMutationChangePosterId = gql(`
   mutation ChangePosterId($input: ChangePosterIdInput!) {
