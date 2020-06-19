@@ -318,10 +318,10 @@ const PostScreen = () => {
     }
 
     const registeredUsersQueryGetPostScreenCount = `query GetPostScreenCount($input: GetPostScreenCountInput!) {
-          getPostScreenCount(input: $input) {
-            postScreenCount
-          }
-         }`;
+      getPostScreenCount(input: $input) {
+        postScreenCount
+      }
+    }`;
     const registeredUsersQueryGetPostScreenCountInput = {
       displayName,
     };
@@ -354,7 +354,7 @@ const PostScreen = () => {
       getCreatedDate(input: $input) {
         createdDate
       }
-     }`;
+    }`;
     const registeredUsersQueryGetCreatedDateInput = {
       displayName,
     };
