@@ -18,6 +18,10 @@ input GetObjectKeysInput {
   objectKey: String
 }
 
+input GetScreenNamesInput {
+  type: String
+}
+
 type Mutation {
   createScreen(input: CreateScreenInput!): ObjectKey
   changePosterId(input: ChangePosterIdInput!): ConnectionTimedOut
@@ -27,12 +31,17 @@ type ObjectKey {
   objectKey: String
 }
 
+type ScreenName {
+  screenName: String
+}
+
 type PosterId {
   posterId: String
 }
 
 type Query {
   getObjectKeys(input: GetObjectKeysInput!): [ObjectKey]
+  getScreenNames(input: GetScreenNamesInput!): [ScreenName]
 }
 
 type Screen {
