@@ -117,28 +117,31 @@ ${util.toJson(${context.result})}
 ${util.toJson(${context.result})}
 
 ## Resolver for Query.getDisplayName
+#set($displayName = ${context.arguments.input.displayName})
 {
   "version" : "2017-02-28",
   "operation" : "GetItem",
   "key" : {
-    "displayName" : { "S" : "${context.arguments.input.displayName}" }
+    "displayName" : { "S" : "$displayName" }
   }
 }
 
 ${util.toJson(${context.result})}
 
 ## Resolver for Query.getCreatedDate
+#set($displayName = ${context.arguments.input.displayName})
 {
   "version" : "2017-02-28",
   "operation" : "GetItem",
   "key" : {
-    "displayName" : { "S" : "${context.arguments.input.displayName}" }
+    "displayName" : { "S" : "$displayName" }
   }
 }
 
 ${util.toJson(${context.result})}
 
 ## Resolver for Query.getAccountNames
+#set($cognitoIdentityId = ${context.arguments.input.cognitoIdentityId})
 {
   "version" : "2017-02-28",
   "operation" : "Query",
@@ -146,7 +149,7 @@ ${util.toJson(${context.result})}
   "query" : {
     "expression" : "cognitoIdentityId = :cognitoIdentityId",
     "expressionValues" : {
-      ":cognitoIdentityId" : { "S" : "${context.arguments.input.cognitoIdentityId}" }
+      ":cognitoIdentityId" : { "S" : "$cognitoIdentityId" }
     }
   }
 }
@@ -156,11 +159,12 @@ ${util.toJson(${context.result})}
 }
 
 ## Resolver for Query.getPostScreenCount
+#set($displayName = ${context.arguments.input.displayName})
 {
   "version" : "2017-02-28",
   "operation" : "GetItem",
   "key" : {
-    "displayName" : { "S" : "${context.arguments.input.displayName}" }
+    "displayName" : { "S" : "$displayName" }
   }
 }
 
