@@ -36,12 +36,13 @@
 ${utils.toJson(${context.result.get("_source")})}
 
 ## Resolver for Mutation.changePosterId
+#set($path = ${util.toJson("/screens/_update_by_query?conflicts=proceed")})
 #set($posterId = ${context.arguments.input.posterId})
 #set($changedPosterId = "Anonymous")
 {
   "version" : "2017-02-28",
   "operation" : "POST",
-  "path" : ${util.toJson("/screens/_update_by_query?conflicts=proceed")},
+  "path" : $path,
   "params" : {
     "headers" : {},
     "queryString" : {},
@@ -61,11 +62,12 @@ ${utils.toJson(${context.result.get("_source")})}
 ${utils.toJson(${context.result})}
 
 ## Resolver for Query.getObjectKeys
+#set($path = ${util.toJson("/screens/_search")})
 #set($objectKey = ${context.arguments.input.objectKey})
 {
   "version" : "2017-02-28",
   "operation" : "GET",
-  "path" : ${util.toJson("/screens/_search")},
+  "path" : $path,
   "params" : {
     "headers" : {},
     "queryString" : {},
@@ -90,12 +92,13 @@ ${utils.toJson(${context.result})}
 ]
 
 ## Resolver for Query.getScreenNames
-#set($type = ${context.arguments.input.type})
+#set($path = ${util.toJson("/screens/_search")})
 #set($size = 12)
+#set($type = ${context.arguments.input.type})
 {
   "version" : "2017-02-28",
   "operation" : "GET",
-  "path" : ${util.toJson("/screens/_search")},
+  "path" : $path,
   "params" : {
     "headers" : {},
     "queryString" : {},
