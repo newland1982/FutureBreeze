@@ -1,14 +1,15 @@
 ## Resolver for Mutation.createScreen
+#set($path = ${util.toJson("/screens/_doc/")})
 #set($screenName = ${context.arguments.input.screenName})
 #set($objectKey = ${context.arguments.input.objectKey})
 #set($createdDate = ${util.time.nowEpochMilliSeconds()})
 #set($posterId = ${context.arguments.input.posterId})
 #set($type = ${context.arguments.input.type})
-#set($labels = ${context.arguments.input.labels})
+#set($labels = ${utils.toJson(${context.arguments.input.labels})})
 {
   "version" : "2017-02-28",
   "operation" : "POST",
-  "path" : ${util.toJson("/screens/_doc/")},
+  "path" : $path,
   "params" : {
     "headers" : {},
     "queryString" : {},
@@ -19,7 +20,7 @@
         "createdDate" : "$createdDate",
         "posterId" : "$posterId",
         "type" : "$type",
-        "labels" : ${utils.toJson($labels)},
+        "labels" : $labels,
         "userCount" : 0,
         "status" : "init"
       #else
