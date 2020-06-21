@@ -60,6 +60,8 @@ ${util.toJson(${context.result})}
 ${util.toJson(${context.result})}
 
 ## Resolver for Mutation.prepareSetPostScreenCount
+#set($displayName = ${context.arguments.input.displayName})
+#set($zero = 0)
 #set($postScreenCountPeriod = 86400)
 #set($currentDate = ${util.time.nowEpochSeconds()})
 #set($postScreenCountStartDateLimit = $currentDate - $postScreenCountPeriod)
@@ -67,12 +69,12 @@ ${util.toJson(${context.result})}
   "version" : "2017-02-28",
   "operation" : "UpdateItem",
   "key" : {
-    "displayName" : { "S" : "${context.arguments.input.displayName}" }
+    "displayName" : { "S" : "$displayName" }
   },
   "update" : {
     "expression" : "SET postScreenCount = :zero",
     "expressionValues" : {
-      ":zero" : { "N" : 0 }
+      ":zero" : { "N" : $zero }
     }
   },
   "condition" : {
