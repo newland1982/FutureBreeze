@@ -6,6 +6,8 @@
 #set($posterId = ${context.arguments.input.posterId})
 #set($type = ${context.arguments.input.type})
 #set($labels = ${utils.toJson(${context.arguments.input.labels})})
+#set($userCount = 0)
+#set($status = "init")
 {
   "version" : "2017-02-28",
   "operation" : "POST",
@@ -17,16 +19,16 @@
       #if($type == "thumbnail")
         "screenName" : "$screenName",
         "objectKey" : "$objectKey",
-        "createdDate" : "$createdDate",
+        "createdDate" : $createdDate,
         "posterId" : "$posterId",
         "type" : "$type",
         "labels" : $labels,
-        "userCount" : 0,
-        "status" : "init"
+        "userCount" : $userCount,
+        "status" : "$status"
       #else
         "screenName" : "$screenName",
         "objectKey" : "$objectKey",
-        "createdDate" : "$createdDate",
+        "createdDate" : $createdDate,
         "type" : "$type",
       #end
     }
@@ -63,6 +65,8 @@ ${utils.toJson(${context.result})}
 
 ## Resolver for Query.getObjectKeys
 #set($path = ${util.toJson("/screens/_search")})
+#set($from = 0)
+#set($size = 1)
 #set($objectKey = ${context.arguments.input.objectKey})
 {
   "version" : "2017-02-28",
@@ -72,8 +76,8 @@ ${utils.toJson(${context.result})}
     "headers" : {},
     "queryString" : {},
     "body" : {
-      "from" : 0,
-      "size" : 1,
+      "from" : $from,
+      "size" : $size,
       "query" : {
         "term" : {
           "objectKey" : "$objectKey"
@@ -93,6 +97,7 @@ ${utils.toJson(${context.result})}
 
 ## Resolver for Query.getScreenNames
 #set($path = ${util.toJson("/screens/_search")})
+#set($from = 0)
 #set($size = 12)
 #set($type = ${context.arguments.input.type})
 {
@@ -103,8 +108,8 @@ ${utils.toJson(${context.result})}
     "headers" : {},
     "queryString" : {},
     "body" : {
-      "from" : 0,
-      "size" : "$size",
+      "from" : $from,
+      "size" : $size,
       "query" : {
         "term" : {
           "type" : "$type"
