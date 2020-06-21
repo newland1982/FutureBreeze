@@ -5,7 +5,6 @@
 #set($posterId = ${context.arguments.input.posterId})
 #set($type = ${context.arguments.input.type})
 #set($labels = ${context.arguments.input.labels})
-#set($userCount = 0)
 {
   "version" : "2017-02-28",
   "operation" : "POST",
@@ -21,7 +20,7 @@
         "posterId" : "$posterId",
         "type" : "$type",
         "labels" : ${utils.toJson($labels)},
-        "userCount" : "$userCount",
+        "userCount" : 0,
         "status" : "init"
       #else
         "screenName" : "$screenName",
