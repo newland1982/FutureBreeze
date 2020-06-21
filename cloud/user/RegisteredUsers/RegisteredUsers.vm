@@ -30,6 +30,7 @@ ${util.toJson(${context.result})}
 ## Resolver for Mutation.setCognitoIdentityId
 #set($accountName = ${context.identity.username})
 #set($displayName = ${accountName.substring(96)})
+#set($cognitoIdentityId = ${context.arguments.input.cognitoIdentityId})
 {
   "version" : "2017-02-28",
   "operation" : "UpdateItem",
@@ -39,7 +40,7 @@ ${util.toJson(${context.result})}
   "update" : {
     "expression" : "SET cognitoIdentityId = :cognitoIdentityId",
     "expressionValues" : {
-      ":cognitoIdentityId" : { "S" : "${context.arguments.input.cognitoIdentityId}" }
+      ":cognitoIdentityId" : { "S" : "$cognitoIdentityId" }
     }
   }
 }
@@ -47,11 +48,12 @@ ${util.toJson(${context.result})}
 ${util.toJson(${context.result})}
 
 ## Resolver for Mutation.deleteRegisteredUser
+#set($displayName = ${context.arguments.input.displayName})
 {
   "version" : "2017-02-28",
   "operation" : "DeleteItem",
   "key" : {
-    "displayName" : { "S" : "${context.arguments.input.displayName}" }
+    "displayName" : { "S" : "$displayName" }
   }
 }
 
