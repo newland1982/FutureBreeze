@@ -7,18 +7,18 @@
 #set($status = "init")
 #set($expirationDate = ${util.time.nowEpochSeconds()} + 86400)
 {
-  "version" : "2017-02-28",
-  "operation" : "PutItem",
-  "key" : {
-    "id" : { "S" : "$id" }
+  "version": "2017-02-28",
+  "operation": "PutItem",
+  "key": {
+    "id": { "S": "$id" }
   },
-  "attributeValues" : {
-    "createdDate" : { "S" : "$createdDate" },
-    "ipAddress" : { "S" : "$ipAddress" },
-    "accountName" : { "S" : "$accountName" },
-    "password" : { "S" : "$password" },
-    "status" : { "S" : "$status" },
-    "expirationDate" : { "N" : $expirationDate }
+  "attributeValues": {
+    "createdDate": { "S": "$createdDate" },
+    "ipAddress": { "S": "$ipAddress" },
+    "accountName": { "S": "$accountName" },
+    "password": { "S": "$password" },
+    "status": { "S": "$status" },
+    "expirationDate": { "N": $expirationDate }
   }
 }
 
@@ -28,18 +28,18 @@ ${util.toJson(${context.result})}
 #set($id = ${context.arguments.input.id})
 #set($status = ${context.arguments.input.status})
 {
-  "version" : "2017-02-28",
-  "operation" : "UpdateItem",
-  "key" : {
-    "id" : { "S" : "$id" }
+  "version": "2017-02-28",
+  "operation": "UpdateItem",
+  "key": {
+    "id": { "S": "$id" }
   },
-  "update" : {
-    "expression" : "SET #status = :status",
-    "expressionNames" : {
-      "#status" : "status"
+  "update": {
+    "expression": "SET #status = :status",
+    "expressionNames": {
+      "#status": "status"
     },
-    "expressionValues" : {
-      ":status" : { "S" : "$status" }
+    "expressionValues": {
+      ":status": { "S": "$status" }
     }
   }
 }
@@ -49,28 +49,28 @@ ${util.toJson(${context.result})}
 ## Resolver for Query.getIpAddresses
 #set($ipAddress = ${context.arguments.input.ipAddress})
 {
-  "version" : "2017-02-28",
-  "operation" : "Query",
-  "index" : "ipAddress-index",
-  "query" : {
-    "expression" : "ipAddress = :ipAddress",
-    "expressionValues" : {
-      ":ipAddress" : { "S" : "$ipAddress" }
+  "version": "2017-02-28",
+  "operation": "Query",
+  "index": "ipAddress-index",
+  "query": {
+    "expression": "ipAddress = :ipAddress",
+    "expressionValues": {
+      ":ipAddress": { "S": "$ipAddress" }
     }
   }
 }
 
 {
-  "ipAddresses" : ${utils.toJson(${context.result.items})}
+  "ipAddresses": ${utils.toJson(${context.result.items})}
 }
 
 ## Resolver for Query.getStatus
 #set($id = ${context.arguments.input.id})
 {
-  "version" : "2017-02-28",
-  "operation" : "GetItem",
-  "key" : {
-    "id" : { "S" : "$id" }
+  "version": "2017-02-28",
+  "operation": "GetItem",
+  "key": {
+    "id": { "S": "$id" }
   }
 }
 
