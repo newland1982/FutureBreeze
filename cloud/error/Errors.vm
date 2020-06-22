@@ -5,16 +5,16 @@
 #set($data = ${context.arguments.input.data})
 #set($status = "init")
 {
-  "version" : "2017-02-28",
-  "operation" : "PutItem",
-  "key" : {
-    "id" : { "S" : "$id" }
+  "version": "2017-02-28",
+  "operation": "PutItem",
+  "key": {
+    "id": { "S": "$id" }
   },
-  "attributeValues" : {
-    "createdDate" : { "S" : "$createdDate" },
-    "type" : { "S" : "$type" },
-    "data" : { "S" : "$data" },
-    "status" : { "S" : "$status" }
+  "attributeValues": {
+    "createdDate": { "S": "$createdDate" },
+    "type": { "S": "$type" },
+    "data": { "S": "$data" },
+    "status": { "S": "$status" }
   }
 }
 
@@ -22,18 +22,18 @@ ${util.toJson(${context.result})}
 
 ## Resolver for Mutation.setStatus
 {
-  "version" : "2017-02-28",
-  "operation" : "UpdateItem",
-  "key" : {
-    "id" : { "S" : "${context.arguments.input.id}" }
+  "version": "2017-02-28",
+  "operation": "UpdateItem",
+  "key": {
+    "id": { "S": "${context.arguments.input.id}" }
   },
-  "update" : {
-    "expression" : "SET #status = :status",
-    "expressionNames" : {
-      "#status" : "status"
+  "update": {
+    "expression": "SET #status = :status",
+    "expressionNames": {
+      "#status": "status"
     },
-    "expressionValues" : {
-      ":status" : { "S" : "${context.arguments.input.status}" }
+    "expressionValues": {
+      ":status": { "S": "${context.arguments.input.status}" }
     }
   }
 }
@@ -42,13 +42,13 @@ $util.toJson($context.result)
 
 ## Resolver for Query.getIpAddressList
 {
-  "version" : "2017-02-28",
-  "operation" : "Query",
-  "index" : "ipAddress-index",
-  "query" : {
+  "version": "2017-02-28",
+  "operation": "Query",
+  "index": "ipAddress-index",
+  "query": {
     "expression": "ipAddress = :ipAddress",
-      "expressionValues" : {
-        ":ipAddress" : { "S" : "${context.arguments.input.ipAddress}" }
+      "expressionValues": {
+        ":ipAddress": { "S": "${context.arguments.input.ipAddress}" }
       }
   }
 }
@@ -62,7 +62,7 @@ $util.toJson($context.result)
     "version": "2017-02-28",
     "operation": "GetItem",
     "key": {
-      "id" : { "S" : "${context.arguments.input.id}" }
+      "id": { "S": "${context.arguments.input.id}" }
     }
 }
 
