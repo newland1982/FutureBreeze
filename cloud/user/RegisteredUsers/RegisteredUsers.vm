@@ -7,21 +7,21 @@
 #set($postScreenCount = 0)
 #set($status = "init")
 {
-  "version" : "2017-02-28",
-  "operation" : "PutItem",
-  "key" : {
-    "displayName" : { "S" : "$displayName" }
+  "version": "2017-02-28",
+  "operation": "PutItem",
+  "key": {
+    "displayName": { "S": "$displayName" }
   },
-  "attributeValues" : {
-    "createdDate" : { "S" : "$createdDate" },
-    "accountName" : { "S" : "$accountName" },
-    "profile" : { "S" : "$profile" },
-    "postScreenCountStartDate" : { "N" : $postScreenCountStartDate },
-    "postScreenCount" : { "N" : $postScreenCount },
-    "status" : { "S" : "$status" }
+  "attributeValues": {
+    "createdDate": { "S": "$createdDate" },
+    "accountName": { "S": "$accountName" },
+    "profile": { "S": "$profile" },
+    "postScreenCountStartDate": { "N": $postScreenCountStartDate },
+    "postScreenCount": { "N": $postScreenCount },
+    "status": { "S": "$status" }
   },
-  "condition" : {
-    "expression" : "attribute_not_exists(displayName)"
+  "condition": {
+    "expression": "attribute_not_exists(displayName)"
   }
 }
 
@@ -32,15 +32,15 @@ ${util.toJson(${context.result})}
 #set($displayName = ${accountName.substring(96)})
 #set($cognitoIdentityId = ${context.arguments.input.cognitoIdentityId})
 {
-  "version" : "2017-02-28",
-  "operation" : "UpdateItem",
-  "key" : {
-    "displayName" : { "S" : "$displayName" }
+  "version": "2017-02-28",
+  "operation": "UpdateItem",
+  "key": {
+    "displayName": { "S": "$displayName" }
   },
-  "update" : {
-    "expression" : "SET cognitoIdentityId = :cognitoIdentityId",
-    "expressionValues" : {
-      ":cognitoIdentityId" : { "S" : "$cognitoIdentityId" }
+  "update": {
+    "expression": "SET cognitoIdentityId = :cognitoIdentityId",
+    "expressionValues": {
+      ":cognitoIdentityId": { "S": "$cognitoIdentityId" }
     }
   }
 }
@@ -50,10 +50,10 @@ ${util.toJson(${context.result})}
 ## Resolver for Mutation.deleteRegisteredUser
 #set($displayName = ${context.arguments.input.displayName})
 {
-  "version" : "2017-02-28",
-  "operation" : "DeleteItem",
-  "key" : {
-    "displayName" : { "S" : "$displayName" }
+  "version": "2017-02-28",
+  "operation": "DeleteItem",
+  "key": {
+    "displayName": { "S": "$displayName" }
   }
 }
 
@@ -66,21 +66,21 @@ ${util.toJson(${context.result})}
 #set($currentDate = ${util.time.nowEpochSeconds()})
 #set($postScreenCountStartDateLimit = $currentDate - $postScreenCountPeriod)
 {
-  "version" : "2017-02-28",
-  "operation" : "UpdateItem",
-  "key" : {
-    "displayName" : { "S" : "$displayName" }
+  "version": "2017-02-28",
+  "operation": "UpdateItem",
+  "key": {
+    "displayName": { "S": "$displayName" }
   },
-  "update" : {
-    "expression" : "SET postScreenCount = :zero",
-    "expressionValues" : {
-      ":zero" : { "N" : $zero }
+  "update": {
+    "expression": "SET postScreenCount = :zero",
+    "expressionValues": {
+      ":zero": { "N": $zero }
     }
   },
-  "condition" : {
-    "expression" : "postScreenCountStartDate < :postScreenCountStartDateLimit",
-    "expressionValues" : {
-      ":postScreenCountStartDateLimit" : { "N" : $postScreenCountStartDateLimit }
+  "condition": {
+    "expression": "postScreenCountStartDate < :postScreenCountStartDateLimit",
+    "expressionValues": {
+      ":postScreenCountStartDateLimit": { "N": $postScreenCountStartDateLimit }
     }
   }
 }
@@ -93,22 +93,22 @@ ${util.toJson(${context.result})}
 #set($currentDate = ${util.time.nowEpochSeconds()})
 #set($one = 1)
 {
-  "version" : "2017-02-28",
-  "operation" : "UpdateItem",
-  "key" : {
-    "displayName" : { "S" : "$displayName" }
+  "version": "2017-02-28",
+  "operation": "UpdateItem",
+  "key": {
+    "displayName": { "S": "$displayName" }
   },
-  "update" : {
+  "update": {
     #if($postScreenCount == 0)
-      "expression" : "SET postScreenCountStartDate = :currentDate, postScreenCount = postScreenCount + :one",
-      "expressionValues" : {
-        ":currentDate" : { "N" : $currentDate },
-        ":one" : { "N" : $one }
+      "expression": "SET postScreenCountStartDate = :currentDate, postScreenCount = postScreenCount + :one",
+      "expressionValues": {
+        ":currentDate": { "N": $currentDate },
+        ":one": { "N": $one }
       }
     #else
-      "expression" : "SET postScreenCount = postScreenCount + :one",
-      "expressionValues" : {
-        ":one" : { "N" : $one }
+      "expression": "SET postScreenCount = postScreenCount + :one",
+      "expressionValues": {
+        ":one": { "N": $one }
       }
     #end
   }
@@ -119,10 +119,10 @@ ${util.toJson(${context.result})}
 ## Resolver for Query.getDisplayName
 #set($displayName = ${context.arguments.input.displayName})
 {
-  "version" : "2017-02-28",
-  "operation" : "GetItem",
-  "key" : {
-    "displayName" : { "S" : "$displayName" }
+  "version": "2017-02-28",
+  "operation": "GetItem",
+  "key": {
+    "displayName": { "S": "$displayName" }
   }
 }
 
@@ -131,10 +131,10 @@ ${util.toJson(${context.result})}
 ## Resolver for Query.getCreatedDate
 #set($displayName = ${context.arguments.input.displayName})
 {
-  "version" : "2017-02-28",
-  "operation" : "GetItem",
-  "key" : {
-    "displayName" : { "S" : "$displayName" }
+  "version": "2017-02-28",
+  "operation": "GetItem",
+  "key": {
+    "displayName": { "S": "$displayName" }
   }
 }
 
@@ -143,28 +143,28 @@ ${util.toJson(${context.result})}
 ## Resolver for Query.getAccountNames
 #set($cognitoIdentityId = ${context.arguments.input.cognitoIdentityId})
 {
-  "version" : "2017-02-28",
-  "operation" : "Query",
-  "index" : "cognitoIdentityId-index",
-  "query" : {
-    "expression" : "cognitoIdentityId = :cognitoIdentityId",
-    "expressionValues" : {
-      ":cognitoIdentityId" : { "S" : "$cognitoIdentityId" }
+  "version": "2017-02-28",
+  "operation": "Query",
+  "index": "cognitoIdentityId-index",
+  "query": {
+    "expression": "cognitoIdentityId = :cognitoIdentityId",
+    "expressionValues": {
+      ":cognitoIdentityId": { "S": "$cognitoIdentityId" }
     }
   }
 }
 
 {
-  "accountNames" : ${utils.toJson(${context.result.items})}
+  "accountNames": ${utils.toJson(${context.result.items})}
 }
 
 ## Resolver for Query.getPostScreenCount
 #set($displayName = ${context.arguments.input.displayName})
 {
-  "version" : "2017-02-28",
-  "operation" : "GetItem",
-  "key" : {
-    "displayName" : { "S" : "$displayName" }
+  "version": "2017-02-28",
+  "operation": "GetItem",
+  "key": {
+    "displayName": { "S": "$displayName" }
   }
 }
 
