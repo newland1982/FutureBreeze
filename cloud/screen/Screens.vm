@@ -100,6 +100,9 @@ ${utils.toJson(${context.result})}
 #set($from = 0)
 #set($size = 12)
 #set($type = ${context.arguments.input.type})
+#set($createdDateMargin = 86400)
+#set($currentDate = ${util.time.nowEpochSeconds()})
+#set($createdDateLimit = $currentDate - $createdDateMargin)
 {
   "version": "2017-02-28",
   "operation": "GET",
@@ -121,7 +124,7 @@ ${utils.toJson(${context.result})}
             {
               "range": {
                 "createdDate": {
-                  "lt": 10
+                  "lt": $createdDateLimit
                 }
               }
             }
