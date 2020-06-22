@@ -9,27 +9,27 @@
 #set($userCount = 0)
 #set($status = "init")
 {
-  "version" : "2017-02-28",
-  "operation" : "POST",
-  "path" : $path,
-  "params" : {
-    "headers" : {},
-    "queryString" : {},
-    "body" : {
+  "version": "2017-02-28",
+  "operation": "POST",
+  "path": $path,
+  "params": {
+    "headers": {},
+    "queryString": {},
+    "body": {
       #if($type == "thumbnail")
-        "screenName" : "$screenName",
-        "objectKey" : "$objectKey",
-        "createdDate" : $createdDate,
-        "posterId" : "$posterId",
-        "type" : "$type",
-        "labels" : $labels,
-        "userCount" : $userCount,
-        "status" : "$status"
+        "screenName": "$screenName",
+        "objectKey": "$objectKey",
+        "createdDate": $createdDate,
+        "posterId": "$posterId",
+        "type": "$type",
+        "labels": $labels,
+        "userCount": $userCount,
+        "status": "$status"
       #else
-        "screenName" : "$screenName",
-        "objectKey" : "$objectKey",
-        "createdDate" : $createdDate,
-        "type" : "$type",
+        "screenName": "$screenName",
+        "objectKey": "$objectKey",
+        "createdDate": $createdDate,
+        "type": "$type",
       #end
     }
   }
@@ -42,19 +42,19 @@ ${utils.toJson(${context.result.get("_source")})}
 #set($posterId = ${context.arguments.input.posterId})
 #set($changedPosterId = "Anonymous")
 {
-  "version" : "2017-02-28",
-  "operation" : "POST",
-  "path" : $path,
-  "params" : {
-    "headers" : {},
-    "queryString" : {},
-    "body" : {
-      "query" : { 
-        "term" : {
-          "posterId" : "$posterId"
+  "version": "2017-02-28",
+  "operation": "POST",
+  "path": $path,
+  "params": {
+    "headers": {},
+    "queryString": {},
+    "body": {
+      "query": { 
+        "term": {
+          "posterId": "$posterId"
         }
       },
-      "script" : {
+      "script": {
         "inline": "ctx._source.posterId = \"$changedPosterId\""
       }
     }
@@ -69,21 +69,21 @@ ${utils.toJson(${context.result})}
 #set($size = 1)
 #set($objectKey = ${context.arguments.input.objectKey})
 {
-  "version" : "2017-02-28",
-  "operation" : "GET",
-  "path" : $path,
-  "params" : {
-    "headers" : {},
-    "queryString" : {},
-    "body" : {
-      "from" : $from,
-      "size" : $size,
-      "query" : {
-        "term" : {
-          "objectKey" : "$objectKey"
+  "version": "2017-02-28",
+  "operation": "GET",
+  "path": $path,
+  "params": {
+    "headers": {},
+    "queryString": {},
+    "body": {
+      "from": $from,
+      "size": $size,
+      "query": {
+        "term": {
+          "objectKey": "$objectKey"
         }
       },
-      "_source" : ["objectKey"]
+      "_source": ["objectKey"]
     }
   }
 }
@@ -101,34 +101,34 @@ ${utils.toJson(${context.result})}
 #set($size = 12)
 #set($type = ${context.arguments.input.type})
 {
-  "version" : "2017-02-28",
-  "operation" : "GET",
-  "path" : $path,
-  "params" : {
-    "headers" : {},
-    "queryString" : {},
-    "body" : {
-      "from" : $from,
-      "size" : $size,
-      "query" : {
-        "bool" : {
-          "must" : [
+  "version": "2017-02-28",
+  "operation": "GET",
+  "path": $path,
+  "params": {
+    "headers": {},
+    "queryString": {},
+    "body": {
+      "from": $from,
+      "size": $size,
+      "query": {
+        "bool": {
+          "must": [
             {
-              "term" : {
-                "type" : "$type"
+              "term": {
+                "type": "$type"
               }
             },
             {
-              "range" : {
-                "createdDate" : {
-                  "lt" : 10
+              "range": {
+                "createdDate": {
+                  "lt": 10
                 }
               }
             }
           ]
         }
       },
-      "_source" : ["screenName"]
+      "_source": ["screenName"]
     }
   }
 }
