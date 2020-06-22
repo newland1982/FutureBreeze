@@ -111,8 +111,21 @@ ${utils.toJson(${context.result})}
       "from" : $from,
       "size" : $size,
       "query" : {
-        "term" : {
-          "type" : "$type"
+        "bool" : {
+          "must" : [
+            {
+              "term" : {
+                "type" : "$type"
+              }
+            },
+            {
+              "range" : {
+                "createdDate" : {
+                  "lt" : 10
+                }
+              }
+            }
+          ]
         }
       },
       "_source" : ["screenName"]

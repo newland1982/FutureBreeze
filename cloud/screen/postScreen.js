@@ -445,6 +445,19 @@ exports.handler = (event, context, callback) => {
         return;
       }
 
+      await registeredUsersClient.hydrated();
+      const registeredUsersMutationSetPostScreenCountInput = {
+        displayName: s3ObjectData.displayName,
+        postScreenCount,
+      };
+      await registeredUsersClient
+        .mutate({
+          mutation: registeredUsersMutationSetPostScreenCount,
+          variables: { input: registeredUsersMutationSetPostScreenCountInput },
+          fetchPolicy: 'no-cache',
+        })
+        .catch(() => {});
+
       let labels = [];
       if (s3ObjectData.type === 'thumbnail') {
         const rekognition = new AWS.Rekognition({
@@ -503,19 +516,6 @@ exports.handler = (event, context, callback) => {
           return;
         }
       }
-
-      await registeredUsersClient.hydrated();
-      const registeredUsersMutationSetPostScreenCountInput = {
-        displayName: s3ObjectData.displayName,
-        postScreenCount,
-      };
-      await registeredUsersClient
-        .mutate({
-          mutation: registeredUsersMutationSetPostScreenCount,
-          variables: { input: registeredUsersMutationSetPostScreenCountInput },
-          fetchPolicy: 'no-cache',
-        })
-        .catch(() => {});
 
       let screensMutationCreateScreenInput;
       await screensClient.hydrated();
