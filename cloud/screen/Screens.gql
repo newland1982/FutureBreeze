@@ -34,7 +34,7 @@ input DeleteScreenInput {
 type Mutation {
   createScreen(input: CreateScreenInput!): ObjectKey
   changePosterId(input: ChangePosterIdInput!): ConnectionTimedOut
-  deleteScreen(input: DeleteScreenInput!): ObjectKey
+  deleteScreen(input: DeleteScreenInput!): ConnectionTimedOut
 }
 
 type ObjectKey {
