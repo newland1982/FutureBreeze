@@ -179,7 +179,7 @@ const deleteS3Object = async (
     .catch(async () => {
       await errorsClient.hydrated();
       const errorsMutationCreateErrorInput = {
-        type: 'postScreen',
+        errorType: 'postScreen',
         data: JSON.stringify({
           action: 'deleteS3Object',
           deleteS3ObjectInput,
@@ -370,7 +370,7 @@ exports.handler = (event, context, callback) => {
         } catch (error) {
           await errorsClient.hydrated();
           const errorsMutationCreateErrorInput = {
-            type: 'postScreen',
+            errorType: 'postScreen',
             data: JSON.stringify({
               action: 'screensMutationChangePosterId',
               screensMutationChangePosterIdInput,
@@ -398,7 +398,7 @@ exports.handler = (event, context, callback) => {
           }
           await errorsClient.hydrated();
           const errorsMutationCreateErrorInput = {
-            type: 'postScreen',
+            errorType: 'postScreen',
             data: JSON.stringify({
               action: 'adminDeleteUser',
               cognitoIdentityServiceProviderAdminDeleteUserInput,
@@ -428,7 +428,7 @@ exports.handler = (event, context, callback) => {
         } catch (error) {
           await errorsClient.hydrated();
           const errorsMutationCreateErrorInput = {
-            type: 'postScreen',
+            errorType: 'postScreen',
             data: JSON.stringify({
               action: 'registeredUsersMutationDeleteRegisteredUser',
               registeredUsersMutationDeleteRegisteredUserInput,

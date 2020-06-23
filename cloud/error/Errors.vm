@@ -1,7 +1,7 @@
 ## Resolver for Mutation.createError
 #set($id = ${util.autoId()})
 #set($createdDate = ${util.time.nowEpochMilliSeconds()})
-#set($type = ${context.arguments.input.type})
+#set($errorType = ${context.arguments.input.errorType})
 #set($data = ${context.arguments.input.data})
 #set($status = "init")
 {
@@ -12,7 +12,7 @@
   },
   "attributeValues": {
     "createdDate": { "S": "$createdDate" },
-    "type": { "S": "$type" },
+    "errorType": { "S": "$errorType" },
     "data": { "S": "$data" },
     "status": { "S": "$status" }
   }
