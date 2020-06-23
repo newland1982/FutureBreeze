@@ -10,7 +10,7 @@ input CreateScreenInput {
   screenName: String!
   objectKey: String!
   posterId: String
-  type: String!
+  screenType: String!
   labels: [String]
 }
 
@@ -19,7 +19,11 @@ input GetObjectKeysInput {
 }
 
 input GetScreenNamesInput {
-  type: String
+  screenType: String
+}
+
+input GetScreenTypesInput {
+  screenName: String
 }
 
 type Mutation {
@@ -31,10 +35,6 @@ type ObjectKey {
   objectKey: String
 }
 
-type ScreenName {
-  screenName: String
-}
-
 type PosterId {
   posterId: String
 }
@@ -42,6 +42,7 @@ type PosterId {
 type Query {
   getObjectKeys(input: GetObjectKeysInput!): [ObjectKey]
   getScreenNames(input: GetScreenNamesInput!): [ScreenName]
+  getScreenTypes(input: GetScreenTypesInput!): [ScreenType]
 }
 
 type Screen {
@@ -49,10 +50,18 @@ type Screen {
   objectKey: String!
   createdDate: AWSTimestamp!
   posterId: String!
-  type: String!
+  screenType: String!
   labels: [String]!
   userCount: Int!
   status: String!
+}
+
+type ScreenName {
+  screenName: String
+}
+
+type ScreenType {
+  screenType: String
 }
 
 schema {

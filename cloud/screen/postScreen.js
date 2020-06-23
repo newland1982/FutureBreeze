@@ -163,7 +163,7 @@ const getS3ObjectData = (eventRecord) => {
     ),
     displayName: preciseEncodedObjectKeyRegexResult[2],
     size: eventRecord.s3.object.size,
-    type: preciseEncodedObjectKeyRegexResult[3],
+    screenType: preciseEncodedObjectKeyRegexResult[3],
   };
 };
 
@@ -459,7 +459,7 @@ exports.handler = (event, context, callback) => {
         .catch(() => {});
 
       let labels = [];
-      if (s3ObjectData.type === 'thumbnail') {
+      if (s3ObjectData.screenType === 'thumbnail') {
         const rekognition = new AWS.Rekognition({
           apiVersion: process.env.Rekognition_ApiVersion,
         });
@@ -519,19 +519,19 @@ exports.handler = (event, context, callback) => {
 
       let screensMutationCreateScreenInput;
       await screensClient.hydrated();
-      if (s3ObjectData.type === 'thumbnail') {
+      if (s3ObjectData.screenType === 'thumbnail') {
         screensMutationCreateScreenInput = {
           screenName,
           objectKey,
           posterId: s3ObjectData.displayName,
-          type: s3ObjectData.type,
+          screenType: s3ObjectData.screenType,
           labels,
         };
       } else {
         screensMutationCreateScreenInput = {
           screenName,
           objectKey,
-          type: s3ObjectData.type,
+          screenType: s3ObjectData.screenType,
         };
       }
 

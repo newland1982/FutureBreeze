@@ -4,7 +4,7 @@
 #set($objectKey = ${context.arguments.input.objectKey})
 #set($createdDate = ${util.time.nowEpochSeconds()})
 #set($posterId = ${context.arguments.input.posterId})
-#set($type = ${context.arguments.input.type})
+#set($screenType = ${context.arguments.input.screenType})
 #set($labels = ${utils.toJson(${context.arguments.input.labels})})
 #set($userCount = 0)
 #set($status = "init")
@@ -16,12 +16,12 @@
     "headers": {},
     "queryString": {},
     "body": {
-      #if($type == "thumbnail")
+      #if($screenType == "thumbnail")
         "screenName": "$screenName",
         "objectKey": "$objectKey",
         "createdDate": $createdDate,
         "posterId": "$posterId",
-        "type": "$type",
+        "screenType": "$screenType",
         "labels": $labels,
         "userCount": $userCount,
         "status": "$status"
@@ -29,7 +29,7 @@
         "screenName": "$screenName",
         "objectKey": "$objectKey",
         "createdDate": $createdDate,
-        "type": "$type",
+        "screenType": "$screenType",
       #end
     }
   }
@@ -99,7 +99,7 @@ ${utils.toJson(${context.result})}
 #set($path = ${util.toJson("/screens/_search")})
 #set($from = 0)
 #set($size = 12)
-#set($type = ${context.arguments.input.type})
+#set($screenType = ${context.arguments.input.screenType})
 #set($createdDateMargin = 86400)
 #set($currentDate = ${util.time.nowEpochSeconds()})
 #set($createdDateLimit = $currentDate - $createdDateMargin)
@@ -118,7 +118,7 @@ ${utils.toJson(${context.result})}
           "must": [
             {
               "term": {
-                "type": "$type"
+                "screenType": "$screenType"
               }
             },
             {
