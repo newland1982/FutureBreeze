@@ -26,9 +26,15 @@ input GetScreenTypesInput {
   screenName: String
 }
 
+input DeleteScreenInput {
+  screenName: String
+  screenTypes: [String]
+}
+
 type Mutation {
   createScreen(input: CreateScreenInput!): ObjectKey
   changePosterId(input: ChangePosterIdInput!): ConnectionTimedOut
+  deleteScreen(input: DeleteScreenInput!): ObjectKey
 }
 
 type ObjectKey {
