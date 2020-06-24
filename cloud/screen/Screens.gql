@@ -9,6 +9,7 @@ type ConnectionTimedOut {
 input CreateScreenInput {
   screenName: String!
   objectKey: String!
+  versionId: String!
   posterId: String
   type: String!
   labels: [String]
@@ -58,6 +59,7 @@ type Query {
 type Screen {
   screenName: String!
   objectKey: String!
+  versionId: String!
   createdDate: AWSTimestamp!
   posterId: String!
   type: String!

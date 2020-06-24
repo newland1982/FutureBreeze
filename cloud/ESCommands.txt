@@ -4,6 +4,7 @@ PUT /screens
     "properties": {
       "screenName":    { "type": "keyword" }, 
       "objectKey":    { "type": "keyword" },  
+      "versionId":    { "type": "keyword" },  
       "createdDate":  { "type": "date"  },
       "posterId":  { "type": "keyword"  }, 
       "type":  { "type": "keyword"  },

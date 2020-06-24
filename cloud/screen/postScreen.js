@@ -208,10 +208,12 @@ exports.handler = (event, context, callback) => {
 
     const objectKey = event.Records[0].s3.object.key.replace('%3A', ':');
 
+    const versionId = event.Records[0].s3.object.versionId;
+
     const deleteS3ObjectInput = {
       Bucket: process.env.Bucket,
       Key: objectKey,
-      VersionId: event.Records[0].s3.object.versionId,
+      VersionId: versionId,
     };
 
     let postScreenCount = 0;
@@ -523,6 +525,7 @@ exports.handler = (event, context, callback) => {
         screensMutationCreateScreenInput = {
           screenName,
           objectKey,
+          versionId,
           posterId: s3ObjectData.displayName,
           type: s3ObjectData.type,
           labels,
@@ -531,6 +534,7 @@ exports.handler = (event, context, callback) => {
         screensMutationCreateScreenInput = {
           screenName,
           objectKey,
+          versionId,
           type: s3ObjectData.type,
         };
       }

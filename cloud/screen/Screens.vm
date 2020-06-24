@@ -2,6 +2,7 @@
 #set($path = ${util.toJson("/screens/_doc/")})
 #set($screenName = ${context.arguments.input.screenName})
 #set($objectKey = ${context.arguments.input.objectKey})
+#set($versionId = ${context.arguments.input.versionId})
 #set($createdDate = ${util.time.nowEpochSeconds()})
 #set($posterId = ${context.arguments.input.posterId})
 #set($type = ${context.arguments.input.type})
@@ -19,6 +20,7 @@
       #if($type == "thumbnail")
         "screenName": "$screenName",
         "objectKey": "$objectKey",
+        "versionId": "$versionId",
         "createdDate": $createdDate,
         "posterId": "$posterId",
         "type": "$type",
@@ -28,6 +30,7 @@
       #else
         "screenName": "$screenName",
         "objectKey": "$objectKey",
+        "versionId": "$versionId",
         "createdDate": $createdDate,
         "type": "$type",
       #end
