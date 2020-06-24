@@ -1,17 +1,17 @@
 input CreateErrorInput {
-  errorType: String!
+  type: String!
   data: AWSJSON!
 }
 
 type Error {
   id: ID!
   createdDate: String!
-  errorType: String!
+  type: String!
   data: AWSJSON!
   status: String!
 }
 
-input GetErrorTypeListInput {
+input GetTypeListInput {
   status: String!
 }
 
@@ -24,11 +24,11 @@ type Mutation {
 }
 
 type Query {
-  getErrorTypeList(input: GetErrorTypeListInput!): ErrorType
+  getTypeList(input: GetTypeListInput!): Type
 }
 
-type ErrorType {
-  errorType: String!
+type Type {
+  type: String!
 }
 
 schema {

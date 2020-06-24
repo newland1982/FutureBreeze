@@ -163,7 +163,7 @@ const getS3ObjectData = (eventRecord) => {
     ),
     displayName: preciseEncodedObjectKeyRegexResult[2],
     size: eventRecord.s3.object.size,
-    screenType: preciseEncodedObjectKeyRegexResult[3],
+    type: preciseEncodedObjectKeyRegexResult[3],
   };
 };
 
@@ -179,7 +179,7 @@ const deleteS3Object = async (
     .catch(async () => {
       await errorsClient.hydrated();
       const errorsMutationCreateErrorInput = {
-        errorType: 'postScreen',
+        type: 'postScreen',
         data: JSON.stringify({
           action: 'deleteS3Object',
           deleteS3ObjectInput,
@@ -370,7 +370,7 @@ exports.handler = (event, context, callback) => {
         } catch (error) {
           await errorsClient.hydrated();
           const errorsMutationCreateErrorInput = {
-            errorType: 'postScreen',
+            type: 'postScreen',
             data: JSON.stringify({
               action: 'screensMutationChangePosterId',
               screensMutationChangePosterIdInput,
@@ -398,7 +398,7 @@ exports.handler = (event, context, callback) => {
           }
           await errorsClient.hydrated();
           const errorsMutationCreateErrorInput = {
-            errorType: 'postScreen',
+            type: 'postScreen',
             data: JSON.stringify({
               action: 'adminDeleteUser',
               cognitoIdentityServiceProviderAdminDeleteUserInput,
@@ -428,7 +428,7 @@ exports.handler = (event, context, callback) => {
         } catch (error) {
           await errorsClient.hydrated();
           const errorsMutationCreateErrorInput = {
-            errorType: 'postScreen',
+            type: 'postScreen',
             data: JSON.stringify({
               action: 'registeredUsersMutationDeleteRegisteredUser',
               registeredUsersMutationDeleteRegisteredUserInput,
@@ -459,7 +459,7 @@ exports.handler = (event, context, callback) => {
         .catch(() => {});
 
       let labels = [];
-      if (s3ObjectData.screenType === 'thumbnail') {
+      if (s3ObjectData.type === 'thumbnail') {
         const rekognition = new AWS.Rekognition({
           apiVersion: process.env.Rekognition_ApiVersion,
         });
@@ -519,19 +519,19 @@ exports.handler = (event, context, callback) => {
 
       let screensMutationCreateScreenInput;
       await screensClient.hydrated();
-      if (s3ObjectData.screenType === 'thumbnail') {
+      if (s3ObjectData.type === 'thumbnail') {
         screensMutationCreateScreenInput = {
           screenName,
           objectKey,
           posterId: s3ObjectData.displayName,
-          screenType: s3ObjectData.screenType,
+          type: s3ObjectData.type,
           labels,
         };
       } else {
         screensMutationCreateScreenInput = {
           screenName,
           objectKey,
-          screenType: s3ObjectData.screenType,
+          type: s3ObjectData.type,
         };
       }
 
