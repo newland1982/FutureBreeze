@@ -66,6 +66,34 @@ ${utils.toJson(${context.result.get("_source")})}
 
 ${utils.toJson(${context.result})}
 
+## begin
+## Resolver for Mutation.setStatus
+#set($path = ${util.toJson("/screens/_update_by_query?conflicts=proceed")})
+#set($objectKey = ${context.arguments.input.objectKey})
+#set($status = "completed")
+{
+  "version": "2017-02-28",
+  "operation": "POST",
+  "path": $path,
+  "params": {
+    "headers": {},
+    "queryString": {},
+    "body": {
+      "query": { 
+        "term": {
+          "objectKey": "$objectKey"
+        }
+      },
+      "script": {
+        "inline": "ctx._source.status = \"$status\""
+      }
+    }
+  }
+}
+
+${utils.toJson(${context.result})}
+## end
+
 ## Resolver for Query.getObjectKeys
 #set($path = ${util.toJson("/screens/_search")})
 #set($from = 0)
