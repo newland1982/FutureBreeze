@@ -31,10 +31,15 @@ input DeleteScreenInput {
   screenTypes: [String]
 }
 
+input SetStatusInput {
+  objectKey: String
+}
+
 type Mutation {
   createScreen(input: CreateScreenInput!): ObjectKey
   changePosterId(input: ChangePosterIdInput!): ConnectionTimedOut
   deleteScreen(input: DeleteScreenInput!): ConnectionTimedOut
+  setStatus(input: SetStatusInput!): ConnectionTimedOut
 }
 
 type ObjectKey {
