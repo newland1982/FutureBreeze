@@ -67,6 +67,53 @@ ${utils.toJson(${context.result.get("_source")})}
 ${utils.toJson(${context.result})}
 
 ## begin
+## Resolver for Mutation.deleteScreen
+#set($path = ${util.toJson("/screens/_delete_by_query?conflicts=proceed")})
+#set($from = 0)
+#set($size = 12)
+#set($type = ${context.arguments.input.type})
+#set($createdDateMargin = 86400)
+#set($currentDate = ${util.time.nowEpochSeconds()})
+#set($createdDateLimit = $currentDate - $createdDateMargin)
+{
+  "version": "2017-02-28",
+  "operation": "POST",
+  "path": $path,
+  "params": {
+    "headers": {},
+    "queryString": {},
+    "body": {
+      "query": {
+        "bool": {
+          "should": [
+            {
+              "term": {
+                "type": "$type"
+              }
+            },
+            {
+              "range": {
+                "createdDate": {
+                  "lt": $createdDateLimit
+                }
+              }
+            }
+          ]
+        }
+      },
+      "_source": ["screenName"]
+    }
+  }
+}
+
+[
+  #foreach($entry in ${context.result.hits.hits})
+    #if($velocityCount > 1), #end
+      ${utils.toJson(${entry.get("_source")})}
+  #end
+]
+## end
+
 ## Resolver for Mutation.setStatus
 #set($path = ${util.toJson("/screens/_update_by_query?conflicts=proceed")})
 #set($objectKey = ${context.arguments.input.objectKey})
@@ -92,7 +139,6 @@ ${utils.toJson(${context.result})}
 }
 
 ${utils.toJson(${context.result})}
-## end
 
 ## Resolver for Query.getObjectKeys
 #set($path = ${util.toJson("/screens/_search")})
