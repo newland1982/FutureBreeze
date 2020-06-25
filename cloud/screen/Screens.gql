@@ -28,7 +28,7 @@ input GetTypesInput {
 }
 
 input DeleteScreenInput {
-  objectKeys: [String]
+  screenName: String
 }
 
 input SetStatusInput {

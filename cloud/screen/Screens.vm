@@ -66,11 +66,11 @@ ${utils.toJson(${context.result.get("_source")})}
 
 ${utils.toJson(${context.result})}
 
-## begin
 ## Resolver for Mutation.deleteScreen
 #set($path = ${util.toJson("/screens/_delete_by_query?conflicts=proceed")})
-#set($objectKeys = ${utils.toJson(${context.arguments.input.objectKeys})})
-#set($should = [])
+#set($from = 0)
+#set($size = 3)
+#set($screenName = ${utils.toJson(${context.arguments.input.screenName})})
 {
   "version": "2017-02-28",
   "operation": "POST",
@@ -79,23 +79,15 @@ ${utils.toJson(${context.result})}
     "headers": {},
     "queryString": {},
     "body": {
+      "from": $from,
+      "size": $size,
       "query": {
-        "bool": {
-          "should": [
-            {
-              "term": {
-                "objectKeys": "$objectKeys"
-              }
-            },
-            {
-              "term": {
-                "objectKeys": "$objectKeys"
-              }
-            }
-          ]
+        {
+          "term": {
+            "screenName": "$screenName"
+          }
         }
-      },
-      "_source": ["screenName"]
+      }
     }
   }
 }
@@ -106,7 +98,6 @@ ${utils.toJson(${context.result})}
       ${utils.toJson(${entry.get("_source")})}
   #end
 ]
-## end
 
 ## Resolver for Mutation.setStatus
 #set($path = ${util.toJson("/screens/_update_by_query?conflicts=proceed")})
