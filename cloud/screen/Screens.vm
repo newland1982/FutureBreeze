@@ -82,22 +82,15 @@ ${utils.toJson(${context.result})}
       "from": $from,
       "size": $size,
       "query": {
-        {
-          "term": {
-            "screenName": "$screenName"
-          }
+        "term": {
+          "screenName": "$screenName"
         }
       }
     }
   }
 }
 
-[
-  #foreach($entry in ${context.result.hits.hits})
-    #if($velocityCount > 1), #end
-      ${utils.toJson(${entry.get("_source")})}
-  #end
-]
+${utils.toJson(${context.result})}
 
 ## Resolver for Mutation.setStatus
 #set($path = ${util.toJson("/screens/_update_by_query?conflicts=proceed")})
