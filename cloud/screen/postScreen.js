@@ -74,8 +74,8 @@ const errorsMutationCreateError = gql(`
   }
  }`);
 
-const registeredUsersClient = new AWSAppSyncClient({
-  url: process.env.AppSync_RegisteredUsers,
+const screensClient = new AWSAppSyncClient({
+  url: process.env.AppSync_Screens,
   region: process.env.AppSync_Region,
   auth: {
     type: AUTH_TYPE.AWS_IAM,
@@ -84,8 +84,8 @@ const registeredUsersClient = new AWSAppSyncClient({
   disableOffline: true,
 });
 
-const screensClient = new AWSAppSyncClient({
-  url: process.env.AppSync_Screens,
+const registeredUsersClient = new AWSAppSyncClient({
+  url: process.env.AppSync_RegisteredUsers,
   region: process.env.AppSync_Region,
   auth: {
     type: AUTH_TYPE.AWS_IAM,
