@@ -31,9 +31,16 @@ const screensMutationChangePosterId = gql(`
  }`);
 
 const screensQueryGetScreenNames = gql(`
-  query GetObjectKeys($input: GetObjectKeysInput!) {
-    getObjectKeys(input: $input) {
-      objectKey
+  query GetScreenNames($input: GetScreenNamesInput!) {
+    getScreenNames(input: $input) {
+        screenName
+  }
+ }`);
+
+const screensQueryGetScreenNames = gql(`
+  query GetScreenNames($input: GetScreenNamesInput!) {
+    getScreenNames(input: $input) {
+        screenName
   }
  }`);
 
