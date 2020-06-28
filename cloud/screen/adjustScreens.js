@@ -37,10 +37,10 @@ const screensQueryGetScreenNames = gql(`
   }
  }`);
 
-const screensQueryGetScreenNames = gql(`
-  query GetScreenNames($input: GetScreenNamesInput!) {
-    getScreenNames(input: $input) {
-        screenName
+const screensQueryGetTypes = gql(`
+  query GetTypes($input: GetTypesInput!) {
+    getTypes(input: $input) {
+        type
   }
  }`);
 
