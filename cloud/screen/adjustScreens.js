@@ -30,7 +30,7 @@ const screensMutationChangePosterId = gql(`
   }
  }`);
 
-const screensQueryGetObjectKeys = gql(`
+const screensQueryGetScreenNames = gql(`
   query GetObjectKeys($input: GetObjectKeysInput!) {
     getObjectKeys(input: $input) {
       objectKey
@@ -47,10 +47,25 @@ const screensClient = new AWSAppSyncClient({
   disableOffline: true,
 });
 
+const types = ['thumbnai', 'mobile', 'pc'];
+
 exports.handler = async (event) => {
-  const response = {
-    statusCode: 200,
-    body: JSON.stringify('Hello from Lambda!'),
-  };
-  return response;
+  (async () => {
+    await screensClient.hydrated();
+    for (let type of types) {
+      try {
+        const screensQueryGetScreenNamesInput = {
+          type,
+        };
+
+        const screensQueryGetScreenNamesResult = await screensClient.query({
+          query: screensQueryGetScreenNames,
+          variables: { input: screensQueryGetScreenNamesInput },
+          fetchPolicy: 'network-only',
+        });
+      } catch (error) {
+        return;
+      }
+    }
+  })();
 };
