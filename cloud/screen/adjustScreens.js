@@ -82,9 +82,7 @@ exports.handler = async (event) => {
             });
           }
         }
-      } catch (error) {
-        return;
-      }
+      } catch (error) {}
     }
   })();
 };
