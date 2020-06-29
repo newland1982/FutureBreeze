@@ -32,7 +32,7 @@ input DeleteScreenInput {
 }
 
 input SetStatusInput {
-  objectKey: String
+  screenName: String
 }
 
 type Mutation {

@@ -33,6 +33,7 @@
         "versionId": "$versionId",
         "createdDate": $createdDate,
         "type": "$type",
+        "status": "$status"
       #end
     }
   }
@@ -94,7 +95,7 @@ ${utils.toJson(${context.result})}
 
 ## Resolver for Mutation.setStatus
 #set($path = ${util.toJson("/screens/_update_by_query?conflicts=proceed")})
-#set($objectKey = ${context.arguments.input.objectKey})
+#set($screenName = ${context.arguments.input.screenName})
 #set($status = "completed")
 {
   "version": "2017-02-28",
@@ -106,7 +107,7 @@ ${utils.toJson(${context.result})}
     "body": {
       "query": { 
         "term": {
-          "objectKey": "$objectKey"
+          "screenName": "$screenName"
         }
       },
       "script": {
