@@ -64,12 +64,24 @@ exports.handler = async (event) => {
         const screensQueryGetScreenNamesInput = {
           type,
         };
-
         const screensQueryGetScreenNamesResult = await screensClient.query({
           query: screensQueryGetScreenNames,
           variables: { input: screensQueryGetScreenNamesInput },
           fetchPolicy: 'network-only',
         });
+        if (screensQueryGetScreenNamesResult.length !== 0) {
+          for (let value of screensQueryGetScreenNamesResult) {
+            const screenName = value.screenName;
+            const screensQueryGetTypesInput = {
+              screenName,
+            };
+            const screensQueryGetTypesResult = await screensClient.query({
+              query: screensQueryGetTypes,
+              variables: { input: screensQueryGetTypesInput },
+              fetchPolicy: 'network-only',
+            });
+          }
+        }
       } catch (error) {
         return;
       }
