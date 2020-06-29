@@ -15,6 +15,10 @@ input CreateScreenInput {
   labels: [String]
 }
 
+input DeleteScreenInput {
+  screenName: String
+}
+
 input GetObjectKeysInput {
   objectKey: String
 }
@@ -27,19 +31,11 @@ input GetTypesInput {
   screenName: String
 }
 
-input DeleteScreenInput {
-  screenName: String
-}
-
-input SetStatusInput {
-  screenName: String
-}
-
 type Mutation {
   createScreen(input: CreateScreenInput!): ObjectKey
   changePosterId(input: ChangePosterIdInput!): ConnectionTimedOut
-  deleteScreen(input: DeleteScreenInput!): ConnectionTimedOut
   setStatus(input: SetStatusInput!): ConnectionTimedOut
+  deleteScreen(input: DeleteScreenInput!): ConnectionTimedOut
 }
 
 type ObjectKey {
@@ -69,6 +65,10 @@ type Screen {
 }
 
 type ScreenName {
+  screenName: String
+}
+
+input SetStatusInput {
   screenName: String
 }
 
