@@ -50,7 +50,6 @@ type PosterId {
 type Query {
   getObjectKeys(input: GetObjectKeysInput!): [ObjectKey]
   getScreenNames(input: GetScreenNamesInput!): [ScreenName]
-  getTypes(input: GetTypesInput!): [Type]
 }
 
 type Screen {
