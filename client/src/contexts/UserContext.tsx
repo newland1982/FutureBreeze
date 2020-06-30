@@ -16,7 +16,7 @@ let initState = {
   password: '',
   authcode: '',
   baseLocation: '/user/changeauthcode',
-  selectedImage: ''
+  selectedImage: '',
 };
 
 type action = {
@@ -35,14 +35,14 @@ export const UserContext = createContext<{
   dispatch: React.Dispatch<action>;
 }>({
   user: initState,
-  dispatch: () => {}
+  dispatch: () => {},
 });
 
 type Props = {
   children: JSX.Element[] | JSX.Element;
 };
 
-const UserContextProvider: React.FC<Props> = props => {
+const UserContextProvider: React.FC<Props> = (props) => {
   const [user, dispatch] = useReducer(userReducer, initState, () => {
     const selectedImage = localStorage.getItem('selectedImage');
     return selectedImage

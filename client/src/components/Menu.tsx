@@ -15,15 +15,15 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     toolBar: {
       paddingTop: 16,
-      margin: '0 auto'
+      margin: '0 auto',
     },
     list: {
       width: 144,
-      paddingTop: '24%'
+      paddingTop: '24%',
     },
     listItemText: {
-      color: '#FFF'
-    }
+      color: '#FFF',
+    },
   })
 );
 
@@ -35,7 +35,7 @@ const Menu = (props: props) => {
   const classes = useStyles();
 
   const [state, setState] = React.useState({
-    isOpen: false
+    isOpen: false,
   });
 
   const toggleDrawer = (isOpen: boolean) => (
@@ -57,7 +57,7 @@ const Menu = (props: props) => {
       { name: 'Edit', path: '/user/signin' },
       { name: 'Screens', path: '/screen/screens' },
       { name: 'Authcode', path: '/user/changeauthcode' },
-      { name: 'Sign Out', path: '/user/signout' }
+      { name: 'Sign Out', path: '/user/signout' },
     ];
 
     if (props.path) {
@@ -75,8 +75,8 @@ const Menu = (props: props) => {
           {[
             { name: 'Sign Up', path: '/user/signup' },
             { name: 'Sign In', path: '/user/signin' },
-            { name: 'Themes', path: '/user/themeoption' }
-          ].map(link => (
+            { name: 'Themes', path: '/user/themeoption' },
+          ].map((link) => (
             <Link
               to={link.path}
               key={link.name}
@@ -91,7 +91,7 @@ const Menu = (props: props) => {
             </Link>
           ))}
           <br />
-          {linkArray.map(link => (
+          {linkArray.map((link) => (
             <Link
               to={link.path}
               key={link.name}
@@ -106,7 +106,7 @@ const Menu = (props: props) => {
             </Link>
           ))}
           <br />
-          {[{ name: 'Quit', path: '/user/quit' }].map(link => (
+          {[{ name: 'Quit', path: '/user/quit' }].map((link) => (
             <Link
               to={link.path}
               key={link.name}
@@ -139,7 +139,7 @@ const Menu = (props: props) => {
               size={1}
               color='#FFF'
               style={{
-                cursor: 'pointer'
+                cursor: 'pointer',
               }}
             />
           </IconButton>

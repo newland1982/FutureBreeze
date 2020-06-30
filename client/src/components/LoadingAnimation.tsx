@@ -6,8 +6,8 @@ const useStyles = makeStyles({
   loadingAnimation: {
     justifySelf: 'center',
     alignSelf: 'center',
-    color: '#fff'
-  }
+    color: '#fff',
+  },
 });
 
 type props = {
@@ -24,7 +24,7 @@ const LoadingAnimation = (props: props) => {
       style={{
         display: `${!props.isLoading ? 'none' : 'grid'}`,
         gridTemplateColumns: '100vw',
-        gridTemplateRows: 'calc(100vh - 112px)'
+        gridTemplateRows: 'calc(100vh - 112px)',
       }}
     >
       <CircularProgress
