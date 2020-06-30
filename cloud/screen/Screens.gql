@@ -21,6 +21,7 @@ input DeleteScreenInput {
 
 input GetObjectKeysInput {
   objectKey: String
+  screenName: String
 }
 
 input GetScreenNamesInput {

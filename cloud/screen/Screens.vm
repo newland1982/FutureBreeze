@@ -121,9 +121,16 @@ ${utils.toJson(${context.result})}
 
 ## Resolver for Query.getObjectKeys
 #set($path = ${util.toJson("/screens/_search")})
-#set($from = 0)
-#set($size = 1)
-#set($objectKey = ${context.arguments.input.objectKey})
+#if(${context.arguments.input.objectKey})
+  #set($from = 0)
+  #set($size = 1)
+  #set($objectKey = ${context.arguments.input.objectKey})
+#end
+#if(${context.arguments.input.screenName})
+  #set($from = 0)
+  #set($size = 3)
+  #set($screenName = ${context.arguments.input.screenName})
+#end
 {
   "version": "2017-02-28",
   "operation": "GET",
@@ -136,7 +143,12 @@ ${utils.toJson(${context.result})}
       "size": $size,
       "query": {
         "term": {
-          "objectKey": "$objectKey"
+          #if($objectKey)
+            "objectKey": "$objectKey"
+          #end
+          #if($screenName)
+            "screenName": "$screenName"
+          #end
         }
       },
       "_source": ["objectKey"]
