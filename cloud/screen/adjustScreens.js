@@ -37,10 +37,10 @@ const screensQueryGetScreenNames = gql(`
   }
  }`);
 
-const screensQueryGetTypes = gql(`
-  query GetTypes($input: GetTypesInput!) {
-    getTypes(input: $input) {
-        type
+const screensQueryGetObjectKeys = gql(`
+  query GetObjectKeys($input: GetObjectKeysInput!) {
+    getObjectKeys(input: $input) {
+      objectKey
   }
  }`);
 
@@ -72,12 +72,12 @@ exports.handler = async (event) => {
         if (screensQueryGetScreenNamesResult.length !== 0) {
           for (let value of screensQueryGetScreenNamesResult) {
             const screenName = value.screenName;
-            const screensQueryGetTypesInput = {
+            const screensQueryGetObjectKeysInput = {
               screenName,
             };
-            const screensQueryGetTypesResult = await screensClient.query({
-              query: screensQueryGetTypes,
-              variables: { input: screensQueryGetTypesInput },
+            const screensQueryGetObjectKeysResult = await screensClient.query({
+              query: screensQueryGetObjectKeys,
+              variables: { input: screensQueryGetObjectKeysInput },
               fetchPolicy: 'network-only',
             });
           }
