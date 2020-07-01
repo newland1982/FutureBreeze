@@ -32,6 +32,10 @@ input GetTypesInput {
   screenName: String
 }
 
+input GetVersionIdInput {
+  objectKey: String
+}
+
 type Mutation {
   createScreen(input: CreateScreenInput!): ObjectKey
   changePosterId(input: ChangePosterIdInput!): ConnectionTimedOut
@@ -50,6 +54,7 @@ type PosterId {
 type Query {
   getObjectKeys(input: GetObjectKeysInput!): [ObjectKey]
   getScreenNames(input: GetScreenNamesInput!): [ScreenName]
+  getVersionId(input: GetVersionIdInput!): VersionId
 }
 
 type Screen {
@@ -74,6 +79,10 @@ input SetStatusInput {
 
 type Type {
   type: String
+}
+
+type VersionId {
+  versionId: String
 }
 
 schema {
