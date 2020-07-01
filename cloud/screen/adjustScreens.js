@@ -16,16 +16,16 @@ const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 let cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
 
-const screensMutationCreateScreen = gql(`
-  mutation CreateScreen($input: CreateScreenInput!) {
-    createScreen(input: $input) {
-      objectKey
+const screensMutationSetStatus = gql(`
+  mutation SetStatus($input: SetStatusInput!) {
+    setStatus(input: $input) {
+      timed_out
   }
  }`);
 
-const screensMutationChangePosterId = gql(`
-  mutation ChangePosterId($input: ChangePosterIdInput!) {
-    changePosterId(input: $input) {
+const screensMutationDeleteScreen = gql(`
+  mutation DeleteScreen($input: DeleteScreenInput!) {
+    deleteScreen(input: $input) {
       timed_out
   }
  }`);
@@ -80,6 +80,28 @@ exports.handler = async (event) => {
               variables: { input: screensQueryGetObjectKeysInput },
               fetchPolicy: 'network-only',
             });
+
+            if (screensQueryGetObjectKeysResult.length === types.length) {
+              const screensMutationSetStatusInput = {
+                screenName,
+              };
+              await screensClient.mutate({
+                mutation: screensMutationSetStatus,
+                variables: { input: screensMutationSetStatusInput },
+                fetchPolicy: 'no-cache',
+              });
+            } else {
+              const screensQueryGetObjectKeysInput = {
+                screenName,
+              };
+              const screensQueryGetObjectKeysResult = await screensClient.query(
+                {
+                  query: screensQueryGetObjectKeys,
+                  variables: { input: screensQueryGetObjectKeysInput },
+                  fetchPolicy: 'network-only',
+                }
+              );
+            }
           }
         }
       } catch (error) {}
