@@ -91,16 +91,9 @@ exports.handler = async (event) => {
                 fetchPolicy: 'no-cache',
               });
             } else {
-              const screensQueryGetObjectKeysInput = {
-                screenName,
-              };
-              const screensQueryGetObjectKeysResult = await screensClient.query(
-                {
-                  query: screensQueryGetObjectKeys,
-                  variables: { input: screensQueryGetObjectKeysInput },
-                  fetchPolicy: 'network-only',
-                }
-              );
+              for (let value of screensQueryGetObjectKeysResult) {
+                const objectKey = value.objectKey;
+              }
             }
           }
         }
