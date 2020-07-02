@@ -32,7 +32,7 @@ input GetTypesInput {
   screenName: String
 }
 
-input GetVersionIdInput {
+input GetVersionIdsInput {
   objectKey: String
 }
 
@@ -54,7 +54,7 @@ type PosterId {
 type Query {
   getObjectKeys(input: GetObjectKeysInput!): [ObjectKey]
   getScreenNames(input: GetScreenNamesInput!): [ScreenName]
-  getVersionId(input: GetVersionIdInput!): VersionId
+  getVersionIds(input: GetVersionIdsInput!): [VersionId]
 }
 
 type Screen {

@@ -30,16 +30,23 @@ const screensMutationDeleteScreen = gql(`
   }
  }`);
 
-const screensQueryGetScreenNames = gql(`
-  query GetScreenNames($input: GetScreenNamesInput!) {
-    getScreenNames(input: $input) {
-        screenName
-  }
- }`);
-
 const screensQueryGetObjectKeys = gql(`
   query GetObjectKeys($input: GetObjectKeysInput!) {
     getObjectKeys(input: $input) {
+      objectKey
+  }
+ }`);
+
+const screensQueryGetScreenNames = gql(`
+  query GetScreenNames($input: GetScreenNamesInput!) {
+    getScreenNames(input: $input) {
+      screenName
+  }
+ }`);
+
+const screensQueryGetVersionIds = gql(`
+  query GetVersionIds($input: GetVersionIdsInput!) {
+    getVersionIds(input: $input) {
       objectKey
   }
  }`);
@@ -96,6 +103,16 @@ exports.handler = async (event) => {
                 await Promise.all(
                   screensQueryGetObjectKeysResult.map(async (value) => {
                     const objectKey = value.objectKey;
+                    const screensQueryGetVersionIdsInput = {
+                      objectKey,
+                    };
+                    const screensQueryGetVersionIdsResult = await screensClient.query(
+                      {
+                        query: screensQueryGetVersionIds,
+                        variables: { input: screensQueryGetVersionIdsInput },
+                        fetchPolicy: 'network-only',
+                      }
+                    );
                   })
                 );
               }

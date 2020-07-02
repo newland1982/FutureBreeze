@@ -219,7 +219,7 @@ ${utils.toJson(${context.result})}
   #end
 ]
 
-## Resolver for Query.getVersionId
+## Resolver for Query.getVersionIds
 #set($path = ${util.toJson("/screens/_search")})
 #set($from = 0)
 #set($size = 1)
@@ -239,7 +239,7 @@ ${utils.toJson(${context.result})}
           "objectKey": "$objectKey"
         }
       },
-      "_source": ["objectKey"]
+      "_source": ["versionId"]
     }
   }
 }
