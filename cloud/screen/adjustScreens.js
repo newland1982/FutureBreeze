@@ -59,7 +59,7 @@ const types = ['thumbnai', 'mobile', 'pc'];
 exports.handler = async (event) => {
   (async () => {
     await screensClient.hydrated();
-    for (let type of types) {
+    for (const type of types) {
       try {
         const screensQueryGetScreenNamesInput = {
           type,
@@ -70,32 +70,37 @@ exports.handler = async (event) => {
           fetchPolicy: 'network-only',
         });
         if (screensQueryGetScreenNamesResult.length !== 0) {
-          for (let value of screensQueryGetScreenNamesResult) {
-            const screenName = value.screenName;
-            const screensQueryGetObjectKeysInput = {
-              screenName,
-            };
-            const screensQueryGetObjectKeysResult = await screensClient.query({
-              query: screensQueryGetObjectKeys,
-              variables: { input: screensQueryGetObjectKeysInput },
-              fetchPolicy: 'network-only',
-            });
-
-            if (screensQueryGetObjectKeysResult.length === types.length) {
-              const screensMutationSetStatusInput = {
+          await Promise.all(
+            screensQueryGetScreenNamesResult.map(async (value) => {
+              const screenName = value.screenName;
+              const screensQueryGetObjectKeysInput = {
                 screenName,
               };
-              await screensClient.mutate({
-                mutation: screensMutationSetStatus,
-                variables: { input: screensMutationSetStatusInput },
-                fetchPolicy: 'no-cache',
-              });
-            } else {
-              for (let value of screensQueryGetObjectKeysResult) {
-                const objectKey = value.objectKey;
+              const screensQueryGetObjectKeysResult = await screensClient.query(
+                {
+                  query: screensQueryGetObjectKeys,
+                  variables: { input: screensQueryGetObjectKeysInput },
+                  fetchPolicy: 'network-only',
+                }
+              );
+              if (screensQueryGetObjectKeysResult.length === types.length) {
+                const screensMutationSetStatusInput = {
+                  screenName,
+                };
+                await screensClient.mutate({
+                  mutation: screensMutationSetStatus,
+                  variables: { input: screensMutationSetStatusInput },
+                  fetchPolicy: 'no-cache',
+                });
+              } else {
+                await Promise.all(
+                  screensQueryGetObjectKeysResult.map(async (value) => {
+                    const objectKey = value.objectKey;
+                  })
+                );
               }
-            }
-          }
+            })
+          );
         }
       } catch (error) {}
     }
