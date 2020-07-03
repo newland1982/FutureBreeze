@@ -93,6 +93,7 @@ exports.handler = async (event) => {
               if (screensQueryGetObjectKeysResult.length === types.length) {
                 const screensMutationSetStatusInput = {
                   screenName,
+                  status: 'completed',
                 };
                 await screensClient.mutate({
                   mutation: screensMutationSetStatus,

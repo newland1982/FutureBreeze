@@ -74,7 +74,8 @@ type ScreenName {
 }
 
 input SetStatusInput {
-  screenName: String
+  screenName: String!
+  status: String!
 }
 
 type Type {
