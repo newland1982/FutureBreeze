@@ -107,7 +107,7 @@ const deleteS3Object = async (
 
 const types = ['thumbnai', 'mobile', 'pc'];
 
-exports.handler = async (event) => {
+exports.handler = (event) => {
   (async () => {
     await screensClient.hydrated();
     for (const type of types) {
@@ -120,10 +120,14 @@ exports.handler = async (event) => {
           variables: { input: screensQueryGetScreenNamesInput },
           fetchPolicy: 'network-only',
         });
-        if (screensQueryGetScreenNamesResult.length !== 0) {
+        const screenNames = screensQueryGetScreenNamesResult.data.getScreenNames.map(
+          (value) => {
+            value.screenName;
+          }
+        );
+        if (screenNames.length !== 0) {
           await Promise.all(
-            screensQueryGetScreenNamesResult.map(async (value) => {
-              const screenName = value.screenName;
+            screenNames.map(async (screenName) => {
               const screensQueryGetObjectKeysInput = {
                 screenName,
               };
@@ -134,7 +138,12 @@ exports.handler = async (event) => {
                   fetchPolicy: 'network-only',
                 }
               );
-              if (screensQueryGetObjectKeysResult.length === types.length) {
+              const objectKeys = screensQueryGetObjectKeysResult.data.getObjectKeys.map(
+                (value) => {
+                  value.objectKey;
+                }
+              );
+              if (objectKeys === types.length) {
                 const screensMutationSetStatusInput = {
                   screenName,
                   status: 'completed',
@@ -146,8 +155,7 @@ exports.handler = async (event) => {
                 });
               } else {
                 await Promise.all(
-                  screensQueryGetObjectKeysResult.map(async (value) => {
-                    const objectKey = value.objectKey;
+                  objectKeys.map(async (objectKey) => {
                     const screensQueryGetVersionIdsInput = {
                       objectKey,
                     };
