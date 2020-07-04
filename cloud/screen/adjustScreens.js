@@ -51,6 +51,13 @@ const screensQueryGetVersionIds = gql(`
   }
  }`);
 
+const errorsMutationCreateError = gql(`
+  mutation CreateError($input: CreateErrorInput!) {
+    createError(input: $input) {
+      id
+  }
+ }`);
+
 const screensClient = new AWSAppSyncClient({
   url: process.env.AppSync_Screens,
   region: process.env.AppSync_Region,
@@ -60,6 +67,44 @@ const screensClient = new AWSAppSyncClient({
   },
   disableOffline: true,
 });
+
+const errorsClient = new AWSAppSyncClient({
+  url: process.env.AppSync_Errors,
+  region: process.env.AppSync_Region,
+  auth: {
+    type: AUTH_TYPE.AWS_IAM,
+    credentials,
+  },
+  disableOffline: true,
+});
+
+const deleteS3Object = async (
+  s3,
+  deleteS3ObjectInput,
+  errorsClient,
+  errorsMutationCreateError
+) => {
+  await s3
+    .deleteObject(deleteS3ObjectInput)
+    .promise()
+    .catch(async () => {
+      await errorsClient.hydrated();
+      const errorsMutationCreateErrorInput = {
+        type: 'adjustScreens',
+        data: JSON.stringify({
+          action: 'deleteS3Object',
+          deleteS3ObjectInput,
+        }),
+      };
+      await errorsClient
+        .mutate({
+          mutation: errorsMutationCreateError,
+          variables: { input: errorsMutationCreateErrorInput },
+          fetchPolicy: 'no-cache',
+        })
+        .catch(() => {});
+    });
+};
 
 const types = ['thumbnai', 'mobile', 'pc'];
 
@@ -113,6 +158,17 @@ exports.handler = async (event) => {
                         variables: { input: screensQueryGetVersionIdsInput },
                         fetchPolicy: 'network-only',
                       }
+                    );
+                    const deleteS3ObjectInput = {
+                      Bucket: process.env.Bucket,
+                      Key: objectKey,
+                      VersionId: screensQueryGetVersionIdsResult[0].VersionId,
+                    };
+                    deleteS3Object(
+                      new AWS.S3(),
+                      deleteS3ObjectInput,
+                      errorsClient,
+                      errorsMutationCreateError
                     );
                   })
                 );
