@@ -120,12 +120,12 @@ exports.handler = (event) => {
           variables: { input: screensQueryGetScreenNamesInput },
           fetchPolicy: 'network-only',
         });
-        const screenNames = screensQueryGetScreenNamesResult.data.getScreenNames.map(
-          (value) => {
-            value.screenName;
-          }
-        );
-        if (screenNames.length !== 0) {
+        if (screensQueryGetScreenNamesResult.data.getScreenNames.length !== 0) {
+          const screenNames = screensQueryGetScreenNamesResult.data.getScreenNames.map(
+            (value) => {
+              value.screenName;
+            }
+          );
           await Promise.all(
             screenNames.map(async (screenName) => {
               const screensQueryGetObjectKeysInput = {
@@ -138,12 +138,17 @@ exports.handler = (event) => {
                   fetchPolicy: 'network-only',
                 }
               );
-              const objectKeys = screensQueryGetObjectKeysResult.data.getObjectKeys.map(
-                (value) => {
-                  value.objectKey;
-                }
-              );
-              if (objectKeys === types.length) {
+              let objectKeys = [];
+              if (
+                screensQueryGetObjectKeysResult.data.getObjectKeys.length !== 0
+              ) {
+                objectKeys = screensQueryGetObjectKeysResult.data.getObjectKeys.map(
+                  (value) => {
+                    value.objectKey;
+                  }
+                );
+              }
+              if (objectKeys.length === types.length) {
                 const screensMutationSetStatusInput = {
                   screenName,
                   status: 'completed',
