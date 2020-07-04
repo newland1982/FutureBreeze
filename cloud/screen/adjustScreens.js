@@ -14,7 +14,6 @@ const AWS = require('aws-sdk');
 // @ts-ignore
 const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
-let cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
 
 const screensMutationSetStatus = gql(`
   mutation SetStatus($input: SetStatusInput!) {
@@ -172,6 +171,14 @@ exports.handler = async (event) => {
                     );
                   })
                 );
+                const screensMutationDeleteScreenInput = {
+                  screenName,
+                };
+                await screensClient.mutate({
+                  mutation: screensMutationDeleteScreen,
+                  variables: { input: screensMutationDeleteScreenInput },
+                  fetchPolicy: 'no-cache',
+                });
               }
             })
           );
