@@ -247,9 +247,10 @@ exports.handler = (event, context, callback) => {
     const screenName = objectKeyRegexResult[1];
 
     (async () => {
+      await errorsClient.hydrated();
+      await screensClient.hydrated();
+      await registeredUsersClient.hydrated();
       try {
-        await screensClient.hydrated();
-
         const screensQueryGetObjectKeysInput = {
           objectKey,
         };
@@ -275,7 +276,6 @@ exports.handler = (event, context, callback) => {
       }
 
       try {
-        await registeredUsersClient.hydrated();
         const registeredUsersQueryGetAccountNamesInput = {
           cognitoIdentityId: s3ObjectData.cognitoIdentityId,
         };
@@ -308,7 +308,6 @@ exports.handler = (event, context, callback) => {
           96
         ) === s3ObjectData.displayName
       ) {
-        await registeredUsersClient.hydrated();
         const registeredUsersQueryGetPostScreenCountInput = {
           displayName: s3ObjectData.displayName,
         };
@@ -360,8 +359,6 @@ exports.handler = (event, context, callback) => {
           errorsClient,
           errorsMutationCreateError
         );
-
-        await screensClient.hydrated();
 
         try {
           await screensClient.mutate({
@@ -418,8 +415,6 @@ exports.handler = (event, context, callback) => {
         }
 
         try {
-          await registeredUsersClient.hydrated();
-
           await registeredUsersClient.mutate({
             mutation: registeredUsersMutationDeleteRegisteredUser,
             variables: {
@@ -447,7 +442,6 @@ exports.handler = (event, context, callback) => {
         return;
       }
 
-      await registeredUsersClient.hydrated();
       const registeredUsersMutationSetPostScreenCountInput = {
         displayName: s3ObjectData.displayName,
         postScreenCount,
@@ -520,7 +514,6 @@ exports.handler = (event, context, callback) => {
       }
 
       let screensMutationCreateScreenInput;
-      await screensClient.hydrated();
       if (s3ObjectData.type === 'thumbnail') {
         screensMutationCreateScreenInput = {
           screenName,
