@@ -165,7 +165,9 @@ exports.handler = (event) => {
                     const deleteS3ObjectInput = {
                       Bucket: process.env.Bucket,
                       Key: objectKey,
-                      VersionId: screensQueryGetVersionIdsResult[0].VersionId,
+                      VersionId:
+                        screensQueryGetVersionIdsResult.data.getVersionIds[0]
+                          .versionId,
                     };
                     deleteS3Object(
                       new AWS.S3(),
