@@ -46,7 +46,7 @@ const screensQueryGetScreenNames = gql(`
 const screensQueryGetVersionIds = gql(`
   query GetVersionIds($input: GetVersionIdsInput!) {
     getVersionIds(input: $input) {
-      objectKey
+      versionId
   }
  }`);
 
