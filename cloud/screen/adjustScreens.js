@@ -122,9 +122,7 @@ exports.handler = (event) => {
         });
         if (screensQueryGetScreenNamesResult.data.getScreenNames.length !== 0) {
           const screenNames = screensQueryGetScreenNamesResult.data.getScreenNames.map(
-            (value) => {
-              value.screenName;
-            }
+            (value) => value.screenName
           );
           await Promise.all(
             screenNames.map(async (screenName) => {
@@ -138,16 +136,9 @@ exports.handler = (event) => {
                   fetchPolicy: 'network-only',
                 }
               );
-              let objectKeys = [];
-              if (
-                screensQueryGetObjectKeysResult.data.getObjectKeys.length !== 0
-              ) {
-                objectKeys = screensQueryGetObjectKeysResult.data.getObjectKeys.map(
-                  (value) => {
-                    value.objectKey;
-                  }
-                );
-              }
+              const objectKeys = screensQueryGetObjectKeysResult.data.getObjectKeys.map(
+                (value) => value.objectKey
+              );
               if (objectKeys.length === types.length) {
                 const screensMutationSetStatusInput = {
                   screenName,
