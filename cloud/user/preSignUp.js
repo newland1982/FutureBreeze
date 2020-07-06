@@ -71,13 +71,11 @@ exports.handler = (event, context, callback) => {
   ) {
     (async () => {
       await signUpUsersClient.hydrated();
-      await signUpUsersClient
-        .mutate({
-          mutation: signUpUsersMutationSetStatus,
-          variables: { input: signUpUsersMutationSetStatusInput },
-          fetchPolicy: 'no-cache',
-        })
-        .catch(() => {});
+      await signUpUsersClient.mutate({
+        mutation: signUpUsersMutationSetStatus,
+        variables: { input: signUpUsersMutationSetStatusInput },
+        fetchPolicy: 'no-cache',
+      });
     })();
     return;
   }
@@ -95,13 +93,11 @@ exports.handler = (event, context, callback) => {
       });
     } catch (error) {
       await signUpUsersClient.hydrated();
-      await signUpUsersClient
-        .mutate({
-          mutation: signUpUsersMutationSetStatus,
-          variables: { input: signUpUsersMutationSetStatusInput },
-          fetchPolicy: 'no-cache',
-        })
-        .catch(() => {});
+      await signUpUsersClient.mutate({
+        mutation: signUpUsersMutationSetStatus,
+        variables: { input: signUpUsersMutationSetStatusInput },
+        fetchPolicy: 'no-cache',
+      });
       return;
     }
 

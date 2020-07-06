@@ -185,13 +185,11 @@ const deleteS3Object = async (
           deleteS3ObjectInput,
         }),
       };
-      await errorsClient
-        .mutate({
-          mutation: errorsMutationCreateError,
-          variables: { input: errorsMutationCreateErrorInput },
-          fetchPolicy: 'no-cache',
-        })
-        .catch(() => {});
+      await errorsClient.mutate({
+        mutation: errorsMutationCreateError,
+        variables: { input: errorsMutationCreateErrorInput },
+        fetchPolicy: 'no-cache',
+      });
     });
 };
 
@@ -311,13 +309,11 @@ exports.handler = (event, context, callback) => {
         const registeredUsersQueryGetPostScreenCountInput = {
           displayName: s3ObjectData.displayName,
         };
-        const result = await registeredUsersClient
-          .query({
-            query: registeredUsersQueryGetPostScreenCount,
-            variables: { input: registeredUsersQueryGetPostScreenCountInput },
-            fetchPolicy: 'network-only',
-          })
-          .catch(() => {});
+        const result = await registeredUsersClient.query({
+          query: registeredUsersQueryGetPostScreenCount,
+          variables: { input: registeredUsersQueryGetPostScreenCountInput },
+          fetchPolicy: 'network-only',
+        });
         if (result) {
           postScreenCount = result.data.getPostScreenCount.postScreenCount;
         }
@@ -377,13 +373,11 @@ exports.handler = (event, context, callback) => {
               registeredUsersMutationDeleteRegisteredUserInput,
             }),
           };
-          await errorsClient
-            .mutate({
-              mutation: errorsMutationCreateError,
-              variables: { input: errorsMutationCreateErrorInput },
-              fetchPolicy: 'no-cache',
-            })
-            .catch(() => {});
+          await errorsClient.mutate({
+            mutation: errorsMutationCreateError,
+            variables: { input: errorsMutationCreateErrorInput },
+            fetchPolicy: 'no-cache',
+          });
           return;
         }
 
@@ -404,13 +398,11 @@ exports.handler = (event, context, callback) => {
               registeredUsersMutationDeleteRegisteredUserInput,
             }),
           };
-          await errorsClient
-            .mutate({
-              mutation: errorsMutationCreateError,
-              variables: { input: errorsMutationCreateErrorInput },
-              fetchPolicy: 'no-cache',
-            })
-            .catch(() => {});
+          await errorsClient.mutate({
+            mutation: errorsMutationCreateError,
+            variables: { input: errorsMutationCreateErrorInput },
+            fetchPolicy: 'no-cache',
+          });
           return;
         }
 
@@ -431,13 +423,11 @@ exports.handler = (event, context, callback) => {
               registeredUsersMutationDeleteRegisteredUserInput,
             }),
           };
-          await errorsClient
-            .mutate({
-              mutation: errorsMutationCreateError,
-              variables: { input: errorsMutationCreateErrorInput },
-              fetchPolicy: 'no-cache',
-            })
-            .catch(() => {});
+          await errorsClient.mutate({
+            mutation: errorsMutationCreateError,
+            variables: { input: errorsMutationCreateErrorInput },
+            fetchPolicy: 'no-cache',
+          });
         }
         return;
       }
@@ -446,13 +436,11 @@ exports.handler = (event, context, callback) => {
         displayName: s3ObjectData.displayName,
         postScreenCount,
       };
-      await registeredUsersClient
-        .mutate({
-          mutation: registeredUsersMutationSetPostScreenCount,
-          variables: { input: registeredUsersMutationSetPostScreenCountInput },
-          fetchPolicy: 'no-cache',
-        })
-        .catch(() => {});
+      await registeredUsersClient.mutate({
+        mutation: registeredUsersMutationSetPostScreenCount,
+        variables: { input: registeredUsersMutationSetPostScreenCountInput },
+        fetchPolicy: 'no-cache',
+      });
 
       let labels = [];
       if (s3ObjectData.type === 'thumbnail') {

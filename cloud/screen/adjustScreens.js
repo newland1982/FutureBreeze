@@ -95,13 +95,11 @@ const deleteS3Object = async (
           deleteS3ObjectInput,
         }),
       };
-      await errorsClient
-        .mutate({
-          mutation: errorsMutationCreateError,
-          variables: { input: errorsMutationCreateErrorInput },
-          fetchPolicy: 'no-cache',
-        })
-        .catch(() => {});
+      await errorsClient.mutate({
+        mutation: errorsMutationCreateError,
+        variables: { input: errorsMutationCreateErrorInput },
+        fetchPolicy: 'no-cache',
+      });
     });
 };
 

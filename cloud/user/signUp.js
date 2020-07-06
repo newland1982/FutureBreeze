@@ -86,18 +86,16 @@ exports.handler = (event, context, callback) => {
           fetchPolicy: 'network-only',
         })
         .catch(async () => {
-          await signUpUsersClient
-            .mutate({
-              mutation: signUpUsersMutationSetStatus,
-              variables: {
-                input: {
-                  ...commonSignUpUsersMutationSetStatusInput,
-                  status: 'signUpError',
-                },
+          await signUpUsersClient.mutate({
+            mutation: signUpUsersMutationSetStatus,
+            variables: {
+              input: {
+                ...commonSignUpUsersMutationSetStatusInput,
+                status: 'signUpError',
               },
-              fetchPolicy: 'no-cache',
-            })
-            .catch(() => {});
+            },
+            fetchPolicy: 'no-cache',
+          });
         });
 
       if (
@@ -108,18 +106,16 @@ exports.handler = (event, context, callback) => {
         return;
       }
 
-      await signUpUsersClient
-        .mutate({
-          mutation: signUpUsersMutationSetStatus,
-          variables: {
-            input: {
-              ...commonSignUpUsersMutationSetStatusInput,
-              status: 'processing',
-            },
+      await signUpUsersClient.mutate({
+        mutation: signUpUsersMutationSetStatus,
+        variables: {
+          input: {
+            ...commonSignUpUsersMutationSetStatusInput,
+            status: 'processing',
           },
-          fetchPolicy: 'no-cache',
-        })
-        .catch(() => {});
+        },
+        fetchPolicy: 'no-cache',
+      });
 
       const result = await signUpUsersClient
         .query({
@@ -128,35 +124,31 @@ exports.handler = (event, context, callback) => {
           fetchPolicy: 'network-only',
         })
         .catch(async () => {
-          await signUpUsersClient
-            .mutate({
-              mutation: signUpUsersMutationSetStatus,
-              variables: {
-                input: {
-                  ...commonSignUpUsersMutationSetStatusInput,
-                  status: 'signUpError',
-                },
+          await signUpUsersClient.mutate({
+            mutation: signUpUsersMutationSetStatus,
+            variables: {
+              input: {
+                ...commonSignUpUsersMutationSetStatusInput,
+                status: 'signUpError',
               },
-              fetchPolicy: 'no-cache',
-            })
-            .catch(() => {});
+            },
+            fetchPolicy: 'no-cache',
+          });
         });
 
       ipAddressCount = result.data.getIpAddresses.ipAddresses.length;
 
       if (ipAddressCount > process.env.Access_Limit) {
-        await signUpUsersClient
-          .mutate({
-            mutation: signUpUsersMutationSetStatus,
-            variables: {
-              input: {
-                ...commonSignUpUsersMutationSetStatusInput,
-                status: 'accessLimitExceeded',
-              },
+        await signUpUsersClient.mutate({
+          mutation: signUpUsersMutationSetStatus,
+          variables: {
+            input: {
+              ...commonSignUpUsersMutationSetStatusInput,
+              status: 'accessLimitExceeded',
             },
-            fetchPolicy: 'no-cache',
-          })
-          .catch(() => {});
+          },
+          fetchPolicy: 'no-cache',
+        });
         return;
       }
 
@@ -167,18 +159,16 @@ exports.handler = (event, context, callback) => {
         null,
         async (error, result) => {
           if (error) {
-            await signUpUsersClient
-              .mutate({
-                mutation: signUpUsersMutationSetStatus,
-                variables: {
-                  input: {
-                    ...commonSignUpUsersMutationSetStatusInput,
-                    status: 'signUpError',
-                  },
+            await signUpUsersClient.mutate({
+              mutation: signUpUsersMutationSetStatus,
+              variables: {
+                input: {
+                  ...commonSignUpUsersMutationSetStatusInput,
+                  status: 'signUpError',
                 },
-                fetchPolicy: 'no-cache',
-              })
-              .catch(() => {});
+              },
+              fetchPolicy: 'no-cache',
+            });
             return;
           }
         },

@@ -278,9 +278,7 @@ const SignUp = () => {
     }
 
     const executeRegisteredUsersMutationSetCognitoIdentityId = async () => {
-      const currentAuthenticatedUser = await Auth.currentAuthenticatedUser().catch(
-        () => {}
-      );
+      const currentAuthenticatedUser = await Auth.currentAuthenticatedUser();
 
       if (!currentAuthenticatedUser) {
         history.push('/failure/error');
