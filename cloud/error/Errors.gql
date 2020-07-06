@@ -3,6 +3,10 @@ input CreateErrorInput {
   data: AWSJSON!
 }
 
+input DeleteErrorInput {
+  id: ID
+}
+
 type Error {
   id: ID!
   createdDate: String!
@@ -21,6 +25,7 @@ type Id {
 
 type Mutation {
   createError(input: CreateErrorInput!): Id
+  deleteError(input: DeleteErrorInput!): Id
 }
 
 type Query {
