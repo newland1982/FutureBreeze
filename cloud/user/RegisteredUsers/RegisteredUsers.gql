@@ -70,13 +70,13 @@ type Query {
   getPostScreenCount(input: GetPostScreenCountInput!): PostScreenCount
 }
 
+# postScreenCountStartDate: (Number)
 type RegisteredUser {
   displayName: String
   createdDate: String
   cognitoIdentityId: String
   accountName: String
   profile: String
-  # postScreenCountStartDate: (Number)
   postScreenCount: Int
   status: String
 }
