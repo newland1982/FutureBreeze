@@ -16,7 +16,7 @@ input CreateScreenInput {
 }
 
 input DeleteScreenInput {
-  screenName: String
+  screenName: String!
 }
 
 input GetObjectKeysInput {
@@ -25,15 +25,15 @@ input GetObjectKeysInput {
 }
 
 input GetScreenNamesInput {
-  type: String
+  type: String!
 }
 
 input GetTypesInput {
-  screenName: String
+  screenName: String!
 }
 
 input GetVersionIdsInput {
-  objectKey: String
+  objectKey: String!
 }
 
 type Mutation {
