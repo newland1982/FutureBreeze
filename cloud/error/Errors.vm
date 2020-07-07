@@ -11,7 +11,7 @@
     "id": { "S": "$id" }
   },
   "attributeValues": {
-    "createdDate": { "S": "$createdDate" },
+    "createdDate": { "N": "$createdDate" },
     "type": { "S": "$type" },
     "data": { "S": "$data" },
     "status": { "S": "$status" }

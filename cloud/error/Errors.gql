@@ -8,11 +8,11 @@ input DeleteErrorInput {
 }
 
 type Error {
-  id: ID!
-  createdDate: String!
-  type: String!
-  data: AWSJSON!
-  status: String!
+  id: ID
+  # createdDate: (Number)
+  type: String
+  data: AWSJSON
+  status: String
 }
 
 input GetTypeListInput {
@@ -20,7 +20,7 @@ input GetTypeListInput {
 }
 
 type Id {
-  id: ID!
+  id: ID
 }
 
 type Mutation {
@@ -33,7 +33,7 @@ type Query {
 }
 
 type Type {
-  type: String!
+  type: String
 }
 
 schema {
