@@ -4,7 +4,7 @@ input CreateErrorInput {
 }
 
 input DeleteErrorInput {
-  id: ID
+  id: ID!
 }
 
 type Error {
