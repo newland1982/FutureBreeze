@@ -72,7 +72,7 @@ type Query {
 
 type RegisteredUser {
   displayName: String
-  # createdDate: (Number)
+  createdDate: String
   cognitoIdentityId: String
   accountName: String
   profile: String
