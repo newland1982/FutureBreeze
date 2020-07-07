@@ -38,14 +38,14 @@ input SetStatusInput {
   status: String!
 }
 
+# createdDate: (Number)
+# expirationDate: (Number)
 type SignUpUser {
   id: ID
-  # createdDate: (Number)
   ipAddress: String
   accountName: String
   password: String
   status: String
-  # expirationDate: (Number)
 }
 
 type Status {
