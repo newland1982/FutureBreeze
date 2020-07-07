@@ -57,11 +57,11 @@ type Query {
   getVersionIds(input: GetVersionIdsInput!): [VersionId]
 }
 
+# createdDate: (Number)
 type Screen {
   screenName: String
   objectKey: String
   versionId: String
-  # createdDate: (Number)
   posterId: String
   type: String
   labels: [String]
