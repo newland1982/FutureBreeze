@@ -7,9 +7,9 @@ input DeleteErrorInput {
   id: ID!
 }
 
+# createdDate: (Number)
 type Error {
   id: ID
-  # createdDate: (Number)
   type: String
   data: AWSJSON
   status: String
