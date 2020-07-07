@@ -62,8 +62,8 @@ ${util.toJson(${context.result})}
 ## Resolver for Mutation.prepareSetPostScreenCount
 #set($displayName = ${context.arguments.input.displayName})
 #set($zero = 0)
-#set($postScreenCountPeriod = 86400)
-#set($currentDate = ${util.time.nowEpochSeconds()})
+#set($postScreenCountPeriod = 86400000)
+#set($currentDate = ${util.time.nowEpochMilliSeconds()})
 #set($postScreenCountStartDateLimit = $currentDate - $postScreenCountPeriod)
 {
   "version": "2017-02-28",
@@ -90,7 +90,7 @@ ${util.toJson(${context.result})}
 ## Resolver for Mutation.setPostScreenCount
 #set($displayName = ${context.arguments.input.displayName})
 #set($postScreenCount = ${context.arguments.input.postScreenCount})
-#set($currentDate = ${util.time.nowEpochSeconds()})
+#set($currentDate = ${util.time.nowEpochMilliSeconds()})
 #set($one = 1)
 {
   "version": "2017-02-28",

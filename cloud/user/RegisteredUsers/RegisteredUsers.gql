@@ -1,17 +1,13 @@
 type AccountName {
-  accountName: String!
+  accountName: String
 }
 
 type AccountNames {
-  accountNames: [AccountName!]!
+  accountNames: [AccountName]
 }
 
 type CognitoIdentityId @aws_cognito_user_pools {
-  cognitoIdentityId: String!
-}
-
-input ConfirmDisplayNameInput {
-  displayName: String!
+  cognitoIdentityId: String
 }
 
 input CreateRegisteredUserInput {
@@ -21,7 +17,7 @@ input CreateRegisteredUserInput {
 }
 
 type CreatedDate {
-  createdDate: String!
+  createdDate: String
 }
 
 input DeleteRegisteredUserInput {
@@ -29,7 +25,7 @@ input DeleteRegisteredUserInput {
 }
 
 type DisplayName {
-  displayName: String!
+  displayName: String
 }
 
 input GetAccountNamesInput {
@@ -60,7 +56,7 @@ type Mutation {
 }
 
 type PostScreenCount {
-  postScreenCount: Int!
+  postScreenCount: Int
 }
 
 input PrepareSetPostScreenCountInput {
@@ -75,14 +71,14 @@ type Query {
 }
 
 type RegisteredUser {
-  displayName: String!
-  createdDate: String!
-  cognitoIdentityId: String!
-  accountName: String!
-  profile: String!
-  postScreenCountStartDate: AWSTimestamp!
-  postScreenCount: Int!
-  status: String!
+  displayName: String
+  createdDate: String
+  cognitoIdentityId: String
+  accountName: String
+  profile: String
+  # postScreenCountStartDate: (Number)
+  postScreenCount: Int
+  status: String
 }
 
 input SetCognitoIdentityIdInput {
