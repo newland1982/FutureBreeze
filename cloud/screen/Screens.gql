@@ -58,15 +58,15 @@ type Query {
 }
 
 type Screen {
-  screenName: String!
-  objectKey: String!
-  versionId: String!
-  createdDate: AWSTimestamp!
-  posterId: String!
-  type: String!
-  labels: [String]!
-  userCount: Int!
-  status: String!
+  screenName: String
+  objectKey: String
+  versionId: String
+  # createdDate: (Number)
+  posterId: String
+  type: String
+  labels: [String]
+  userCount: Int
+  status: String
 }
 
 type ScreenName {
