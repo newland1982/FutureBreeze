@@ -12,15 +12,15 @@ input GetStatusInput {
 }
 
 type Id {
-  id: ID!
+  id: ID
 }
 
 type IpAddress {
-  ipAddress: String!
+  ipAddress: String
 }
 
 type IpAddresses {
-  ipAddresses: [IpAddress!]!
+  ipAddresses: [IpAddress]
 }
 
 type Mutation {
@@ -39,17 +39,17 @@ input SetStatusInput {
 }
 
 type SignUpUser {
-  id: ID!
-  createdDate: String!
-  ipAddress: String!
-  accountName: String!
-  password: String!
-  status: String!
-  expirationDate: Int!
+  id: ID
+  # createdDate: (Number)
+  ipAddress: String
+  accountName: String
+  password: String
+  status: String
+  # expirationDate: (Number)
 }
 
 type Status {
-  status: String!
+  status: String
 }
 
 schema {
