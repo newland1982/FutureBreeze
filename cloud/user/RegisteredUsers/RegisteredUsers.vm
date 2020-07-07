@@ -13,7 +13,7 @@
     "displayName": { "S": "$displayName" }
   },
   "attributeValues": {
-    "createdDate": { "S": "$createdDate" },
+    "createdDate": { "N": "$createdDate" },
     "accountName": { "S": "$accountName" },
     "profile": { "S": "$profile" },
     "postScreenCountStartDate": { "N": $postScreenCountStartDate },
