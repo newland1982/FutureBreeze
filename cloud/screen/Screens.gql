@@ -1,3 +1,12 @@
+# screenName: String
+# objectKey: String
+# versionId: String
+# createdDate: (Number)
+# posterId: String
+# type: String
+# labels: [String]
+# userCount: Int
+# status: String
 input ChangePosterIdInput {
   posterId: String!
 }
@@ -55,18 +64,6 @@ type Query {
   getObjectKeys(input: GetObjectKeysInput!): [ObjectKey]
   getScreenNames(input: GetScreenNamesInput!): [ScreenName]
   getVersionIds(input: GetVersionIdsInput!): [VersionId]
-}
-
-# createdDate: (Number)
-type Screen {
-  screenName: String
-  objectKey: String
-  versionId: String
-  posterId: String
-  type: String
-  labels: [String]
-  userCount: Int
-  status: String
 }
 
 type ScreenName {

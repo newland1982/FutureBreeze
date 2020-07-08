@@ -1,3 +1,10 @@
+# id: ID
+# createdDate: (Number)
+# ipAddress: String
+# accountName: String
+# password: String
+# status: String
+# expirationDate: (Number)
 input CreateSignUpUserInput {
   accountName: String!
   password: String!
@@ -36,16 +43,6 @@ type Query {
 input SetStatusInput {
   id: ID!
   status: String!
-}
-
-# createdDate: (Number)
-# expirationDate: (Number)
-type SignUpUser {
-  id: ID
-  ipAddress: String
-  accountName: String
-  password: String
-  status: String
 }
 
 type Status {
