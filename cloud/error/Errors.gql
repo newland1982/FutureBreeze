@@ -2,7 +2,6 @@
 # createdDate: (Number)
 # type: String
 # data: AWSJSON
-# status: String
 input CreateErrorInput {
   type: String!
   data: AWSJSON!
@@ -10,10 +9,6 @@ input CreateErrorInput {
 
 input DeleteErrorInput {
   id: ID!
-}
-
-input GetTypeListInput {
-  status: String!
 }
 
 type Id {

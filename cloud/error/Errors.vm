@@ -3,7 +3,6 @@
 #set($createdDate = ${util.time.nowEpochMilliSeconds()})
 #set($type = ${context.arguments.input.type})
 #set($data = ${context.arguments.input.data})
-#set($status = "init")
 {
   "version": "2017-02-28",
   "operation": "PutItem",
@@ -14,29 +13,18 @@
     "createdDate": { "N": "$createdDate" },
     "type": { "S": "$type" },
     "data": { "S": "$data" },
-    "status": { "S": "$status" }
   }
 }
 
 ${util.toJson(${context.result})}
 
 ## Resolver for Mutation.deleteError
-#set($id = ${util.autoId()})
-#set($createdDate = ${util.time.nowEpochMilliSeconds()})
-#set($type = ${context.arguments.input.type})
-#set($data = ${context.arguments.input.data})
-#set($status = "init")
+#set($id = ${context.arguments.input.id})
 {
   "version": "2017-02-28",
-  "operation": "PutItem",
+  "operation": "DeleteItem",
   "key": {
     "id": { "S": "$id" }
-  },
-  "attributeValues": {
-    "createdDate": { "S": "$createdDate" },
-    "type": { "S": "$type" },
-    "data": { "S": "$data" },
-    "status": { "S": "$status" }
   }
 }
 
