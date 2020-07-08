@@ -11,6 +11,10 @@ input DeleteErrorInput {
   id: ID!
 }
 
+input GetErrorsInput {
+  id: ID!
+}
+
 type Id {
   id: ID
 }
@@ -21,7 +25,7 @@ type Mutation {
 }
 
 type Query {
-  getTypeList(input: GetTypeListInput!): Type
+  getErrors(input: GetErrorsInput!): Id
 }
 
 type Type {

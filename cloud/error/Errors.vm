@@ -29,3 +29,21 @@ ${util.toJson(${context.result})}
 }
 
 ${util.toJson(${context.result})}
+
+## Resolver for Query.getErrors
+#set($cognitoIdentityId = ${context.arguments.input.cognitoIdentityId})
+{
+  "version": "2017-02-28",
+  "operation": "Query",
+  "index": "cognitoIdentityId-index",
+  "query": {
+    "expression": "cognitoIdentityId = :cognitoIdentityId",
+    "expressionValues": {
+      ":cognitoIdentityId": { "S": "$cognitoIdentityId" }
+    }
+  }
+}
+
+{
+  "accountNames": ${utils.toJson(${context.result.items})}
+}
