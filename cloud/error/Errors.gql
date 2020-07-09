@@ -11,12 +11,16 @@ input DeleteErrorInput {
   id: ID!
 }
 
-input GetErrorsInput {
+input GetIdsInput {
   type: String!
 }
 
 type Id {
   id: ID
+}
+
+type Ids {
+  ids: [Id]
 }
 
 type Mutation {
@@ -25,7 +29,7 @@ type Mutation {
 }
 
 type Query {
-  getErrors(input: GetErrorsInput!): Id
+  getIds(input: GetIdsInput!): Ids
 }
 
 type Type {

@@ -57,5 +57,5 @@ ${util.toJson(${context.result})}
 }
 
 {
-  "accountNames": ${utils.toJson(${context.result.items})}
+  "ids": ${utils.toJson(${context.result.items})}
 }
