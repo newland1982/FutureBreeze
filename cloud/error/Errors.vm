@@ -31,17 +31,28 @@ ${util.toJson(${context.result})}
 ${util.toJson(${context.result})}
 
 ## Resolver for Query.getErrors
-#set($cognitoIdentityId = ${context.arguments.input.cognitoIdentityId})
+#set($type = ${context.arguments.input.type})
+#set($limit = 12)
+#set($createdDateMargin = 86400000)
+#set($currentDate = ${util.time.nowEpochMilliSeconds()})
+#set($createdDateLimit = $currentDate + $createdDateMargin)
 {
   "version": "2017-02-28",
   "operation": "Query",
-  "index": "cognitoIdentityId-index",
-  "query": {
-    "expression": "cognitoIdentityId = :cognitoIdentityId",
+  "index": "type-index",
+  "limit": $limit,
+  "filter": {
+    "expression": "createdDate > :createdDateLimit",
     "expressionValues": {
-      ":cognitoIdentityId": { "S": "$cognitoIdentityId" }
+      ":createdDateLimit": { "N": $createdDateLimit }
     }
-  }
+  },
+  "query": {
+    "expression": "type = :type",
+    "expressionValues": {
+      ":type": { "S": "$type" }
+    }
+  },
 }
 
 {

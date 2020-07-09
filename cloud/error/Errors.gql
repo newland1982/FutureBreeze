@@ -12,7 +12,7 @@ input DeleteErrorInput {
 }
 
 input GetErrorsInput {
-  id: ID!
+  type: String!
 }
 
 type Id {
