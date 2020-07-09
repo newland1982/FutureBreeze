@@ -49,7 +49,10 @@ ${util.toJson(${context.result})}
     }
   },
   "query": {
-    "expression": "type = :type",
+    "expression": "#type = :type",
+    "expressionNames": {
+      "#type": "type"
+    },
     "expressionValues": {
       ":type": { "S": "$type" }
     }
