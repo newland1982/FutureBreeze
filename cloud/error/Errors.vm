@@ -33,16 +33,17 @@ ${util.toJson(${context.result})}
 ## Resolver for Query.getErrors
 #set($type = ${context.arguments.input.type})
 #set($limit = 12)
-#set($createdDateMargin = 86400000)
+## #set($createdDateMargin = 86400000)
+#set($createdDateMargin = 1)
 #set($currentDate = ${util.time.nowEpochMilliSeconds()})
-#set($createdDateLimit = $currentDate + $createdDateMargin)
+#set($createdDateLimit = $currentDate - $createdDateMargin)
 {
   "version": "2017-02-28",
   "operation": "Query",
   "index": "type-index",
   "limit": $limit,
   "filter": {
-    "expression": "createdDate > :createdDateLimit",
+    "expression": "createdDate < :createdDateLimit",
     "expressionValues": {
       ":createdDateLimit": { "N": $createdDateLimit }
     }
