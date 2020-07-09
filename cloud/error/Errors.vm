@@ -30,7 +30,7 @@ ${util.toJson(${context.result})}
 
 ${util.toJson(${context.result})}
 
-## Resolver for Query.getErrors
+## Resolver for Query.getIds
 #set($type = ${context.arguments.input.type})
 #set($limit = 12)
 ## #set($createdDateMargin = 86400000)
