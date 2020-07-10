@@ -1,35 +1,51 @@
 # id: ID
+# sequenceNumber: Int
 # createdDate: (Number)
 # type: String
 # data: AWSJSON
 input CreateErrorInput {
+  sequenceNumber: Int!
   type: String!
   data: AWSJSON!
 }
 
 input DeleteErrorInput {
   id: ID!
+  sequenceNumber: Int!
 }
 
-input GetIdsInput {
+input GetIdSequenceNumberDatasInput {
   type: String!
 }
 
-type Id {
+type IdSequenceNumber {
   id: ID
+  sequenceNumber: Int
 }
 
-type Ids {
-  ids: [Id]
+type IdSequenceNumbers {
+  idSequenceNumbers: [IdSequenceNumber]
+}
+
+type IdSequenceNumberData {
+  id: ID
+  sequenceNumber: Int
+  data: String
+}
+
+type IdSequenceNumberDatas {
+  idSequenceNumberDatas: [IdSequenceNumberData]
 }
 
 type Mutation {
-  createError(input: CreateErrorInput!): Id
-  deleteError(input: DeleteErrorInput!): Id
+  createError(input: CreateErrorInput!): IdSequenceNumber
+  deleteError(input: DeleteErrorInput!): IdSequenceNumber
 }
 
 type Query {
-  getIds(input: GetIdsInput!): Ids
+  getIdSequenceNumberDatas(
+    input: GetIdSequenceNumberDatasInput!
+  ): IdSequenceNumberDatas
 }
 
 type Type {

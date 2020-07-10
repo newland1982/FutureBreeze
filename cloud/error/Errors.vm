@@ -1,5 +1,6 @@
 ## Resolver for Mutation.createError
 #set($id = ${util.autoId()})
+#set($sequenceNumber = ${context.arguments.input.sequenceNumber})
 #set($createdDate = ${util.time.nowEpochMilliSeconds()})
 #set($type = ${context.arguments.input.type})
 #set($data = ${context.arguments.input.data})
@@ -7,7 +8,8 @@
   "version": "2017-02-28",
   "operation": "PutItem",
   "key": {
-    "id": { "S": "$id" }
+    "id": { "S": "$id" },
+    "sequenceNumber": { "N": "$sequenceNumber" }
   },
   "attributeValues": {
     "createdDate": { "N": "$createdDate" },
@@ -20,17 +22,19 @@ ${util.toJson(${context.result})}
 
 ## Resolver for Mutation.deleteError
 #set($id = ${context.arguments.input.id})
+#set($sequenceNumber = ${context.arguments.input.sequenceNumber})
 {
   "version": "2017-02-28",
   "operation": "DeleteItem",
   "key": {
-    "id": { "S": "$id" }
+    "id": { "S": "$id" },
+    "sequenceNumber": { "N": "$sequenceNumber" }
   }
 }
 
 ${util.toJson(${context.result})}
 
-## Resolver for Query.getIds
+## Resolver for Query.getIdSequenceNumberDatas
 #set($type = ${context.arguments.input.type})
 #set($limit = 12)
 ## #set($createdDateMargin = 86400000)
@@ -60,5 +64,5 @@ ${util.toJson(${context.result})}
 }
 
 {
-  "ids": ${utils.toJson(${context.result.items})}
+  "idSequenceNumberDatas": ${utils.toJson(${context.result.items})}
 }
