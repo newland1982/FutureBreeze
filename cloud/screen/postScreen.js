@@ -365,23 +365,24 @@ exports.handler = (event, context, callback) => {
           errorsClient,
           errorsMutationCreateError
         );
-
+        // begin
         try {
-          const errorsMutationCreateErrorInput = {
-            sequenceNumber: 1,
-            type: 'postScreen',
-            data: JSON.stringify({
-              action: 'deleteS3Object',
-              deleteS3ObjectInput,
-            }),
-          };
           await errorsClient.mutate({
             mutation: errorsMutationCreateError,
-            variables: { input: errorsMutationCreateErrorInput },
+            variables: {
+              input: {
+                sequenceNumber: 1,
+                type: 'postScreen',
+                data: JSON.stringify({
+                  action: 'screensMutationChangePosterId',
+                  screensMutationChangePosterIdInput,
+                }),
+              },
+            },
             fetchPolicy: 'no-cache',
           });
         } catch (error) {}
-
+        // end
         try {
           await screensClient.mutate({
             mutation: screensMutationChangePosterId,
