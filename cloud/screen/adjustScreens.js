@@ -54,6 +54,7 @@ const errorsMutationCreateError = gql(`
   mutation CreateError($input: CreateErrorInput!) {
     createError(input: $input) {
       id
+      sequenceNumber
   }
  }`);
 
@@ -89,6 +90,7 @@ const deleteS3Object = async (
     .catch(async () => {
       await errorsClient.hydrated();
       const errorsMutationCreateErrorInput = {
+        sequenceNumber: 1,
         type: 'adjustScreens',
         data: JSON.stringify({
           action: 'deleteS3Object',
