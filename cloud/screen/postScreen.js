@@ -75,6 +75,14 @@ const errorsMutationCreateError = gql(`
   }
  }`);
 
+const errorsMutationDeleteError = gql(`
+  mutation DeleteError($input: DeleteErrorInput!) {
+    deleteError(input: $input) {
+      id
+      sequenceNumber
+  }
+ }`);
+
 const screensClient = new AWSAppSyncClient({
   url: process.env.AppSync_Screens,
   region: process.env.AppSync_Region,
@@ -357,6 +365,22 @@ exports.handler = (event, context, callback) => {
           errorsClient,
           errorsMutationCreateError
         );
+
+        try {
+          const errorsMutationCreateErrorInput = {
+            sequenceNumber: 1,
+            type: 'postScreen',
+            data: JSON.stringify({
+              action: 'deleteS3Object',
+              deleteS3ObjectInput,
+            }),
+          };
+          await errorsClient.mutate({
+            mutation: errorsMutationCreateError,
+            variables: { input: errorsMutationCreateErrorInput },
+            fetchPolicy: 'no-cache',
+          });
+        } catch (error) {}
 
         try {
           await screensClient.mutate({
