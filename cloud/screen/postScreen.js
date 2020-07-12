@@ -366,21 +366,58 @@ exports.handler = (event, context, callback) => {
           errorsMutationCreateError
         );
         // begin
+        let screensMutationChangePosterIdErrorsMutationCreateErrorResult;
+        let cognitoIdentityServiceProviderAdminDeleteUserErrorsMutationCreateErrorResult;
+        let registeredUsersMutationDeleteRegisteredUserErrorsMutationCreateErrorResult;
         try {
-          await errorsClient.mutate({
-            mutation: errorsMutationCreateError,
-            variables: {
-              input: {
-                sequenceNumber: 1,
-                type: 'postScreen',
-                data: JSON.stringify({
-                  action: 'screensMutationChangePosterId',
-                  screensMutationChangePosterIdInput,
-                }),
+          screensMutationChangePosterIdErrorsMutationCreateErrorResult = await errorsClient.mutate(
+            {
+              mutation: errorsMutationCreateError,
+              variables: {
+                input: {
+                  sequenceNumber: 1,
+                  type: 'postScreen',
+                  data: JSON.stringify({
+                    action: 'screensMutationChangePosterId',
+                    screensMutationChangePosterIdInput,
+                  }),
+                },
               },
-            },
-            fetchPolicy: 'no-cache',
-          });
+              fetchPolicy: 'no-cache',
+            }
+          );
+          cognitoIdentityServiceProviderAdminDeleteUserErrorsMutationCreateErrorResult = await errorsClient.mutate(
+            {
+              mutation: errorsMutationCreateError,
+              variables: {
+                input: {
+                  sequenceNumber: 2,
+                  type: 'postScreen',
+                  data: JSON.stringify({
+                    action: 'cognitoIdentityServiceProviderAdminDeleteUser',
+                    cognitoIdentityServiceProviderAdminDeleteUserInput,
+                  }),
+                },
+              },
+              fetchPolicy: 'no-cache',
+            }
+          );
+          registeredUsersMutationDeleteRegisteredUserErrorsMutationCreateErrorResult = await errorsClient.mutate(
+            {
+              mutation: errorsMutationCreateError,
+              variables: {
+                input: {
+                  sequenceNumber: 3,
+                  type: 'postScreen',
+                  data: JSON.stringify({
+                    action: 'registeredUsersMutationDeleteRegisteredUser',
+                    registeredUsersMutationDeleteRegisteredUserInput,
+                  }),
+                },
+              },
+              fetchPolicy: 'no-cache',
+            }
+          );
         } catch (error) {}
         // end
         try {
