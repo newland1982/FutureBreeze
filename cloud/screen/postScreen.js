@@ -188,7 +188,7 @@ const deleteS3Object = async (
     .catch(async () => {
       await errorsClient.hydrated();
       const errorsMutationCreateErrorInput = {
-        sequenceNumber: 1,
+        sequenceNumber: 0,
         type: 'postScreen',
         data: JSON.stringify({
           action: 'deleteS3Object',
@@ -366,58 +366,52 @@ exports.handler = (event, context, callback) => {
           errorsMutationCreateError
         );
         // begin
-        let screensMutationChangePosterIdErrorsMutationCreateErrorResult;
-        let cognitoIdentityServiceProviderAdminDeleteUserErrorsMutationCreateErrorResult;
-        let registeredUsersMutationDeleteRegisteredUserErrorsMutationCreateErrorResult;
+        let errorsMutationCreateErrorResult_1;
+        let errorsMutationCreateErrorResult_2;
+        let errorsMutationCreateErrorResult_3;
         try {
-          screensMutationChangePosterIdErrorsMutationCreateErrorResult = await errorsClient.mutate(
-            {
-              mutation: errorsMutationCreateError,
-              variables: {
-                input: {
-                  sequenceNumber: 1,
-                  type: 'postScreen',
-                  data: JSON.stringify({
-                    action: 'screensMutationChangePosterId',
-                    screensMutationChangePosterIdInput,
-                  }),
-                },
+          errorsMutationCreateErrorResult_1 = await errorsClient.mutate({
+            mutation: errorsMutationCreateError,
+            variables: {
+              input: {
+                sequenceNumber: 1,
+                type: 'postScreen',
+                data: JSON.stringify({
+                  action: 'screensMutationChangePosterId',
+                  screensMutationChangePosterIdInput,
+                }),
               },
-              fetchPolicy: 'no-cache',
-            }
-          );
-          cognitoIdentityServiceProviderAdminDeleteUserErrorsMutationCreateErrorResult = await errorsClient.mutate(
-            {
-              mutation: errorsMutationCreateError,
-              variables: {
-                input: {
-                  sequenceNumber: 2,
-                  type: 'postScreen',
-                  data: JSON.stringify({
-                    action: 'cognitoIdentityServiceProviderAdminDeleteUser',
-                    cognitoIdentityServiceProviderAdminDeleteUserInput,
-                  }),
-                },
+            },
+            fetchPolicy: 'no-cache',
+          });
+          errorsMutationCreateErrorResult_2 = await errorsClient.mutate({
+            mutation: errorsMutationCreateError,
+            variables: {
+              input: {
+                sequenceNumber: 2,
+                type: 'postScreen',
+                data: JSON.stringify({
+                  action: 'cognitoIdentityServiceProviderAdminDeleteUser',
+                  cognitoIdentityServiceProviderAdminDeleteUserInput,
+                }),
               },
-              fetchPolicy: 'no-cache',
-            }
-          );
-          registeredUsersMutationDeleteRegisteredUserErrorsMutationCreateErrorResult = await errorsClient.mutate(
-            {
-              mutation: errorsMutationCreateError,
-              variables: {
-                input: {
-                  sequenceNumber: 3,
-                  type: 'postScreen',
-                  data: JSON.stringify({
-                    action: 'registeredUsersMutationDeleteRegisteredUser',
-                    registeredUsersMutationDeleteRegisteredUserInput,
-                  }),
-                },
+            },
+            fetchPolicy: 'no-cache',
+          });
+          errorsMutationCreateErrorResult_3 = await errorsClient.mutate({
+            mutation: errorsMutationCreateError,
+            variables: {
+              input: {
+                sequenceNumber: 3,
+                type: 'postScreen',
+                data: JSON.stringify({
+                  action: 'registeredUsersMutationDeleteRegisteredUser',
+                  registeredUsersMutationDeleteRegisteredUserInput,
+                }),
               },
-              fetchPolicy: 'no-cache',
-            }
-          );
+            },
+            fetchPolicy: 'no-cache',
+          });
         } catch (error) {}
         // end
         try {
