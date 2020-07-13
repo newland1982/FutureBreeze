@@ -412,12 +412,26 @@ exports.handler = (event, context, callback) => {
             },
             fetchPolicy: 'no-cache',
           });
-        } catch (error) {}
+        } catch (error) {
+          return;
+        }
         // end
         try {
           await screensClient.mutate({
             mutation: screens_Mutation_ChangePosterId,
             variables: { input: screens_Mutation_ChangePosterId_Input },
+            fetchPolicy: 'no-cache',
+          });
+          await errorsClient.mutate({
+            mutation: errors_Mutation_DeleteError,
+            variables: {
+              input: {
+                id: errors_Mutation_CreateError_Result_1.data.createError.id,
+                sequenceNumber:
+                  errors_Mutation_CreateError_Result_1.data.createError
+                    .sequenceNumber,
+              },
+            },
             fetchPolicy: 'no-cache',
           });
         } catch (error) {
