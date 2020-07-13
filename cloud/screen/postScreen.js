@@ -16,42 +16,42 @@ const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 let cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
 
-const screensMutationCreateScreen = gql(`
+const screens_Mutation_CreateScreen = gql(`
   mutation CreateScreen($input: CreateScreenInput!) {
     createScreen(input: $input) {
       objectKey
   }
  }`);
 
-const screensMutationChangePosterId = gql(`
+const screens_Mutation_ChangePosterId = gql(`
   mutation ChangePosterId($input: ChangePosterIdInput!) {
     changePosterId(input: $input) {
       timed_out
   }
  }`);
 
-const screensQueryGetObjectKeys = gql(`
+const screens_Query_GetObjectKeys = gql(`
   query GetObjectKeys($input: GetObjectKeysInput!) {
     getObjectKeys(input: $input) {
       objectKey
   }
  }`);
 
-const registeredUsersMutationDeleteRegisteredUser = gql(`
+const registeredUsers_Mutation_DeleteRegisteredUser = gql(`
   mutation DeleteRegisteredUser($input: DeleteRegisteredUserInput!) {
     deleteRegisteredUser(input: $input) {
       displayName
   }
  }`);
 
-const registeredUsersMutationSetPostScreenCount = gql(`
+const registeredUsers_Mutation_SetPostScreenCount = gql(`
   mutation SetPostScreenCount($input: SetPostScreenCountInput!) {
     setPostScreenCount(input: $input) {
       postScreenCount
   }
  }`);
 
-const registeredUsersQueryGetAccountNames = gql(`
+const registeredUsers_Query_GetAccountNames = gql(`
   query GetAccountNames($input: GetAccountNamesInput!) {
     getAccountNames(input: $input) {
       accountNames {
@@ -60,14 +60,14 @@ const registeredUsersQueryGetAccountNames = gql(`
   }
  }`);
 
-const registeredUsersQueryGetPostScreenCount = gql(`
+const registeredUsers_Query_GetPostScreenCount = gql(`
   query GetPostScreenCount($input: GetPostScreenCountInput!) {
     getPostScreenCount(input: $input) {
       postScreenCount
   }
  }`);
 
-const errorsMutationCreateError = gql(`
+const errors_Mutation_CreateError = gql(`
   mutation CreateError($input: CreateErrorInput!) {
     createError(input: $input) {
       id
@@ -75,7 +75,7 @@ const errorsMutationCreateError = gql(`
   }
  }`);
 
-const errorsMutationDeleteError = gql(`
+const errors_Mutation_DeleteError = gql(`
   mutation DeleteError($input: DeleteErrorInput!) {
     deleteError(input: $input) {
       id
@@ -180,14 +180,14 @@ const deleteS3Object = async (
   s3,
   deleteS3ObjectInput,
   errorsClient,
-  errorsMutationCreateError
+  errors_Mutation_CreateError
 ) => {
   await s3
     .deleteObject(deleteS3ObjectInput)
     .promise()
     .catch(async () => {
       await errorsClient.hydrated();
-      const errorsMutationCreateErrorInput = {
+      const errors_Mutation_CreateError_Input = {
         sequenceNumber: 0,
         type: 'postScreen',
         data: JSON.stringify({
@@ -196,8 +196,8 @@ const deleteS3Object = async (
         }),
       };
       await errorsClient.mutate({
-        mutation: errorsMutationCreateError,
-        variables: { input: errorsMutationCreateErrorInput },
+        mutation: errors_Mutation_CreateError,
+        variables: { input: errors_Mutation_CreateError_Input },
         fetchPolicy: 'no-cache',
       });
     });
@@ -226,9 +226,9 @@ exports.handler = (event, context, callback) => {
 
     let postScreenCount = 0;
 
-    let screensQueryGetObjectKeysResult;
+    let screens_Query_GetObjectKeys_Result;
 
-    let registeredUsersQueryGetAccountNamesResult;
+    let registeredUsers_Query_GetAccountNames_Result;
 
     const s3FileAccessLevel = `(protected`;
     const region = `${process.env.S3_Region}`;
@@ -259,13 +259,13 @@ exports.handler = (event, context, callback) => {
       await screensClient.hydrated();
       await registeredUsersClient.hydrated();
       try {
-        const screensQueryGetObjectKeysInput = {
+        const screens_Query_GetObjectKeys_Input = {
           objectKey,
         };
 
-        screensQueryGetObjectKeysResult = await screensClient.query({
-          query: screensQueryGetObjectKeys,
-          variables: { input: screensQueryGetObjectKeysInput },
+        screens_Query_GetObjectKeys_Result = await screensClient.query({
+          query: screens_Query_GetObjectKeys,
+          variables: { input: screens_Query_GetObjectKeys_Input },
           fetchPolicy: 'network-only',
         });
       } catch (error) {
@@ -277,20 +277,20 @@ exports.handler = (event, context, callback) => {
             new AWS.S3(),
             deleteS3ObjectInput,
             errorsClient,
-            errorsMutationCreateError
+            errors_Mutation_CreateError
           );
         }
         return;
       }
 
       try {
-        const registeredUsersQueryGetAccountNamesInput = {
+        const registeredUsers_Query_GetAccountNames_Input = {
           cognitoIdentityId: s3ObjectData.cognitoIdentityId,
         };
-        registeredUsersQueryGetAccountNamesResult = await registeredUsersClient.query(
+        registeredUsers_Query_GetAccountNames_Result = await registeredUsersClient.query(
           {
-            query: registeredUsersQueryGetAccountNames,
-            variables: { input: registeredUsersQueryGetAccountNamesInput },
+            query: registeredUsers_Query_GetAccountNames,
+            variables: { input: registeredUsers_Query_GetAccountNames_Input },
             fetchPolicy: 'network-only',
           }
         );
@@ -303,7 +303,7 @@ exports.handler = (event, context, callback) => {
             new AWS.S3(),
             deleteS3ObjectInput,
             errorsClient,
-            errorsMutationCreateError
+            errors_Mutation_CreateError
           );
         }
         return;
@@ -312,16 +312,16 @@ exports.handler = (event, context, callback) => {
       if (
         s3ObjectData.validationResult === 'valid' &&
         s3ObjectData.size < Number(process.env.Object_Size_Limit) &&
-        registeredUsersQueryGetAccountNamesResult.data.getAccountNames.accountNames[0].accountName.slice(
+        registeredUsers_Query_GetAccountNames_Result.data.getAccountNames.accountNames[0].accountName.slice(
           96
         ) === s3ObjectData.displayName
       ) {
-        const registeredUsersQueryGetPostScreenCountInput = {
+        const registeredUsers_Query_GetPostScreenCount_Input = {
           displayName: s3ObjectData.displayName,
         };
         const result = await registeredUsersClient.query({
-          query: registeredUsersQueryGetPostScreenCount,
-          variables: { input: registeredUsersQueryGetPostScreenCountInput },
+          query: registeredUsers_Query_GetPostScreenCount,
+          variables: { input: registeredUsers_Query_GetPostScreenCount_Input },
           fetchPolicy: 'network-only',
         });
         if (result) {
@@ -332,16 +332,16 @@ exports.handler = (event, context, callback) => {
       if (
         !(s3ObjectData.validationResult === 'valid') ||
         !(s3ObjectData.size < Number(process.env.Object_Size_Limit)) ||
-        !(screensQueryGetObjectKeysResult.data.getObjectKeys.length === 0) ||
+        !(screens_Query_GetObjectKeys_Result.data.getObjectKeys.length === 0) ||
         !(
-          registeredUsersQueryGetAccountNamesResult.data.getAccountNames.accountNames[0].accountName.slice(
+          registeredUsers_Query_GetAccountNames_Result.data.getAccountNames.accountNames[0].accountName.slice(
             96
           ) === s3ObjectData.displayName
         ) ||
         !(postScreenCount + 1 <= Number(process.env.Post_Screen_Count_Limit))
       ) {
-        const screensMutationChangePosterIdInput = {
-          posterId: registeredUsersQueryGetAccountNamesResult.data.getAccountNames.accountNames[0].accountName.slice(
+        const screens_Mutation_ChangePosterId_Input = {
+          posterId: registeredUsers_Query_GetAccountNames_Result.data.getAccountNames.accountNames[0].accountName.slice(
             96
           ),
         };
@@ -349,12 +349,12 @@ exports.handler = (event, context, callback) => {
         const cognitoIdentityServiceProviderAdminDeleteUserInput = {
           UserPoolId: process.env.User_Pool_Id,
           Username:
-            registeredUsersQueryGetAccountNamesResult.data.getAccountNames
+            registeredUsers_Query_GetAccountNames_Result.data.getAccountNames
               .accountNames[0].accountName,
         };
 
-        const registeredUsersMutationDeleteRegisteredUserInput = {
-          displayName: registeredUsersQueryGetAccountNamesResult.data.getAccountNames.accountNames[0].accountName.slice(
+        const registeredUsers_Mutation_DeleteRegisteredUser_Input = {
+          displayName: registeredUsers_Query_GetAccountNames_Result.data.getAccountNames.accountNames[0].accountName.slice(
             96
           ),
         };
@@ -363,29 +363,29 @@ exports.handler = (event, context, callback) => {
           new AWS.S3(),
           deleteS3ObjectInput,
           errorsClient,
-          errorsMutationCreateError
+          errors_Mutation_CreateError
         );
         // begin
-        let errorsMutationCreateErrorResult_1;
-        let errorsMutationCreateErrorResult_2;
-        let errorsMutationCreateErrorResult_3;
+        let errors_Mutation_CreateError_Result_1;
+        let errors_Mutation_CreateError_Result_2;
+        let errors_Mutation_CreateError_Result_3;
         try {
-          errorsMutationCreateErrorResult_1 = await errorsClient.mutate({
-            mutation: errorsMutationCreateError,
+          errors_Mutation_CreateError_Result_1 = await errorsClient.mutate({
+            mutation: errors_Mutation_CreateError,
             variables: {
               input: {
                 sequenceNumber: 1,
                 type: 'postScreen',
                 data: JSON.stringify({
-                  action: 'screensMutationChangePosterId',
-                  screensMutationChangePosterIdInput,
+                  action: 'screens_Mutation_ChangePosterId',
+                  screens_Mutation_ChangePosterId_Input,
                 }),
               },
             },
             fetchPolicy: 'no-cache',
           });
-          errorsMutationCreateErrorResult_2 = await errorsClient.mutate({
-            mutation: errorsMutationCreateError,
+          errors_Mutation_CreateError_Result_2 = await errorsClient.mutate({
+            mutation: errors_Mutation_CreateError,
             variables: {
               input: {
                 sequenceNumber: 2,
@@ -398,15 +398,15 @@ exports.handler = (event, context, callback) => {
             },
             fetchPolicy: 'no-cache',
           });
-          errorsMutationCreateErrorResult_3 = await errorsClient.mutate({
-            mutation: errorsMutationCreateError,
+          errors_Mutation_CreateError_Result_3 = await errorsClient.mutate({
+            mutation: errors_Mutation_CreateError,
             variables: {
               input: {
                 sequenceNumber: 3,
                 type: 'postScreen',
                 data: JSON.stringify({
-                  action: 'registeredUsersMutationDeleteRegisteredUser',
-                  registeredUsersMutationDeleteRegisteredUserInput,
+                  action: 'registeredUsers_Mutation_DeleteRegisteredUser',
+                  registeredUsers_Mutation_DeleteRegisteredUser_Input,
                 }),
               },
             },
@@ -416,24 +416,24 @@ exports.handler = (event, context, callback) => {
         // end
         try {
           await screensClient.mutate({
-            mutation: screensMutationChangePosterId,
-            variables: { input: screensMutationChangePosterIdInput },
+            mutation: screens_Mutation_ChangePosterId,
+            variables: { input: screens_Mutation_ChangePosterId_Input },
             fetchPolicy: 'no-cache',
           });
         } catch (error) {
           await errorsClient.hydrated();
-          const errorsMutationCreateErrorInput = {
+          const errors_Mutation_CreateError_Input = {
             type: 'postScreen',
             data: JSON.stringify({
-              action: 'screensMutationChangePosterId',
-              screensMutationChangePosterIdInput,
+              action: 'screens_Mutation_ChangePosterId',
+              screens_Mutation_ChangePosterId_Input,
               cognitoIdentityServiceProviderAdminDeleteUserInput,
-              registeredUsersMutationDeleteRegisteredUserInput,
+              registeredUsers_Mutation_DeleteRegisteredUser_Input,
             }),
           };
           await errorsClient.mutate({
-            mutation: errorsMutationCreateError,
-            variables: { input: errorsMutationCreateErrorInput },
+            mutation: errors_Mutation_CreateError,
+            variables: { input: errors_Mutation_CreateError_Input },
             fetchPolicy: 'no-cache',
           });
           return;
@@ -448,17 +448,17 @@ exports.handler = (event, context, callback) => {
             return;
           }
           await errorsClient.hydrated();
-          const errorsMutationCreateErrorInput = {
+          const errors_Mutation_CreateError_Input = {
             type: 'postScreen',
             data: JSON.stringify({
               action: 'adminDeleteUser',
               cognitoIdentityServiceProviderAdminDeleteUserInput,
-              registeredUsersMutationDeleteRegisteredUserInput,
+              registeredUsers_Mutation_DeleteRegisteredUser_Input,
             }),
           };
           await errorsClient.mutate({
-            mutation: errorsMutationCreateError,
-            variables: { input: errorsMutationCreateErrorInput },
+            mutation: errors_Mutation_CreateError,
+            variables: { input: errors_Mutation_CreateError_Input },
             fetchPolicy: 'no-cache',
           });
           return;
@@ -466,37 +466,37 @@ exports.handler = (event, context, callback) => {
 
         try {
           await registeredUsersClient.mutate({
-            mutation: registeredUsersMutationDeleteRegisteredUser,
+            mutation: registeredUsers_Mutation_DeleteRegisteredUser,
             variables: {
-              input: registeredUsersMutationDeleteRegisteredUserInput,
+              input: registeredUsers_Mutation_DeleteRegisteredUser_Input,
             },
             fetchPolicy: 'no-cache',
           });
         } catch (error) {
           await errorsClient.hydrated();
-          const errorsMutationCreateErrorInput = {
+          const errors_Mutation_CreateError_Input = {
             type: 'postScreen',
             data: JSON.stringify({
-              action: 'registeredUsersMutationDeleteRegisteredUser',
-              registeredUsersMutationDeleteRegisteredUserInput,
+              action: 'registeredUsers_Mutation_DeleteRegisteredUser',
+              registeredUsers_Mutation_DeleteRegisteredUser_Input,
             }),
           };
           await errorsClient.mutate({
-            mutation: errorsMutationCreateError,
-            variables: { input: errorsMutationCreateErrorInput },
+            mutation: errors_Mutation_CreateError,
+            variables: { input: errors_Mutation_CreateError_Input },
             fetchPolicy: 'no-cache',
           });
         }
         return;
       }
 
-      const registeredUsersMutationSetPostScreenCountInput = {
+      const registeredUsers_Mutation_SetPostScreenCount_Input = {
         displayName: s3ObjectData.displayName,
         postScreenCount,
       };
       await registeredUsersClient.mutate({
-        mutation: registeredUsersMutationSetPostScreenCount,
-        variables: { input: registeredUsersMutationSetPostScreenCountInput },
+        mutation: registeredUsers_Mutation_SetPostScreenCount,
+        variables: { input: registeredUsers_Mutation_SetPostScreenCount_Input },
         fetchPolicy: 'no-cache',
       });
 
@@ -527,7 +527,7 @@ exports.handler = (event, context, callback) => {
               new AWS.S3(),
               deleteS3ObjectInput,
               errorsClient,
-              errorsMutationCreateError
+              errors_Mutation_CreateError
             );
             return;
           }
@@ -553,15 +553,15 @@ exports.handler = (event, context, callback) => {
             new AWS.S3(),
             deleteS3ObjectInput,
             errorsClient,
-            errorsMutationCreateError
+            errors_Mutation_CreateError
           );
           return;
         }
       }
 
-      let screensMutationCreateScreenInput;
+      let screens_Mutation_CreateScreen_Input;
       if (s3ObjectData.type === 'thumbnail') {
-        screensMutationCreateScreenInput = {
+        screens_Mutation_CreateScreen_Input = {
           screenName,
           objectKey,
           versionId,
@@ -570,7 +570,7 @@ exports.handler = (event, context, callback) => {
           labels,
         };
       } else {
-        screensMutationCreateScreenInput = {
+        screens_Mutation_CreateScreen_Input = {
           screenName,
           objectKey,
           versionId,
@@ -580,8 +580,8 @@ exports.handler = (event, context, callback) => {
 
       try {
         await screensClient.mutate({
-          mutation: screensMutationCreateScreen,
-          variables: { input: screensMutationCreateScreenInput },
+          mutation: screens_Mutation_CreateScreen,
+          variables: { input: screens_Mutation_CreateScreen_Input },
           fetchPolicy: 'no-cache',
         });
       } catch (error) {
@@ -589,7 +589,7 @@ exports.handler = (event, context, callback) => {
           new AWS.S3(),
           deleteS3ObjectInput,
           errorsClient,
-          errorsMutationCreateError
+          errors_Mutation_CreateError
         );
       }
     })();
