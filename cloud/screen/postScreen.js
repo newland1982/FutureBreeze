@@ -435,21 +435,6 @@ exports.handler = (event, context, callback) => {
             fetchPolicy: 'no-cache',
           });
         } catch (error) {
-          await errorsClient.hydrated();
-          const errors_Mutation_CreateError_Input = {
-            type: 'postScreen',
-            data: JSON.stringify({
-              action: 'screens_Mutation_ChangePosterId',
-              screens_Mutation_ChangePosterId_Input,
-              cognitoIdentityServiceProviderAdminDeleteUserInput,
-              registeredUsers_Mutation_DeleteRegisteredUser_Input,
-            }),
-          };
-          await errorsClient.mutate({
-            mutation: errors_Mutation_CreateError,
-            variables: { input: errors_Mutation_CreateError_Input },
-            fetchPolicy: 'no-cache',
-          });
           return;
         }
 
