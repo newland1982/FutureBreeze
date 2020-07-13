@@ -23,10 +23,6 @@ type IdSequenceNumber {
   sequenceNumber: Int
 }
 
-type IdSequenceNumbers {
-  idSequenceNumbers: [IdSequenceNumber]
-}
-
 type IdSequenceNumberData {
   id: ID
   sequenceNumber: Int
