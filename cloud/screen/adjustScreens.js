@@ -15,42 +15,42 @@ const AWS = require('aws-sdk');
 const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 
-const screensMutationSetStatus = gql(`
+const screens_Mutation_SetStatus = gql(`
   mutation SetStatus($input: SetStatusInput!) {
     setStatus(input: $input) {
       timed_out
   }
  }`);
 
-const screensMutationDeleteScreen = gql(`
+const screens_Mutation_DeleteScreen = gql(`
   mutation DeleteScreen($input: DeleteScreenInput!) {
     deleteScreen(input: $input) {
       timed_out
   }
  }`);
 
-const screensQueryGetObjectKeys = gql(`
+const screens_Query_GetObjectKeys = gql(`
   query GetObjectKeys($input: GetObjectKeysInput!) {
     getObjectKeys(input: $input) {
       objectKey
   }
  }`);
 
-const screensQueryGetScreenNames = gql(`
+const screens_Query_GetScreenNames = gql(`
   query GetScreenNames($input: GetScreenNamesInput!) {
     getScreenNames(input: $input) {
       screenName
   }
  }`);
 
-const screensQueryGetVersionIds = gql(`
+const screens_Query_GetVersionIds = gql(`
   query GetVersionIds($input: GetVersionIdsInput!) {
     getVersionIds(input: $input) {
       versionId
   }
  }`);
 
-const errorsMutationCreateError = gql(`
+const errors_Mutation_CreateError = gql(`
   mutation CreateError($input: CreateErrorInput!) {
     createError(input: $input) {
       id
@@ -82,14 +82,14 @@ const deleteS3Object = async (
   s3,
   deleteS3ObjectInput,
   errorsClient,
-  errorsMutationCreateError
+  errors_Mutation_CreateError
 ) => {
   await s3
     .deleteObject(deleteS3ObjectInput)
     .promise()
     .catch(async () => {
       await errorsClient.hydrated();
-      const errorsMutationCreateErrorInput = {
+      const errors_Mutation_CreateError_Input = {
         sequenceNumber: 1,
         type: 'adjustScreens',
         data: JSON.stringify({
@@ -98,8 +98,8 @@ const deleteS3Object = async (
         }),
       };
       await errorsClient.mutate({
-        mutation: errorsMutationCreateError,
-        variables: { input: errorsMutationCreateErrorInput },
+        mutation: errors_Mutation_CreateError,
+        variables: { input: errors_Mutation_CreateError_Input },
         fetchPolicy: 'no-cache',
       });
     });
@@ -112,53 +112,55 @@ exports.handler = (event) => {
     await screensClient.hydrated();
     for (const type of types) {
       try {
-        const screensQueryGetScreenNamesInput = {
+        const screens_Query_GetScreenNames_Input = {
           type,
         };
-        const screensQueryGetScreenNamesResult = await screensClient.query({
-          query: screensQueryGetScreenNames,
-          variables: { input: screensQueryGetScreenNamesInput },
+        const screens_Query_GetScreenNames_Result = await screensClient.query({
+          query: screens_Query_GetScreenNames,
+          variables: { input: screens_Query_GetScreenNames_Input },
           fetchPolicy: 'network-only',
         });
-        if (screensQueryGetScreenNamesResult.data.getScreenNames.length !== 0) {
-          const screenNames = screensQueryGetScreenNamesResult.data.getScreenNames.map(
+        if (
+          screens_Query_GetScreenNames_Result.data.getScreenNames.length !== 0
+        ) {
+          const screenNames = screens_Query_GetScreenNames_Result.data.getScreenNames.map(
             (value) => value.screenName
           );
           await Promise.all(
             screenNames.map(async (screenName) => {
-              const screensQueryGetObjectKeysInput = {
+              const screens_Query_GetObjectKeys_Input = {
                 screenName,
               };
-              const screensQueryGetObjectKeysResult = await screensClient.query(
+              const screens_Query_GetObjectKeys_Result = await screensClient.query(
                 {
-                  query: screensQueryGetObjectKeys,
-                  variables: { input: screensQueryGetObjectKeysInput },
+                  query: screens_Query_GetObjectKeys,
+                  variables: { input: screens_Query_GetObjectKeys_Input },
                   fetchPolicy: 'network-only',
                 }
               );
-              const objectKeys = screensQueryGetObjectKeysResult.data.getObjectKeys.map(
+              const objectKeys = screens_Query_GetObjectKeys_Result.data.getObjectKeys.map(
                 (value) => value.objectKey
               );
               if (objectKeys.length === types.length) {
-                const screensMutationSetStatusInput = {
+                const screens_Mutation_SetStatus_Input = {
                   screenName,
                   status: 'completed',
                 };
                 await screensClient.mutate({
-                  mutation: screensMutationSetStatus,
-                  variables: { input: screensMutationSetStatusInput },
+                  mutation: screens_Mutation_SetStatus,
+                  variables: { input: screens_Mutation_SetStatus_Input },
                   fetchPolicy: 'no-cache',
                 });
               } else {
                 await Promise.all(
                   objectKeys.map(async (objectKey) => {
-                    const screensQueryGetVersionIdsInput = {
+                    const screens_Query_GetVersionIds_Input = {
                       objectKey,
                     };
-                    const screensQueryGetVersionIdsResult = await screensClient.query(
+                    const screens_Query_GetVersionIds_Result = await screensClient.query(
                       {
-                        query: screensQueryGetVersionIds,
-                        variables: { input: screensQueryGetVersionIdsInput },
+                        query: screens_Query_GetVersionIds,
+                        variables: { input: screens_Query_GetVersionIds_Input },
                         fetchPolicy: 'network-only',
                       }
                     );
@@ -166,23 +168,23 @@ exports.handler = (event) => {
                       Bucket: process.env.Bucket,
                       Key: objectKey,
                       VersionId:
-                        screensQueryGetVersionIdsResult.data.getVersionIds[0]
+                        screens_Query_GetVersionIds_Result.data.getVersionIds[0]
                           .versionId,
                     };
                     deleteS3Object(
                       new AWS.S3(),
                       deleteS3ObjectInput,
                       errorsClient,
-                      errorsMutationCreateError
+                      errors_Mutation_CreateError
                     );
                   })
                 );
-                const screensMutationDeleteScreenInput = {
+                const screens_Mutation_DeleteScreen_Input = {
                   screenName,
                 };
                 await screensClient.mutate({
-                  mutation: screensMutationDeleteScreen,
-                  variables: { input: screensMutationDeleteScreenInput },
+                  mutation: screens_Mutation_DeleteScreen,
+                  variables: { input: screens_Mutation_DeleteScreen_Input },
                   fetchPolicy: 'no-cache',
                 });
               }
