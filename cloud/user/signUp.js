@@ -23,14 +23,14 @@ const poolData = {
 };
 const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
-const signUpUsersMutationSetStatus = gql(`
+const signUpUsers_Mutation_SetStatus = gql(`
   mutation SetStatus($input: SetStatusInput!) {
     setStatus(input: $input) {
       status
     }
   }`);
 
-const signUpUsersQueryGetIpAddresses = gql(`
+const signUpUsers_Query_GetIpAddresses = gql(`
   query GetIpAddresses($input: GetIpAddressesInput!) {
     getIpAddresses(input: $input) {
       ipAddresses {
@@ -39,7 +39,7 @@ const signUpUsersQueryGetIpAddresses = gql(`
     }
   }`);
 
-const signUpUsersQueryGetStatus = gql(`
+const signUpUsers_Query_GetStatus = gql(`
   query GetStatus($input: GetStatusInput!) {
     getStatus(input: $input) {
       status
@@ -64,33 +64,33 @@ exports.handler = (event, context, callback) => {
 
     let ipAddressCount;
 
-    const commonSignUpUsersMutationSetStatusInput = {
+    const common_SignUpUsers_Mutation_SetStatus_Input = {
       id: record.dynamodb.NewImage.id.S,
     };
 
-    const signUpUsersQueryGetIpAddressesInput = {
+    const signUpUsers_Query_GetIpAddresses_Input = {
       ipAddress: record.dynamodb.NewImage.ipAddress.S,
     };
 
-    const signUpUsersQueryGetStatusInput = {
+    const signUpUsers_Query_GetStatus_Input = {
       id: record.dynamodb.NewImage.id.S,
     };
 
     (async () => {
       await signUpUsersClient.hydrated();
 
-      const signUpUsersQueryGetStatusResult = await signUpUsersClient
+      const signUpUsers_Query_GetStatus_Result = await signUpUsersClient
         .query({
-          query: signUpUsersQueryGetStatus,
-          variables: { input: signUpUsersQueryGetStatusInput },
+          query: signUpUsers_Query_GetStatus,
+          variables: { input: signUpUsers_Query_GetStatus_Input },
           fetchPolicy: 'network-only',
         })
         .catch(async () => {
           await signUpUsersClient.mutate({
-            mutation: signUpUsersMutationSetStatus,
+            mutation: signUpUsers_Mutation_SetStatus,
             variables: {
               input: {
-                ...commonSignUpUsersMutationSetStatusInput,
+                ...common_SignUpUsers_Mutation_SetStatus_Input,
                 status: 'signUpError',
               },
             },
@@ -99,18 +99,18 @@ exports.handler = (event, context, callback) => {
         });
 
       if (
-        signUpUsersQueryGetStatusResult.data.getStatus.status ===
+        signUpUsers_Query_GetStatus_Result.data.getStatus.status ===
           'processing' ||
-        signUpUsersQueryGetStatusResult.data.getStatus.status === 'completed'
+        signUpUsers_Query_GetStatus_Result.data.getStatus.status === 'completed'
       ) {
         return;
       }
 
       await signUpUsersClient.mutate({
-        mutation: signUpUsersMutationSetStatus,
+        mutation: signUpUsers_Mutation_SetStatus,
         variables: {
           input: {
-            ...commonSignUpUsersMutationSetStatusInput,
+            ...common_SignUpUsers_Mutation_SetStatus_Input,
             status: 'processing',
           },
         },
@@ -119,16 +119,16 @@ exports.handler = (event, context, callback) => {
 
       const result = await signUpUsersClient
         .query({
-          query: signUpUsersQueryGetIpAddresses,
-          variables: { input: signUpUsersQueryGetIpAddressesInput },
+          query: signUpUsers_Query_GetIpAddresses,
+          variables: { input: signUpUsers_Query_GetIpAddresses_Input },
           fetchPolicy: 'network-only',
         })
         .catch(async () => {
           await signUpUsersClient.mutate({
-            mutation: signUpUsersMutationSetStatus,
+            mutation: signUpUsers_Mutation_SetStatus,
             variables: {
               input: {
-                ...commonSignUpUsersMutationSetStatusInput,
+                ...common_SignUpUsers_Mutation_SetStatus_Input,
                 status: 'signUpError',
               },
             },
@@ -140,10 +140,10 @@ exports.handler = (event, context, callback) => {
 
       if (ipAddressCount > process.env.Access_Limit) {
         await signUpUsersClient.mutate({
-          mutation: signUpUsersMutationSetStatus,
+          mutation: signUpUsers_Mutation_SetStatus,
           variables: {
             input: {
-              ...commonSignUpUsersMutationSetStatusInput,
+              ...common_SignUpUsers_Mutation_SetStatus_Input,
               status: 'accessLimitExceeded',
             },
           },
@@ -160,10 +160,10 @@ exports.handler = (event, context, callback) => {
         async (error, result) => {
           if (error) {
             await signUpUsersClient.mutate({
-              mutation: signUpUsersMutationSetStatus,
+              mutation: signUpUsers_Mutation_SetStatus,
               variables: {
                 input: {
-                  ...commonSignUpUsersMutationSetStatusInput,
+                  ...common_SignUpUsers_Mutation_SetStatus_Input,
                   status: 'signUpError',
                 },
               },
