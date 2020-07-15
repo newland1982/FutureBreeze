@@ -15,14 +15,14 @@ const AWS = require('aws-sdk');
 const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 
-const signUpUsersMutationSetStatus = gql(`
+const signUpUsers_Mutation_SetStatus = gql(`
 mutation SetStatus($input: SetStatusInput!) {
   setStatus(input: $input) {
     status
   }
 }`);
 
-const registeredUsersMutationCreateRegisteredUser = gql(`
+const registeredUsers_Mutation_CreateRegisteredUser = gql(`
   mutation CreateRegisteredUser($input: CreateRegisteredUserInput!) {
     createRegisteredUser(input: $input) {
       displayName
@@ -54,12 +54,12 @@ exports.handler = (event, context, callback) => {
   const displayName = accountName.slice(96);
   const displayNamePrefix = event.userName.slice(0, 96);
 
-  const signUpUsersMutationSetStatusInput = {
+  const signUpUsers_Mutation_SetStatus_Input = {
     id: event.request.clientMetadata.id,
     status: 'preSignUpError',
   };
 
-  const registeredUsersMutationCreateRegisteredUserInput = {
+  const registeredUsers_Mutation_CreateRegisteredUser_Input = {
     displayName,
     accountName,
     profile: '{}',
@@ -72,8 +72,8 @@ exports.handler = (event, context, callback) => {
     (async () => {
       await signUpUsersClient.hydrated();
       await signUpUsersClient.mutate({
-        mutation: signUpUsersMutationSetStatus,
-        variables: { input: signUpUsersMutationSetStatusInput },
+        mutation: signUpUsers_Mutation_SetStatus,
+        variables: { input: signUpUsers_Mutation_SetStatus_Input },
         fetchPolicy: 'no-cache',
       });
     })();
@@ -85,17 +85,17 @@ exports.handler = (event, context, callback) => {
       await registeredUsersClient.hydrated();
 
       await registeredUsersClient.mutate({
-        mutation: registeredUsersMutationCreateRegisteredUser,
+        mutation: registeredUsers_Mutation_CreateRegisteredUser,
         variables: {
-          input: registeredUsersMutationCreateRegisteredUserInput,
+          input: registeredUsers_Mutation_CreateRegisteredUser_Input,
         },
         fetchPolicy: 'no-cache',
       });
     } catch (error) {
       await signUpUsersClient.hydrated();
       await signUpUsersClient.mutate({
-        mutation: signUpUsersMutationSetStatus,
-        variables: { input: signUpUsersMutationSetStatusInput },
+        mutation: signUpUsers_Mutation_SetStatus,
+        variables: { input: signUpUsers_Mutation_SetStatus_Input },
         fetchPolicy: 'no-cache',
       });
       return;
