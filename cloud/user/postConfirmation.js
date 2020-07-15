@@ -15,7 +15,7 @@ const AWS = require('aws-sdk');
 const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 
-const signUpUsersMutationSetStatus = gql(`
+const signUpUsers_Mutation_SetStatus = gql(`
 mutation SetStatus($input: SetStatusInput!) {
   setStatus(input: $input) {
     status
@@ -33,7 +33,7 @@ const signUpUsersClient = new AWSAppSyncClient({
 });
 
 exports.handler = (event, context, callback) => {
-  const signUpUsersMutationSetStatusInput = {
+  const signUpUsers_Mutation_SetStatus_Input = {
     id: event.request.clientMetadata.id,
     status: 'completed',
   };
@@ -41,8 +41,8 @@ exports.handler = (event, context, callback) => {
   (async () => {
     await signUpUsersClient.hydrated();
     await signUpUsersClient.mutate({
-      mutation: signUpUsersMutationSetStatus,
-      variables: { input: signUpUsersMutationSetStatusInput },
+      mutation: signUpUsers_Mutation_SetStatus,
+      variables: { input: signUpUsers_Mutation_SetStatus_Input },
       fetchPolicy: 'no-cache',
     });
 
