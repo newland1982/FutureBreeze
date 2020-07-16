@@ -93,8 +93,8 @@ const SignUp = () => {
   const [userHasSignedUp, setUserHasSignedUp] = useState(false);
   const [userHasSignedIn, setUserHasSignedIn] = useState(false);
   const [
-    executeRegisteredUsersMutationSetCognitoIdentityIdIsCompleted,
-    setRegisteredUsersMutationSetCognitoIdentityIdExecutionIsCompleted,
+    execute_RegisteredUsers_Mutation_SetCognitoIdentityId_IsCompleted,
+    set_RegisteredUsers_Mutation_SetCognitoIdentityId_Execution_IsCompleted,
   ] = useState(false);
 
   const displayNamePrefix = useMemo(() => {
@@ -147,19 +147,19 @@ const SignUp = () => {
           .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers,
         'AWS_IAM'
       );
-      const registeredUsersQueryGetDisplayName = `query GetDisplayName($input: GetDisplayNameInput!) {
+      const registeredUsers_Query_GetDisplayName = `query GetDisplayName($input: GetDisplayNameInput!) {
         getDisplayName(input: $input) {
             displayName
         }
        }`;
-      const registeredUsersQueryGetDisplayNameInput = {
+      const registeredUsers_Query_GetDisplayName_Input = {
         displayName,
       };
 
       try {
         const result = await API.graphql(
-          graphqlOperation(registeredUsersQueryGetDisplayName, {
-            input: registeredUsersQueryGetDisplayNameInput,
+          graphqlOperation(registeredUsers_Query_GetDisplayName, {
+            input: registeredUsers_Query_GetDisplayName_Input,
           })
         );
         const displayNameAlreadyExists = Boolean(
@@ -187,19 +187,19 @@ const SignUp = () => {
       process.env.REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_SignUpUsers,
       'AWS_IAM'
     );
-    const signUpUsersMutationCreateSignUpUser = `mutation CreateSignUpUser($input: CreateSignUpUserInput!) {
+    const signUpUsers_Mutation_CreateSignUpUser = `mutation CreateSignUpUser($input: CreateSignUpUserInput!) {
       createSignUpUser(input: $input) {
         id
       }
      }`;
-    const signUpUsersMutationCreateSignUpUserInput = {
+    const signUpUsers_Mutation_CreateSignUpUser_Input = {
       accountName,
       password,
     };
     try {
       const result = await API.graphql(
-        graphqlOperation(signUpUsersMutationCreateSignUpUser, {
-          input: signUpUsersMutationCreateSignUpUserInput,
+        graphqlOperation(signUpUsers_Mutation_CreateSignUpUser, {
+          input: signUpUsers_Mutation_CreateSignUpUser_Input,
         })
       );
       id = result?.data?.createSignUpUser?.id;
@@ -208,19 +208,19 @@ const SignUp = () => {
       return;
     }
 
-    const signUpUsersQueryGetStatus = `query GetStatus($input: GetStatusInput!) {
+    const signUpUsers_Query_GetStatus = `query GetStatus($input: GetStatusInput!) {
       getStatus(input: $input) {
         status
       }
      }`;
-    const signUpUsersQueryGetStatusInput = {
+    const signUpUsers_Query_GetStatus_Input = {
       id,
     };
     const signUpUsersStatusWatcher = async () => {
       try {
         const result = await API.graphql(
-          graphqlOperation(signUpUsersQueryGetStatus, {
-            input: signUpUsersQueryGetStatusInput,
+          graphqlOperation(signUpUsers_Query_GetStatus, {
+            input: signUpUsers_Query_GetStatus_Input,
           })
         );
         setSignUpUsersStatus(`${result.data.getStatus.status}`);
@@ -277,7 +277,7 @@ const SignUp = () => {
       return;
     }
 
-    const executeRegisteredUsersMutationSetCognitoIdentityId = async () => {
+    const execute_RegisteredUsers_Mutation_SetCognitoIdentityId = async () => {
       const currentAuthenticatedUser = await Auth.currentAuthenticatedUser();
 
       if (!currentAuthenticatedUser) {
@@ -289,12 +289,12 @@ const SignUp = () => {
           .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers,
         'AMAZON_COGNITO_USER_POOLS'
       );
-      const registeredUsersMutationSetCognitoIdentityId = `mutation SetCognitoIdentityId($input: SetCognitoIdentityIdInput!) {
+      const registeredUsers_Mutation_SetCognitoIdentityId = `mutation SetCognitoIdentityId($input: SetCognitoIdentityIdInput!) {
         setCognitoIdentityId(input: $input) {
           cognitoIdentityId
         }
        }`;
-      const registeredUsersMutationSetCognitoIdentityIdInput = {
+      const registeredUsers_Mutation_SetCognitoIdentityId_Input = {
         cognitoIdentityId:
           currentAuthenticatedUser.storage[
             `aws.cognito.identity-id.${process.env.REACT_APP_AWS_COGNITO_identityPoolId}`
@@ -302,11 +302,11 @@ const SignUp = () => {
       };
       try {
         await API.graphql(
-          graphqlOperation(registeredUsersMutationSetCognitoIdentityId, {
-            input: registeredUsersMutationSetCognitoIdentityIdInput,
+          graphqlOperation(registeredUsers_Mutation_SetCognitoIdentityId, {
+            input: registeredUsers_Mutation_SetCognitoIdentityId_Input,
           })
         );
-        setRegisteredUsersMutationSetCognitoIdentityIdExecutionIsCompleted(
+        set_RegisteredUsers_Mutation_SetCognitoIdentityId_Execution_IsCompleted(
           true
         );
       } catch (error) {
@@ -315,11 +315,11 @@ const SignUp = () => {
       }
     };
 
-    executeRegisteredUsersMutationSetCognitoIdentityId();
+    execute_RegisteredUsers_Mutation_SetCognitoIdentityId();
   }, [accountName, userHasSignedIn, history, password]);
 
   useEffect(() => {
-    if (!executeRegisteredUsersMutationSetCognitoIdentityIdIsCompleted) {
+    if (!execute_RegisteredUsers_Mutation_SetCognitoIdentityId_IsCompleted) {
       return;
     }
     dispatch({
@@ -333,7 +333,7 @@ const SignUp = () => {
     dispatch,
     accountName,
     history,
-    executeRegisteredUsersMutationSetCognitoIdentityIdIsCompleted,
+    execute_RegisteredUsers_Mutation_SetCognitoIdentityId_IsCompleted,
     password,
     user,
   ]);
