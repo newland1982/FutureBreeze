@@ -294,18 +294,18 @@ const PostScreen = () => {
       'AWS_IAM'
     );
 
-    const registeredUsersMutationPrepareSetPostScreenCount = `mutation PrepareSetPostScreenCount($input: PrepareSetPostScreenCountInput!) {
+    const registeredUsers_Mutation_PrepareSetPostScreenCount = `mutation PrepareSetPostScreenCount($input: PrepareSetPostScreenCountInput!) {
       prepareSetPostScreenCount(input: $input) {
         postScreenCount
       }
      }`;
-    const registeredUsersMutationPrepareSetPostScreenCountInput = {
+    const registeredUsers_Mutation_PrepareSetPostScreenCount_Input = {
       displayName,
     };
     try {
       await API.graphql(
-        graphqlOperation(registeredUsersMutationPrepareSetPostScreenCount, {
-          input: registeredUsersMutationPrepareSetPostScreenCountInput,
+        graphqlOperation(registeredUsers_Mutation_PrepareSetPostScreenCount, {
+          input: registeredUsers_Mutation_PrepareSetPostScreenCount_Input,
         })
       );
     } catch (error) {
@@ -317,18 +317,18 @@ const PostScreen = () => {
       }
     }
 
-    const registeredUsersQueryGetPostScreenCount = `query GetPostScreenCount($input: GetPostScreenCountInput!) {
+    const registeredUsers_Query_GetPostScreenCount = `query GetPostScreenCount($input: GetPostScreenCountInput!) {
       getPostScreenCount(input: $input) {
         postScreenCount
       }
      }`;
-    const registeredUsersQueryGetPostScreenCountInput = {
+    const registeredUsers_Query_GetPostScreenCount_Input = {
       displayName,
     };
     try {
       const result = await API.graphql(
-        graphqlOperation(registeredUsersQueryGetPostScreenCount, {
-          input: registeredUsersQueryGetPostScreenCountInput,
+        graphqlOperation(registeredUsers_Query_GetPostScreenCount, {
+          input: registeredUsers_Query_GetPostScreenCount_Input,
         })
       );
       if (
@@ -350,18 +350,18 @@ const PostScreen = () => {
         .REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_RegisteredUsers,
       'AWS_IAM'
     );
-    const registeredUsersQueryGetCreatedDate = `query GetCreatedDate($input: GetCreatedDateInput!) {
+    const registeredUsers_Query_GetCreatedDate = `query GetCreatedDate($input: GetCreatedDateInput!) {
       getCreatedDate(input: $input) {
         createdDate
       }
      }`;
-    const registeredUsersQueryGetCreatedDateInput = {
+    const registeredUsers_Query_GetCreatedDate_Input = {
       displayName,
     };
     try {
       const result = await API.graphql(
-        graphqlOperation(registeredUsersQueryGetCreatedDate, {
-          input: registeredUsersQueryGetCreatedDateInput,
+        graphqlOperation(registeredUsers_Query_GetCreatedDate, {
+          input: registeredUsers_Query_GetCreatedDate_Input,
         })
       );
       RegisteredUsersCreatedDate = result.data.getCreatedDate.createdDate;
