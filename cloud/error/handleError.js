@@ -15,41 +15,6 @@ const AWS = require('aws-sdk');
 const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 
-const screens_Mutation_SetStatus = gql(`
-  mutation SetStatus($input: SetStatusInput!) {
-    setStatus(input: $input) {
-      timed_out
-  }
- }`);
-
-const screens_Mutation_DeleteScreen = gql(`
-  mutation DeleteScreen($input: DeleteScreenInput!) {
-    deleteScreen(input: $input) {
-      timed_out
-  }
- }`);
-
-const screens_Query_GetObjectKeys = gql(`
-  query GetObjectKeys($input: GetObjectKeysInput!) {
-    getObjectKeys(input: $input) {
-      objectKey
-  }
- }`);
-
-const screens_Query_GetScreenNames = gql(`
-  query GetScreenNames($input: GetScreenNamesInput!) {
-    getScreenNames(input: $input) {
-      screenName
-  }
- }`);
-
-const screens_Query_GetVersionIds = gql(`
-  query GetVersionIds($input: GetVersionIdsInput!) {
-    getVersionIds(input: $input) {
-      versionId
-  }
- }`);
-
 const errors_Mutation_CreateError = gql(`
   mutation CreateError($input: CreateErrorInput!) {
     createError(input: $input) {
@@ -58,8 +23,39 @@ const errors_Mutation_CreateError = gql(`
   }
  }`);
 
-const screensClient = new AWSAppSyncClient({
-  url: process.env.AppSync_Screens,
+const errors_Mutation_DeleteError = gql(`
+  mutation DeleteError($input: DeleteErrorInput!) {
+    deleteError(input: $input) {
+      id
+      sequenceNumber
+  }
+ }`);
+
+const errors_Query_GetIdSequenceNumberDatas = gql(`
+  query GetIdSequenceNumberDatas($input: GetIdSequenceNumberDatasInput!) {
+    getIdSequenceNumberDatas(input: $input) {
+      id
+      sequenceNumber
+      data
+  }
+ }`);
+
+const registeredUsers_Mutation_DeleteRegisteredUser = gql(`
+  mutation DeleteRegisteredUser($input: DeleteRegisteredUserInput!) {
+    deleteRegisteredUser(input: $input) {
+      displayName
+  }
+ }`);
+
+const screens_Mutation_ChangePosterId = gql(`
+  mutation ChangePosterId($input: ChangePosterIdInput!) {
+    changePosterId(input: $input) {
+      timed_out
+  }
+ }`);
+
+const errorsClient = new AWSAppSyncClient({
+  url: process.env.AppSync_Errors,
   region: process.env.AppSync_Region,
   auth: {
     type: AUTH_TYPE.AWS_IAM,
@@ -68,8 +64,18 @@ const screensClient = new AWSAppSyncClient({
   disableOffline: true,
 });
 
-const errorsClient = new AWSAppSyncClient({
-  url: process.env.AppSync_Errors,
+const registeredUsersClient = new AWSAppSyncClient({
+  url: process.env.AppSync_RegisteredUsers,
+  region: process.env.AppSync_Region,
+  auth: {
+    type: AUTH_TYPE.AWS_IAM,
+    credentials,
+  },
+  disableOffline: true,
+});
+
+const screensClient = new AWSAppSyncClient({
+  url: process.env.AppSync_Screens,
   region: process.env.AppSync_Region,
   auth: {
     type: AUTH_TYPE.AWS_IAM,
@@ -105,9 +111,9 @@ const deleteS3Object = async (
     });
 };
 
-const types = ['thumbnai', 'mobile', 'pc'];
+const types = ['postScreen'];
 
-const screens_Query_GetScreenNames_Size = 12;
+const errors_Query_GetIdSequenceNumberDatas_Limit = 12;
 
 exports.handler = (event) => {
   (async () => {
@@ -203,7 +209,7 @@ exports.handler = (event) => {
           }
           if (
             screens_Query_GetScreenNames_Result.data.getScreenNames.length <
-              screens_Query_GetScreenNames_Size &&
+              errors_Query_GetIdSequenceNumberDatas_Limit &&
             (typeof processIsCompleted === undefined ||
               processIsCompleted === true)
           ) {
