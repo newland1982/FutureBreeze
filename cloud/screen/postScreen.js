@@ -496,68 +496,43 @@ exports.handler = (event, context, callback) => {
         } catch (error) {
           return;
         }
+      }
 
-        const registeredUsers_Mutation_SetPostScreenCount_Input = {
-          displayName: s3ObjectData.displayName,
-          postScreenCount,
-        };
-        await registeredUsersClient.mutate({
-          mutation: registeredUsers_Mutation_SetPostScreenCount,
-          variables: {
-            input: registeredUsers_Mutation_SetPostScreenCount_Input,
-          },
-          fetchPolicy: 'no-cache',
+      const registeredUsers_Mutation_SetPostScreenCount_Input = {
+        displayName: s3ObjectData.displayName,
+        postScreenCount,
+      };
+      await registeredUsersClient.mutate({
+        mutation: registeredUsers_Mutation_SetPostScreenCount,
+        variables: {
+          input: registeredUsers_Mutation_SetPostScreenCount_Input,
+        },
+        fetchPolicy: 'no-cache',
+      });
+
+      let labels = [];
+      if (s3ObjectData.type === 'thumbnail') {
+        const rekognition = new AWS.Rekognition({
+          apiVersion: process.env.Rekognition_ApiVersion,
         });
-
-        let labels = [];
-        if (s3ObjectData.type === 'thumbnail') {
-          const rekognition = new AWS.Rekognition({
-            apiVersion: process.env.Rekognition_ApiVersion,
-          });
-          try {
-            const rekognitionDetectModerationLabelsInput = {
-              Image: {
-                S3Object: {
-                  Bucket: process.env.Bucket,
-                  Name: objectKey,
-                },
+        try {
+          const rekognitionDetectModerationLabelsInput = {
+            Image: {
+              S3Object: {
+                Bucket: process.env.Bucket,
+                Name: objectKey,
               },
-              MinConfidence:
-                process.env.Rekognition_DetectModerationLabels_MinConfidence,
-            };
-            const rekognitionDetectModerationLabelsResult = await rekognition
-              .detectModerationLabels(rekognitionDetectModerationLabelsInput)
-              .promise();
-            if (
-              rekognitionDetectModerationLabelsResult.ModerationLabels
-                .length !== 0
-            ) {
-              deleteS3Object(
-                new AWS.S3(),
-                deleteS3ObjectInput,
-                errorsClient,
-                errors_Mutation_CreateError
-              );
-              return;
-            }
-
-            const rekognitionDetectLabelsInput = {
-              Image: {
-                S3Object: {
-                  Bucket: process.env.Bucket,
-                  Name: objectKey,
-                },
-              },
-              MaxLabels: process.env.Rekognition_DetectLabels_MaxLabels,
-              MinConfidence: process.env.Rekognition_DetectLabels_MinConfidence,
-            };
-            const rekognitionDetectLabelsResult = await rekognition
-              .detectLabels(rekognitionDetectLabelsInput)
-              .promise();
-            labels = rekognitionDetectLabelsResult.Labels.map((value) => {
-              return value.Name;
-            });
-          } catch (error) {
+            },
+            MinConfidence:
+              process.env.Rekognition_DetectModerationLabels_MinConfidence,
+          };
+          const rekognitionDetectModerationLabelsResult = await rekognition
+            .detectModerationLabels(rekognitionDetectModerationLabelsInput)
+            .promise();
+          if (
+            rekognitionDetectModerationLabelsResult.ModerationLabels.length !==
+            0
+          ) {
             deleteS3Object(
               new AWS.S3(),
               deleteS3ObjectInput,
@@ -566,32 +541,22 @@ exports.handler = (event, context, callback) => {
             );
             return;
           }
-        }
 
-        let screens_Mutation_CreateScreen_Input;
-        if (s3ObjectData.type === 'thumbnail') {
-          screens_Mutation_CreateScreen_Input = {
-            screenName,
-            objectKey,
-            versionId,
-            posterId: s3ObjectData.displayName,
-            type: s3ObjectData.type,
-            labels,
+          const rekognitionDetectLabelsInput = {
+            Image: {
+              S3Object: {
+                Bucket: process.env.Bucket,
+                Name: objectKey,
+              },
+            },
+            MaxLabels: process.env.Rekognition_DetectLabels_MaxLabels,
+            MinConfidence: process.env.Rekognition_DetectLabels_MinConfidence,
           };
-        } else {
-          screens_Mutation_CreateScreen_Input = {
-            screenName,
-            objectKey,
-            versionId,
-            type: s3ObjectData.type,
-          };
-        }
-
-        try {
-          await screensClient.mutate({
-            mutation: screens_Mutation_CreateScreen,
-            variables: { input: screens_Mutation_CreateScreen_Input },
-            fetchPolicy: 'no-cache',
+          const rekognitionDetectLabelsResult = await rekognition
+            .detectLabels(rekognitionDetectLabelsInput)
+            .promise();
+          labels = rekognitionDetectLabelsResult.Labels.map((value) => {
+            return value.Name;
           });
         } catch (error) {
           deleteS3Object(
@@ -600,7 +565,42 @@ exports.handler = (event, context, callback) => {
             errorsClient,
             errors_Mutation_CreateError
           );
+          return;
         }
+      }
+
+      let screens_Mutation_CreateScreen_Input;
+      if (s3ObjectData.type === 'thumbnail') {
+        screens_Mutation_CreateScreen_Input = {
+          screenName,
+          objectKey,
+          versionId,
+          posterId: s3ObjectData.displayName,
+          type: s3ObjectData.type,
+          labels,
+        };
+      } else {
+        screens_Mutation_CreateScreen_Input = {
+          screenName,
+          objectKey,
+          versionId,
+          type: s3ObjectData.type,
+        };
+      }
+
+      try {
+        await screensClient.mutate({
+          mutation: screens_Mutation_CreateScreen,
+          variables: { input: screens_Mutation_CreateScreen_Input },
+          fetchPolicy: 'no-cache',
+        });
+      } catch (error) {
+        deleteS3Object(
+          new AWS.S3(),
+          deleteS3ObjectInput,
+          errorsClient,
+          errors_Mutation_CreateError
+        );
       }
     })();
   });
