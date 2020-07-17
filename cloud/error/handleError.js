@@ -117,6 +117,8 @@ const errors_Query_GetIdSequenceNumberDatas_Limit = 12;
 
 exports.handler = (event) => {
   (async () => {
+    await errorsClient.hydrated();
+    await registeredUsersClient.hydrated();
     await screensClient.hydrated();
 
     let processIsCompleted;
