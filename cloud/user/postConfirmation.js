@@ -63,8 +63,7 @@ exports.handler = (event, context, callback) => {
     "graphql": "^0.11.7",
     "graphql-tag": "^2.5.0",
     "isomorphic-fetch": "^2.2.1",
-    "ws": "^3.3.1",
-    "amazon-cognito-identity-js": "^3.2.0"
+    "ws": "^3.3.1"
   }
 }
 */
