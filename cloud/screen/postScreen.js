@@ -297,7 +297,8 @@ exports.handler = (event, context, callback) => {
       } catch (error) {
         if (
           s3ObjectData.validationResult === 'valid' &&
-          s3ObjectData.size < Number(process.env.Object_Size_Limit)
+          s3ObjectData.size < Number(process.env.Object_Size_Limit) &&
+          screens_Query_GetObjectKeys_Result.data.getObjectKeys.length === 0
         ) {
           deleteS3Object(
             new AWS.S3(),
@@ -312,6 +313,7 @@ exports.handler = (event, context, callback) => {
       if (
         s3ObjectData.validationResult === 'valid' &&
         s3ObjectData.size < Number(process.env.Object_Size_Limit) &&
+        screens_Query_GetObjectKeys_Result.data.getObjectKeys.length === 0 &&
         registeredUsers_Query_GetAccountNames_Result.data.getAccountNames.accountNames[0].accountName.slice(
           96
         ) === s3ObjectData.displayName
