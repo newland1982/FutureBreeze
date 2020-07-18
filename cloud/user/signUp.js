@@ -12,16 +12,10 @@ const AWSAppSyncClient = require('aws-appsync').default;
 // @ts-ignore
 const AWS = require('aws-sdk');
 // @ts-ignore
-const AmazonCognitoIdentity = require('amazon-cognito-identity-js');
+const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
 // @ts-ignore
 const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
-
-const poolData = {
-  UserPoolId: process.env.User_Pool_Id,
-  ClientId: process.env.Client_Id,
-};
-const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
 const signUpUsers_Mutation_SetStatus = gql(`
   mutation SetStatus($input: SetStatusInput!) {
@@ -152,11 +146,15 @@ exports.handler = (event, context, callback) => {
         return;
       }
 
-      userPool.signUp(
-        record.dynamodb.NewImage.accountName.S,
-        record.dynamodb.NewImage.password.S,
-        [],
-        null,
+      cognitoidentityserviceprovider.signUp(
+        {
+          ClientId: process.env.Client_Id,
+          Password: record.dynamodb.NewImage.password.S,
+          Username: record.dynamodb.NewImage.accountName.S,
+          ClientMetadata: {
+            id: record.dynamodb.NewImage.id.S,
+          },
+        },
         async (error, result) => {
           if (error) {
             await signUpUsersClient.mutate({
@@ -171,9 +169,6 @@ exports.handler = (event, context, callback) => {
             });
             return;
           }
-        },
-        {
-          id: record.dynamodb.NewImage.id.S,
         }
       );
     })();
@@ -193,8 +188,7 @@ exports.handler = (event, context, callback) => {
     "graphql": "^0.11.7",
     "graphql-tag": "^2.5.0",
     "isomorphic-fetch": "^2.2.1",
-    "ws": "^3.3.1",
-    "amazon-cognito-identity-js": "^3.2.0"
+    "ws": "^3.3.1"
   }
 }
 */
