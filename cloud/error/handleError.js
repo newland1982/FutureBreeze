@@ -34,9 +34,11 @@ const errors_Mutation_DeleteError = gql(`
 const errors_Query_GetIdSequenceNumberDatas = gql(`
   query GetIdSequenceNumberDatas($input: GetIdSequenceNumberDatasInput!) {
     getIdSequenceNumberDatas(input: $input) {
-      id
-      sequenceNumber
-      data
+      idSequenceNumberDatas {
+        id
+        sequenceNumber
+        data
+      }
   }
  }`);
 
