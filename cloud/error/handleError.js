@@ -131,7 +131,7 @@ exports.handler = (event) => {
           };
           const screens_Query_GetScreenNames_Result = await screensClient.query(
             {
-              query: screens_Query_GetScreenNames,
+              query: errors_Query_GetIdSequenceNumberDatas,
               variables: { input: screens_Query_GetScreenNames_Input },
               fetchPolicy: 'network-only',
             }
@@ -149,7 +149,7 @@ exports.handler = (event) => {
                 };
                 const screens_Query_GetObjectKeys_Result = await screensClient.query(
                   {
-                    query: screens_Query_GetObjectKeys,
+                    query: errors_Query_GetIdSequenceNumberDatas,
                     variables: { input: screens_Query_GetObjectKeys_Input },
                     fetchPolicy: 'network-only',
                   }
@@ -163,7 +163,7 @@ exports.handler = (event) => {
                     status: 'completed',
                   };
                   await screensClient.mutate({
-                    mutation: screens_Mutation_SetStatus,
+                    mutation: errors_Mutation_DeleteError,
                     variables: { input: screens_Mutation_SetStatus_Input },
                     fetchPolicy: 'no-cache',
                   });
@@ -175,7 +175,7 @@ exports.handler = (event) => {
                       };
                       const screens_Query_GetVersionIds_Result = await screensClient.query(
                         {
-                          query: screens_Query_GetVersionIds,
+                          query: errors_Query_GetIdSequenceNumberDatas,
                           variables: {
                             input: screens_Query_GetVersionIds_Input,
                           },
@@ -201,7 +201,7 @@ exports.handler = (event) => {
                     screenName,
                   };
                   await screensClient.mutate({
-                    mutation: screens_Mutation_DeleteScreen,
+                    mutation: errors_Mutation_DeleteError,
                     variables: { input: screens_Mutation_DeleteScreen_Input },
                     fetchPolicy: 'no-cache',
                   });
