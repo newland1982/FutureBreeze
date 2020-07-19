@@ -44,7 +44,7 @@ ${util.toJson(${context.result})}
 {
   "version": "2017-02-28",
   "operation": "Query",
-  "index": "type-index",
+  "index": "type-sequenceNumber-index",
   "limit": $limit,
   "filter": {
     "expression": "createdDate < :createdDateLimit",

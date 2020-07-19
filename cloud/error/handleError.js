@@ -126,20 +126,21 @@ exports.handler = (event) => {
     do {
       for (const type of types) {
         try {
-          const screens_Query_GetScreenNames_Input = {
+          const errors_Query_GetIdSequenceNumberDatas_Input = {
             type,
           };
-          const screens_Query_GetScreenNames_Result = await screensClient.query(
+          const errors_Query_GetIdSequenceNumberDatas_Result = await errorsClient.query(
             {
               query: errors_Query_GetIdSequenceNumberDatas,
-              variables: { input: screens_Query_GetScreenNames_Input },
+              variables: { input: errors_Query_GetIdSequenceNumberDatas_Input },
               fetchPolicy: 'network-only',
             }
           );
           if (
-            screens_Query_GetScreenNames_Result.data.getScreenNames.length !== 0
+            errors_Query_GetIdSequenceNumberDatas_Result.data
+              .getIdSequenceNumberDatas.idSequenceNumberDatas.length !== 0
           ) {
-            const screenNames = screens_Query_GetScreenNames_Result.data.getScreenNames.map(
+            const screenNames = errors_Query_GetIdSequenceNumberDatas.data.getScreenNames.map(
               (value) => value.screenName
             );
             await Promise.all(
@@ -210,7 +211,7 @@ exports.handler = (event) => {
             );
           }
           if (
-            screens_Query_GetScreenNames_Result.data.getScreenNames.length <
+            errors_Query_GetIdSequenceNumberDatas.data.getScreenNames.length <
               errors_Query_GetIdSequenceNumberDatas_Limit &&
             (typeof processIsCompleted === undefined ||
               processIsCompleted === true)
