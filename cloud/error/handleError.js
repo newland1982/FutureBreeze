@@ -140,13 +140,13 @@ exports.handler = (event) => {
             errors_Query_GetIdSequenceNumberDatas_Result.data
               .getIdSequenceNumberDatas.idSequenceNumberDatas.length !== 0
           ) {
-            const screenNames = errors_Query_GetIdSequenceNumberDatas.data.getScreenNames.map(
-              (value) => value.screenName
+            const datas = errors_Query_GetIdSequenceNumberDatas.data.idSequenceNumberDatas.map(
+              (value) => value.data
             );
             await Promise.all(
-              screenNames.map(async (screenName) => {
+              datas.map(async (data) => {
                 const screens_Query_GetObjectKeys_Input = {
-                  screenName,
+                  data,
                 };
                 const screens_Query_GetObjectKeys_Result = await screensClient.query(
                   {
@@ -160,7 +160,7 @@ exports.handler = (event) => {
                 );
                 if (objectKeys.length === types.length) {
                   const screens_Mutation_SetStatus_Input = {
-                    screenName,
+                    data,
                     status: 'completed',
                   };
                   await screensClient.mutate({
@@ -199,7 +199,7 @@ exports.handler = (event) => {
                     })
                   );
                   const screens_Mutation_DeleteScreen_Input = {
-                    screenName,
+                    data,
                   };
                   await screensClient.mutate({
                     mutation: errors_Mutation_DeleteError,
