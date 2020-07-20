@@ -9,10 +9,10 @@
   "operation": "PutItem",
   "key": {
     "id": { "S": "$id" },
-    "sequenceNumber": { "N": "$sequenceNumber" }
+    "sequenceNumber": { "N": $sequenceNumber }
   },
   "attributeValues": {
-    "createdDate": { "N": "$createdDate" },
+    "createdDate": { "N": $createdDate },
     "type": { "S": "$type" },
     "data": { "S": "$data" },
   }
@@ -28,7 +28,7 @@ ${util.toJson(${context.result})}
   "operation": "DeleteItem",
   "key": {
     "id": { "S": "$id" },
-    "sequenceNumber": { "N": "$sequenceNumber" }
+    "sequenceNumber": { "N": $sequenceNumber }
   }
 }
 

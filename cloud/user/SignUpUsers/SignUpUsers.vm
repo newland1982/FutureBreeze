@@ -13,7 +13,7 @@
     "id": { "S": "$id" }
   },
   "attributeValues": {
-    "createdDate": { "N": "$createdDate" },
+    "createdDate": { "N": $createdDate },
     "ipAddress": { "S": "$ipAddress" },
     "accountName": { "S": "$accountName" },
     "password": { "S": "$password" },
