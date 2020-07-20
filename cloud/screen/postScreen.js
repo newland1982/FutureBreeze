@@ -190,10 +190,10 @@ const deleteS3Object = async (
       const errors_Mutation_CreateError_Input = {
         sequenceNumber: 0,
         type: 'postScreen',
-        data: JSON.stringify({
-          action: 'deleteS3Object',
-          deleteS3ObjectInput,
-        }),
+        action: 'deleteS3Object',
+        deleteS3ObjectInputBucket: deleteS3ObjectInput.Bucket,
+        deleteS3ObjectInputKey: deleteS3ObjectInput.Key,
+        deleteS3ObjectInputVersionId: deleteS3ObjectInput.VersionId,
       };
       await errorsClient.mutate({
         mutation: errors_Mutation_CreateError,
@@ -378,10 +378,9 @@ exports.handler = (event, context, callback) => {
               input: {
                 sequenceNumber: 1,
                 type: 'postScreen',
-                data: JSON.stringify({
-                  action: 'screens_Mutation_ChangePosterId',
-                  screens_Mutation_ChangePosterId_Input,
-                }),
+                action: 'screens_Mutation_ChangePosterId',
+                screens_Mutation_ChangePosterId_Input_PosterId:
+                  screens_Mutation_ChangePosterId_Input.posterId,
               },
             },
             fetchPolicy: 'no-cache',
@@ -392,10 +391,11 @@ exports.handler = (event, context, callback) => {
               input: {
                 sequenceNumber: 2,
                 type: 'postScreen',
-                data: JSON.stringify({
-                  action: 'cognitoIdentityServiceProviderAdminDeleteUser',
-                  cognitoIdentityServiceProviderAdminDeleteUserInput,
-                }),
+                action: 'cognitoIdentityServiceProviderAdminDeleteUser',
+                cognitoIdentityServiceProviderAdminDeleteUserInputUserPoolId:
+                  cognitoIdentityServiceProviderAdminDeleteUserInput.UserPoolId,
+                cognitoIdentityServiceProviderAdminDeleteUserInputUsername:
+                  cognitoIdentityServiceProviderAdminDeleteUserInput.Username,
               },
             },
             fetchPolicy: 'no-cache',
@@ -406,10 +406,9 @@ exports.handler = (event, context, callback) => {
               input: {
                 sequenceNumber: 3,
                 type: 'postScreen',
-                data: JSON.stringify({
-                  action: 'registeredUsers_Mutation_DeleteRegisteredUser',
-                  registeredUsers_Mutation_DeleteRegisteredUser_Input,
-                }),
+                action: 'registeredUsers_Mutation_DeleteRegisteredUser',
+                registeredUsers_Mutation_DeleteRegisteredUser_Input_DisplayName:
+                  registeredUsers_Mutation_DeleteRegisteredUser_Input.displayName,
               },
             },
             fetchPolicy: 'no-cache',
