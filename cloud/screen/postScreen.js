@@ -71,7 +71,6 @@ const errors_Mutation_CreateError = gql(`
   mutation CreateError($input: CreateErrorInput!) {
     createError(input: $input) {
       id
-      sequenceNumber
   }
  }`);
 
@@ -79,7 +78,6 @@ const errors_Mutation_DeleteError = gql(`
   mutation DeleteError($input: DeleteErrorInput!) {
     deleteError(input: $input) {
       id
-      sequenceNumber
   }
  }`);
 
@@ -188,7 +186,6 @@ const deleteS3Object = async (
     .catch(async () => {
       await errorsClient.hydrated();
       const errors_Mutation_CreateError_Input = {
-        sequenceNumber: 0,
         type: 'postScreen',
         action: 'deleteS3Object',
         deleteS3ObjectInputBucket: deleteS3ObjectInput.Bucket,
@@ -376,7 +373,6 @@ exports.handler = (event, context, callback) => {
             mutation: errors_Mutation_CreateError,
             variables: {
               input: {
-                sequenceNumber: 1,
                 type: 'postScreen',
                 action: 'screens_Mutation_ChangePosterId',
                 screens_Mutation_ChangePosterId_Input_PosterId:
@@ -389,7 +385,6 @@ exports.handler = (event, context, callback) => {
             mutation: errors_Mutation_CreateError,
             variables: {
               input: {
-                sequenceNumber: 2,
                 type: 'postScreen',
                 action: 'cognitoIdentityServiceProviderAdminDeleteUser',
                 cognitoIdentityServiceProviderAdminDeleteUserInputUserPoolId:
@@ -404,7 +399,6 @@ exports.handler = (event, context, callback) => {
             mutation: errors_Mutation_CreateError,
             variables: {
               input: {
-                sequenceNumber: 3,
                 type: 'postScreen',
                 action: 'registeredUsers_Mutation_DeleteRegisteredUser',
                 registeredUsers_Mutation_DeleteRegisteredUser_Input_DisplayName:
@@ -428,9 +422,6 @@ exports.handler = (event, context, callback) => {
             variables: {
               input: {
                 id: errors_Mutation_CreateError_Result_1.data.createError.id,
-                sequenceNumber:
-                  errors_Mutation_CreateError_Result_1.data.createError
-                    .sequenceNumber,
               },
             },
             fetchPolicy: 'no-cache',
@@ -448,9 +439,6 @@ exports.handler = (event, context, callback) => {
             variables: {
               input: {
                 id: errors_Mutation_CreateError_Result_2.data.createError.id,
-                sequenceNumber:
-                  errors_Mutation_CreateError_Result_2.data.createError
-                    .sequenceNumber,
               },
             },
             fetchPolicy: 'no-cache',
@@ -462,9 +450,6 @@ exports.handler = (event, context, callback) => {
               variables: {
                 input: {
                   id: errors_Mutation_CreateError_Result_2.data.createError.id,
-                  sequenceNumber:
-                    errors_Mutation_CreateError_Result_2.data.createError
-                      .sequenceNumber,
                 },
               },
               fetchPolicy: 'no-cache',
@@ -487,9 +472,6 @@ exports.handler = (event, context, callback) => {
             variables: {
               input: {
                 id: errors_Mutation_CreateError_Result_3.data.createError.id,
-                sequenceNumber:
-                  errors_Mutation_CreateError_Result_3.data.createError
-                    .sequenceNumber,
               },
             },
             fetchPolicy: 'no-cache',

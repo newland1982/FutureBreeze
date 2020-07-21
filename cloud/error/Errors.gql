@@ -1,5 +1,4 @@
 # id: ID
-# sequenceNumber: Int
 # createdDate: (Number)
 # type: String
 # action: String!
@@ -11,7 +10,6 @@
 # cognitoIdentityServiceProviderAdminDeleteUserInputUsername: String
 # registeredUsers_Mutation_DeleteRegisteredUser_Input_DisplayName: String
 input CreateErrorInput {
-  sequenceNumber: Int!
   type: String!
   action: String!
   deleteS3ObjectInputBucket: String
@@ -25,37 +23,38 @@ input CreateErrorInput {
 
 input DeleteErrorInput {
   id: ID!
-  sequenceNumber: Int!
 }
 
-input GetIdSequenceNumberDatasInput {
-  type: String!
+input GetDatasInput {
+  action: String!
 }
 
-type IdSequenceNumber {
+type Id {
   id: ID
-  sequenceNumber: Int
 }
 
-type IdSequenceNumberData {
+type Data {
   id: ID
-  sequenceNumber: Int
-  data: String
+  deleteS3ObjectInputBucket: String
+  deleteS3ObjectInputKey: String
+  deleteS3ObjectInputVersionId: String
+  screens_Mutation_ChangePosterId_Input_PosterId: String
+  cognitoIdentityServiceProviderAdminDeleteUserInputUserPoolId: String
+  cognitoIdentityServiceProviderAdminDeleteUserInputUsername: String
+  registeredUsers_Mutation_DeleteRegisteredUser_Input_DisplayName: String
 }
 
-type IdSequenceNumberDatas {
-  idSequenceNumberDatas: [IdSequenceNumberData]
+type Datas {
+  datas: [Data]
 }
 
 type Mutation {
-  createError(input: CreateErrorInput!): IdSequenceNumber
-  deleteError(input: DeleteErrorInput!): IdSequenceNumber
+  createError(input: CreateErrorInput!): Id
+  deleteError(input: DeleteErrorInput!): Id
 }
 
 type Query {
-  getIdSequenceNumberDatas(
-    input: GetIdSequenceNumberDatasInput!
-  ): IdSequenceNumberDatas
+  getDatas(input: GetDatasInput!): Datas
 }
 
 type Type {

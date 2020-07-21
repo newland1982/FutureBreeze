@@ -1,6 +1,5 @@
 ## Resolver for Mutation.createError
 #set($id = ${util.autoId()})
-#set($sequenceNumber = ${context.arguments.input.sequenceNumber})
 #set($createdDate = ${util.time.nowEpochMilliSeconds()})
 #set($type = ${context.arguments.input.type})
 #set($action = ${context.arguments.input.action})
@@ -20,7 +19,6 @@ ${context.arguments.input.registeredUsers_Mutation_DeleteRegisteredUser_Input_Di
   "operation": "PutItem",
   "key": {
     "id": { "S": "$id" },
-    "sequenceNumber": { "N": $sequenceNumber }
   },
   "attributeValues": {
     "createdDate": { "N": $createdDate },
@@ -40,13 +38,11 @@ ${util.toJson(${context.result})}
 
 ## Resolver for Mutation.deleteError
 #set($id = ${context.arguments.input.id})
-#set($sequenceNumber = ${context.arguments.input.sequenceNumber})
 {
   "version": "2017-02-28",
   "operation": "DeleteItem",
   "key": {
-    "id": { "S": "$id" },
-    "sequenceNumber": { "N": $sequenceNumber }
+    "id": { "S": "$id" }
   }
 }
 
