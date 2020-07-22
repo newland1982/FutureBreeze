@@ -1,26 +1,27 @@
+.
 ## Resolver for Mutation.createError
 #set($id = ${util.autoId()})
 #set($createdDate = ${util.time.nowEpochMilliSeconds()})
 #set($type = ${context.arguments.input.type})
 #set($action = ${context.arguments.input.action})
 #if($action == "deleteS3Object")
-    #set($deleteS3ObjectInputBucket = ${context.arguments.input.deleteS3ObjectInputBucket})
-    #set($deleteS3ObjectInputKey = ${context.arguments.input.deleteS3ObjectInputKey})
-    #set($deleteS3ObjectInputVersionId = ${context.arguments.input.deleteS3ObjectInputVersionId})
+  #set($deleteS3ObjectInputBucket = ${context.arguments.input.deleteS3ObjectInputBucket})
+  #set($deleteS3ObjectInputKey = ${context.arguments.input.deleteS3ObjectInputKey})
+  #set($deleteS3ObjectInputVersionId = ${context.arguments.input.deleteS3ObjectInputVersionId})
 #end
 #if($action == "screens_Mutation_ChangePosterId")
-    #set($screens_Mutation_ChangePosterId_Input_PosterId =
-    ${context.arguments.input.screens_Mutation_ChangePosterId_Input_PosterId})
+  #set($screens_Mutation_ChangePosterId_Input_PosterId =
+  ${context.arguments.input.screens_Mutation_ChangePosterId_Input_PosterId})
 #end
 #if($action == "cognitoIdentityServiceProviderAdminDeleteUser")
-    #set($cognitoIdentityServiceProviderAdminDeleteUserInputUserPoolId =
-    ${context.arguments.input.cognitoIdentityServiceProviderAdminDeleteUserInputUserPoolId})
-    #set($cognitoIdentityServiceProviderAdminDeleteUserInputUsername =
-    ${context.arguments.input.cognitoIdentityServiceProviderAdminDeleteUserInputUsername})
+  #set($cognitoIdentityServiceProviderAdminDeleteUserInputUserPoolId =
+  ${context.arguments.input.cognitoIdentityServiceProviderAdminDeleteUserInputUserPoolId})
+  #set($cognitoIdentityServiceProviderAdminDeleteUserInputUsername =
+  ${context.arguments.input.cognitoIdentityServiceProviderAdminDeleteUserInputUsername})
 #end
 #if($action == "registeredUsers_Mutation_DeleteRegisteredUser")
-    #set($registeredUsers_Mutation_DeleteRegisteredUser_Input_DisplayName =
-    ${context.arguments.input.registeredUsers_Mutation_DeleteRegisteredUser_Input_DisplayName})
+  #set($registeredUsers_Mutation_DeleteRegisteredUser_Input_DisplayName =
+  ${context.arguments.input.registeredUsers_Mutation_DeleteRegisteredUser_Input_DisplayName})
 #end
 {
   "version": "2017-02-28",
@@ -64,8 +65,8 @@ ${util.toJson(${context.result})}
 
 ${util.toJson(${context.result})}
 
-## Resolver for Query.getIdSequenceNumberDatas
-#set($type = ${context.arguments.input.type})
+## Resolver for Query.getDatas
+#set($action = ${context.arguments.input.action})
 #set($limit = 12)
 ## #set($createdDateMargin = 86400000)
 #set($createdDateMargin = 1)
@@ -74,7 +75,7 @@ ${util.toJson(${context.result})}
 {
   "version": "2017-02-28",
   "operation": "Query",
-  "index": "type-sequenceNumber-index",
+  "index": "action-index",
   "limit": $limit,
   "filter": {
     "expression": "createdDate < :createdDateLimit",
@@ -83,16 +84,16 @@ ${util.toJson(${context.result})}
     }
   },
   "query": {
-    "expression": "#type = :type",
+    "expression": "#action = :action",
     "expressionNames": {
-      "#type": "type"
+      "#action": "action"
     },
     "expressionValues": {
-      ":type": { "S": "$type" }
+      ":action": { "S": "$action" }
     }
-  },
+  }
 }
 
 {
-  "idSequenceNumberDatas": ${utils.toJson(${context.result.items})}
+  "datas": ${utils.toJson(${context.result.items})}
 }
