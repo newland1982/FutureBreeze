@@ -3,34 +3,50 @@
 #set($createdDate = ${util.time.nowEpochMilliSeconds()})
 #set($type = ${context.arguments.input.type})
 #set($action = ${context.arguments.input.action})
-#set($deleteS3ObjectInputBucket = ${context.arguments.input.deleteS3ObjectInputBucket})
-#set($deleteS3ObjectInputKey = ${context.arguments.input.deleteS3ObjectInputKey})
-#set($deleteS3ObjectInputVersionId = ${context.arguments.input.deleteS3ObjectInputVersionId})
-#set($screens_Mutation_ChangePosterId_Input_PosterId =
-${context.arguments.input.screens_Mutation_ChangePosterId_Input_PosterId})
-#set($cognitoIdentityServiceProviderAdminDeleteUserInputUserPoolId =
-${context.arguments.input.cognitoIdentityServiceProviderAdminDeleteUserInputUserPoolId})
-#set($cognitoIdentityServiceProviderAdminDeleteUserInputUsername =
-${context.arguments.input.cognitoIdentityServiceProviderAdminDeleteUserInputUsername})
-#set($registeredUsers_Mutation_DeleteRegisteredUser_Input_DisplayName =
-${context.arguments.input.registeredUsers_Mutation_DeleteRegisteredUser_Input_DisplayName})
+#if($action == "deleteS3Object")
+    #set($deleteS3ObjectInputBucket = ${context.arguments.input.deleteS3ObjectInputBucket})
+    #set($deleteS3ObjectInputKey = ${context.arguments.input.deleteS3ObjectInputKey})
+    #set($deleteS3ObjectInputVersionId = ${context.arguments.input.deleteS3ObjectInputVersionId})
+#end
+#if($action == "screens_Mutation_ChangePosterId")
+    #set($screens_Mutation_ChangePosterId_Input_PosterId =
+    ${context.arguments.input.screens_Mutation_ChangePosterId_Input_PosterId})
+#end
+#if($action == "cognitoIdentityServiceProviderAdminDeleteUser")
+    #set($cognitoIdentityServiceProviderAdminDeleteUserInputUserPoolId =
+    ${context.arguments.input.cognitoIdentityServiceProviderAdminDeleteUserInputUserPoolId})
+    #set($cognitoIdentityServiceProviderAdminDeleteUserInputUsername =
+    ${context.arguments.input.cognitoIdentityServiceProviderAdminDeleteUserInputUsername})
+#end
+#if($action == "registeredUsers_Mutation_DeleteRegisteredUser")
+    #set($registeredUsers_Mutation_DeleteRegisteredUser_Input_DisplayName =
+    ${context.arguments.input.registeredUsers_Mutation_DeleteRegisteredUser_Input_DisplayName})
+#end
 {
   "version": "2017-02-28",
   "operation": "PutItem",
   "key": {
-    "id": { "S": "$id" },
+    "id": { "S": "$id" }
   },
   "attributeValues": {
     "createdDate": { "N": $createdDate },
     "type": { "S": "$type" },
     "action": { "S": "$action" },
-    "deleteS3ObjectInputBucket": { "S": "$deleteS3ObjectInputBucket" },
-    "deleteS3ObjectInputKey": { "S": "$deleteS3ObjectInputKey" },
-    "deleteS3ObjectInputVersionId": { "S": "$deleteS3ObjectInputVersionId" },
-    "screens_Mutation_ChangePosterId_Input_PosterId": { "S": "$screens_Mutation_ChangePosterId_Input_PosterId" },
-    "cognitoIdentityServiceProviderAdminDeleteUserInputUserPoolId": { "S": "$cognitoIdentityServiceProviderAdminDeleteUserInputUserPoolId" },
-    "cognitoIdentityServiceProviderAdminDeleteUserInputUsername": { "S": "$cognitoIdentityServiceProviderAdminDeleteUserInputUsername" },
-    "registeredUsers_Mutation_DeleteRegisteredUser_Input_DisplayName": { "S": "$registeredUsers_Mutation_DeleteRegisteredUser_Input_DisplayName" },
+    #if($action == "deleteS3Object")
+      "deleteS3ObjectInputBucket": { "S": "$deleteS3ObjectInputBucket" },
+      "deleteS3ObjectInputKey": { "S": "$deleteS3ObjectInputKey" },
+      "deleteS3ObjectInputVersionId": { "S": "$deleteS3ObjectInputVersionId" }
+    #end
+    #if($action == "screens_Mutation_ChangePosterId")
+      "screens_Mutation_ChangePosterId_Input_PosterId": { "S": "$screens_Mutation_ChangePosterId_Input_PosterId" }
+    #end
+    #if($action == "cognitoIdentityServiceProviderAdminDeleteUser")
+      "cognitoIdentityServiceProviderAdminDeleteUserInputUserPoolId": { "S": "$cognitoIdentityServiceProviderAdminDeleteUserInputUserPoolId" },
+      "cognitoIdentityServiceProviderAdminDeleteUserInputUsername": { "S": "$cognitoIdentityServiceProviderAdminDeleteUserInputUsername" }
+    #end
+    #if($action == "registeredUsers_Mutation_DeleteRegisteredUser")
+      "registeredUsers_Mutation_DeleteRegisteredUser_Input_DisplayName": { "S": "$registeredUsers_Mutation_DeleteRegisteredUser_Input_DisplayName" }
+    #end
   }
 }
 
