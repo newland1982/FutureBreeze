@@ -19,7 +19,6 @@ const errors_Mutation_CreateError = gql(`
   mutation CreateError($input: CreateErrorInput!) {
     createError(input: $input) {
       id
-      sequenceNumber
   }
  }`);
 
@@ -27,17 +26,21 @@ const errors_Mutation_DeleteError = gql(`
   mutation DeleteError($input: DeleteErrorInput!) {
     deleteError(input: $input) {
       id
-      sequenceNumber
   }
  }`);
 
-const errors_Query_GetIdSequenceNumberDatas = gql(`
-  query GetIdSequenceNumberDatas($input: GetIdSequenceNumberDatasInput!) {
-    getIdSequenceNumberDatas(input: $input) {
-      idSequenceNumberDatas {
+const errors_Query_GetDatas = gql(`
+  query GetDatas($input: GetDatasInput!) {
+    getDatas(input: $input) {
+      datas {
         id
-        sequenceNumber
-        data
+        deleteS3ObjectInputBucket
+        deleteS3ObjectInputKey
+        deleteS3ObjectInputVersionId
+        screens_Mutation_ChangePosterId_Input_PosterId
+        cognitoIdentityServiceProviderAdminDeleteUserInputUserPoolId
+        cognitoIdentityServiceProviderAdminDeleteUserInputUsername
+        registeredUsers_Mutation_DeleteRegisteredUser_Input_DisplayName
       }
   }
  }`);
@@ -98,12 +101,11 @@ const deleteS3Object = async (
     .catch(async () => {
       await errorsClient.hydrated();
       const errors_Mutation_CreateError_Input = {
-        sequenceNumber: 1,
-        type: 'adjustScreens',
-        data: JSON.stringify({
-          action: 'deleteS3Object',
-          deleteS3ObjectInput,
-        }),
+        type: 'postScreen',
+        action: 'deleteS3Object',
+        deleteS3ObjectInputBucket: deleteS3ObjectInput.Bucket,
+        deleteS3ObjectInputKey: deleteS3ObjectInput.Key,
+        deleteS3ObjectInputVersionId: deleteS3ObjectInput.VersionId,
       };
       await errorsClient.mutate({
         mutation: errors_Mutation_CreateError,
@@ -113,9 +115,14 @@ const deleteS3Object = async (
     });
 };
 
-const types = ['postScreen'];
+const actions = [
+  'deleteS3Object',
+  'screens_Mutation_ChangePosterId',
+  'cognitoIdentityServiceProviderAdminDeleteUser',
+  'registeredUsers_Mutation_DeleteRegisteredUser',
+];
 
-const errors_Query_GetIdSequenceNumberDatas_Limit = 12;
+const errors_Query_GetDatas_Limit = 12;
 
 exports.handler = (event) => {
   (async () => {
@@ -126,23 +133,18 @@ exports.handler = (event) => {
     let processIsCompleted;
 
     do {
-      for (const type of types) {
+      for (const action of actions) {
         try {
-          const errors_Query_GetIdSequenceNumberDatas_Input = {
-            type,
+          const errors_Query_GetDatas_Input = {
+            action,
           };
-          const errors_Query_GetIdSequenceNumberDatas_Result = await errorsClient.query(
-            {
-              query: errors_Query_GetIdSequenceNumberDatas,
-              variables: { input: errors_Query_GetIdSequenceNumberDatas_Input },
-              fetchPolicy: 'network-only',
-            }
-          );
-          if (
-            errors_Query_GetIdSequenceNumberDatas_Result.data
-              .getIdSequenceNumberDatas.idSequenceNumberDatas.length !== 0
-          ) {
-            const datas = errors_Query_GetIdSequenceNumberDatas.data.idSequenceNumberDatas.map(
+          const errors_Query_GetDatas_Result = await errorsClient.query({
+            query: errors_Query_GetDatas,
+            variables: { input: errors_Query_GetDatas_Input },
+            fetchPolicy: 'network-only',
+          });
+          if (errors_Query_GetDatas_Result.data.getDatas.datas.length !== 0) {
+            const datas = errors_Query_GetDatas.data.datas.map(
               (value) => value.data
             );
             await Promise.all(
@@ -152,7 +154,7 @@ exports.handler = (event) => {
                 };
                 const screens_Query_GetObjectKeys_Result = await screensClient.query(
                   {
-                    query: errors_Query_GetIdSequenceNumberDatas,
+                    query: errors_Query_GetDatas,
                     variables: { input: screens_Query_GetObjectKeys_Input },
                     fetchPolicy: 'network-only',
                   }
@@ -160,7 +162,7 @@ exports.handler = (event) => {
                 const objectKeys = screens_Query_GetObjectKeys_Result.data.getObjectKeys.map(
                   (value) => value.objectKey
                 );
-                if (objectKeys.length === types.length) {
+                if (objectKeys.length === actions.length) {
                   const screens_Mutation_SetStatus_Input = {
                     data,
                     status: 'completed',
@@ -178,7 +180,7 @@ exports.handler = (event) => {
                       };
                       const screens_Query_GetVersionIds_Result = await screensClient.query(
                         {
-                          query: errors_Query_GetIdSequenceNumberDatas,
+                          query: errors_Query_GetDatas,
                           variables: {
                             input: screens_Query_GetVersionIds_Input,
                           },
@@ -213,8 +215,8 @@ exports.handler = (event) => {
             );
           }
           if (
-            errors_Query_GetIdSequenceNumberDatas.data.getScreenNames.length <
-              errors_Query_GetIdSequenceNumberDatas_Limit &&
+            errors_Query_GetDatas.data.getScreenNames.length <
+              errors_Query_GetDatas_Limit &&
             (typeof processIsCompleted === undefined ||
               processIsCompleted === true)
           ) {
