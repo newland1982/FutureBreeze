@@ -366,65 +366,10 @@ exports.handler = (event, context, callback) => {
         );
 
         // begin
-        let errors_Mutation_CreateError_Result_1;
-        let errors_Mutation_CreateError_Result_2;
-        let errors_Mutation_CreateError_Result_3;
-        try {
-          errors_Mutation_CreateError_Result_1 = await errorsClient.mutate({
-            mutation: errors_Mutation_CreateError,
-            variables: {
-              input: {
-                type: 'postScreen',
-                action: 'screens_Mutation_ChangePosterId',
-                screens_Mutation_ChangePosterId_Input_PosterId:
-                  screens_Mutation_ChangePosterId_Input.posterId,
-              },
-            },
-            fetchPolicy: 'no-cache',
-          });
-          errors_Mutation_CreateError_Result_2 = await errorsClient.mutate({
-            mutation: errors_Mutation_CreateError,
-            variables: {
-              input: {
-                type: 'postScreen',
-                action: 'cognitoIdentityServiceProviderAdminDeleteUser',
-                cognitoIdentityServiceProviderAdminDeleteUserInputUserPoolId:
-                  cognitoIdentityServiceProviderAdminDeleteUserInput.UserPoolId,
-                cognitoIdentityServiceProviderAdminDeleteUserInputUsername:
-                  cognitoIdentityServiceProviderAdminDeleteUserInput.Username,
-              },
-            },
-            fetchPolicy: 'no-cache',
-          });
-          errors_Mutation_CreateError_Result_3 = await errorsClient.mutate({
-            mutation: errors_Mutation_CreateError,
-            variables: {
-              input: {
-                type: 'postScreen',
-                action: 'registeredUsers_Mutation_DeleteRegisteredUser',
-                registeredUsers_Mutation_DeleteRegisteredUser_Input_DisplayName:
-                  registeredUsers_Mutation_DeleteRegisteredUser_Input.displayName,
-              },
-            },
-            fetchPolicy: 'no-cache',
-          });
-        } catch (error) {
-          return;
-        }
-
         try {
           await screensClient.mutate({
             mutation: screens_Mutation_ChangePosterId,
             variables: { input: screens_Mutation_ChangePosterId_Input },
-            fetchPolicy: 'no-cache',
-          });
-          await errorsClient.mutate({
-            mutation: errors_Mutation_DeleteError,
-            variables: {
-              input: {
-                id: errors_Mutation_CreateError_Result_1.data.createError.id,
-              },
-            },
             fetchPolicy: 'no-cache',
           });
         } catch (error) {
@@ -435,26 +380,8 @@ exports.handler = (event, context, callback) => {
           await cognitoIdentityServiceProvider
             .adminDeleteUser(cognitoIdentityServiceProviderAdminDeleteUserInput)
             .promise();
-          await errorsClient.mutate({
-            mutation: errors_Mutation_DeleteError,
-            variables: {
-              input: {
-                id: errors_Mutation_CreateError_Result_2.data.createError.id,
-              },
-            },
-            fetchPolicy: 'no-cache',
-          });
         } catch (error) {
-          if (error.code === 'UserNotFoundException') {
-            await errorsClient.mutate({
-              mutation: errors_Mutation_DeleteError,
-              variables: {
-                input: {
-                  id: errors_Mutation_CreateError_Result_2.data.createError.id,
-                },
-              },
-              fetchPolicy: 'no-cache',
-            });
+          if (error.code !== 'UserNotFoundException') {
           } else {
             return;
           }
@@ -465,15 +392,6 @@ exports.handler = (event, context, callback) => {
             mutation: registeredUsers_Mutation_DeleteRegisteredUser,
             variables: {
               input: registeredUsers_Mutation_DeleteRegisteredUser_Input,
-            },
-            fetchPolicy: 'no-cache',
-          });
-          await errorsClient.mutate({
-            mutation: errors_Mutation_DeleteError,
-            variables: {
-              input: {
-                id: errors_Mutation_CreateError_Result_3.data.createError.id,
-              },
             },
             fetchPolicy: 'no-cache',
           });
