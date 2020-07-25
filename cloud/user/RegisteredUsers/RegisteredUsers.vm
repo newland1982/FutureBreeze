@@ -116,6 +116,28 @@ ${util.toJson(${context.result})}
 
 ${util.toJson(${context.result})}
 
+## Resolver for Mutation.setStatus
+#set($displayName = ${context.arguments.input.displayName})
+#set($status = ${context.arguments.input.status})
+{
+  "version": "2017-02-28",
+  "operation": "UpdateItem",
+  "key": {
+    "displayName": { "S": "$displayName" }
+  },
+  "update": {
+    "expression": "SET #status = :status",
+    "expressionNames": {
+      "#status": "status"
+    },
+    "expressionValues": {
+      ":status": { "S": "$status" }
+    }
+  }
+}
+
+${util.toJson(${context.result})}
+
 ## Resolver for Query.getDisplayName
 #set($displayName = ${context.arguments.input.displayName})
 {

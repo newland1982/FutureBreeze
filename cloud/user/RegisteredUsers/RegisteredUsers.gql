@@ -61,6 +61,7 @@ type Mutation {
     input: PrepareSetPostScreenCountInput!
   ): PostScreenCount
   setPostScreenCount(input: SetPostScreenCountInput!): PostScreenCount
+  setStatus(input: SetStatusInput!): DisplayName
 }
 
 type PostScreenCount {
@@ -85,6 +86,11 @@ input SetCognitoIdentityIdInput {
 input SetPostScreenCountInput {
   displayName: String!
   postScreenCount: Int!
+}
+
+input SetStatusInput {
+  displayName: String!
+  status: String!
 }
 
 schema {
