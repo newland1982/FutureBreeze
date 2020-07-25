@@ -365,6 +365,7 @@ exports.handler = (event, context, callback) => {
           errors_Mutation_CreateError
         );
 
+        // begin
         let errors_Mutation_CreateError_Result_1;
         let errors_Mutation_CreateError_Result_2;
         let errors_Mutation_CreateError_Result_3;
@@ -479,6 +480,7 @@ exports.handler = (event, context, callback) => {
         } catch (error) {
           return;
         }
+        // end
       }
 
       const registeredUsers_Mutation_SetPostScreenCount_Input = {
