@@ -20,36 +20,43 @@ const screens_Mutation_CreateScreen = gql(`
   mutation CreateScreen($input: CreateScreenInput!) {
     createScreen(input: $input) {
       objectKey
-  }
- }`);
+    }
+  }`);
 
 const screens_Mutation_ChangePosterId = gql(`
   mutation ChangePosterId($input: ChangePosterIdInput!) {
     changePosterId(input: $input) {
       timed_out
-  }
- }`);
+    }
+  }`);
 
 const screens_Query_GetObjectKeys = gql(`
   query GetObjectKeys($input: GetObjectKeysInput!) {
     getObjectKeys(input: $input) {
       objectKey
-  }
- }`);
+    }
+  }`);
 
 const registeredUsers_Mutation_DeleteRegisteredUser = gql(`
   mutation DeleteRegisteredUser($input: DeleteRegisteredUserInput!) {
     deleteRegisteredUser(input: $input) {
       displayName
-  }
- }`);
+    }
+  }`);
 
 const registeredUsers_Mutation_SetPostScreenCount = gql(`
   mutation SetPostScreenCount($input: SetPostScreenCountInput!) {
     setPostScreenCount(input: $input) {
       postScreenCount
-  }
- }`);
+    }
+  }`);
+
+const registeredUsers_Mutation_SetStatus = gql(`
+  mutation SetStatus($input: SetStatusInput!) {
+    setStatus(input: $input) {
+      displayName
+    }
+  }`);
 
 const registeredUsers_Query_GetAccountNames = gql(`
   query GetAccountNames($input: GetAccountNamesInput!) {
@@ -57,29 +64,29 @@ const registeredUsers_Query_GetAccountNames = gql(`
       accountNames {
         accountName
       }
-  }
- }`);
+    }
+  }`);
 
 const registeredUsers_Query_GetPostScreenCount = gql(`
   query GetPostScreenCount($input: GetPostScreenCountInput!) {
     getPostScreenCount(input: $input) {
       postScreenCount
-  }
- }`);
+    }
+  }`);
 
 const errors_Mutation_CreateError = gql(`
   mutation CreateError($input: CreateErrorInput!) {
     createError(input: $input) {
       id
-  }
- }`);
+    }
+  }`);
 
 const errors_Mutation_DeleteError = gql(`
   mutation DeleteError($input: DeleteErrorInput!) {
     deleteError(input: $input) {
       id
-  }
- }`);
+    }
+  }`);
 
 const screensClient = new AWSAppSyncClient({
   url: process.env.AppSync_Screens,
@@ -366,6 +373,13 @@ exports.handler = (event, context, callback) => {
         );
 
         // begin
+
+        const registeredUsers_Mutation_SetStatus_Input = {
+          displayName: registeredUsers_Query_GetAccountNames_Result.data.getAccountNames.accountNames[0].accountName.slice(
+            96
+          ),
+          status: 'invalid',
+        };
         try {
           await screensClient.mutate({
             mutation: screens_Mutation_ChangePosterId,
@@ -373,6 +387,13 @@ exports.handler = (event, context, callback) => {
             fetchPolicy: 'no-cache',
           });
         } catch (error) {
+          await registeredUsersClient.mutate({
+            mutation: registeredUsers_Mutation_SetStatus,
+            variables: {
+              input: registeredUsers_Mutation_SetStatus_Input,
+            },
+            fetchPolicy: 'no-cache',
+          });
           return;
         }
 
@@ -382,7 +403,13 @@ exports.handler = (event, context, callback) => {
             .promise();
         } catch (error) {
           if (error.code !== 'UserNotFoundException') {
-          } else {
+            await registeredUsersClient.mutate({
+              mutation: registeredUsers_Mutation_SetStatus,
+              variables: {
+                input: registeredUsers_Mutation_SetStatus_Input,
+              },
+              fetchPolicy: 'no-cache',
+            });
             return;
           }
         }
@@ -396,8 +423,16 @@ exports.handler = (event, context, callback) => {
             fetchPolicy: 'no-cache',
           });
         } catch (error) {
+          await registeredUsersClient.mutate({
+            mutation: registeredUsers_Mutation_SetStatus,
+            variables: {
+              input: registeredUsers_Mutation_SetStatus_Input,
+            },
+            fetchPolicy: 'no-cache',
+          });
           return;
         }
+        return;
         // end
       }
 
