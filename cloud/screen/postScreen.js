@@ -14,6 +14,7 @@ const AWS = require('aws-sdk');
 // @ts-ignore
 const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
+const lambda = new AWS.Lambda();
 let cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
 
 const screens_Mutation_CreateScreen = gql(`
@@ -262,6 +263,26 @@ exports.handler = (event, context, callback) => {
       await errorsClient.hydrated();
       await screensClient.hydrated();
       await registeredUsersClient.hydrated();
+      // begin 1
+
+      const Payload = JSON.stringify({
+        number: '111112121212',
+        message: 'dsdsdsd',
+      });
+
+      let params = {
+        FunctionName: 'deleteAccount',
+        InvocationType: 'RequestResponse',
+        Payload,
+      };
+
+      try {
+        const result = await lambda.invoke(params).promise();
+        console.log('restulttt', result);
+      } catch (error) {
+        console.log('errorrrrr', error);
+      }
+      // end 1
       try {
         const screens_Query_GetObjectKeys_Input = {
           objectKey,
@@ -372,7 +393,7 @@ exports.handler = (event, context, callback) => {
           errors_Mutation_CreateError
         );
 
-        // begin
+        // begin 2
 
         const registeredUsers_Mutation_SetStatus_Input = {
           displayName: registeredUsers_Query_GetAccountNames_Result.data.getAccountNames.accountNames[0].accountName.slice(
@@ -433,7 +454,7 @@ exports.handler = (event, context, callback) => {
           return;
         }
         return;
-        // end
+        // end 2
       }
 
       const registeredUsers_Mutation_SetPostScreenCount_Input = {

@@ -16,8 +16,10 @@ const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 let cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
 
-exports.handler = () => {
-  (async () => {})();
+exports.handler = (event) => {
+  (async () => {
+    console.log('eventtttt', event);
+  })();
 };
 
 /* layer package.json
