@@ -19,43 +19,43 @@ const screens_Mutation_SetStatus = gql(`
   mutation SetStatus($input: SetStatusInput!) {
     setStatus(input: $input) {
       timed_out
-  }
- }`);
+    }
+  }`);
 
 const screens_Mutation_DeleteScreen = gql(`
   mutation DeleteScreen($input: DeleteScreenInput!) {
     deleteScreen(input: $input) {
       timed_out
-  }
- }`);
+    }
+  }`);
 
 const screens_Query_GetObjectKeys = gql(`
   query GetObjectKeys($input: GetObjectKeysInput!) {
     getObjectKeys(input: $input) {
       objectKey
-  }
- }`);
+    }
+  }`);
 
 const screens_Query_GetScreenNames = gql(`
   query GetScreenNames($input: GetScreenNamesInput!) {
     getScreenNames(input: $input) {
       screenName
-  }
- }`);
+    }
+  }`);
 
 const screens_Query_GetVersionIds = gql(`
   query GetVersionIds($input: GetVersionIdsInput!) {
     getVersionIds(input: $input) {
       versionId
-  }
- }`);
+    }
+  }`);
 
 const errors_Mutation_CreateError = gql(`
   mutation CreateError($input: CreateErrorInput!) {
     createError(input: $input) {
       id
-  }
- }`);
+    }
+  }`);
 
 const screensClient = new AWSAppSyncClient({
   url: process.env.AppSync_Screens,

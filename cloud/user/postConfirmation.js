@@ -16,11 +16,11 @@ const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 
 const signUpUsers_Mutation_SetStatus = gql(`
-mutation SetStatus($input: SetStatusInput!) {
-  setStatus(input: $input) {
-    status
-  }
-}`);
+  mutation SetStatus($input: SetStatusInput!) {
+    setStatus(input: $input) {
+      status
+    }
+  }`);
 
 const signUpUsersClient = new AWSAppSyncClient({
   url: process.env.AppSync_SignUpUsers,

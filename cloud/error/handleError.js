@@ -19,15 +19,15 @@ const errors_Mutation_CreateError = gql(`
   mutation CreateError($input: CreateErrorInput!) {
     createError(input: $input) {
       id
-  }
- }`);
+    }
+  }`);
 
 const errors_Mutation_DeleteError = gql(`
   mutation DeleteError($input: DeleteErrorInput!) {
     deleteError(input: $input) {
       id
-  }
- }`);
+    }
+  }`);
 
 const errors_Query_GetDatas = gql(`
   query GetDatas($input: GetDatasInput!) {
@@ -42,22 +42,22 @@ const errors_Query_GetDatas = gql(`
         cognitoIdentityServiceProviderAdminDeleteUserInputUsername
         registeredUsers_Mutation_DeleteRegisteredUser_Input_DisplayName
       }
-  }
- }`);
+    }
+  }`);
 
 const registeredUsers_Mutation_DeleteRegisteredUser = gql(`
   mutation DeleteRegisteredUser($input: DeleteRegisteredUserInput!) {
     deleteRegisteredUser(input: $input) {
       displayName
-  }
- }`);
+    }
+  }`);
 
 const screens_Mutation_ChangePosterId = gql(`
   mutation ChangePosterId($input: ChangePosterIdInput!) {
     changePosterId(input: $input) {
       timed_out
-  }
- }`);
+    }
+  }`);
 
 const errorsClient = new AWSAppSyncClient({
   url: process.env.AppSync_Errors,
