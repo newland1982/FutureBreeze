@@ -124,7 +124,7 @@ const actions = [
 
 const errors_Query_GetDatas_Limit = 12;
 
-exports.handler = (event) => {
+exports.handler = () => {
   (async () => {
     await errorsClient.hydrated();
     await registeredUsersClient.hydrated();
