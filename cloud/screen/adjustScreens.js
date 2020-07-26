@@ -107,7 +107,7 @@ const types = ['thumbnai', 'mobile', 'pc'];
 
 const screens_Query_GetScreenNames_Size = 12;
 
-exports.handler = (event) => {
+exports.handler = () => {
   (async () => {
     await screensClient.hydrated();
 

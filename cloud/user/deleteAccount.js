@@ -16,17 +16,8 @@ const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 let cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
 
-exports.handler = (event, context, callback) => {
-  event.Records.forEach((record) => {
-    if (
-      record.eventName !== 'ObjectCreated:Put' &&
-      record.eventName !== 'ObjectCreated:CompleteMultipartUpload'
-    ) {
-      return;
-    }
-
-    (async () => {})();
-  });
+exports.handler = () => {
+  (async () => {})();
 };
 
 /* layer package.json
