@@ -82,13 +82,6 @@ const errors_Mutation_CreateError = gql(`
     }
   }`);
 
-const errors_Mutation_DeleteError = gql(`
-  mutation DeleteError($input: DeleteErrorInput!) {
-    deleteError(input: $input) {
-      id
-    }
-  }`);
-
 const screensClient = new AWSAppSyncClient({
   url: process.env.AppSync_Screens,
   region: process.env.AppSync_Region,
@@ -264,6 +257,27 @@ exports.handler = (event, context, callback) => {
       await screensClient.hydrated();
       await registeredUsersClient.hydrated();
       // begin 1
+      try {
+        const registeredUsers_Query_GetAccountNames_Input = {
+          cognitoIdentityId: s3ObjectData.cognitoIdentityId,
+        };
+        registeredUsers_Query_GetAccountNames_Result = await registeredUsersClient.query(
+          {
+            query: registeredUsers_Query_GetAccountNames,
+            variables: { input: registeredUsers_Query_GetAccountNames_Input },
+            fetchPolicy: 'network-only',
+          }
+        );
+      } catch (error) {
+        deleteS3Object(
+          new AWS.S3(),
+          deleteS3ObjectInput,
+          errorsClient,
+          errors_Mutation_CreateError
+        );
+
+        return;
+      }
 
       const Payload = JSON.stringify({
         number: '111112121212',
