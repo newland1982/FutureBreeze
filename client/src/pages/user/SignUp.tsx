@@ -151,7 +151,7 @@ const SignUp = () => {
         getDisplayName(input: $input) {
             displayName
         }
-       }`;
+      }`;
       const registeredUsers_Query_GetDisplayName_Input = {
         displayName,
       };
@@ -191,7 +191,7 @@ const SignUp = () => {
       createSignUpUser(input: $input) {
         id
       }
-     }`;
+    }`;
     const signUpUsers_Mutation_CreateSignUpUser_Input = {
       accountName,
       password,
@@ -212,7 +212,7 @@ const SignUp = () => {
       getStatus(input: $input) {
         status
       }
-     }`;
+    }`;
     const signUpUsers_Query_GetStatus_Input = {
       id,
     };
@@ -293,7 +293,7 @@ const SignUp = () => {
         setCognitoIdentityId(input: $input) {
           cognitoIdentityId
         }
-       }`;
+      }`;
       const registeredUsers_Mutation_SetCognitoIdentityId_Input = {
         cognitoIdentityId:
           currentAuthenticatedUser.storage[

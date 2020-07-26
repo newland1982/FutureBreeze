@@ -298,7 +298,7 @@ const PostScreen = () => {
       prepareSetPostScreenCount(input: $input) {
         postScreenCount
       }
-     }`;
+    }`;
     const registeredUsers_Mutation_PrepareSetPostScreenCount_Input = {
       displayName,
     };
@@ -321,7 +321,7 @@ const PostScreen = () => {
       getPostScreenCount(input: $input) {
         postScreenCount
       }
-     }`;
+    }`;
     const registeredUsers_Query_GetPostScreenCount_Input = {
       displayName,
     };
@@ -354,7 +354,7 @@ const PostScreen = () => {
       getCreatedDate(input: $input) {
         createdDate
       }
-     }`;
+    }`;
     const registeredUsers_Query_GetCreatedDate_Input = {
       displayName,
     };
