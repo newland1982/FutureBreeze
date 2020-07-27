@@ -291,21 +291,60 @@ exports.handler = (event, context, callback) => {
       }
 
       if (
-        registeredUsers_Query_GetAccountNames_Result.data.getAccountNames
-          .accountNames.length !== 1
+        !(s3ObjectData.validationResult === 'valid') ||
+        !(s3ObjectData.size < Number(process.env.Object_Size_Limit))
       ) {
-        try {
-          const result = await lambda
+        await lambda
+          .invoke({
+            FunctionName: 'deleteAccount',
+            InvocationType: 'RequestResponse',
+            Payload: JSON.stringify({
+              displayName: registeredUsers_Query_GetAccountNames_Result.data.getAccountNames.accountNames[0].accountName.slice(
+                96
+              ),
+              accountName:
+                registeredUsers_Query_GetAccountNames_Result.data
+                  .getAccountNames.accountNames[0].accountName,
+            }),
+          })
+          .promise();
+      }
+
+      try {
+        const screens_Query_GetObjectKeys_Input = {
+          objectKey,
+        };
+        screens_Query_GetObjectKeys_Result = await screensClient.query({
+          query: screens_Query_GetObjectKeys,
+          variables: { input: screens_Query_GetObjectKeys_Input },
+          fetchPolicy: 'network-only',
+        });
+        if (
+          screens_Query_GetObjectKeys_Result.data.getObjectKeys.length !== 0
+        ) {
+          await lambda
             .invoke({
               FunctionName: 'deleteAccount',
               InvocationType: 'RequestResponse',
               Payload: JSON.stringify({
-                displayName: '111112121212',
-                accountName: 'dsdsdsd',
+                displayName: registeredUsers_Query_GetAccountNames_Result.data.getAccountNames.accountNames[0].accountName.slice(
+                  96
+                ),
+                accountName:
+                  registeredUsers_Query_GetAccountNames_Result.data
+                    .getAccountNames.accountNames[0].accountName,
               }),
             })
             .promise();
-        } catch (error) {}
+        }
+      } catch (error) {
+        deleteS3Object(
+          new AWS.S3(),
+          deleteS3ObjectInput,
+          errorsClient,
+          errors_Mutation_CreateError
+        );
+        return;
       }
 
       // end 1
