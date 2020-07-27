@@ -90,15 +90,36 @@ exports.handler = (event) => {
         variables: { input: screens_Mutation_ChangePosterId_Input },
         fetchPolicy: 'no-cache',
       });
-    } catch (error) {
+
+      await cognitoIdentityServiceProvider
+        .adminDeleteUser(cognitoIdentityServiceProviderAdminDeleteUserInput)
+        .promise();
+
       await registeredUsersClient.mutate({
-        mutation: registeredUsers_Mutation_SetStatus,
+        mutation: registeredUsers_Mutation_DeleteRegisteredUser,
         variables: {
-          input: registeredUsers_Mutation_SetStatus_Input,
+          input: registeredUsers_Mutation_DeleteRegisteredUser_Input,
         },
         fetchPolicy: 'no-cache',
       });
-      return;
+    } catch (error) {
+      if (error.code !== 'UserNotFoundException') {
+        await registeredUsersClient.mutate({
+          mutation: registeredUsers_Mutation_SetStatus,
+          variables: {
+            input: registeredUsers_Mutation_SetStatus_Input,
+          },
+          fetchPolicy: 'no-cache',
+        });
+      } else {
+        await registeredUsersClient.mutate({
+          mutation: registeredUsers_Mutation_DeleteRegisteredUser,
+          variables: {
+            input: registeredUsers_Mutation_DeleteRegisteredUser_Input,
+          },
+          fetchPolicy: 'no-cache',
+        });
+      }
     }
   })();
 };
