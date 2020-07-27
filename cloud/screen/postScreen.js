@@ -268,6 +268,18 @@ exports.handler = (event, context, callback) => {
             fetchPolicy: 'network-only',
           }
         );
+        if (
+          registeredUsers_Query_GetAccountNames_Result.data.getAccountNames
+            .accountNames.length !== 1
+        ) {
+          deleteS3Object(
+            new AWS.S3(),
+            deleteS3ObjectInput,
+            errorsClient,
+            errors_Mutation_CreateError
+          );
+          return;
+        }
       } catch (error) {
         deleteS3Object(
           new AWS.S3(),
@@ -275,27 +287,27 @@ exports.handler = (event, context, callback) => {
           errorsClient,
           errors_Mutation_CreateError
         );
-
         return;
       }
 
-      const Payload = JSON.stringify({
-        number: '111112121212',
-        message: 'dsdsdsd',
-      });
-
-      let params = {
-        FunctionName: 'deleteAccount',
-        InvocationType: 'RequestResponse',
-        Payload,
-      };
-
-      try {
-        const result = await lambda.invoke(params).promise();
-        console.log('restulttt', result);
-      } catch (error) {
-        console.log('errorrrrr', error);
+      if (
+        registeredUsers_Query_GetAccountNames_Result.data.getAccountNames
+          .accountNames.length !== 1
+      ) {
+        try {
+          const result = await lambda
+            .invoke({
+              FunctionName: 'deleteAccount',
+              InvocationType: 'RequestResponse',
+              Payload: JSON.stringify({
+                displayName: '111112121212',
+                accountName: 'dsdsdsd',
+              }),
+            })
+            .promise();
+        } catch (error) {}
       }
+
       // end 1
       try {
         const screens_Query_GetObjectKeys_Input = {
