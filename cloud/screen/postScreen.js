@@ -336,6 +336,7 @@ exports.handler = (event, context, callback) => {
               }),
             })
             .promise();
+          return;
         }
       } catch (error) {
         deleteS3Object(
