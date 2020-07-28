@@ -15,19 +15,11 @@ const AWS = require('aws-sdk');
 const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 const lambda = new AWS.Lambda();
-let cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
 
 const screens_Mutation_CreateScreen = gql(`
   mutation CreateScreen($input: CreateScreenInput!) {
     createScreen(input: $input) {
       objectKey
-    }
-  }`);
-
-const screens_Mutation_ChangePosterId = gql(`
-  mutation ChangePosterId($input: ChangePosterIdInput!) {
-    changePosterId(input: $input) {
-      timed_out
     }
   }`);
 
@@ -38,24 +30,10 @@ const screens_Query_GetObjectKeys = gql(`
     }
   }`);
 
-const registeredUsers_Mutation_DeleteRegisteredUser = gql(`
-  mutation DeleteRegisteredUser($input: DeleteRegisteredUserInput!) {
-    deleteRegisteredUser(input: $input) {
-      displayName
-    }
-  }`);
-
 const registeredUsers_Mutation_SetPostScreenCount = gql(`
   mutation SetPostScreenCount($input: SetPostScreenCountInput!) {
     setPostScreenCount(input: $input) {
       postScreenCount
-    }
-  }`);
-
-const registeredUsers_Mutation_SetStatus = gql(`
-  mutation SetStatus($input: SetStatusInput!) {
-    setStatus(input: $input) {
-      displayName
     }
   }`);
 
@@ -222,7 +200,7 @@ exports.handler = (event, context, callback) => {
       VersionId: versionId,
     };
 
-    let postScreenCount = 0;
+    let postScreenCount;
 
     let screens_Query_GetObjectKeys_Result;
 
@@ -256,7 +234,7 @@ exports.handler = (event, context, callback) => {
       await errorsClient.hydrated();
       await screensClient.hydrated();
       await registeredUsersClient.hydrated();
-      // begin 1
+
       try {
         const registeredUsers_Query_GetAccountNames_Input = {
           cognitoIdentityId: s3ObjectData.cognitoIdentityId,
@@ -292,7 +270,12 @@ exports.handler = (event, context, callback) => {
 
       if (
         !(s3ObjectData.validationResult === 'valid') ||
-        !(s3ObjectData.size < Number(process.env.Object_Size_Limit))
+        !(s3ObjectData.size < Number(process.env.Object_Size_Limit)) ||
+        !(
+          registeredUsers_Query_GetAccountNames_Result.data.getAccountNames.accountNames[0].accountName.slice(
+            96
+          ) === s3ObjectData.displayName
+        )
       ) {
         await lambda
           .invoke({
@@ -308,6 +291,7 @@ exports.handler = (event, context, callback) => {
             }),
           })
           .promise();
+        return;
       }
 
       try {
@@ -319,8 +303,28 @@ exports.handler = (event, context, callback) => {
           variables: { input: screens_Query_GetObjectKeys_Input },
           fetchPolicy: 'network-only',
         });
+
+        const registeredUsers_Query_GetPostScreenCount_Input = {
+          displayName: s3ObjectData.displayName,
+        };
+        const registeredUsers_Query_GetPostScreenCount_Result = await registeredUsersClient.query(
+          {
+            query: registeredUsers_Query_GetPostScreenCount,
+            variables: {
+              input: registeredUsers_Query_GetPostScreenCount_Input,
+            },
+            fetchPolicy: 'network-only',
+          }
+        );
+        postScreenCount =
+          registeredUsers_Query_GetPostScreenCount_Result.data
+            .getPostScreenCount.postScreenCount;
+
         if (
-          screens_Query_GetObjectKeys_Result.data.getObjectKeys.length !== 0
+          !(
+            screens_Query_GetObjectKeys_Result.data.getObjectKeys.length === 0
+          ) ||
+          !(postScreenCount + 1 <= Number(process.env.Post_Screen_Count_Limit))
         ) {
           await lambda
             .invoke({
@@ -346,181 +350,6 @@ exports.handler = (event, context, callback) => {
           errors_Mutation_CreateError
         );
         return;
-      }
-
-      // end 1
-      try {
-        const screens_Query_GetObjectKeys_Input = {
-          objectKey,
-        };
-
-        screens_Query_GetObjectKeys_Result = await screensClient.query({
-          query: screens_Query_GetObjectKeys,
-          variables: { input: screens_Query_GetObjectKeys_Input },
-          fetchPolicy: 'network-only',
-        });
-      } catch (error) {
-        if (
-          s3ObjectData.validationResult === 'valid' &&
-          s3ObjectData.size < Number(process.env.Object_Size_Limit)
-        ) {
-          deleteS3Object(
-            new AWS.S3(),
-            deleteS3ObjectInput,
-            errorsClient,
-            errors_Mutation_CreateError
-          );
-        }
-        return;
-      }
-
-      try {
-        const registeredUsers_Query_GetAccountNames_Input = {
-          cognitoIdentityId: s3ObjectData.cognitoIdentityId,
-        };
-        registeredUsers_Query_GetAccountNames_Result = await registeredUsersClient.query(
-          {
-            query: registeredUsers_Query_GetAccountNames,
-            variables: { input: registeredUsers_Query_GetAccountNames_Input },
-            fetchPolicy: 'network-only',
-          }
-        );
-      } catch (error) {
-        if (
-          s3ObjectData.validationResult === 'valid' &&
-          s3ObjectData.size < Number(process.env.Object_Size_Limit) &&
-          screens_Query_GetObjectKeys_Result.data.getObjectKeys.length === 0
-        ) {
-          deleteS3Object(
-            new AWS.S3(),
-            deleteS3ObjectInput,
-            errorsClient,
-            errors_Mutation_CreateError
-          );
-        }
-        return;
-      }
-
-      if (
-        s3ObjectData.validationResult === 'valid' &&
-        s3ObjectData.size < Number(process.env.Object_Size_Limit) &&
-        screens_Query_GetObjectKeys_Result.data.getObjectKeys.length === 0 &&
-        registeredUsers_Query_GetAccountNames_Result.data.getAccountNames.accountNames[0].accountName.slice(
-          96
-        ) === s3ObjectData.displayName
-      ) {
-        const registeredUsers_Query_GetPostScreenCount_Input = {
-          displayName: s3ObjectData.displayName,
-        };
-        const result = await registeredUsersClient.query({
-          query: registeredUsers_Query_GetPostScreenCount,
-          variables: { input: registeredUsers_Query_GetPostScreenCount_Input },
-          fetchPolicy: 'network-only',
-        });
-        if (result) {
-          postScreenCount = result.data.getPostScreenCount.postScreenCount;
-        }
-      }
-
-      if (
-        !(s3ObjectData.validationResult === 'valid') ||
-        !(s3ObjectData.size < Number(process.env.Object_Size_Limit)) ||
-        !(screens_Query_GetObjectKeys_Result.data.getObjectKeys.length === 0) ||
-        !(
-          registeredUsers_Query_GetAccountNames_Result.data.getAccountNames.accountNames[0].accountName.slice(
-            96
-          ) === s3ObjectData.displayName
-        ) ||
-        !(postScreenCount + 1 <= Number(process.env.Post_Screen_Count_Limit))
-      ) {
-        const screens_Mutation_ChangePosterId_Input = {
-          posterId: registeredUsers_Query_GetAccountNames_Result.data.getAccountNames.accountNames[0].accountName.slice(
-            96
-          ),
-        };
-
-        const cognitoIdentityServiceProviderAdminDeleteUserInput = {
-          UserPoolId: process.env.User_Pool_Id,
-          Username:
-            registeredUsers_Query_GetAccountNames_Result.data.getAccountNames
-              .accountNames[0].accountName,
-        };
-
-        const registeredUsers_Mutation_DeleteRegisteredUser_Input = {
-          displayName: registeredUsers_Query_GetAccountNames_Result.data.getAccountNames.accountNames[0].accountName.slice(
-            96
-          ),
-        };
-
-        deleteS3Object(
-          new AWS.S3(),
-          deleteS3ObjectInput,
-          errorsClient,
-          errors_Mutation_CreateError
-        );
-
-        // begin 2
-
-        const registeredUsers_Mutation_SetStatus_Input = {
-          displayName: registeredUsers_Query_GetAccountNames_Result.data.getAccountNames.accountNames[0].accountName.slice(
-            96
-          ),
-          status: 'invalid',
-        };
-        try {
-          await screensClient.mutate({
-            mutation: screens_Mutation_ChangePosterId,
-            variables: { input: screens_Mutation_ChangePosterId_Input },
-            fetchPolicy: 'no-cache',
-          });
-        } catch (error) {
-          await registeredUsersClient.mutate({
-            mutation: registeredUsers_Mutation_SetStatus,
-            variables: {
-              input: registeredUsers_Mutation_SetStatus_Input,
-            },
-            fetchPolicy: 'no-cache',
-          });
-          return;
-        }
-
-        try {
-          await cognitoIdentityServiceProvider
-            .adminDeleteUser(cognitoIdentityServiceProviderAdminDeleteUserInput)
-            .promise();
-        } catch (error) {
-          if (error.code !== 'UserNotFoundException') {
-            await registeredUsersClient.mutate({
-              mutation: registeredUsers_Mutation_SetStatus,
-              variables: {
-                input: registeredUsers_Mutation_SetStatus_Input,
-              },
-              fetchPolicy: 'no-cache',
-            });
-            return;
-          }
-        }
-
-        try {
-          await registeredUsersClient.mutate({
-            mutation: registeredUsers_Mutation_DeleteRegisteredUser,
-            variables: {
-              input: registeredUsers_Mutation_DeleteRegisteredUser_Input,
-            },
-            fetchPolicy: 'no-cache',
-          });
-        } catch (error) {
-          await registeredUsersClient.mutate({
-            mutation: registeredUsers_Mutation_SetStatus,
-            variables: {
-              input: registeredUsers_Mutation_SetStatus_Input,
-            },
-            fetchPolicy: 'no-cache',
-          });
-          return;
-        }
-        return;
-        // end 2
       }
 
       const registeredUsers_Mutation_SetPostScreenCount_Input = {
