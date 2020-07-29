@@ -379,13 +379,6 @@ const PostScreen = () => {
           contentType: 'image/jpeg',
         }
       );
-      console.log(putFileForThumbnailResult);
-    } catch (error) {
-      history.push('/failure/error');
-      return;
-    }
-
-    try {
       const putFileForMobileResult = await Storage.put(
         `${displayName}_${RegisteredUsersCreatedDate}/${unixTimestamp}mobile`,
         blobForMobile,
@@ -394,12 +387,6 @@ const PostScreen = () => {
           contentType: 'image/jpeg',
         }
       );
-      console.log(putFileForMobileResult);
-    } catch (error) {
-      return;
-    }
-
-    try {
       const putFileForPCResult = await Storage.put(
         `${displayName}_${RegisteredUsersCreatedDate}/${unixTimestamp}pc`,
         blobForPC,
@@ -408,8 +395,12 @@ const PostScreen = () => {
           contentType: 'image/jpeg',
         }
       );
+
+      console.log(putFileForThumbnailResult);
+      console.log(putFileForMobileResult);
       console.log(putFileForPCResult);
     } catch (error) {
+      history.push('/failure/error');
       return;
     }
   };
