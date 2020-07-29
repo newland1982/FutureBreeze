@@ -277,6 +277,12 @@ exports.handler = (event, context, callback) => {
           ) === s3ObjectData.displayName
         )
       ) {
+        deleteS3Object(
+          new AWS.S3(),
+          deleteS3ObjectInput,
+          errorsClient,
+          errors_Mutation_CreateError
+        );
         await lambda
           .invoke({
             FunctionName: 'deleteAccount',
@@ -326,6 +332,12 @@ exports.handler = (event, context, callback) => {
           ) ||
           !(postScreenCount + 1 <= Number(process.env.Post_Screen_Count_Limit))
         ) {
+          deleteS3Object(
+            new AWS.S3(),
+            deleteS3ObjectInput,
+            errorsClient,
+            errors_Mutation_CreateError
+          );
           await lambda
             .invoke({
               FunctionName: 'deleteAccount',
