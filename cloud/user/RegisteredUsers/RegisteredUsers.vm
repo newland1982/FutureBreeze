@@ -28,6 +28,40 @@
 ${util.toJson(${context.result})}
 
 ## Resolver for Mutation.setCognitoIdentityId
+## begin
+$util.quiet($context.stash.put("accountName", ${context.identity.username}))
+$util.quiet($context.stash.put("cognitoIdentityId", ${context.arguments.input.cognitoIdentityId}))
+{}
+
+#set($cognitoIdentityId = ${context.stash.cognitoIdentityId})
+{
+  "version": "2017-02-28",
+  "operation": "Query",
+  "index": "cognitoIdentityId-index",
+  "query": {
+    "expression": "cognitoIdentityId = :cognitoIdentityId",
+    "expressionValues": {
+      ":cognitoIdentityId": { "S": "$cognitoIdentityId" }
+    }
+  }
+}
+
+$util.toJson($context.result)
+
+#set($cognitoIdentityIds = ${context.prev.result.items})
+#if(!${cognitoIdentityIds.isEmpty()})
+  #set($accountName = ${context.stash.accountName})
+  #set($displayName = ${accountName.substring(96)})
+  {
+    "version": "2017-02-28",
+    "operation": "DeleteItem",
+    "key": {
+      "displayName": { "S": "$displayName" }
+    }
+  }
+#else
+#end
+## end
 #set($accountName = ${context.identity.username})
 #set($displayName = ${accountName.substring(96)})
 #set($cognitoIdentityId = ${context.arguments.input.cognitoIdentityId})
