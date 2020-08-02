@@ -64,7 +64,7 @@ $util.toJson($context.result)
       "displayName": { "S": "$displayName" }
     }
   }
-  $util.error("Error")
+  $util.appendError("Error")
 #else
   #set($accountName = ${context.stash.accountName})
   #set($displayName = ${accountName.substring(96)})
