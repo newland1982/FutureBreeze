@@ -162,21 +162,19 @@ const deleteS3Object = async (
   try {
     await s3.deleteObject(deleteS3ObjectInput).promise();
   } catch (error) {
-    async () => {
-      await errorsClient.hydrated();
-      const errors_Mutation_CreateError_Input = {
-        type: 'postScreen',
-        action: 'deleteS3Object',
-        deleteS3ObjectInputBucket: deleteS3ObjectInput.Bucket,
-        deleteS3ObjectInputKey: deleteS3ObjectInput.Key,
-        deleteS3ObjectInputVersionId: deleteS3ObjectInput.VersionId,
-      };
-      await errorsClient.mutate({
-        mutation: errors_Mutation_CreateError,
-        variables: { input: errors_Mutation_CreateError_Input },
-        fetchPolicy: 'no-cache',
-      });
+    await errorsClient.hydrated();
+    const errors_Mutation_CreateError_Input = {
+      type: 'postScreen',
+      action: 'deleteS3Object',
+      deleteS3ObjectInputBucket: deleteS3ObjectInput.Bucket,
+      deleteS3ObjectInputKey: deleteS3ObjectInput.Key,
+      deleteS3ObjectInputVersionId: deleteS3ObjectInput.VersionId,
     };
+    await errorsClient.mutate({
+      mutation: errors_Mutation_CreateError,
+      variables: { input: errors_Mutation_CreateError_Input },
+      fetchPolicy: 'no-cache',
+    });
   }
 };
 
