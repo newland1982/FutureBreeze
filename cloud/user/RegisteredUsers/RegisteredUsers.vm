@@ -27,8 +27,9 @@
 
 ${util.toJson(${context.result})}
 
-## Resolver for Mutation.setCognitoIdentityId
+## pipeline resolver for Mutation.setCognitoIdentityId
 ## begin
+## Before mapping template.
 #set($region = "ap-northeast-1")
 #set($UUIDPattern = "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}")
 #set($cognitoIdentityIdPattern = $region + ":" + $UUIDPattern)
@@ -36,8 +37,8 @@ ${util.toJson(${context.result})}
 $util.quiet($context.stash.put("accountName", ${context.identity.username}))
 $util.quiet($context.stash.put("cognitoIdentityIdIsValid", $cognitoIdentityIdIsValid))
 $util.quiet($context.stash.put("cognitoIdentityId", ${context.arguments.input.cognitoIdentityId}))
-{}
 
+## Mutation_getCognitoIdentityId_Function
 #set($cognitoIdentityId = ${context.stash.cognitoIdentityId})
 {
   "version": "2017-02-28",
@@ -53,6 +54,7 @@ $util.quiet($context.stash.put("cognitoIdentityId", ${context.arguments.input.co
 
 $util.toJson($context.result)
 
+## Mutation_setCognitoIdentityId_Function
 #set($cognitoIdentityIds = ${context.prev.result.items})
 #if(!${cognitoIdentityIds.isEmpty()} || !${context.stash.cognitoIdentityIdIsValid})
   #set($accountName = ${context.stash.accountName})
@@ -85,25 +87,10 @@ $util.toJson($context.result)
 #end
 
 ${util.toJson(${context.result})}
-## end
-#set($accountName = ${context.identity.username})
-#set($displayName = ${accountName.substring(96)})
-#set($cognitoIdentityId = ${context.arguments.input.cognitoIdentityId})
-{
-  "version": "2017-02-28",
-  "operation": "UpdateItem",
-  "key": {
-    "displayName": { "S": "$displayName" }
-  },
-  "update": {
-    "expression": "SET cognitoIdentityId = :cognitoIdentityId",
-    "expressionValues": {
-      ":cognitoIdentityId": { "S": "$cognitoIdentityId" }
-    }
-  }
-}
 
+## After mapping template.
 ${util.toJson(${context.result})}
+## end
 
 ## Resolver for Mutation.deleteRegisteredUser
 #set($displayName = ${context.arguments.input.displayName})
