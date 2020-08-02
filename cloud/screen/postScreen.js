@@ -159,10 +159,10 @@ const deleteS3Object = async (
   errorsClient,
   errors_Mutation_CreateError
 ) => {
-  await s3
-    .deleteObject(deleteS3ObjectInput)
-    .promise()
-    .catch(async () => {
+  try {
+    await s3.deleteObject(deleteS3ObjectInput).promise();
+  } catch (error) {
+    async () => {
       await errorsClient.hydrated();
       const errors_Mutation_CreateError_Input = {
         type: 'postScreen',
@@ -176,7 +176,8 @@ const deleteS3Object = async (
         variables: { input: errors_Mutation_CreateError_Input },
         fetchPolicy: 'no-cache',
       });
-    });
+    };
+  }
 };
 
 exports.handler = (event, context, callback) => {
