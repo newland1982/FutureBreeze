@@ -82,9 +82,9 @@ $util.toJson($context.result)
       }
     }
   }
-
-  ${util.toJson(${context.result})}
 #end
+
+${util.toJson(${context.result})}
 ## end
 #set($accountName = ${context.identity.username})
 #set($displayName = ${accountName.substring(96)})
