@@ -37,6 +37,7 @@ ${util.toJson(${context.result})}
 $util.quiet($context.stash.put("accountName", ${context.identity.username}))
 $util.quiet($context.stash.put("cognitoIdentityIdIsValid", $cognitoIdentityIdIsValid))
 $util.quiet($context.stash.put("cognitoIdentityId", ${context.arguments.input.cognitoIdentityId}))
+{}
 
 ## Mutation_getCognitoIdentityId_Function
 #set($cognitoIdentityId = ${context.stash.cognitoIdentityId})
@@ -90,6 +91,7 @@ ${util.toJson(${context.result})}
 
 ## After mapping template.
 ${util.toJson(${context.result})}
+
 ## end
 
 ## Resolver for Mutation.deleteRegisteredUser
