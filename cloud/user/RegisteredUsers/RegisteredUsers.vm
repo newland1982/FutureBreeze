@@ -29,7 +29,12 @@ ${util.toJson(${context.result})}
 
 ## Resolver for Mutation.setCognitoIdentityId
 ## begin
+#set($region = "ap-northeast-1")
+#set($UUIDPattern = "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}")
+#set($cognitoIdentityIdPattern = $region + ":" + $UUIDPattern)
+#set($cognitoIdentityIdIsValid = $util.matches($cognitoIdentityIdPattern, ${context.arguments.input.cognitoIdentityId}))
 $util.quiet($context.stash.put("accountName", ${context.identity.username}))
+$util.quiet($context.stash.put("cognitoIdentityIdIsValid", $cognitoIdentityIdIsValid))
 $util.quiet($context.stash.put("cognitoIdentityId", ${context.arguments.input.cognitoIdentityId}))
 {}
 
@@ -49,7 +54,7 @@ $util.quiet($context.stash.put("cognitoIdentityId", ${context.arguments.input.co
 $util.toJson($context.result)
 
 #set($cognitoIdentityIds = ${context.prev.result.items})
-#if(!${cognitoIdentityIds.isEmpty()})
+#if(!${cognitoIdentityIds.isEmpty()} || !${context.stash.cognitoIdentityIdIsValid})
   #set($accountName = ${context.stash.accountName})
   #set($displayName = ${accountName.substring(96)})
   {
@@ -59,7 +64,26 @@ $util.toJson($context.result)
       "displayName": { "S": "$displayName" }
     }
   }
+  $util.error("Error")
 #else
+  #set($accountName = ${context.stash.accountName})
+  #set($displayName = ${accountName.substring(96)})
+  #set($cognitoIdentityId = ${context.stash.cognitoIdentityId})
+  {
+    "version": "2017-02-28",
+    "operation": "UpdateItem",
+    "key": {
+      "displayName": { "S": "$displayName" }
+    },
+    "update": {
+      "expression": "SET cognitoIdentityId = :cognitoIdentityId",
+      "expressionValues": {
+        ":cognitoIdentityId": { "S": "$cognitoIdentityId" }
+      }
+    }
+  }
+
+  ${util.toJson(${context.result})}
 #end
 ## end
 #set($accountName = ${context.identity.username})
