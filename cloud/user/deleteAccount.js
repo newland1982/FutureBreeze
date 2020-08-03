@@ -59,6 +59,10 @@ const registeredUsersClient = new AWSAppSyncClient({
 
 exports.handler = (event) => {
   (async () => {
+    if (!event.accountName) {
+      return;
+    }
+
     const displayName = event.accountName.slice(96);
     const accountName = event.accountName;
 
