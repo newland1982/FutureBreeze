@@ -54,48 +54,38 @@ $util.quiet($context.stash.put("cognitoIdentityId", ${context.arguments.input.co
 }
 
 $util.toJson($context.result)
-## begin 1
 ## deleteAccount
-{
-  "version": "2017-02-28",
-  "operation": "Invoke",
-  "payload": {
-    "field": "getPost",
-    "arguments": $utils.toJson($context.arguments)
-  }
-}
-## end 1
-## Mutation_setCognitoIdentityId_Function
 #set($cognitoIdentityIds = ${context.prev.result.items})
 #if(!${cognitoIdentityIds.isEmpty()} || !${context.stash.cognitoIdentityIdIsValid})
-  #set($accountName = ${context.stash.accountName})
-  #set($displayName = ${accountName.substring(96)})
   {
     "version": "2017-02-28",
-    "operation": "DeleteItem",
-    "key": {
-      "displayName": { "S": "$displayName" }
+    "operation": "Invoke",
+    "payload": {
+      "accountName": ${context.stash.accountName}
     }
   }
   $util.appendError("Error")
-#else
-  #set($accountName = ${context.stash.accountName})
-  #set($displayName = ${accountName.substring(96)})
-  #set($cognitoIdentityId = ${context.stash.cognitoIdentityId})
-  {
-    "version": "2017-02-28",
-    "operation": "UpdateItem",
-    "key": {
-      "displayName": { "S": "$displayName" }
-    },
-    "update": {
-      "expression": "SET cognitoIdentityId = :cognitoIdentityId",
-      "expressionValues": {
-        ":cognitoIdentityId": { "S": "$cognitoIdentityId" }
-      }
+#end
+
+$util.toJson($context.result)
+
+## Mutation_setCognitoIdentityId_Function
+#set($accountName = ${context.stash.accountName})
+#set($displayName = ${accountName.substring(96)})
+#set($cognitoIdentityId = ${context.stash.cognitoIdentityId})
+{
+  "version": "2017-02-28",
+  "operation": "UpdateItem",
+  "key": {
+    "displayName": { "S": "$displayName" }
+  },
+  "update": {
+    "expression": "SET cognitoIdentityId = :cognitoIdentityId",
+    "expressionValues": {
+      ":cognitoIdentityId": { "S": "$cognitoIdentityId" }
     }
   }
-#end
+}
 
 ${util.toJson(${context.result})}
 
