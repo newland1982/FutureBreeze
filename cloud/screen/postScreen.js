@@ -287,9 +287,6 @@ exports.handler = (event, context, callback) => {
             FunctionName: 'deleteAccount',
             InvocationType: 'RequestResponse',
             Payload: JSON.stringify({
-              displayName: registeredUsers_Query_GetAccountNames_Result.data.getAccountNames.accountNames[0].accountName.slice(
-                96
-              ),
               accountName:
                 registeredUsers_Query_GetAccountNames_Result.data
                   .getAccountNames.accountNames[0].accountName,
@@ -342,9 +339,6 @@ exports.handler = (event, context, callback) => {
               FunctionName: 'deleteAccount',
               InvocationType: 'RequestResponse',
               Payload: JSON.stringify({
-                displayName: registeredUsers_Query_GetAccountNames_Result.data.getAccountNames.accountNames[0].accountName.slice(
-                  96
-                ),
                 accountName:
                   registeredUsers_Query_GetAccountNames_Result.data
                     .getAccountNames.accountNames[0].accountName,

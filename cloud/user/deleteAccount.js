@@ -59,7 +59,7 @@ const registeredUsersClient = new AWSAppSyncClient({
 
 exports.handler = (event) => {
   (async () => {
-    const displayName = event.displayName;
+    const displayName = event.accountName.slice(96);
     const accountName = event.accountName;
 
     await screensClient.hydrated();
