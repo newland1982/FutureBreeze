@@ -66,6 +66,7 @@ ${util.toJson(${context.result})}
     }
   }
   ${util.appendError("Error")}
+  #return
 #else
   {
     "version": "2017-02-28",
