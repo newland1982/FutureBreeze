@@ -57,29 +57,26 @@ ${util.toJson(${context.result})}
 
 ## deleteAccount
 #set($cognitoIdentityIds = ${context.prev.result.items})
-#if(!${cognitoIdentityIds.isEmpty()} || !${context.stash.cognitoIdentityIdIsValid})
-  {
-    "version": "2017-02-28",
-    "operation": "Invoke",
-    "payload": {
-      "accountName": "${context.stash.accountName}"
-    }
+{
+  "version": "2017-02-28",
+  "operation": "Invoke",
+  "payload": {
+  #if(!${cognitoIdentityIds.isEmpty()} || !${context.stash.cognitoIdentityIdIsValid})
+    "accountName": "${context.stash.accountName}"
+    ${util.quiet(${context.stash.put("errorExists", true)})}
+  #else
+    "accountName": ""
+    ${util.quiet(${context.stash.put("errorExists", false)})}
+  #end
   }
-  ${util.appendError("Error")}
-  #return
-#else
-  {
-    "version": "2017-02-28",
-    "operation": "Invoke",
-    "payload": {
-      "accountName": ""
-    }
-  }
-#end
+}
 
 ${util.toJson(${context.result})}
 
 ## Mutation_setCognitoIdentityId_Function
+#if(${context.stash.errorExists})
+  ${util.error("Error")}
+#end
 #set($accountName = ${context.stash.accountName})
 #set($displayName = ${accountName.substring(96)})
 #set($cognitoIdentityId = ${context.stash.cognitoIdentityId})
