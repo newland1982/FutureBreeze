@@ -65,8 +65,8 @@ ${util.toJson(${context.result})}
     "accountName": "${context.stash.accountName}"
     ${util.quiet(${context.stash.put("errorExists", true)})}
   #else
-    "accountName": ""
     ${util.quiet(${context.stash.put("errorExists", false)})}
+    #return
   #end
   }
 }
