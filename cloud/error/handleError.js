@@ -89,38 +89,11 @@ const screensClient = new AWSAppSyncClient({
   disableOffline: true,
 });
 
-const deleteS3Object = async (
-  s3,
-  deleteS3ObjectInput,
-  errorsClient,
-  errors_Mutation_CreateError
-) => {
-  await s3
-    .deleteObject(deleteS3ObjectInput)
-    .promise()
-    .catch(async () => {
-      await errorsClient.hydrated();
-      const errors_Mutation_CreateError_Input = {
-        type: 'postScreen',
-        action: 'deleteS3Object',
-        deleteS3ObjectInputBucket: deleteS3ObjectInput.Bucket,
-        deleteS3ObjectInputKey: deleteS3ObjectInput.Key,
-        deleteS3ObjectInputVersionId: deleteS3ObjectInput.VersionId,
-      };
-      await errorsClient.mutate({
-        mutation: errors_Mutation_CreateError,
-        variables: { input: errors_Mutation_CreateError_Input },
-        fetchPolicy: 'no-cache',
-      });
-    });
+const deleteS3Object = async (s3, deleteS3ObjectInput) => {
+  await s3.deleteObject(deleteS3ObjectInput).promise();
 };
 
-const actions = [
-  'deleteS3Object',
-  'screens_Mutation_ChangePosterId',
-  'cognitoIdentityServiceProviderAdminDeleteUser',
-  'registeredUsers_Mutation_DeleteRegisteredUser',
-];
+const actions = ['deleteS3Object'];
 
 const errors_Query_GetDatas_Limit = 12;
 
@@ -131,7 +104,7 @@ exports.handler = () => {
     await screensClient.hydrated();
 
     let processIsCompleted;
-
+    // begin
     do {
       for (const action of actions) {
         try {
@@ -144,78 +117,24 @@ exports.handler = () => {
             fetchPolicy: 'network-only',
           });
           if (errors_Query_GetDatas_Result.data.getDatas.datas.length !== 0) {
-            const datas = errors_Query_GetDatas.data.datas.map(
-              (value) => value.data
-            );
+            const datas = errors_Query_GetDatas_Result.data.getDatas.datas;
             await Promise.all(
               datas.map(async (data) => {
-                const screens_Query_GetObjectKeys_Input = {
-                  data,
-                };
-                const screens_Query_GetObjectKeys_Result = await screensClient.query(
-                  {
-                    query: errors_Query_GetDatas,
-                    variables: { input: screens_Query_GetObjectKeys_Input },
-                    fetchPolicy: 'network-only',
-                  }
-                );
-                const objectKeys = screens_Query_GetObjectKeys_Result.data.getObjectKeys.map(
-                  (value) => value.objectKey
-                );
-                if (objectKeys.length === actions.length) {
-                  const screens_Mutation_SetStatus_Input = {
-                    data,
-                    status: 'completed',
+                if (action === 'deleteS3Object') {
+                  const deleteS3ObjectInput = {
+                    Bucket: data.deleteS3ObjectInputBucket,
+                    Key: data.deleteS3ObjectInputKey,
+                    VersionId: data.deleteS3ObjectInputVersionId,
                   };
-                  await screensClient.mutate({
-                    mutation: errors_Mutation_DeleteError,
-                    variables: { input: screens_Mutation_SetStatus_Input },
-                    fetchPolicy: 'no-cache',
-                  });
-                } else {
-                  await Promise.all(
-                    objectKeys.map(async (objectKey) => {
-                      const screens_Query_GetVersionIds_Input = {
-                        objectKey,
-                      };
-                      const screens_Query_GetVersionIds_Result = await screensClient.query(
-                        {
-                          query: errors_Query_GetDatas,
-                          variables: {
-                            input: screens_Query_GetVersionIds_Input,
-                          },
-                          fetchPolicy: 'network-only',
-                        }
-                      );
-                      const deleteS3ObjectInput = {
-                        Bucket: process.env.Bucket,
-                        Key: objectKey,
-                        VersionId:
-                          screens_Query_GetVersionIds_Result.data
-                            .getVersionIds[0].versionId,
-                      };
-                      deleteS3Object(
-                        new AWS.S3(),
-                        deleteS3ObjectInput,
-                        errorsClient,
-                        errors_Mutation_CreateError
-                      );
-                    })
-                  );
-                  const screens_Mutation_DeleteScreen_Input = {
-                    data,
-                  };
-                  await screensClient.mutate({
-                    mutation: errors_Mutation_DeleteError,
-                    variables: { input: screens_Mutation_DeleteScreen_Input },
-                    fetchPolicy: 'no-cache',
-                  });
+
+                  deleteS3Object(new AWS.S3(), deleteS3ObjectInput);
                 }
+                // end
               })
             );
           }
           if (
-            errors_Query_GetDatas.data.getScreenNames.length <
+            errors_Query_GetDatas_Result.data.getDatas.datas.length <
               errors_Query_GetDatas_Limit &&
             (typeof processIsCompleted === undefined ||
               processIsCompleted === true)
