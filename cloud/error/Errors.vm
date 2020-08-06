@@ -9,20 +9,6 @@
   #set($deleteS3ObjectInputKey = ${context.arguments.input.deleteS3ObjectInputKey})
   #set($deleteS3ObjectInputVersionId = ${context.arguments.input.deleteS3ObjectInputVersionId})
 #end
-#if($action == "screens_Mutation_ChangePosterId")
-  #set($screens_Mutation_ChangePosterId_Input_PosterId =
-  ${context.arguments.input.screens_Mutation_ChangePosterId_Input_PosterId})
-#end
-#if($action == "cognitoIdentityServiceProviderAdminDeleteUser")
-  #set($cognitoIdentityServiceProviderAdminDeleteUserInputUserPoolId =
-  ${context.arguments.input.cognitoIdentityServiceProviderAdminDeleteUserInputUserPoolId})
-  #set($cognitoIdentityServiceProviderAdminDeleteUserInputUsername =
-  ${context.arguments.input.cognitoIdentityServiceProviderAdminDeleteUserInputUsername})
-#end
-#if($action == "registeredUsers_Mutation_DeleteRegisteredUser")
-  #set($registeredUsers_Mutation_DeleteRegisteredUser_Input_DisplayName =
-  ${context.arguments.input.registeredUsers_Mutation_DeleteRegisteredUser_Input_DisplayName})
-#end
 {
   "version": "2017-02-28",
   "operation": "PutItem",
@@ -37,16 +23,6 @@
       "deleteS3ObjectInputBucket": { "S": "$deleteS3ObjectInputBucket" },
       "deleteS3ObjectInputKey": { "S": "$deleteS3ObjectInputKey" },
       "deleteS3ObjectInputVersionId": { "S": "$deleteS3ObjectInputVersionId" }
-    #end
-    #if($action == "screens_Mutation_ChangePosterId")
-      "screens_Mutation_ChangePosterId_Input_PosterId": { "S": "$screens_Mutation_ChangePosterId_Input_PosterId" }
-    #end
-    #if($action == "cognitoIdentityServiceProviderAdminDeleteUser")
-      "cognitoIdentityServiceProviderAdminDeleteUserInputUserPoolId": { "S": "$cognitoIdentityServiceProviderAdminDeleteUserInputUserPoolId" },
-      "cognitoIdentityServiceProviderAdminDeleteUserInputUsername": { "S": "$cognitoIdentityServiceProviderAdminDeleteUserInputUsername" }
-    #end
-    #if($action == "registeredUsers_Mutation_DeleteRegisteredUser")
-      "registeredUsers_Mutation_DeleteRegisteredUser_Input_DisplayName": { "S": "$registeredUsers_Mutation_DeleteRegisteredUser_Input_DisplayName" }
     #end
   }
 }

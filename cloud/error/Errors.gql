@@ -5,20 +5,12 @@
 # deleteS3ObjectInputBucket: String
 # deleteS3ObjectInputKey: String
 # deleteS3ObjectInputVersionId: String
-# screens_Mutation_ChangePosterId_Input_PosterId: String
-# cognitoIdentityServiceProviderAdminDeleteUserInputUserPoolId: String
-# cognitoIdentityServiceProviderAdminDeleteUserInputUsername: String
-# registeredUsers_Mutation_DeleteRegisteredUser_Input_DisplayName: String
 input CreateErrorInput {
   type: String!
   action: String!
   deleteS3ObjectInputBucket: String
   deleteS3ObjectInputKey: String
   deleteS3ObjectInputVersionId: String
-  screens_Mutation_ChangePosterId_Input_PosterId: String
-  cognitoIdentityServiceProviderAdminDeleteUserInputUserPoolId: String
-  cognitoIdentityServiceProviderAdminDeleteUserInputUsername: String
-  registeredUsers_Mutation_DeleteRegisteredUser_Input_DisplayName: String
 }
 
 input DeleteErrorInput {
@@ -38,10 +30,6 @@ type Data {
   deleteS3ObjectInputBucket: String
   deleteS3ObjectInputKey: String
   deleteS3ObjectInputVersionId: String
-  screens_Mutation_ChangePosterId_Input_PosterId: String
-  cognitoIdentityServiceProviderAdminDeleteUserInputUserPoolId: String
-  cognitoIdentityServiceProviderAdminDeleteUserInputUsername: String
-  registeredUsers_Mutation_DeleteRegisteredUser_Input_DisplayName: String
 }
 
 type Datas {
