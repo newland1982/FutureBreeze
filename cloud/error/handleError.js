@@ -37,10 +37,6 @@ const errors_Query_GetDatas = gql(`
         deleteS3ObjectInputBucket
         deleteS3ObjectInputKey
         deleteS3ObjectInputVersionId
-        screens_Mutation_ChangePosterId_Input_PosterId
-        cognitoIdentityServiceProviderAdminDeleteUserInputUserPoolId
-        cognitoIdentityServiceProviderAdminDeleteUserInputUsername
-        registeredUsers_Mutation_DeleteRegisteredUser_Input_DisplayName
       }
     }
   }`);
@@ -90,7 +86,9 @@ const screensClient = new AWSAppSyncClient({
 });
 
 const deleteS3Object = async (s3, deleteS3ObjectInput) => {
-  await s3.deleteObject(deleteS3ObjectInput).promise();
+  try {
+    await s3.deleteObject(deleteS3ObjectInput).promise();
+  } catch (error) {}
 };
 
 const actions = ['deleteS3Object'];
