@@ -15,13 +15,6 @@ const AWS = require('aws-sdk');
 const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 
-const errors_Mutation_CreateError = gql(`
-  mutation CreateError($input: CreateErrorInput!) {
-    createError(input: $input) {
-      id
-    }
-  }`);
-
 const errors_Mutation_DeleteError = gql(`
   mutation DeleteError($input: DeleteErrorInput!) {
     deleteError(input: $input) {
@@ -41,20 +34,6 @@ const errors_Query_GetDatas = gql(`
     }
   }`);
 
-const registeredUsers_Mutation_DeleteRegisteredUser = gql(`
-  mutation DeleteRegisteredUser($input: DeleteRegisteredUserInput!) {
-    deleteRegisteredUser(input: $input) {
-      displayName
-    }
-  }`);
-
-const screens_Mutation_ChangePosterId = gql(`
-  mutation ChangePosterId($input: ChangePosterIdInput!) {
-    changePosterId(input: $input) {
-      timed_out
-    }
-  }`);
-
 const errorsClient = new AWSAppSyncClient({
   url: process.env.AppSync_Errors,
   region: process.env.AppSync_Region,
@@ -65,29 +44,24 @@ const errorsClient = new AWSAppSyncClient({
   disableOffline: true,
 });
 
-const registeredUsersClient = new AWSAppSyncClient({
-  url: process.env.AppSync_RegisteredUsers,
-  region: process.env.AppSync_Region,
-  auth: {
-    type: AUTH_TYPE.AWS_IAM,
-    credentials,
-  },
-  disableOffline: true,
-});
-
-const screensClient = new AWSAppSyncClient({
-  url: process.env.AppSync_Screens,
-  region: process.env.AppSync_Region,
-  auth: {
-    type: AUTH_TYPE.AWS_IAM,
-    credentials,
-  },
-  disableOffline: true,
-});
-
-const deleteS3Object = async (s3, deleteS3ObjectInput) => {
+const deleteS3Object = async (
+  s3,
+  deleteS3ObjectInput,
+  errorsClient,
+  errors_Mutation_DeleteError,
+  id
+) => {
   try {
     await s3.deleteObject(deleteS3ObjectInput).promise();
+    await errorsClient.hydrated();
+    const errors_Mutation_DeleteError_Input = {
+      id,
+    };
+    await errorsClient.mutate({
+      mutation: errors_Mutation_DeleteError,
+      variables: { input: errors_Mutation_DeleteError_Input },
+      fetchPolicy: 'no-cache',
+    });
   } catch (error) {}
 };
 
@@ -98,8 +72,6 @@ const errors_Query_GetDatas_Limit = 12;
 exports.handler = () => {
   (async () => {
     await errorsClient.hydrated();
-    await registeredUsersClient.hydrated();
-    await screensClient.hydrated();
 
     let processIsCompleted;
     // begin
@@ -124,8 +96,13 @@ exports.handler = () => {
                     Key: data.deleteS3ObjectInputKey,
                     VersionId: data.deleteS3ObjectInputVersionId,
                   };
-
-                  deleteS3Object(new AWS.S3(), deleteS3ObjectInput);
+                  deleteS3Object(
+                    new AWS.S3(),
+                    deleteS3ObjectInput,
+                    errorsClient,
+                    errors_Mutation_DeleteError,
+                    data.id
+                  );
                 }
                 // end
               })
