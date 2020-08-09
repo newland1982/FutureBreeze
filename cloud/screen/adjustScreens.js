@@ -118,6 +118,7 @@ exports.handler = () => {
         try {
           const screens_Query_GetScreenNames_Input = {
             type,
+            status: 'init',
           };
           const screens_Query_GetScreenNames_Result = await screensClient.query(
             {

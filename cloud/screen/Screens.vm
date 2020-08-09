@@ -170,7 +170,7 @@ ${utils.toJson(${context.result})}
 #set($createdDateMargin = 1)
 #set($currentDate = ${util.time.nowEpochMilliSeconds()})
 #set($createdDateLimit = $currentDate - $createdDateMargin)
-#set($status = "init")
+#set($status = ${context.arguments.input.status})
 {
   "version": "2017-02-28",
   "operation": "GET",

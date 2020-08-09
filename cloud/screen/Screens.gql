@@ -35,6 +35,7 @@ input GetObjectKeysInput {
 
 input GetScreenNamesInput {
   type: String!
+  status: String!
 }
 
 input GetTypesInput {
