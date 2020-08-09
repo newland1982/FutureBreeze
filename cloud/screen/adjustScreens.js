@@ -104,6 +104,7 @@ const deleteS3Object = async (
 };
 
 const types = ['thumbnai', 'mobile', 'pc'];
+let unprocessedTypes = types.slice();
 
 const screens_Query_GetScreenNames_Size = 12;
 
@@ -111,13 +112,11 @@ exports.handler = () => {
   (async () => {
     await screensClient.hydrated();
 
-    let processIsCompleted;
-
     do {
-      for (const type of types) {
+      for (const unprocessedType of unprocessedTypes) {
         try {
           const screens_Query_GetScreenNames_Input = {
-            type,
+            type: unprocessedType,
             status: 'init',
           };
           const screens_Query_GetScreenNames_Result = await screensClient.query(
@@ -202,17 +201,16 @@ exports.handler = () => {
           }
           if (
             screens_Query_GetScreenNames_Result.data.getScreenNames.length <
-              screens_Query_GetScreenNames_Size &&
-            (typeof processIsCompleted === undefined ||
-              processIsCompleted === true)
+            screens_Query_GetScreenNames_Size
           ) {
-            processIsCompleted = true;
-          } else {
-            processIsCompleted = false;
+            unprocessedTypes.splice(
+              unprocessedTypes.indexOf(unprocessedType),
+              1
+            );
           }
         } catch (error) {}
       }
-    } while (!processIsCompleted);
+    } while (unprocessedTypes.length > 0);
   })();
 };
 
