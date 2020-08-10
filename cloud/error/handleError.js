@@ -90,15 +90,15 @@ exports.handler = () => {
                 }
               })
             );
-          }
-          if (
-            errors_Query_GetDatas_Result.data.getDatas.datas.length <
-            errors_Query_GetDatas_Limit
-          ) {
-            unprocessedActions.splice(
-              unprocessedActions.indexOf(unprocessedAction),
-              1
-            );
+            if (
+              errors_Query_GetDatas_Result.data.getDatas.datas.length <
+              errors_Query_GetDatas_Limit
+            ) {
+              unprocessedActions.splice(
+                unprocessedActions.indexOf(unprocessedAction),
+                1
+              );
+            }
           }
         } catch (error) {}
       }
