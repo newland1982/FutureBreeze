@@ -198,15 +198,15 @@ exports.handler = () => {
                 }
               })
             );
-          }
-          if (
-            screens_Query_GetScreenNames_Result.data.getScreenNames.length <
-            screens_Query_GetScreenNames_Size
-          ) {
-            unprocessedTypes.splice(
-              unprocessedTypes.indexOf(unprocessedType),
-              1
-            );
+            if (
+              screens_Query_GetScreenNames_Result.data.getScreenNames.length <
+              screens_Query_GetScreenNames_Size
+            ) {
+              unprocessedTypes.splice(
+                unprocessedTypes.indexOf(unprocessedType),
+                1
+              );
+            }
           }
         } catch (error) {}
       }
