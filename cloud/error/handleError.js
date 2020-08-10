@@ -15,6 +15,8 @@ const AWS = require('aws-sdk');
 const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 
+const s3 = new AWS.S3();
+
 const errors_Mutation_DeleteError = gql(`
   mutation DeleteError($input: DeleteErrorInput!) {
     deleteError(input: $input) {
@@ -44,28 +46,8 @@ const errorsClient = new AWSAppSyncClient({
   disableOffline: true,
 });
 
-const deleteS3Object = async (
-  s3,
-  deleteS3ObjectInput,
-  errorsClient,
-  errors_Mutation_DeleteError,
-  id
-) => {
-  try {
-    await s3.deleteObject(deleteS3ObjectInput).promise();
-    await errorsClient.hydrated();
-    const errors_Mutation_DeleteError_Input = {
-      id,
-    };
-    await errorsClient.mutate({
-      mutation: errors_Mutation_DeleteError,
-      variables: { input: errors_Mutation_DeleteError_Input },
-      fetchPolicy: 'no-cache',
-    });
-  } catch (error) {}
-};
-
 const actions = ['deleteS3Object'];
+let unprocessedActions = actions.slice();
 
 const errors_Query_GetDatas_Limit = 12;
 
@@ -73,13 +55,11 @@ exports.handler = () => {
   (async () => {
     await errorsClient.hydrated();
 
-    let processIsCompleted;
-    // begin
     do {
-      for (const action of actions) {
+      for (const unprocessedAction of unprocessedActions) {
         try {
           const errors_Query_GetDatas_Input = {
-            action,
+            action: unprocessedAction,
           };
           const errors_Query_GetDatas_Result = await errorsClient.query({
             query: errors_Query_GetDatas,
@@ -90,37 +70,39 @@ exports.handler = () => {
             const datas = errors_Query_GetDatas_Result.data.getDatas.datas;
             await Promise.all(
               datas.map(async (data) => {
-                if (action === 'deleteS3Object') {
+                if (unprocessedAction === 'deleteS3Object') {
                   const deleteS3ObjectInput = {
                     Bucket: data.deleteS3ObjectInputBucket,
                     Key: data.deleteS3ObjectInputKey,
                     VersionId: data.deleteS3ObjectInputVersionId,
                   };
-                  deleteS3Object(
-                    new AWS.S3(),
-                    deleteS3ObjectInput,
-                    errorsClient,
-                    errors_Mutation_DeleteError,
-                    data.id
-                  );
+                  try {
+                    await s3.deleteObject(deleteS3ObjectInput).promise();
+                    const errors_Mutation_DeleteError_Input = {
+                      id: data.id,
+                    };
+                    await errorsClient.mutate({
+                      mutation: errors_Mutation_DeleteError,
+                      variables: { input: errors_Mutation_DeleteError_Input },
+                      fetchPolicy: 'no-cache',
+                    });
+                  } catch (error) {}
                 }
-                // end
               })
             );
           }
           if (
             errors_Query_GetDatas_Result.data.getDatas.datas.length <
-              errors_Query_GetDatas_Limit &&
-            (typeof processIsCompleted === undefined ||
-              processIsCompleted === true)
+            errors_Query_GetDatas_Limit
           ) {
-            processIsCompleted = true;
-          } else {
-            processIsCompleted = false;
+            unprocessedActions.splice(
+              unprocessedActions.indexOf(unprocessedAction),
+              1
+            );
           }
         } catch (error) {}
       }
-    } while (!processIsCompleted);
+    } while (unprocessedActions.length > 0);
   })();
 };
 
