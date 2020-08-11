@@ -202,7 +202,7 @@ exports.handler = () => {
               screens_Query_GetScreenNames_Result.data.getScreenNames.length <
               screens_Query_GetScreenNames_Size
             ) {
-              unprocessedTypes.splice(
+              unprocessedTypes = unprocessedTypes.splice(
                 unprocessedTypes.indexOf(unprocessedType),
                 1
               );
