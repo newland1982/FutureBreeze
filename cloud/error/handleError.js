@@ -100,7 +100,9 @@ exports.handler = () => {
               );
             }
           }
-        } catch (error) {}
+        } catch (error) {
+          console.log('error', error);
+        }
       }
     } while (unprocessedActions.length > 0);
   })();

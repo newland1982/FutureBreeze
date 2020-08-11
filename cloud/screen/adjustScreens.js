@@ -208,7 +208,9 @@ exports.handler = () => {
               );
             }
           }
-        } catch (error) {}
+        } catch (error) {
+          console.log('error', error);
+        }
       }
     } while (unprocessedTypes.length > 0);
   })();
