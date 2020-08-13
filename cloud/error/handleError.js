@@ -47,11 +47,12 @@ const errorsClient = new AWSAppSyncClient({
 });
 
 const actions = ['deleteS3Object'];
-let unprocessedActions = actions.slice();
 
 const errors_Query_GetDatas_Limit = 12;
 
 exports.handler = () => {
+  let unprocessedActions = actions.slice();
+
   (async () => {
     await errorsClient.hydrated();
 

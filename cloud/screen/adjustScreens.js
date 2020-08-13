@@ -104,11 +104,12 @@ const deleteS3Object = async (
 };
 
 const types = ['thumbnai', 'mobile', 'pc'];
-let unprocessedTypes = types.slice();
 
 const screens_Query_GetScreenNames_Size = 12;
 
 exports.handler = () => {
+  let unprocessedTypes = types.slice();
+
   (async () => {
     await screensClient.hydrated();
 
