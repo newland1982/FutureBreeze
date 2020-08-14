@@ -103,7 +103,7 @@ const deleteS3Object = async (
     });
 };
 
-const types = ['thumbnai', 'mobile', 'pc'];
+const types = ['thumbnail', 'mobile', 'pc'];
 
 const screens_Query_GetScreenNames_Size = 12;
 
@@ -114,103 +114,105 @@ exports.handler = () => {
     await screensClient.hydrated();
 
     do {
-      for (const unprocessedType of unprocessedTypes) {
-        try {
-          const screens_Query_GetScreenNames_Input = {
-            type: unprocessedType,
-            status: 'init',
-          };
-          const screens_Query_GetScreenNames_Result = await screensClient.query(
-            {
-              query: screens_Query_GetScreenNames,
-              variables: { input: screens_Query_GetScreenNames_Input },
-              fetchPolicy: 'network-only',
+      for (const type of types) {
+        if (unprocessedTypes.indexOf(type)) {
+          try {
+            const screens_Query_GetScreenNames_Input = {
+              type,
+              status: 'init',
+            };
+            const screens_Query_GetScreenNames_Result = await screensClient.query(
+              {
+                query: screens_Query_GetScreenNames,
+                variables: { input: screens_Query_GetScreenNames_Input },
+                fetchPolicy: 'network-only',
+              }
+            );
+
+            if (
+              screens_Query_GetScreenNames_Result.data.getScreenNames.length <
+              screens_Query_GetScreenNames_Size
+            ) {
+              unprocessedTypes.splice(unprocessedTypes.indexOf(type), 1);
             }
-          );
-          if (
-            screens_Query_GetScreenNames_Result.data.getScreenNames.length !== 0
-          ) {
-            const screenNames = screens_Query_GetScreenNames_Result.data.getScreenNames.map(
-              (value) => value.screenName
-            );
-            await Promise.all(
-              screenNames.map(async (screenName) => {
-                const screens_Query_GetObjectKeys_Input = {
-                  screenName,
-                };
-                const screens_Query_GetObjectKeys_Result = await screensClient.query(
-                  {
-                    query: screens_Query_GetObjectKeys,
-                    variables: { input: screens_Query_GetObjectKeys_Input },
-                    fetchPolicy: 'network-only',
-                  }
-                );
-                const objectKeys = screens_Query_GetObjectKeys_Result.data.getObjectKeys.map(
-                  (value) => value.objectKey
-                );
-                if (objectKeys.length === types.length) {
-                  const screens_Mutation_SetStatus_Input = {
+
+            if (
+              screens_Query_GetScreenNames_Result.data.getScreenNames.length !==
+              0
+            ) {
+              const screenNames = screens_Query_GetScreenNames_Result.data.getScreenNames.map(
+                (value) => value.screenName
+              );
+              await Promise.all(
+                screenNames.map(async (screenName) => {
+                  const screens_Query_GetObjectKeys_Input = {
                     screenName,
-                    status: 'completed',
                   };
-                  await screensClient.mutate({
-                    mutation: screens_Mutation_SetStatus,
-                    variables: { input: screens_Mutation_SetStatus_Input },
-                    fetchPolicy: 'no-cache',
-                  });
-                } else {
-                  await Promise.all(
-                    objectKeys.map(async (objectKey) => {
-                      const screens_Query_GetVersionIds_Input = {
-                        objectKey,
-                      };
-                      const screens_Query_GetVersionIds_Result = await screensClient.query(
-                        {
-                          query: screens_Query_GetVersionIds,
-                          variables: {
-                            input: screens_Query_GetVersionIds_Input,
-                          },
-                          fetchPolicy: 'network-only',
-                        }
-                      );
-                      const deleteS3ObjectInput = {
-                        Bucket: process.env.Bucket,
-                        Key: objectKey,
-                        VersionId:
-                          screens_Query_GetVersionIds_Result.data
-                            .getVersionIds[0].versionId,
-                      };
-                      deleteS3Object(
-                        new AWS.S3(),
-                        deleteS3ObjectInput,
-                        errorsClient,
-                        errors_Mutation_CreateError
-                      );
-                    })
+                  const screens_Query_GetObjectKeys_Result = await screensClient.query(
+                    {
+                      query: screens_Query_GetObjectKeys,
+                      variables: { input: screens_Query_GetObjectKeys_Input },
+                      fetchPolicy: 'network-only',
+                    }
                   );
-                  const screens_Mutation_DeleteScreen_Input = {
-                    screenName,
-                  };
-                  await screensClient.mutate({
-                    mutation: screens_Mutation_DeleteScreen,
-                    variables: { input: screens_Mutation_DeleteScreen_Input },
-                    fetchPolicy: 'no-cache',
-                  });
-                }
-              })
-            );
+                  const objectKeys = screens_Query_GetObjectKeys_Result.data.getObjectKeys.map(
+                    (value) => value.objectKey
+                  );
+                  if (objectKeys.length === types.length) {
+                    const screens_Mutation_SetStatus_Input = {
+                      screenName,
+                      status: 'completed',
+                    };
+                    await screensClient.mutate({
+                      mutation: screens_Mutation_SetStatus,
+                      variables: { input: screens_Mutation_SetStatus_Input },
+                      fetchPolicy: 'no-cache',
+                    });
+                  } else {
+                    await Promise.all(
+                      objectKeys.map(async (objectKey) => {
+                        const screens_Query_GetVersionIds_Input = {
+                          objectKey,
+                        };
+                        const screens_Query_GetVersionIds_Result = await screensClient.query(
+                          {
+                            query: screens_Query_GetVersionIds,
+                            variables: {
+                              input: screens_Query_GetVersionIds_Input,
+                            },
+                            fetchPolicy: 'network-only',
+                          }
+                        );
+                        const deleteS3ObjectInput = {
+                          Bucket: process.env.Bucket,
+                          Key: objectKey,
+                          VersionId:
+                            screens_Query_GetVersionIds_Result.data
+                              .getVersionIds[0].versionId,
+                        };
+                        deleteS3Object(
+                          new AWS.S3(),
+                          deleteS3ObjectInput,
+                          errorsClient,
+                          errors_Mutation_CreateError
+                        );
+                      })
+                    );
+                    const screens_Mutation_DeleteScreen_Input = {
+                      screenName,
+                    };
+                    await screensClient.mutate({
+                      mutation: screens_Mutation_DeleteScreen,
+                      variables: { input: screens_Mutation_DeleteScreen_Input },
+                      fetchPolicy: 'no-cache',
+                    });
+                  }
+                })
+              );
+            }
+          } catch (error) {
+            console.log('error', error);
           }
-          if (
-            screens_Query_GetScreenNames_Result.data.getScreenNames.length <
-            screens_Query_GetScreenNames_Size
-          ) {
-            unprocessedTypes.splice(
-              unprocessedTypes.indexOf(unprocessedType),
-              1
-            );
-          }
-        } catch (error) {
-          console.log('error', error);
         }
       }
     } while (unprocessedTypes.length > 0);

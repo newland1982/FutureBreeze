@@ -57,52 +57,53 @@ exports.handler = () => {
     await errorsClient.hydrated();
 
     do {
-      for (const unprocessedAction of unprocessedActions) {
-        try {
-          const errors_Query_GetDatas_Input = {
-            action: unprocessedAction,
-          };
-          const errors_Query_GetDatas_Result = await errorsClient.query({
-            query: errors_Query_GetDatas,
-            variables: { input: errors_Query_GetDatas_Input },
-            fetchPolicy: 'network-only',
-          });
-          if (errors_Query_GetDatas_Result.data.getDatas.datas.length !== 0) {
-            const datas = errors_Query_GetDatas_Result.data.getDatas.datas;
-            await Promise.all(
-              datas.map(async (data) => {
-                if (unprocessedAction === 'deleteS3Object') {
-                  const deleteS3ObjectInput = {
-                    Bucket: data.deleteS3ObjectInputBucket,
-                    Key: data.deleteS3ObjectInputKey,
-                    VersionId: data.deleteS3ObjectInputVersionId,
-                  };
-                  try {
-                    await s3.deleteObject(deleteS3ObjectInput).promise();
-                    const errors_Mutation_DeleteError_Input = {
-                      id: data.id,
+      for (const action of actions) {
+        if (unprocessedActions.indexOf(action)) {
+          try {
+            const errors_Query_GetDatas_Input = {
+              action,
+            };
+            const errors_Query_GetDatas_Result = await errorsClient.query({
+              query: errors_Query_GetDatas,
+              variables: { input: errors_Query_GetDatas_Input },
+              fetchPolicy: 'network-only',
+            });
+
+            if (
+              errors_Query_GetDatas_Result.data.getDatas.datas.length <
+              errors_Query_GetDatas_Limit
+            ) {
+              unprocessedActions.splice(unprocessedActions.indexOf(action), 1);
+            }
+
+            if (errors_Query_GetDatas_Result.data.getDatas.datas.length !== 0) {
+              const datas = errors_Query_GetDatas_Result.data.getDatas.datas;
+              await Promise.all(
+                datas.map(async (data) => {
+                  if (action === 'deleteS3Object') {
+                    const deleteS3ObjectInput = {
+                      Bucket: data.deleteS3ObjectInputBucket,
+                      Key: data.deleteS3ObjectInputKey,
+                      VersionId: data.deleteS3ObjectInputVersionId,
                     };
-                    await errorsClient.mutate({
-                      mutation: errors_Mutation_DeleteError,
-                      variables: { input: errors_Mutation_DeleteError_Input },
-                      fetchPolicy: 'no-cache',
-                    });
-                  } catch (error) {}
-                }
-              })
-            );
+                    try {
+                      await s3.deleteObject(deleteS3ObjectInput).promise();
+                      const errors_Mutation_DeleteError_Input = {
+                        id: data.id,
+                      };
+                      await errorsClient.mutate({
+                        mutation: errors_Mutation_DeleteError,
+                        variables: { input: errors_Mutation_DeleteError_Input },
+                        fetchPolicy: 'no-cache',
+                      });
+                    } catch (error) {}
+                  }
+                })
+              );
+            }
+          } catch (error) {
+            console.log('error', error);
           }
-          if (
-            errors_Query_GetDatas_Result.data.getDatas.datas.length <
-            errors_Query_GetDatas_Limit
-          ) {
-            unprocessedActions.splice(
-              unprocessedActions.indexOf(unprocessedAction),
-              1
-            );
-          }
-        } catch (error) {
-          console.log('error', error);
         }
       }
     } while (unprocessedActions.length > 0);
