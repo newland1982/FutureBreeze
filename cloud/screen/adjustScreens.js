@@ -115,7 +115,7 @@ exports.handler = () => {
 
     do {
       for (const type of types) {
-        if (unprocessedTypes.indexOf(type)) {
+        if (unprocessedTypes.indexOf(type) !== -1) {
           try {
             const screens_Query_GetScreenNames_Input = {
               type,
@@ -212,6 +212,7 @@ exports.handler = () => {
             }
           } catch (error) {
             console.log('error', error);
+            return;
           }
         }
       }

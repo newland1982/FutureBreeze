@@ -58,7 +58,7 @@ exports.handler = () => {
 
     do {
       for (const action of actions) {
-        if (unprocessedActions.indexOf(action)) {
+        if (unprocessedActions.indexOf(action) !== -1) {
           try {
             const errors_Query_GetDatas_Input = {
               action,
@@ -86,23 +86,22 @@ exports.handler = () => {
                       Key: data.deleteS3ObjectInputKey,
                       VersionId: data.deleteS3ObjectInputVersionId,
                     };
-                    try {
-                      await s3.deleteObject(deleteS3ObjectInput).promise();
-                      const errors_Mutation_DeleteError_Input = {
-                        id: data.id,
-                      };
-                      await errorsClient.mutate({
-                        mutation: errors_Mutation_DeleteError,
-                        variables: { input: errors_Mutation_DeleteError_Input },
-                        fetchPolicy: 'no-cache',
-                      });
-                    } catch (error) {}
+                    await s3.deleteObject(deleteS3ObjectInput).promise();
+                    const errors_Mutation_DeleteError_Input = {
+                      id: data.id,
+                    };
+                    await errorsClient.mutate({
+                      mutation: errors_Mutation_DeleteError,
+                      variables: { input: errors_Mutation_DeleteError_Input },
+                      fetchPolicy: 'no-cache',
+                    });
                   }
                 })
               );
             }
           } catch (error) {
             console.log('error', error);
+            return;
           }
         }
       }
