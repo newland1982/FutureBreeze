@@ -28,6 +28,10 @@ input DeleteScreenInput {
   screenName: String!
 }
 
+input ConfirmScreenInput {
+  screenName: String!
+}
+
 input GetObjectKeysInput {
   objectKey: String
   screenName: String
@@ -51,6 +55,7 @@ type Mutation {
   changePosterId(input: ChangePosterIdInput!): ConnectionTimedOut
   setStatus(input: SetStatusInput!): ConnectionTimedOut
   deleteScreen(input: DeleteScreenInput!): ConnectionTimedOut
+  confirmScreen(input: ConfirmScreenInput!): [ObjectKey]
 }
 
 type ObjectKey {
