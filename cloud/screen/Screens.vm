@@ -115,6 +115,82 @@ ${utils.toJson(${context.result})}
 
 ${utils.toJson(${context.result})}
 
+## begin
+## pipeline resolver for Mutation.confirmScreen
+## begin
+## Before mapping template.
+#set($region = "ap-northeast-1")
+#set($UUIDPattern = "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}")
+#set($cognitoIdentityIdPattern = $region + ":" + $UUIDPattern)
+#set($cognitoIdentityIdIsValid = ${util.matches($cognitoIdentityIdPattern, ${context.arguments.input.cognitoIdentityId})})
+${util.quiet(${context.stash.put("accountName", ${context.identity.username})})}
+${util.quiet(${context.stash.put("cognitoIdentityIdIsValid", $cognitoIdentityIdIsValid)})}
+${util.quiet(${context.stash.put("cognitoIdentityId", ${context.arguments.input.cognitoIdentityId})})}
+{}
+
+## Mutation_getCognitoIdentityId_Function
+#set($cognitoIdentityId = ${context.stash.cognitoIdentityId})
+{
+  "version": "2017-02-28",
+  "operation": "Query",
+  "index": "cognitoIdentityId-index",
+  "query": {
+    "expression": "cognitoIdentityId = :cognitoIdentityId",
+    "expressionValues": {
+      ":cognitoIdentityId": { "S": "$cognitoIdentityId" }
+    }
+  }
+}
+
+${util.toJson(${context.result})}
+
+## deleteAccount
+#set($cognitoIdentityIds = ${context.prev.result.items})
+{
+  "version": "2017-02-28",
+  "operation": "Invoke",
+  "payload": {
+  #if(!${cognitoIdentityIds.isEmpty()} || !${context.stash.cognitoIdentityIdIsValid})
+    "accountName": "${context.stash.accountName}"
+    ${util.quiet(${context.stash.put("errorExists", true)})}
+  #else
+    ${util.quiet(${context.stash.put("errorExists", false)})}
+    #return
+  #end
+  }
+}
+
+${util.toJson(${context.result})}
+
+## Mutation_setCognitoIdentityId_Function
+#if(${context.stash.errorExists})
+  ${util.error("Error")}
+#end
+#set($accountName = ${context.stash.accountName})
+#set($displayName = ${accountName.substring(96)})
+#set($cognitoIdentityId = ${context.stash.cognitoIdentityId})
+{
+  "version": "2017-02-28",
+  "operation": "UpdateItem",
+  "key": {
+    "displayName": { "S": "$displayName" }
+  },
+  "update": {
+    "expression": "SET cognitoIdentityId = :cognitoIdentityId",
+    "expressionValues": {
+      ":cognitoIdentityId": { "S": "$cognitoIdentityId" }
+    }
+  }
+}
+
+${util.toJson(${context.result})}
+
+## After mapping template.
+${util.toJson(${context.result})}
+
+## end
+## end
+
 ## Resolver for Query.getObjectKeys
 #set($path = ${util.toJson("/screens/_search")})
 #if(${context.arguments.input.containsKey("objectKey")})
