@@ -55,10 +55,10 @@ type Mutation {
   changePosterId(input: ChangePosterIdInput!): ConnectionTimedOut
   setStatus(input: SetStatusInput!): ConnectionTimedOut
   deleteScreen(input: DeleteScreenInput!): ConnectionTimedOut
-  confirmScreen(input: ConfirmScreenInput!): [ObjectKey]
+  confirmScreen(input: ConfirmScreenInput!): [ObjectKey] @aws_cognito_user_pools
 }
 
-type ObjectKey {
+type ObjectKey @aws_cognito_user_pools {
   objectKey: String
 }
 

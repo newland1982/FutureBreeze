@@ -127,28 +127,12 @@ ${utils.toJson(${context.result})}
 #set($unixTimestampPattern = "[0-9]{13,}")
 #set($screenNamePattern = $s3FileAccessLevel + "/" + $region + ":" + $UUIDPattern + "/" + $displayNamePattern + "_" + $displayNameSuffixPattern + "/" + $unixTimestampPattern)
 #set($screenNameIsValid = ${util.matches($screenNamePattern, ${context.arguments.input.screenName})})
+${util.quiet(${context.stash.put("accountName", ${context.identity.username})})}
 ${util.quiet(${context.stash.put("screenNameIsValid", $screenNameIsValid)})}
 ${util.quiet(${context.stash.put("screenName", ${context.arguments.input.screenName})})}
 {}
 
-## Mutation_getCognitoIdentityId_Function
-#set($cognitoIdentityId = ${context.stash.cognitoIdentityId})
-{
-  "version": "2017-02-28",
-  "operation": "Query",
-  "index": "cognitoIdentityId-index",
-  "query": {
-    "expression": "cognitoIdentityId = :cognitoIdentityId",
-    "expressionValues": {
-      ":cognitoIdentityId": { "S": "$cognitoIdentityId" }
-    }
-  }
-}
-
-${util.toJson(${context.result})}
-
 ## deleteAccount
-#set($cognitoIdentityIds = ${context.prev.result.items})
 {
   "version": "2017-02-28",
   "operation": "Invoke",
