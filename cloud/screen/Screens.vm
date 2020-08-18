@@ -137,7 +137,7 @@ ${util.quiet(${context.stash.put("screenName", ${context.arguments.input.screenN
   "version": "2017-02-28",
   "operation": "Invoke",
   "payload": {
-  #if(!${cognitoIdentityIds.isEmpty()} || !${context.stash.cognitoIdentityIdIsValid})
+  #if(!${context.stash.screenNameIsValid})
     "accountName": "${context.stash.accountName}"
     ${util.quiet(${context.stash.put("errorExists", true)})}
   #else
