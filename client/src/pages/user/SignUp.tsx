@@ -87,8 +87,13 @@ const SignUp = () => {
   const [signUpButtonHasBeenClicked, setSignUpButtonHasBeenClicked] = useState(
     false
   );
-  const [intervalTimerId, setIntervalTimerId] = useState(0);
+
   const intervalTime = 2400;
+  let setIntervalCountLimit = 6;
+  const [intervalTimerId, setIntervalTimerId] = useState(0);
+  const [setIntervalCount, setSetIntervalCount] = useState(0);
+  const refSetIntervalCount = useRef(setIntervalCount);
+
   const [signUpUsersStatus, setSignUpUsersStatus] = useState('');
   const [userHasSignedUp, setUserHasSignedUp] = useState(false);
   const [userHasSignedIn, setUserHasSignedIn] = useState(false);
@@ -217,6 +222,10 @@ const SignUp = () => {
       id,
     };
     const signUpUsersStatusWatcher = async () => {
+      if (refSetIntervalCount.current + 1 > setIntervalCountLimit) {
+        setSetIntervalCount(refSetIntervalCount.current + 1);
+        return;
+      }
       try {
         const result = await API.graphql(
           graphqlOperation(signUpUsers_Query_GetStatus, {
@@ -224,15 +233,24 @@ const SignUp = () => {
           })
         );
         setSignUpUsersStatus(`${result.data.getStatus.status}`);
+        setSetIntervalCount(refSetIntervalCount.current + 1);
       } catch (error) {
         return;
       }
     };
-
     setIntervalTimerId(
       window.setInterval(signUpUsersStatusWatcher, intervalTime)
     );
   };
+
+  useEffect(() => {
+    refSetIntervalCount.current = setIntervalCount;
+
+    if (refSetIntervalCount.current > setIntervalCountLimit) {
+      setSignUpUsersStatus('timeOut');
+      return;
+    }
+  }, [intervalTimerId, setIntervalCountLimit, setIntervalCount]);
 
   useEffect(() => {
     if (
