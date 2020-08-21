@@ -92,7 +92,14 @@ const SignUp = () => {
   let setIntervalCountLimit = 6;
   const [intervalTimerId, setIntervalTimerId] = useState(0);
   const [setIntervalCount, setSetIntervalCount] = useState(0);
+  const [
+    graphqlOperation_SignUpUsers_Query_GetStatus_IsCompleted,
+    set_GraphqlOperation_SignUpUsers_Query_GetStatus_IsCompleted,
+  ] = useState(true);
   const refSetIntervalCount = useRef(setIntervalCount);
+  const ref_GraphqlOperation_SignUpUsers_Query_GetStatus_IsCompleted = useRef(
+    graphqlOperation_SignUpUsers_Query_GetStatus_IsCompleted
+  );
 
   const [signUpUsersStatus, setSignUpUsersStatus] = useState('');
   const [userHasSignedUp, setUserHasSignedUp] = useState(false);
@@ -227,6 +234,12 @@ const SignUp = () => {
         return;
       }
       try {
+        if (
+          !ref_GraphqlOperation_SignUpUsers_Query_GetStatus_IsCompleted.current
+        ) {
+          return;
+        }
+        set_GraphqlOperation_SignUpUsers_Query_GetStatus_IsCompleted(false);
         const result = await API.graphql(
           graphqlOperation(signUpUsers_Query_GetStatus, {
             input: signUpUsers_Query_GetStatus_Input,
@@ -234,6 +247,7 @@ const SignUp = () => {
         );
         setSignUpUsersStatus(`${result.data.getStatus.status}`);
         setSetIntervalCount(refSetIntervalCount.current + 1);
+        set_GraphqlOperation_SignUpUsers_Query_GetStatus_IsCompleted(true);
       } catch (error) {
         return;
       }
@@ -245,12 +259,21 @@ const SignUp = () => {
 
   useEffect(() => {
     refSetIntervalCount.current = setIntervalCount;
+    ref_GraphqlOperation_SignUpUsers_Query_GetStatus_IsCompleted.current = graphqlOperation_SignUpUsers_Query_GetStatus_IsCompleted;
 
-    if (refSetIntervalCount.current > setIntervalCountLimit) {
+    if (
+      refSetIntervalCount.current > setIntervalCountLimit &&
+      ref_GraphqlOperation_SignUpUsers_Query_GetStatus_IsCompleted.current
+    ) {
       setSignUpUsersStatus('timeOut');
       return;
     }
-  }, [intervalTimerId, setIntervalCountLimit, setIntervalCount]);
+  }, [
+    intervalTimerId,
+    setIntervalCountLimit,
+    setIntervalCount,
+    graphqlOperation_SignUpUsers_Query_GetStatus_IsCompleted,
+  ]);
 
   useEffect(() => {
     if (
