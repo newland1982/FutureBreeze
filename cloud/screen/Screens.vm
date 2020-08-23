@@ -149,31 +149,45 @@ ${util.quiet(${context.stash.put("screenName", ${context.arguments.input.screenN
 
 ${util.toJson(${context.result})}
 
-## Mutation_setCognitoIdentityId_Function
+## Query_getObjectKeys_Function
 #if(${context.stash.errorExists})
   ${util.error("Error")}
 #end
-#set($accountName = ${context.stash.accountName})
-#set($displayName = ${accountName.substring(96)})
-#set($cognitoIdentityId = ${context.stash.cognitoIdentityId})
+#set($path = ${util.toJson("/screens/_search")})
+#set($from = 0)
+#set($size = 3)
+#set($screenName = ${context.stash.screenName})
 {
   "version": "2017-02-28",
-  "operation": "UpdateItem",
-  "key": {
-    "displayName": { "S": "$displayName" }
-  },
-  "update": {
-    "expression": "SET cognitoIdentityId = :cognitoIdentityId",
-    "expressionValues": {
-      ":cognitoIdentityId": { "S": "$cognitoIdentityId" }
+  "operation": "GET",
+  "path": $path,
+  "params": {
+    "headers": {},
+    "queryString": {},
+    "body": {
+      "from": $from,
+      "size": $size,
+      "query": {
+        "term": {
+          "screenName": "$screenName"
+        }
+      },
+      "_source": ["objectKey"]
     }
   }
 }
 
-${util.toJson(${context.result})}
+[
+  #foreach($entry in ${context.result.hits.hits})
+    #if($velocityCount > 1), #end
+      ${utils.toJson(${entry.get("_source")})}
+  #end
+]
 
 ## After mapping template.
-${util.toJson(${context.result})}
+{
+  "objectKeys": ${utils.toJson(${context.prev.result.items})}
+}
 
 ## end
 ## end
