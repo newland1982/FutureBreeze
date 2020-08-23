@@ -58,7 +58,7 @@ type Mutation {
   confirmScreen(input: ConfirmScreenInput!): [ObjectKey] @aws_cognito_user_pools
 }
 
-type ObjectKey {
+type ObjectKey @aws_cognito_user_pools {
   objectKey: String
 }
 

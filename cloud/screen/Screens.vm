@@ -185,9 +185,7 @@ ${util.toJson(${context.result})}
 ]
 
 ## After mapping template.
-{
-  "objectKeys": ${utils.toJson(${context.prev.result.items})}
-}
+${utils.toJson(${context.prev.result})}
 
 ## end
 ## end
