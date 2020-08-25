@@ -201,7 +201,7 @@ ${util.toJson(${context.result})}
     "body": {
       "query": { 
         "term": {
-        #if(${utils.toJson(${context.prev.result}).size()} == ${context.stash.types.size()})
+        #if(${utils.toJson(${context.prev.result.size()})} == ${context.stash.types.size()})
           "screenName": "$screenName"
           ${util.quiet(${context.stash.put("confirmScreenIsCompleted", true)})}
         #else
