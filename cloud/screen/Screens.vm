@@ -225,6 +225,7 @@ ${utils.toJson(${context.result})}
 #else
   ${util.quiet(${context.result.put("confirmScreenIsCompleted", true)})}
 #end
+${utils.toJson(${context.result})}
 
 ## end
 ## end
