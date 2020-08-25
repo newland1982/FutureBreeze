@@ -55,7 +55,12 @@ type Mutation {
   changePosterId(input: ChangePosterIdInput!): ConnectionTimedOut
   setStatus(input: SetStatusInput!): ConnectionTimedOut
   deleteScreen(input: DeleteScreenInput!): ConnectionTimedOut
-  confirmScreen(input: ConfirmScreenInput!): [ObjectKey] @aws_cognito_user_pools
+  confirmScreen(input: ConfirmScreenInput!): ConfirmScreenIsCompleted
+    @aws_cognito_user_pools
+}
+
+type ConfirmScreenIsCompleted @aws_cognito_user_pools {
+  confirmScreenIsCompleted: Boolean
 }
 
 type ObjectKey @aws_iam @aws_cognito_user_pools {

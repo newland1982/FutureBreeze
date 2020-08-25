@@ -132,6 +132,7 @@ ${util.quiet(${context.stash.put("types", $types)})}
 ${util.quiet(${context.stash.put("accountName", ${context.identity.username})})}
 ${util.quiet(${context.stash.put("screenNameIsValid", $screenNameIsValid)})}
 ${util.quiet(${context.stash.put("screenName", ${context.arguments.input.screenName})})}
+${util.quiet(${context.stash.put("confirmScreenIsCompleted", false)})}
 {}
 
 ## deleteAccount
@@ -202,9 +203,9 @@ ${util.toJson(${context.result})}
         "term": {
         #if(${utils.toJson(${context.prev.result}).size()} == ${context.stash.types.size()})
           "screenName": "$screenName"
-          ${util.quiet(${context.stash.put("errorExists", false)})}
+          ${util.quiet(${context.stash.put("confirmScreenIsCompleted", true)})}
         #else
-          ${util.quiet(${context.stash.put("errorExists", true)})}
+          ${util.quiet(${context.stash.put("confirmScreenIsCompleted", false)})}
           #return
         #end
         }
@@ -219,10 +220,11 @@ ${util.toJson(${context.result})}
 ${utils.toJson(${context.result})}
 
 ## After mapping template.
-#if(${context.stash.errorExists})
-  ${util.error("Error")}
+#if(!${context.stash.confirmScreenIsCompleted})
+  ${util.quiet(${context.result.put("confirmScreenIsCompleted", false)})}
+#else
+  ${util.quiet(${context.result.put("confirmScreenIsCompleted", true)})}
 #end
-${utils.toJson(${context.prev.result})}
 
 ## end
 ## end
