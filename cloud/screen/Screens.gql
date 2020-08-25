@@ -15,6 +15,10 @@ input ConfirmScreenInput {
   screenName: String!
 }
 
+type ConfirmScreenIsCompleted @aws_cognito_user_pools {
+  confirmScreenIsCompleted: Boolean
+}
+
 type ConnectionTimedOut {
   timed_out: Boolean
 }
@@ -57,10 +61,6 @@ type Mutation {
   deleteScreen(input: DeleteScreenInput!): ConnectionTimedOut
   confirmScreen(input: ConfirmScreenInput!): ConfirmScreenIsCompleted
     @aws_cognito_user_pools
-}
-
-type ConfirmScreenIsCompleted @aws_cognito_user_pools {
-  confirmScreenIsCompleted: Boolean
 }
 
 type ObjectKey @aws_iam @aws_cognito_user_pools {
