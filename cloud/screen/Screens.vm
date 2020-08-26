@@ -158,7 +158,7 @@ ${util.toJson(${context.result})}
 #end
 #set($path = ${util.toJson("/screens/_search")})
 #set($from = 0)
-#set($size = 3)
+#set($size = ${context.stash.types.size()})
 #set($screenName = ${context.stash.screenName})
 {
   "version": "2017-02-28",
@@ -231,6 +231,7 @@ ${utils.toJson(${context.result})}
 ## end
 
 ## Resolver for Query.getObjectKeys
+#set($types = ["thumbnail", "mobile", "pc"])
 #set($path = ${util.toJson("/screens/_search")})
 #if(${context.arguments.input.containsKey("objectKey")})
   #set($from = 0)
@@ -240,7 +241,7 @@ ${utils.toJson(${context.result})}
 #end
 #if(${context.arguments.input.containsKey("screenName")})
   #set($from = 0)
-  #set($size = 3)
+  #set($size = ${types.size()})
   #set($objectKey = "")
   #set($screenName = ${context.arguments.input.screenName})
 #end
