@@ -201,12 +201,12 @@ ${util.toJson(${context.result})}
     "body": {
       "query": { 
         "term": {
-        #if(${utils.toJson(${context.prev.result.size()})} == ${context.stash.types.size()})
-          "screenName": "$screenName"
-          ${util.quiet(${context.stash.put("confirmScreenIsCompleted", true)})}
-        #else
+        #if(${utils.toJson(${context.prev.result.size()})} != ${context.stash.types.size()})
           ${util.quiet(${context.stash.put("confirmScreenIsCompleted", false)})}
           #return
+        #else
+          "screenName": "$screenName"
+          ${util.quiet(${context.stash.put("confirmScreenIsCompleted", true)})}
         #end
         }
       },
