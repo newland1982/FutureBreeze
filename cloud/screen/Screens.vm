@@ -136,17 +136,17 @@ ${util.quiet(${context.stash.put("confirmScreenIsCompleted", false)})}
 {}
 
 ## deleteAccount
+#if(${context.stash.screenNameIsValid})
+  ${util.quiet(${context.stash.put("errorExists", false)})}
+  #return
+#else
+  ${util.quiet(${context.stash.put("errorExists", true)})}
+#end
 {
   "version": "2017-02-28",
   "operation": "Invoke",
   "payload": {
-  #if(!${context.stash.screenNameIsValid})
     "accountName": "${context.stash.accountName}"
-    ${util.quiet(${context.stash.put("errorExists", true)})}
-  #else
-    ${util.quiet(${context.stash.put("errorExists", false)})}
-    #return
-  #end
   }
 }
 
@@ -188,6 +188,11 @@ ${util.toJson(${context.result})}
 ]
 
 ## Mutation_confirmScreen_Function
+#if(${context.prev.result.size()} != ${context.stash.types.size()})
+  #return
+#else
+  ${util.quiet(${context.stash.put("confirmScreenIsCompleted", true)})}
+#end
 #set($path = ${util.toJson("/screens/_update_by_query?conflicts=proceed")})
 #set($screenName = ${context.stash.screenName})
 #set($status = "completed")
@@ -201,12 +206,7 @@ ${util.toJson(${context.result})}
     "body": {
       "query": { 
         "term": {
-        #if(${context.prev.result.size()} != ${context.stash.types.size()})
-          #return
-        #else
           "screenName": "$screenName"
-          ${util.quiet(${context.stash.put("confirmScreenIsCompleted", true)})}
-        #end
         }
       },
       "script": {
