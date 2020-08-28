@@ -132,7 +132,6 @@ ${util.quiet(${context.stash.put("types", $types)})}
 ${util.quiet(${context.stash.put("accountName", ${context.identity.username})})}
 ${util.quiet(${context.stash.put("screenNameIsValid", $screenNameIsValid)})}
 ${util.quiet(${context.stash.put("screenName", ${context.arguments.input.screenName})})}
-${util.quiet(${context.stash.put("confirmScreenIsCompleted", false)})}
 {}
 
 ## deleteAccount
@@ -189,6 +188,7 @@ ${util.toJson(${context.result})}
 
 ## Mutation_confirmScreen_Function
 #if(${context.prev.result.size()} != ${context.stash.types.size()})
+  ${util.quiet(${context.stash.put("confirmScreenIsCompleted", false)})}
   #return
 #else
   ${util.quiet(${context.stash.put("confirmScreenIsCompleted", true)})}
