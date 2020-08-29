@@ -128,9 +128,9 @@ ${utils.toJson(${context.result})}
 #set($unixTimestampPattern = "[0-9]{13,}")
 #set($screenNamePattern = $s3FileAccessLevel + "/" + $region + ":" + $UUIDPattern + "/" + $displayNamePattern + "_" + $displayNameSuffixPattern + "/" + $unixTimestampPattern)
 #set($screenNameIsValid = ${util.matches($screenNamePattern, ${context.arguments.input.screenName})})
+${util.quiet(${context.stash.put("screenNameIsValid", $screenNameIsValid)})}
 ${util.quiet(${context.stash.put("types", $types)})}
 ${util.quiet(${context.stash.put("accountName", ${context.identity.username})})}
-${util.quiet(${context.stash.put("screenNameIsValid", $screenNameIsValid)})}
 ${util.quiet(${context.stash.put("screenName", ${context.arguments.input.screenName})})}
 {}
 
