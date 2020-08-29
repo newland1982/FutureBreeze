@@ -136,10 +136,7 @@ ${util.quiet(${context.stash.put("screenName", ${context.arguments.input.screenN
 
 ## deleteAccount
 #if(${context.stash.screenNameIsValid})
-  ${util.quiet(${context.stash.put("errorExists", false)})}
   #return
-#else
-  ${util.quiet(${context.stash.put("errorExists", true)})}
 #end
 {
   "version": "2017-02-28",
@@ -152,7 +149,7 @@ ${util.quiet(${context.stash.put("screenName", ${context.arguments.input.screenN
 ${util.toJson(${context.result})}
 
 ## Query_getObjectKeys_Function
-#if(${context.stash.errorExists})
+#if(!${context.stash.screenNameIsValid})
   ${util.error("Error")}
 #end
 #set($path = ${util.toJson("/screens/_search")})
