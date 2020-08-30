@@ -115,7 +115,6 @@ ${utils.toJson(${context.result})}
 
 ${utils.toJson(${context.result})}
 
-## begin
 ## pipeline resolver for Mutation.confirmScreen
 ## begin
 ## Before mapping template.
@@ -218,7 +217,6 @@ ${utils.toJson(${context.result})}
 ## After mapping template.
 ${utils.toJson(${context.prev.result})}
 
-## end
 ## end
 
 ## Resolver for Query.getObjectKeys
