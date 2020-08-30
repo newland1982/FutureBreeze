@@ -30,6 +30,7 @@ ${util.toJson(${context.result})}
 ## pipeline resolver for Mutation.setCognitoIdentityId
 ## begin
 ## Before mapping template.
+${util.quiet(${context.stash.put("errorExists", false)})}
 #set($region = "ap-northeast-1")
 #set($UUIDPattern = "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}")
 #set($cognitoIdentityIdPattern = $region + ":" + $UUIDPattern)
@@ -57,17 +58,16 @@ ${util.toJson(${context.result})}
 
 ## deleteAccount
 #set($cognitoIdentityIds = ${context.prev.result.items})
+#if(${cognitoIdentityIds.isEmpty()} && ${context.stash.cognitoIdentityIdIsValid})
+  #return
+#else
+  ${util.quiet(${context.stash.put("errorExists", true)})}
+#end
 {
   "version": "2017-02-28",
   "operation": "Invoke",
   "payload": {
-  #if(!${cognitoIdentityIds.isEmpty()} || !${context.stash.cognitoIdentityIdIsValid})
     "accountName": "${context.stash.accountName}"
-    ${util.quiet(${context.stash.put("errorExists", true)})}
-  #else
-    ${util.quiet(${context.stash.put("errorExists", false)})}
-    #return
-  #end
   }
 }
 
