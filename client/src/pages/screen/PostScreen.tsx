@@ -103,9 +103,9 @@ const PostScreen = () => {
 
   const blobSizeLimit = 8 * 1000 * 1000;
 
-  const appropriateImageWidthForPC = 1980;
-  const appropriateImageWidthForMobile = 744;
-  const appropriateImageWidthForThumbnail = 312;
+  const appropriateImageWidthForPC = 1980 * 0.48;
+  const appropriateImageWidthForMobile = 744 * 0.48;
+  const appropriateImageWidthForThumbnail = 312 * 0.48;
 
   const initialStyleElementTextContent = useMemo(() => {
     const styleElement = document.getElementById('style');
