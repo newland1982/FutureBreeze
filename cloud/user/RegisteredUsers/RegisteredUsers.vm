@@ -36,8 +36,9 @@ ${util.quiet(${context.stash.put("errorExists", false)})}
 #set($cognitoIdentityIdPattern = $region + ":" + $UUIDPattern)
 #set($cognitoIdentityIdIsValid = ${util.matches($cognitoIdentityIdPattern, ${context.arguments.input.cognitoIdentityId})})
 ${util.quiet(${context.stash.put("cognitoIdentityIdIsValid", $cognitoIdentityIdIsValid)})}
-${util.quiet(${context.stash.put("accountName", ${context.identity.username})})}
 ${util.quiet(${context.stash.put("cognitoIdentityId", ${context.arguments.input.cognitoIdentityId})})}
+${util.quiet(${context.stash.put("accountName", ${context.identity.username})})}
+${util.quiet(${context.stash.put("displayName", ${context.identity.username.substring(96)})})}
 {}
 
 ## Mutation_getCognitoIdentityId_Function
@@ -78,7 +79,7 @@ ${util.toJson(${context.result})}
   ${util.error("Error")}
 #end
 #set($accountName = ${context.stash.accountName})
-#set($displayName = ${accountName.substring(96)})
+#set($displayName = ${context.stash.displayName})
 #set($cognitoIdentityId = ${context.stash.cognitoIdentityId})
 {
   "version": "2017-02-28",
