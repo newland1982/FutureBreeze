@@ -97,7 +97,36 @@ ${util.toJson(${context.result})}
 
 ${util.toJson(${context.result})}
 
+## Mutation_setStatus_Function
+#if(${context.prev.result.cognitoIdentityId} != ${context.stash.cognitoIdentityId})
+  ${util.quiet(${context.stash.put("errorExists", true)})}
+  #return
+#end
+#set($displayName = ${context.stash.displayName})
+#set($status = "completed")
+{
+  "version": "2017-02-28",
+  "operation": "UpdateItem",
+  "key": {
+    "displayName": { "S": "$displayName" }
+  },
+  "update": {
+    "expression": "SET #status = :status",
+    "expressionNames": {
+      "#status": "status"
+    },
+    "expressionValues": {
+      ":status": { "S": "$status" }
+    }
+  }
+}
+
+${util.toJson(${context.result})}
+
 ## After mapping template.
+#if(${context.stash.errorExists})
+  ${util.error("Error")}
+#end
 ${util.toJson(${context.result})}
 
 ## end
