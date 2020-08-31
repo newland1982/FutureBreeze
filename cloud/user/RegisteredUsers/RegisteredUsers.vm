@@ -103,7 +103,7 @@ ${util.toJson(${context.result})}
   #return
 #end
 #set($displayName = ${context.stash.displayName})
-#set($status = "completed")
+#set($status = "valid")
 {
   "version": "2017-02-28",
   "operation": "UpdateItem",
