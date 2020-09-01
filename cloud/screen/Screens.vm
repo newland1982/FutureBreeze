@@ -227,8 +227,7 @@ ${utils.toJson(${context.prev.result})}
   #set($size = 1)
   #set($objectKey = ${context.arguments.input.objectKey})
   #set($screenName = "")
-#end
-#if(${context.arguments.input.containsKey("screenName")})
+#elseif(${context.arguments.input.containsKey("screenName")})
   #set($from = 0)
   #set($size = ${types.size()})
   #set($objectKey = "")
@@ -248,8 +247,7 @@ ${utils.toJson(${context.prev.result})}
         "term": {
           #if($objectKey != "")
             "objectKey": "$objectKey"
-          #end
-          #if($screenName != "")
+          #elseif($screenName != "")
             "screenName": "$screenName"
           #end
         }

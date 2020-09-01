@@ -37,7 +37,8 @@ type DisplayName {
 }
 
 input GetAccountNamesInput {
-  cognitoIdentityId: String!
+  cognitoIdentityId: String
+  status: String
 }
 
 input GetCreatedDateInput {
@@ -55,7 +56,7 @@ input GetPostScreenCountInput {
 type Mutation {
   createRegisteredUser(input: CreateRegisteredUserInput!): DisplayName
   setCognitoIdentityId(input: SetCognitoIdentityIdInput!): CognitoIdentityId
-    @aws_cognito_user_pools
+  @aws_cognito_user_pools
   deleteRegisteredUser(input: DeleteRegisteredUserInput!): DisplayName
   prepareSetPostScreenCount(
     input: PrepareSetPostScreenCountInput!

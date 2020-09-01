@@ -247,16 +247,36 @@ ${util.toJson(${context.result})}
 ${util.toJson(${context.result})}
 
 ## Resolver for Query.getAccountNames
-#set($cognitoIdentityId = ${context.arguments.input.cognitoIdentityId})
+#if(${context.arguments.input.containsKey("cognitoIdentityId")})
+  #set($cognitoIdentityId = ${context.arguments.input.cognitoIdentityId})
+  #set($status = "")
+#elseif(${context.arguments.input.containsKey("status")})
+  #set($cognitoIdentityId = "")
+  #set($status = ${context.arguments.input.status})
+#end
 {
   "version": "2017-02-28",
   "operation": "Query",
-  "index": "cognitoIdentityId-index",
+  #if($cognitoIdentityId != "")
+    "index": "cognitoIdentityId-index",
+  #elseif($status != "")
+    "index": "status-index",
+  #end
   "query": {
-    "expression": "cognitoIdentityId = :cognitoIdentityId",
-    "expressionValues": {
-      ":cognitoIdentityId": { "S": "$cognitoIdentityId" }
-    }
+    #if($cognitoIdentityId != "")
+      "expression": "cognitoIdentityId = :cognitoIdentityId",
+      "expressionValues": {
+        ":cognitoIdentityId": { "S": "$cognitoIdentityId" }
+      }
+    #elseif($status != "")
+      "expression": "#status = :status",
+      "expressionNames": {
+        "#status": "status"
+      },
+      "expressionValues": {
+        ":status": { "S": "$status" }
+      }
+    #end
   }
 }
 
