@@ -39,7 +39,9 @@ const screens_Query_GetObjectKeys = gql(`
 const screens_Query_GetScreenNames = gql(`
   query GetScreenNames($input: GetScreenNamesInput!) {
     getScreenNames(input: $input) {
-      screenName
+      screenNames {
+        screenName
+      }
     }
   }`);
 
@@ -132,17 +134,17 @@ exports.handler = () => {
             );
 
             if (
-              screens_Query_GetScreenNames_Result.data.getScreenNames.length <
-              screens_Query_GetScreenNames_Size
+              screens_Query_GetScreenNames_Result.data.getScreenNames
+                .screenNames.length < screens_Query_GetScreenNames_Size
             ) {
               unprocessedTypes.splice(unprocessedTypes.indexOf(type), 1);
             }
 
             if (
-              screens_Query_GetScreenNames_Result.data.getScreenNames.length !==
-              0
+              screens_Query_GetScreenNames_Result.data.getScreenNames
+                .screenNames.length !== 0
             ) {
-              const screenNames = screens_Query_GetScreenNames_Result.data.getScreenNames.map(
+              const screenNames = screens_Query_GetScreenNames_Result.data.getScreenNames.screenNames.map(
                 (value) => value.screenName
               );
               await Promise.all(
