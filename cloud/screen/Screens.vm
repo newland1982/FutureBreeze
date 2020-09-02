@@ -175,15 +175,17 @@ ${util.toJson(${context.result})}
   }
 }
 
-[
-  #foreach($entry in ${context.result.hits.hits})
-    #if($velocityCount > 1), #end
-      ${utils.toJson(${entry.get("_source")})}
-  #end
-]
+{
+  "objectKeys": [
+    #foreach($entry in ${context.result.hits.hits})
+      #if($velocityCount > 1), #end
+        ${utils.toJson(${entry.get("_source")})}
+    #end
+  ]
+}
 
 ## Mutation_confirmScreen_Function
-#if(${context.prev.result.size()} != ${context.stash.types.size()})
+#if(${context.prev.result.objectKeys.size()} != ${context.stash.types.size()})
   #return({"confirmScreenIsCompleted": false})
 #end
 #set($path = ${util.toJson("/screens/_update_by_query?conflicts=proceed")})
@@ -257,12 +259,14 @@ ${utils.toJson(${context.prev.result})}
   }
 }
 
-[
-  #foreach($entry in ${context.result.hits.hits})
-    #if($velocityCount > 1), #end
-      ${utils.toJson(${entry.get("_source")})}
-  #end
-]
+{
+  "objectKeys": [
+    #foreach($entry in ${context.result.hits.hits})
+      #if($velocityCount > 1), #end
+        ${utils.toJson(${entry.get("_source")})}
+    #end
+  ]
+}
 
 ## Resolver for Query.getScreenNames
 #set($path = ${util.toJson("/screens/_search")})
@@ -312,12 +316,14 @@ ${utils.toJson(${context.prev.result})}
   }
 }
 
-[
-  #foreach($entry in ${context.result.hits.hits})
-    #if($velocityCount > 1), #end
-      ${utils.toJson(${entry.get("_source")})}
-  #end
-]
+{
+  "screenNames": [
+    #foreach($entry in ${context.result.hits.hits})
+      #if($velocityCount > 1), #end
+        ${utils.toJson(${entry.get("_source")})}
+    #end
+  ]
+}
 
 ## Resolver for Query.getVersionIds
 #set($path = ${util.toJson("/screens/_search")})
@@ -344,9 +350,11 @@ ${utils.toJson(${context.prev.result})}
   }
 }
 
-[
-  #foreach($entry in ${context.result.hits.hits})
-    #if($velocityCount > 1), #end
-      ${utils.toJson(${entry.get("_source")})}
-  #end
-]
+{
+  "versionIds": [
+    #foreach($entry in ${context.result.hits.hits})
+      #if($velocityCount > 1), #end
+        ${utils.toJson(${entry.get("_source")})}
+    #end
+  ]
+}
