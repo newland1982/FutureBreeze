@@ -26,7 +26,9 @@ const screens_Mutation_CreateScreen = gql(`
 const screens_Query_GetObjectKeys = gql(`
   query GetObjectKeys($input: GetObjectKeysInput!) {
     getObjectKeys(input: $input) {
-      objectKey
+      objectKeys {
+        objectKey
+      }
     }
   }`);
 
@@ -324,7 +326,8 @@ exports.handler = (event, context, callback) => {
 
         if (
           !(
-            screens_Query_GetObjectKeys_Result.data.getObjectKeys.length === 0
+            screens_Query_GetObjectKeys_Result.data.getObjectKeys.objectKeys
+              .length === 0
           ) ||
           !(postScreenCount + 1 <= Number(process.env.Post_Screen_Count_Limit))
         ) {
