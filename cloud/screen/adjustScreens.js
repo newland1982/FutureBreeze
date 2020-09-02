@@ -32,7 +32,9 @@ const screens_Mutation_DeleteScreen = gql(`
 const screens_Query_GetObjectKeys = gql(`
   query GetObjectKeys($input: GetObjectKeysInput!) {
     getObjectKeys(input: $input) {
-      objectKey
+      objectKeys {
+        objectKey
+      }
     }
   }`);
 
@@ -159,7 +161,7 @@ exports.handler = () => {
                       fetchPolicy: 'network-only',
                     }
                   );
-                  const objectKeys = screens_Query_GetObjectKeys_Result.data.getObjectKeys.map(
+                  const objectKeys = screens_Query_GetObjectKeys_Result.data.getObjectKeys.objectKeys.map(
                     (value) => value.objectKey
                   );
                   if (objectKeys.length === types.length) {
