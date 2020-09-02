@@ -46,7 +46,9 @@ const screens_Query_GetScreenNames = gql(`
 const screens_Query_GetVersionIds = gql(`
   query GetVersionIds($input: GetVersionIdsInput!) {
     getVersionIds(input: $input) {
-      versionId
+      versionIds {
+        versionId
+      }
     }
   }`);
 
@@ -188,7 +190,7 @@ exports.handler = () => {
                           Key: objectKey,
                           VersionId:
                             screens_Query_GetVersionIds_Result.data
-                              .getVersionIds[0].versionId,
+                              .getVersionIds.versionIds[0].versionId,
                         };
                         deleteS3Object(
                           new AWS.S3(),
