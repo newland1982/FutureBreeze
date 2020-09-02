@@ -60,11 +60,15 @@ type Mutation {
   setStatus(input: SetStatusInput!): ConnectionTimedOut
   deleteScreen(input: DeleteScreenInput!): ConnectionTimedOut
   confirmScreen(input: ConfirmScreenInput!): ConfirmScreenIsCompleted
-    @aws_cognito_user_pools
+  @aws_cognito_user_pools
 }
 
 type ObjectKey @aws_iam @aws_cognito_user_pools {
   objectKey: String
+}
+
+type ObjectKeys @aws_iam @aws_cognito_user_pools {
+  objectKeys: [ObjectKey]
 }
 
 type PosterId {
@@ -72,13 +76,17 @@ type PosterId {
 }
 
 type Query {
-  getObjectKeys(input: GetObjectKeysInput!): [ObjectKey]
-  getScreenNames(input: GetScreenNamesInput!): [ScreenName]
-  getVersionIds(input: GetVersionIdsInput!): [VersionId]
+  getObjectKeys(input: GetObjectKeysInput!): ObjectKeys
+  getScreenNames(input: GetScreenNamesInput!): ScreenNames
+  getVersionIds(input: GetVersionIdsInput!): VersionIds
 }
 
 type ScreenName {
   screenName: String
+}
+
+type ScreenNames {
+  screenNames: [ScreenName]
 }
 
 input SetStatusInput {
@@ -92,6 +100,10 @@ type Type {
 
 type VersionId {
   versionId: String
+}
+
+type VersionIds {
+  versionIds: [VersionId]
 }
 
 schema {
