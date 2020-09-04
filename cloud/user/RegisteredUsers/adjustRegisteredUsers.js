@@ -46,18 +46,18 @@ const errorsClient = new AWSAppSyncClient({
   disableOffline: true,
 });
 
-const actions = ['deleteS3Object'];
+const statuses = ['init', 'invalid'];
 
 const errors_Query_GetDatas_Limit = 12;
 
 exports.handler = () => {
-  let unprocessedActions = actions.slice();
+  let unprocessedActions = statuses.slice();
 
   (async () => {
     await errorsClient.hydrated();
 
     do {
-      for (const action of actions) {
+      for (const action of statuses) {
         if (unprocessedActions.indexOf(action) !== -1) {
           try {
             const errors_Query_GetDatas_Input = {
