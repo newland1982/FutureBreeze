@@ -43,11 +43,11 @@ ${util.toJson(${context.result})}
 
 ## Resolver for Query.getDatas
 #set($limit = ${context.arguments.input.limit})
-#set($action = ${context.arguments.input.action})
 ## #set($createdDateMargin = 86400000)
 #set($createdDateMargin = 1)
 #set($currentDate = ${util.time.nowEpochMilliSeconds()})
 #set($createdDateLimit = $currentDate - $createdDateMargin)
+#set($action = ${context.arguments.input.action})
 {
   "version": "2017-02-28",
   "operation": "Query",

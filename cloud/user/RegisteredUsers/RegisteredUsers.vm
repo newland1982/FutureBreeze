@@ -247,6 +247,10 @@ ${util.toJson(${context.result})}
 ${util.toJson(${context.result})}
 
 ## Resolver for Query.getAccountNames
+## #set($createdDateMargin = 86400000)
+#set($createdDateMargin = 1)
+#set($currentDate = ${util.time.nowEpochMilliSeconds()})
+#set($createdDateLimit = $currentDate - $createdDateMargin)
 #if(${context.arguments.input.containsKey("cognitoIdentityId")})
   #set($cognitoIdentityId = ${context.arguments.input.cognitoIdentityId})
   #set($status = "")
@@ -261,6 +265,12 @@ ${util.toJson(${context.result})}
     "index": "cognitoIdentityId-index",
   #elseif($status != "")
     "index": "status-index",
+    "filter": {
+      "expression": "createdDate < :createdDateLimit",
+      "expressionValues": {
+        ":createdDateLimit": { "N": $createdDateLimit }
+      }
+    },
   #end
   "query": {
     #if($cognitoIdentityId != "")
