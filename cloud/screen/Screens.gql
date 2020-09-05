@@ -42,6 +42,7 @@ input GetObjectKeysInput {
 }
 
 input GetScreenNamesInput {
+  size: Int!
   type: String!
   status: String!
 }

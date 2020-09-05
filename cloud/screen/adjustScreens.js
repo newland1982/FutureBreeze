@@ -124,6 +124,7 @@ exports.handler = () => {
         if (unprocessedTypes.indexOf(type) !== -1) {
           try {
             const screens_Query_GetScreenNames_Input = {
+              size: screens_Query_GetScreenNames_Size,
               type,
               status: 'init',
             };

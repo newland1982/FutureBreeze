@@ -271,7 +271,7 @@ ${utils.toJson(${context.prev.result})}
 ## Resolver for Query.getScreenNames
 #set($path = ${util.toJson("/screens/_search")})
 #set($from = 0)
-#set($size = 12)
+#set($size = ${context.arguments.input.size})
 #set($type = ${context.arguments.input.type})
 ## #set($createdDateMargin = 86400000)
 #set($createdDateMargin = 1)
