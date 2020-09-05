@@ -61,8 +61,8 @@ exports.handler = () => {
         if (unprocessedActions.indexOf(action) !== -1) {
           try {
             const errors_Query_GetDatas_Input = {
-              action,
               limit: errors_Query_GetDatas_Limit,
+              action,
             };
             const errors_Query_GetDatas_Result = await errorsClient.query({
               query: errors_Query_GetDatas,

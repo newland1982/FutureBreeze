@@ -29,8 +29,8 @@ input DeleteErrorInput {
 }
 
 input GetDatasInput {
-  action: String!
   limit: Int!
+  action: String!
 }
 
 type Id {
