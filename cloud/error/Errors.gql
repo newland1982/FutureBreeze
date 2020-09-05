@@ -13,18 +13,6 @@ input CreateErrorInput {
   deleteS3ObjectInputVersionId: String
 }
 
-input DeleteErrorInput {
-  id: ID!
-}
-
-input GetDatasInput {
-  action: String!
-}
-
-type Id {
-  id: ID
-}
-
 type Data {
   id: ID
   deleteS3ObjectInputBucket: String
@@ -34,6 +22,19 @@ type Data {
 
 type Datas {
   datas: [Data]
+}
+
+input DeleteErrorInput {
+  id: ID!
+}
+
+input GetDatasInput {
+  action: String!
+  limit: Int!
+}
+
+type Id {
+  id: ID
 }
 
 type Mutation {
