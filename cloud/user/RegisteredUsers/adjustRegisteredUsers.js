@@ -17,27 +17,15 @@ const credentials = AWS.config.credentials;
 
 const s3 = new AWS.S3();
 
-const errors_Mutation_DeleteError = gql(`
-  mutation DeleteError($input: DeleteErrorInput!) {
-    deleteError(input: $input) {
-      id
+const registeredUsers_Query_GetAccountNames = gql(`
+  mutation DeleteRegisteredUser($input: DeleteRegisteredUserInput!) {
+    deleteRegisteredUser(input: $input) {
+      displayName
     }
   }`);
 
-const errors_Query_GetDatas = gql(`
-  query GetDatas($input: GetDatasInput!) {
-    getDatas(input: $input) {
-      datas {
-        id
-        deleteS3ObjectInputBucket
-        deleteS3ObjectInputKey
-        deleteS3ObjectInputVersionId
-      }
-    }
-  }`);
-
-const errorsClient = new AWSAppSyncClient({
-  url: process.env.AppSync_Errors,
+const registeredUsersClient = new AWSAppSyncClient({
+  url: process.env.AppSync_RegisteredUsers,
   region: process.env.AppSync_Region,
   auth: {
     type: AUTH_TYPE.AWS_IAM,
@@ -46,7 +34,7 @@ const errorsClient = new AWSAppSyncClient({
   disableOffline: true,
 });
 
-const statuses = ['init', 'invalid'];
+const statuses = ['init', 'invalid', 'valid'];
 
 const errors_Query_GetDatas_Limit = 12;
 
@@ -54,20 +42,24 @@ exports.handler = () => {
   let unprocessedActions = statuses.slice();
 
   (async () => {
-    await errorsClient.hydrated();
+    await registeredUsersClient.hydrated();
 
     do {
       for (const action of statuses) {
         if (unprocessedActions.indexOf(action) !== -1) {
           try {
-            const errors_Query_GetDatas_Input = {
+            const registeredUsers_Query_GetAccountNames_Input = {
               action,
             };
-            const errors_Query_GetDatas_Result = await errorsClient.query({
-              query: errors_Query_GetDatas,
-              variables: { input: errors_Query_GetDatas_Input },
-              fetchPolicy: 'network-only',
-            });
+            const errors_Query_GetDatas_Result = await registeredUsersClient.query(
+              {
+                query: registeredUsers_Query_GetAccountNames,
+                variables: {
+                  input: registeredUsers_Query_GetAccountNames_Input,
+                },
+                fetchPolicy: 'network-only',
+              }
+            );
 
             if (
               errors_Query_GetDatas_Result.data.getDatas.datas.length <
@@ -90,8 +82,8 @@ exports.handler = () => {
                     const errors_Mutation_DeleteError_Input = {
                       id: data.id,
                     };
-                    await errorsClient.mutate({
-                      mutation: errors_Mutation_DeleteError,
+                    await registeredUsersClient.mutate({
+                      mutation: registeredUsers_Query_GetAccountNames,
                       variables: { input: errors_Mutation_DeleteError_Input },
                       fetchPolicy: 'no-cache',
                     });
