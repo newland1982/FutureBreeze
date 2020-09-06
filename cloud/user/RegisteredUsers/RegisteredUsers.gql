@@ -37,6 +37,7 @@ type DisplayName {
 }
 
 input GetAccountNamesInput {
+  limit: Int
   cognitoIdentityId: String
   status: String
 }

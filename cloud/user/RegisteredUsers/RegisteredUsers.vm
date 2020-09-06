@@ -247,6 +247,7 @@ ${util.toJson(${context.result})}
 ${util.toJson(${context.result})}
 
 ## Resolver for Query.getAccountNames
+#set($limit = ${context.arguments.input.limit})
 ## #set($createdDateMargin = 86400000)
 #set($createdDateMargin = 1)
 #set($currentDate = ${util.time.nowEpochMilliSeconds()})
@@ -265,6 +266,7 @@ ${util.toJson(${context.result})}
     "index": "cognitoIdentityId-index",
   #elseif($status != "")
     "index": "status-index",
+    "limit": $limit,
     "filter": {
       "expression": "createdDate < :createdDateLimit",
       "expressionValues": {
