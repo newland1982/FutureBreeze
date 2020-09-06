@@ -15,12 +15,12 @@ const AWS = require('aws-sdk');
 const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 
-const s3 = new AWS.S3();
-
 const registeredUsers_Query_GetAccountNames = gql(`
-  mutation DeleteRegisteredUser($input: DeleteRegisteredUserInput!) {
-    deleteRegisteredUser(input: $input) {
-      displayName
+  query GetAccountNames($input: GetAccountNamesInput!) {
+    getAccountNames(input: $input) {
+      accountNames {
+        accountName
+      }
     }
   }`);
 
@@ -36,22 +36,23 @@ const registeredUsersClient = new AWSAppSyncClient({
 
 const statuses = ['init', 'invalid', 'valid'];
 
-const errors_Query_GetDatas_Limit = 12;
+const registeredUsers_Query_GetAccountNames_Limit = 12;
 
 exports.handler = () => {
-  let unprocessedActions = statuses.slice();
+  let unprocessedStatuses = statuses.slice();
 
   (async () => {
     await registeredUsersClient.hydrated();
 
     do {
-      for (const action of statuses) {
-        if (unprocessedActions.indexOf(action) !== -1) {
+      for (const status of statuses) {
+        if (unprocessedStatuses.indexOf(status) !== -1) {
           try {
             const registeredUsers_Query_GetAccountNames_Input = {
-              action,
+              limit: registeredUsers_Query_GetAccountNames_Limit,
+              status,
             };
-            const errors_Query_GetDatas_Result = await registeredUsersClient.query(
+            const registeredUsers_Query_GetAccountNames_Result = await registeredUsersClient.query(
               {
                 query: registeredUsers_Query_GetAccountNames,
                 variables: {
@@ -62,29 +63,35 @@ exports.handler = () => {
             );
 
             if (
-              errors_Query_GetDatas_Result.data.getDatas.datas.length <
-              errors_Query_GetDatas_Limit
+              registeredUsers_Query_GetAccountNames_Result.data.getDatas.datas
+                .length < registeredUsers_Query_GetAccountNames_Limit
             ) {
-              unprocessedActions.splice(unprocessedActions.indexOf(action), 1);
+              unprocessedStatuses.splice(
+                unprocessedStatuses.indexOf(status),
+                1
+              );
             }
 
-            if (errors_Query_GetDatas_Result.data.getDatas.datas.length !== 0) {
-              const datas = errors_Query_GetDatas_Result.data.getDatas.datas;
+            if (
+              registeredUsers_Query_GetAccountNames_Result.data.getDatas.datas
+                .length !== 0
+            ) {
+              const datas =
+                registeredUsers_Query_GetAccountNames_Result.data.getDatas
+                  .datas;
               await Promise.all(
                 datas.map(async (data) => {
-                  if (action === 'deleteS3Object') {
+                  if (status === 'deleteS3Object') {
                     const deleteS3ObjectInput = {
                       Bucket: data.deleteS3ObjectInputBucket,
                       Key: data.deleteS3ObjectInputKey,
                       VersionId: data.deleteS3ObjectInputVersionId,
                     };
-                    await s3.deleteObject(deleteS3ObjectInput).promise();
-                    const errors_Mutation_DeleteError_Input = {
-                      id: data.id,
-                    };
                     await registeredUsersClient.mutate({
                       mutation: registeredUsers_Query_GetAccountNames,
-                      variables: { input: errors_Mutation_DeleteError_Input },
+                      variables: {
+                        input: registeredUsers_Query_GetAccountNames_Input,
+                      },
                       fetchPolicy: 'no-cache',
                     });
                   }
@@ -97,7 +104,7 @@ exports.handler = () => {
           }
         }
       }
-    } while (unprocessedActions.length > 0);
+    } while (unprocessedStatuses.length > 0);
   })();
 };
 
