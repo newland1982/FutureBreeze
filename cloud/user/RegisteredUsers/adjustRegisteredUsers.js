@@ -89,7 +89,7 @@ exports.handler = () => {
                         FunctionName: 'deleteAccount',
                         InvocationType: 'RequestResponse',
                         Payload: JSON.stringify({
-                          accountName: accountName.accountName,
+                          accountName,
                         }),
                       })
                       .promise();
