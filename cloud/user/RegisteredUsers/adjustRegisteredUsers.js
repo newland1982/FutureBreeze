@@ -14,6 +14,7 @@ const AWS = require('aws-sdk');
 // @ts-ignore
 const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
+const lambda = new AWS.Lambda();
 
 const registeredUsers_Query_GetAccountNames = gql(`
   query GetAccountNames($input: GetAccountNamesInput!) {
@@ -63,8 +64,9 @@ exports.handler = () => {
             );
 
             if (
-              registeredUsers_Query_GetAccountNames_Result.data.getDatas.datas
-                .length < registeredUsers_Query_GetAccountNames_Limit
+              registeredUsers_Query_GetAccountNames_Result.data.getAccountNames
+                .accountNames.length <
+              registeredUsers_Query_GetAccountNames_Limit
             ) {
               unprocessedStatuses.splice(
                 unprocessedStatuses.indexOf(status),
@@ -73,27 +75,24 @@ exports.handler = () => {
             }
 
             if (
-              registeredUsers_Query_GetAccountNames_Result.data.getDatas.datas
-                .length !== 0
+              registeredUsers_Query_GetAccountNames_Result.data.getAccountNames
+                .accountNames.length !== 0
             ) {
-              const datas =
-                registeredUsers_Query_GetAccountNames_Result.data.getDatas
-                  .datas;
+              const accountNames = registeredUsers_Query_GetAccountNames_Result.data.getAccountNames.accountNames.map(
+                (value) => value.accountName
+              );
               await Promise.all(
-                datas.map(async (data) => {
-                  if (status === 'deleteS3Object') {
-                    const deleteS3ObjectInput = {
-                      Bucket: data.deleteS3ObjectInputBucket,
-                      Key: data.deleteS3ObjectInputKey,
-                      VersionId: data.deleteS3ObjectInputVersionId,
-                    };
-                    await registeredUsersClient.mutate({
-                      mutation: registeredUsers_Query_GetAccountNames,
-                      variables: {
-                        input: registeredUsers_Query_GetAccountNames_Input,
-                      },
-                      fetchPolicy: 'no-cache',
-                    });
+                accountNames.map(async (accountName) => {
+                  if (status === 'init' || status === 'invalid') {
+                    await lambda
+                      .invoke({
+                        FunctionName: 'deleteAccount',
+                        InvocationType: 'RequestResponse',
+                        Payload: JSON.stringify({
+                          accountName: accountName.accountName,
+                        }),
+                      })
+                      .promise();
                   }
                 })
               );
