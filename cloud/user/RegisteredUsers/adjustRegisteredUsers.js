@@ -16,12 +16,26 @@ const gql = require('graphql-tag');
 const credentials = AWS.config.credentials;
 const lambda = new AWS.Lambda();
 
+const registeredUsers_Mutation_SetStatus = gql(`
+  mutation SetStatus($input: SetStatusInput!) {
+    setStatus(input: $input) {
+      displayName
+    }
+  }`);
+
 const registeredUsers_Query_GetAccountNames = gql(`
   query GetAccountNames($input: GetAccountNamesInput!) {
     getAccountNames(input: $input) {
       accountNames {
         accountName
       }
+    }
+  }`);
+
+const registeredUsers_Query_GetCognitoIdentityId = gql(`
+  query GetCognitoIdentityId($input: GetCognitoIdentityIdInput!) {
+    getCognitoIdentityId(input: $input) {
+      cognitoIdentityId
     }
   }`);
 
@@ -35,7 +49,7 @@ const registeredUsersClient = new AWSAppSyncClient({
   disableOffline: true,
 });
 
-const statuses = ['init', 'invalid', 'valid'];
+const statuses = ['init', 'invalid'];
 
 const registeredUsers_Query_GetAccountNames_Limit = 12;
 
@@ -83,7 +97,48 @@ exports.handler = () => {
               );
               await Promise.all(
                 accountNames.map(async (accountName) => {
-                  if (status === 'init' || status === 'invalid') {
+                  if (status === 'init') {
+                    const registeredUsers_Query_GetCognitoIdentityId_Input = {
+                      displayName: accountName.slice(96),
+                    };
+                    const registeredUsers_Query_GetCognitoIdentityId_Result = await registeredUsersClient.query(
+                      {
+                        query: registeredUsers_Query_GetCognitoIdentityId,
+                        variables: {
+                          input: registeredUsers_Query_GetCognitoIdentityId_Input,
+                        },
+                        fetchPolicy: 'network-only',
+                      }
+                    );
+                    if (
+                      registeredUsers_Query_GetCognitoIdentityId_Result.data
+                        .getCognitoIdentityId &&
+                      registeredUsers_Query_GetCognitoIdentityId_Result.data
+                        .getCognitoIdentityId.cognitoIdentityId
+                    ) {
+                      const registeredUsers_Mutation_SetStatus_Input = {
+                        displayName: accountName.slice(96),
+                        status: 'valid',
+                      };
+                      await registeredUsersClient.query({
+                        query: registeredUsers_Mutation_SetStatus,
+                        variables: {
+                          input: registeredUsers_Mutation_SetStatus_Input,
+                        },
+                        fetchPolicy: 'network-only',
+                      });
+                    } else {
+                      await lambda
+                        .invoke({
+                          FunctionName: 'deleteAccount',
+                          InvocationType: 'RequestResponse',
+                          Payload: JSON.stringify({
+                            accountName,
+                          }),
+                        })
+                        .promise();
+                    }
+                  } else if (status === 'invalid') {
                     await lambda
                       .invoke({
                         FunctionName: 'deleteAccount',
