@@ -120,12 +120,12 @@ exports.handler = () => {
                         displayName: accountName.slice(96),
                         status: 'valid',
                       };
-                      await registeredUsersClient.query({
-                        query: registeredUsers_Mutation_SetStatus,
+                      await registeredUsersClient.mutate({
+                        mutation: registeredUsers_Mutation_SetStatus,
                         variables: {
                           input: registeredUsers_Mutation_SetStatus_Input,
                         },
-                        fetchPolicy: 'network-only',
+                        fetchPolicy: 'no-cache',
                       });
                     } else {
                       await lambda
