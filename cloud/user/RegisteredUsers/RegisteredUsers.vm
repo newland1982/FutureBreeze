@@ -296,6 +296,18 @@ ${util.toJson(${context.result})}
   "accountNames": ${utils.toJson(${context.result.items})}
 }
 
+## Resolver for Query.getCognitoIdentityId
+#set($displayName = ${context.arguments.input.displayName})
+{
+  "version": "2017-02-28",
+  "operation": "GetItem",
+  "key": {
+    "displayName": { "S": "$displayName" }
+  }
+}
+
+${util.toJson(${context.result})}
+
 ## Resolver for Query.getPostScreenCount
 #set($displayName = ${context.arguments.input.displayName})
 {
