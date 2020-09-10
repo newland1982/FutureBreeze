@@ -422,13 +422,29 @@ const PostScreen = () => {
       console.log(putFileForMobileResult);
       console.log(putFileForPCResult);
       // begin 1
+      const currentAuthenticatedUser = await Auth.currentAuthenticatedUser();
+      if (!currentAuthenticatedUser) {
+        history.push('/failure/error');
+        return;
+      }
+      const cognitoIdentityId =
+        currentAuthenticatedUser.storage[
+          `aws.cognito.identity-id.${process.env.REACT_APP_AWS_COGNITO_identityPoolId}`
+        ];
+
+      setAmplifyConfig(
+        process.env.REACT_APP_AWS_APPSYNC_aws_appsync_graphqlEndpoint_Screens,
+        'AMAZON_COGNITO_USER_POOLS'
+      );
       const screens_Mutation_ConfirmScreen = `mutation ConfirmScreen($input: ConfirmScreenInput!) {
         confirmScreen(input: $input) {
           confirmScreenIsCompleted
         }
       }`;
       const screens_Mutation_ConfirmScreen_Input = {
-        // screenName,
+        screenName: `protected/${cognitoIdentityId}/${displayName}_${String(
+          RegisteredUsersCreatedDate
+        )}/${unixTimestamp}`,
       };
       const screens_Mutation_ConfirmScreen_Result_Watcher = async () => {
         if (refSetIntervalCount.current + 1 > setIntervalCountLimit) {
@@ -470,6 +486,24 @@ const PostScreen = () => {
       return;
     }
   };
+
+  // begin 2
+  useEffect(() => {
+    refSetIntervalCount.current = setIntervalCount;
+    ref_GraphqlOperation_Screens_Mutation_ConfirmScreen_IsCompleted.current = graphqlOperation_Screens_Mutation_ConfirmScreen_IsCompleted;
+    if (
+      refSetIntervalCount.current > setIntervalCountLimit &&
+      ref_GraphqlOperation_Screens_Mutation_ConfirmScreen_IsCompleted.current
+    ) {
+      setConfirmScreenIsCompleted(false);
+      return;
+    }
+  }, [
+    setIntervalCountLimit,
+    setIntervalCount,
+    graphqlOperation_Screens_Mutation_ConfirmScreen_IsCompleted,
+  ]);
+  // end 2
 
   return (
     <Fragment>

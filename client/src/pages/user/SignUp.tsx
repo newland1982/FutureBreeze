@@ -269,7 +269,6 @@ const SignUp = () => {
       return;
     }
   }, [
-    intervalTimerId,
     setIntervalCountLimit,
     setIntervalCount,
     graphqlOperation_SignUpUsers_Query_GetStatus_IsCompleted,
