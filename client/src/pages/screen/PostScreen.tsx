@@ -491,18 +491,32 @@ const PostScreen = () => {
   useEffect(() => {
     refSetIntervalCount.current = setIntervalCount;
     ref_GraphqlOperation_Screens_Mutation_ConfirmScreen_IsCompleted.current = graphqlOperation_Screens_Mutation_ConfirmScreen_IsCompleted;
+
     if (
       refSetIntervalCount.current > setIntervalCountLimit &&
       ref_GraphqlOperation_Screens_Mutation_ConfirmScreen_IsCompleted.current
     ) {
+      clearInterval(intervalTimerId);
       setConfirmScreenIsCompleted(false);
+      history.push('/failure/error');
       return;
     }
   }, [
+    confirmScreenIsCompleted,
+    history,
+    intervalTimerId,
     setIntervalCountLimit,
     setIntervalCount,
     graphqlOperation_Screens_Mutation_ConfirmScreen_IsCompleted,
   ]);
+
+  useEffect(() => {
+    if (confirmScreenIsCompleted === true) {
+      clearInterval(intervalTimerId);
+      history.push('/screen/screens');
+      return;
+    }
+  }, [confirmScreenIsCompleted, history, intervalTimerId]);
   // end 2
 
   return (
