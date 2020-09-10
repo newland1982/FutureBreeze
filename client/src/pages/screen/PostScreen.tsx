@@ -119,6 +119,16 @@ const PostScreen = () => {
 
   const postScreenCountLimit = 36;
 
+  const intervalTime = 2400;
+  let setIntervalCountLimit = 6;
+  const [intervalTimerId, setIntervalTimerId] = useState(0);
+  const [setIntervalCount, setSetIntervalCount] = useState(0);
+  const [confirmScreenIsCompleted, setConfirmScreenIsCompleted] = useState(
+    false
+  );
+  const refSetIntervalCount = useRef(setIntervalCount);
+  const ref_ConfirmScreenIsCompleted = useRef(confirmScreenIsCompleted);
+
   useEffect(() => {
     const checkAuthentication = async () => {
       try {
