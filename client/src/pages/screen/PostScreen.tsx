@@ -123,11 +123,17 @@ const PostScreen = () => {
   let setIntervalCountLimit = 6;
   const [intervalTimerId, setIntervalTimerId] = useState(0);
   const [setIntervalCount, setSetIntervalCount] = useState(0);
+  const [
+    graphqlOperation_Screens_Mutation_ConfirmScreen_IsCompleted,
+    set_GraphqlOperation_Screens_Mutation_ConfirmScreen_IsCompleted,
+  ] = useState(true);
+  const refSetIntervalCount = useRef(setIntervalCount);
+  const ref_GraphqlOperation_Screens_Mutation_ConfirmScreen_IsCompleted = useRef(
+    graphqlOperation_Screens_Mutation_ConfirmScreen_IsCompleted
+  );
   const [confirmScreenIsCompleted, setConfirmScreenIsCompleted] = useState(
     false
   );
-  const refSetIntervalCount = useRef(setIntervalCount);
-  const ref_ConfirmScreenIsCompleted = useRef(confirmScreenIsCompleted);
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -415,6 +421,50 @@ const PostScreen = () => {
       console.log(putFileForThumbnailResult);
       console.log(putFileForMobileResult);
       console.log(putFileForPCResult);
+      // begin 1
+      const screens_Mutation_ConfirmScreen = `mutation ConfirmScreen($input: ConfirmScreenInput!) {
+        confirmScreen(input: $input) {
+          confirmScreenIsCompleted
+        }
+      }`;
+      const screens_Mutation_ConfirmScreen_Input = {
+        // screenName,
+      };
+      const screens_Mutation_ConfirmScreen_Result_Watcher = async () => {
+        if (refSetIntervalCount.current + 1 > setIntervalCountLimit) {
+          setSetIntervalCount(refSetIntervalCount.current + 1);
+          return;
+        }
+        try {
+          if (
+            !ref_GraphqlOperation_Screens_Mutation_ConfirmScreen_IsCompleted.current
+          ) {
+            return;
+          }
+          set_GraphqlOperation_Screens_Mutation_ConfirmScreen_IsCompleted(
+            false
+          );
+          const result = await API.graphql(
+            graphqlOperation(screens_Mutation_ConfirmScreen, {
+              input: screens_Mutation_ConfirmScreen_Input,
+            })
+          );
+          setConfirmScreenIsCompleted(
+            result.data.confirmScreen.confirmScreenIsCompleted
+          );
+          setSetIntervalCount(refSetIntervalCount.current + 1);
+          set_GraphqlOperation_Screens_Mutation_ConfirmScreen_IsCompleted(true);
+        } catch (error) {
+          return;
+        }
+      };
+      setIntervalTimerId(
+        window.setInterval(
+          screens_Mutation_ConfirmScreen_Result_Watcher,
+          intervalTime
+        )
+      );
+      // end 1
     } catch (error) {
       history.push('/failure/error');
       return;
